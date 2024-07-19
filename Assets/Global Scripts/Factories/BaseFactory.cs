@@ -1,4 +1,4 @@
-namespace GlobalScripts
+namespace GlobalScripts.Factories
 {
     public abstract class BaseFactory<TParam, TResult>
     {

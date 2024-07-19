@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace GlobalScripts
+namespace GlobalScripts.App
 {
     public static class ApplicationStart
     {

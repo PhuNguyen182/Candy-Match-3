@@ -3,39 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using GlobalScripts.UpdateHandlerPattern;
 
-public class AutoDespawn : MonoBehaviour, IUpdateHandler
+namespace GlobalScripts.Pool
 {
-    [SerializeField] private float duration;
-
-    private float _timer = 0;
-
-    private void Awake()
+    public class AutoDespawn : MonoBehaviour, IUpdateHandler
     {
-        UpdateHandlerManager.Instance.AddUpdateBehaviour(this);
-    }
+        [SerializeField] private float duration;
 
-    private void OnEnable()
-    {
-        _timer = 0;
-    }
+        private float _timer = 0;
 
-    public void OnUpdate(float deltaTime)
-    {
-        _timer += deltaTime;
-        if (_timer >= duration)
+        private void Awake()
+        {
+            UpdateHandlerManager.Instance.AddUpdateBehaviour(this);
+        }
+
+        private void OnEnable()
         {
             _timer = 0;
-            SimplePool.Despawn(this.gameObject);
         }
-    }
 
-    public void SetDuration(float duration)
-    {
-        this.duration = duration;
-    }
+        public void OnUpdate(float deltaTime)
+        {
+            _timer += deltaTime;
+            if (_timer >= duration)
+            {
+                _timer = 0;
+                SimplePool.Despawn(this.gameObject);
+            }
+        }
 
-    private void OnDestroy()
-    {
-        UpdateHandlerManager.Instance?.RemoveUpdateBehaviour(this);
+        public void SetDuration(float duration)
+        {
+            this.duration = duration;
+        }
+
+        private void OnDestroy()
+        {
+            UpdateHandlerManager.Instance?.RemoveUpdateBehaviour(this);
+        }
     }
 }

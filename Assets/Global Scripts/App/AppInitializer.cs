@@ -1,9 +1,9 @@
-using GlobalScripts.Service;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GlobalScripts.Service;
 
-namespace GlobalScripts
+namespace GlobalScripts.App
 {
     public class AppInitializer : Singleton<AppInitializer>, IService
     {
