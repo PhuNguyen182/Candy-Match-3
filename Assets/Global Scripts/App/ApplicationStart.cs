@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GlobalScripts.UpdateHandlerPattern;
+using GlobalScripts.Audios;
 
 namespace GlobalScripts.App
 {
@@ -30,9 +32,9 @@ namespace GlobalScripts.App
 
         private static void RegisterServicesAfterSceneLoad()
         {
-            //Register<AppInitializer>("App/App Initializer");
-            //Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
-            //Register<MusicManager>("Managers/Music Manager");
+            Register<AppInitializer>("App/App Initializer");
+            Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
+            Register<MusicManager>("Managers/Music Manager");
         }
 
         private static T Register<T>(string serviceName) where T : Component
