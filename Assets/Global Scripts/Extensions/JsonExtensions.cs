@@ -7,6 +7,21 @@ namespace GlobalScripts.Extensions
 {
     public static class JsonExtensions
     {
+        public static void ReadBool(this JsonReader reader, out bool? value)
+        {
+            value = null;
+
+            try
+            {
+                value = reader.ReadAsBoolean();
+            }
+            catch
+            {
+                Debug.LogError("Not An Integer!");
+                return;
+            }
+        }
+
         public static void ReadInt(this JsonReader reader, out int? value)
         {
             value = null;
@@ -14,6 +29,36 @@ namespace GlobalScripts.Extensions
             try
             {
                 value = reader.ReadAsInt32();
+            }
+            catch
+            {
+                Debug.LogError("Not An Integer!");
+                return;
+            }
+        }
+
+        public static void ReadFloat(this JsonReader reader, out float? value)
+        {
+            value = null;
+
+            try
+            {
+                value = (float)reader.ReadAsDouble();
+            }
+            catch
+            {
+                Debug.LogError("Not An Integer!");
+                return;
+            }
+        }
+
+        public static void ReadString(this JsonReader reader, out string value)
+        {
+            value = null;
+
+            try
+            {
+                value = reader.ReadAsString();
             }
             catch
             {
