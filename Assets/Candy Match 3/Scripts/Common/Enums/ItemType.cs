@@ -43,6 +43,7 @@ namespace CandyMatch3.Scripts.Common.Enums
         Cream = 28,
         Marshmallow = 29,
         Unbreakable = 30,
-        Watermelon = 31
+        Watermelon = 31,
+        ColorBomb = 32,
     }
 }

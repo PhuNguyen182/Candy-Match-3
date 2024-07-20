@@ -3,7 +3,7 @@ using System;
 namespace CandyMatch3.Scripts.Common.Enums
 {
     [Serializable]
-    public enum ItemColor
+    public enum CandyColor
     {
         None = 0,
         Blue = 1,
