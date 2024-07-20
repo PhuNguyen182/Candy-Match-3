@@ -28,7 +28,7 @@ namespace GlobalScripts.Service
 
         private void InitDOTween()
         {
-            DOTween.Init(true, true, LogBehaviour.Verbose).SetCapacity(1200, 120);
+            DOTween.Init(true, true, LogBehaviour.Verbose).SetCapacity(2000, 200);
         }
     }
 }
