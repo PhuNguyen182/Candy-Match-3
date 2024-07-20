@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Tile
   layers:
   - Default
   - TransparentFX
@@ -11,7 +12,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - GridCell
   - 
   - 
   - 
@@ -38,6 +39,48 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BottomMost
+    uniqueID: 3710800329
+    locked: 0
+  - name: Backgrounds
+    uniqueID: 88989213
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: ItemBottom3
+    uniqueID: 2489517055
+    locked: 0
+  - name: ItemBottom2
+    uniqueID: 621274457
+    locked: 0
+  - name: ItemBottom1
+    uniqueID: 2124310927
+    locked: 0
+  - name: ItemNormal
+    uniqueID: 3630877451
+    locked: 0
+  - name: ItemTop1
+    uniqueID: 118083971
+    locked: 0
+  - name: ItemTop2
+    uniqueID: 1012096273
+    locked: 0
+  - name: ItemTop3
+    uniqueID: 2701226197
+    locked: 0
+  - name: Effects
+    uniqueID: 257535643
+    locked: 0
+  - name: UI
+    uniqueID: 4037577285
+    locked: 0
+  - name: UIObjects
+    uniqueID: 3908522599
+    locked: 0
+  - name: UIEffects
+    uniqueID: 1129346501
+    locked: 0
+  - name: TopMost
+    uniqueID: 3992429577
     locked: 0
