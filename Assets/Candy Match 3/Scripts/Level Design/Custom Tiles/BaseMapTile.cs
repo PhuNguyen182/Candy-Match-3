@@ -8,7 +8,6 @@ namespace CandyMatch3.Scripts.LevelDesign.CustomTiles
     public class BaseMapTile : Tile
     {
         [SerializeField] protected int itemId;
-        [SerializeField] protected string itemName;
 
         public int ItemID => itemId;
 
