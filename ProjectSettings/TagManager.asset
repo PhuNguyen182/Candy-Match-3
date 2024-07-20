@@ -48,6 +48,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Board
+    uniqueID: 1649967707
+    locked: 0
   - name: ItemBottom3
     uniqueID: 2489517055
     locked: 0
