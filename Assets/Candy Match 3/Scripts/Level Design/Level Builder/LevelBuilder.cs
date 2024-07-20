@@ -17,6 +17,8 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
+        [SerializeField] private Tilemap itemTilemap;
+        [SerializeField] private Tilemap topItemTilemap;
 
         [HorizontalGroup(GroupID = "Map Clear 1")]
         [Button]

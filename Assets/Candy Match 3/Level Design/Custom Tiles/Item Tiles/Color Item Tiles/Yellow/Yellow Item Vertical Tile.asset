@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a0817d4dcfe0514c9297705e6e508e1, type: 3}
-  m_Name: Board Tile
+  m_Script: {fileID: 11500000, guid: 786ae938176796043a38afed0c732f0e, type: 3}
+  m_Name: Yellow Item Vertical Tile
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: c7544dff621c34f4e8c4f9cf1c682d7a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9eb0a4869109d4b8fa7c335e92157dfd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -34,5 +34,8 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  oddSprite: {fileID: 21300000, guid: 1339c2ed3d218b14abd2d7e4a9418a8c, type: 3}
-  evenSprite: {fileID: 21300000, guid: c7544dff621c34f4e8c4f9cf1c682d7a, type: 3}
+  itemId: 0
+  itemName: Yellow Vertical
+  itemType: 23
+  candyColor: 6
+  colorType: 3

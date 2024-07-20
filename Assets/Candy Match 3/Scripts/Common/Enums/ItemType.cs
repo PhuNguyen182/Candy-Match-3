@@ -44,6 +44,9 @@ namespace CandyMatch3.Scripts.Common.Enums
         Marshmallow = 29,
         Unbreakable = 30,
         Watermelon = 31,
-        ColorBomb = 32,
+        ColorBomb = 32, // Similar to rainbow entity
+        Bomb = 33, // Explore 3x3
+
+        Random = 34,
     }
 }

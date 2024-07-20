@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00699db8450be2b41b6582c059332d99, type: 3}
+  m_Name: Tile Database
+  m_EditorClassIdentifier: 
+  boardTile: {fileID: 11400000, guid: cb74c9ec7b42ae24dbd6f977254c2c69, type: 2}
+  colorItemTiles:
+  - {fileID: 11400000, guid: 938a042a226c700488dab887624429d6, type: 2}
+  - {fileID: 11400000, guid: 3f98516e48e3d9b419a469c59c579c37, type: 2}
+  - {fileID: 11400000, guid: 838f8229905ff1b489b0eee205bec4ca, type: 2}
+  - {fileID: 11400000, guid: 4e68b9de86133e94aa855b4589d9aab3, type: 2}
+  - {fileID: 11400000, guid: d7a6aab2119d0db40aae7910e0e8d1b8, type: 2}
+  - {fileID: 11400000, guid: 751da709a5fb2424b8e9a4e52499ed99, type: 2}
+  - {fileID: 11400000, guid: c2949f7e4cfb1d84188d91c414c55fa8, type: 2}
+  - {fileID: 11400000, guid: 4bb6bfd2b83716443a59ab444ace7d4b, type: 2}
+  - {fileID: 11400000, guid: 4c74803c1e7f304488dd53e682c46418, type: 2}
+  - {fileID: 11400000, guid: dfba6963da2a93949a5d8d1a26290e99, type: 2}
+  - {fileID: 11400000, guid: d9e4e9974953ccc44939a420c44b8290, type: 2}
+  - {fileID: 11400000, guid: 3b3253faae7bbcf4797b2afb7ee37db2, type: 2}
+  - {fileID: 11400000, guid: 0f47aff3a891832499637ffa33da49fe, type: 2}
+  - {fileID: 11400000, guid: 9bf2d78f1470a9d4185f76c9990343c0, type: 2}
+  - {fileID: 11400000, guid: 01cbb28c964e4e84e802e8c4dd3a9193, type: 2}
+  - {fileID: 11400000, guid: 23cc05376222c164c8ad6cb96cd43cee, type: 2}
+  - {fileID: 11400000, guid: 7d5a21de315243e4a8568ed194f845e8, type: 2}
+  - {fileID: 11400000, guid: ec8306322191a364dbdb9ffd9feb3cd3, type: 2}
+  - {fileID: 11400000, guid: f615f687efb14a4498ee501f471b4537, type: 2}
+  - {fileID: 11400000, guid: 45b1b73a57890984bbd237ac74900ecf, type: 2}
+  - {fileID: 11400000, guid: 9bcabf2d23ceca340b763318114d83c6, type: 2}
+  - {fileID: 11400000, guid: 469b8eeb8d770fb459c5cf26fc24bfaa, type: 2}
+  - {fileID: 11400000, guid: 389cbddf9869cc14e99e571a8059cbf2, type: 2}
+  - {fileID: 11400000, guid: 9640ab90b16c3d3428130a0f7d52e3d8, type: 2}
+  breakableTiles:
+  - {fileID: 11400000, guid: 0168f94cc07aac14ca532383116c3f60, type: 2}
+  - {fileID: 11400000, guid: 948fcfd7f06a13544bbe382fa87a7619, type: 2}
+  - {fileID: 11400000, guid: 21eadc9a103dd14428994ba96d5de864, type: 2}
+  collectibleTiles:
+  - {fileID: 11400000, guid: 8dda438f9ea46734a8b234d0687dc8a4, type: 2}
+  - {fileID: 11400000, guid: be64945cfb0cce1469fb2d69d1e44450, type: 2}
+  boosterTiles:
+  - {fileID: 11400000, guid: af2379d58816d05448bcf6919cf33636, type: 2}
+  - {fileID: 11400000, guid: d03b4454b06468d4f8c0e4297d8b02a1, type: 2}
+  topItemTiles:
+  - {fileID: 11400000, guid: 5f04754a8eeba6347831a94de6293a01, type: 2}
+  - {fileID: 11400000, guid: 52aa285e0e0ff6b428eac27d0d3df18e, type: 2}
+  - {fileID: 11400000, guid: e52dcb51439f8c740af42293c27dc67f, type: 2}
+  - {fileID: 11400000, guid: bf5c16604f98d0e43b4aa6cf54d65f90, type: 2}
+  itemTiles:
+  - {fileID: 11400000, guid: 0ff5e6bf6c72dbb4f8e1a28f54ce6f8c, type: 2}
+  - {fileID: 11400000, guid: 223f079af68b50b4ba2060db83a6e100, type: 2}

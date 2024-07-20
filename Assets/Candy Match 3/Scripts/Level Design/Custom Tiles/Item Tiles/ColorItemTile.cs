@@ -7,13 +7,11 @@ using CandyMatch3.Scripts.Common.Enums;
 namespace CandyMatch3.Scripts.LevelDesign.CustomTiles.ItemTiles
 {
     [CreateAssetMenu(fileName = "Color Item Tile", menuName = "Scriptable Objects/Level Design/Tiles/Color Item Tile")]
-    public class ColorItemTile : BaseMapTile
+    public class ColorItemTile : ItemTile
     {
-        [SerializeField] private ItemType itemType;
         [SerializeField] private CandyColor candyColor;
         [SerializeField] private ColorType colorType;
 
-        public ItemType ItemType => itemType;
         public CandyColor CandyColor => candyColor;
         public ColorType ColorType => colorType;
 
