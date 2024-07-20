@@ -1,5 +1,9 @@
 ﻿using System;
 using UnityEngine;
+#if UNITASK_ADDRESSABLE_SUPPORT
+using UnityEngine.AddressableAssets;
+using Cysharp.Threading.Tasks;
+#endif
 
 public abstract class BasePopup : MonoBehaviour
 {
@@ -187,4 +191,29 @@ public class BasePopup<T> : BasePopup where T : BasePopup
         instance.gameObject.SetActive(true);
         return instance;
     }
+
+#if UNITASK_ADDRESSABLE_SUPPORT
+    public static async UniTask PreloadFromAddress(string address)
+    {
+        T instance = await CreateFromAddress(address);
+        
+        if(instance != null)
+            SimplePool.Despawn(instance.gameObject);
+    }
+
+    public static async UniTask<T> CreateFromAddress(string address)
+    {
+        _resourcePath = address;
+        T instance = default;
+        T prefab = await Addressables.LoadAssetAsync<T>(address);
+        
+        if (prefab != null)
+        {
+            instance = SimplePool.Spawn(prefab);
+            instance.gameObject.SetActive(true);
+        }
+
+        return instance;
+    }
+#endif
 }
