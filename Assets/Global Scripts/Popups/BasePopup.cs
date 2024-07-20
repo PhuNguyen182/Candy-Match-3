@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public abstract class BaseBox : MonoBehaviour
+public abstract class BasePopup : MonoBehaviour
 {
     public RectTransform ContentPanel;
     [SerializeField] protected Canvas popupCanvas;
@@ -52,7 +52,7 @@ public abstract class BaseBox : MonoBehaviour
     {
         if (!IsNotStack)
         {
-            BoxController.Instance.AddNewBackObj(this);
+            PopupController.Instance.AddNewBackObj(this);
         }
 
         DoAppear();
@@ -79,7 +79,7 @@ public abstract class BaseBox : MonoBehaviour
     public virtual void SaveBox()
     {
         if (IsBoxSave)
-            BoxController.Instance.AddBoxSave(IDPopup, actionOpenSaveBox);
+            PopupController.Instance.AddBoxSave(IDPopup, actionOpenSaveBox);
     }
 
     /// <summary>
@@ -87,14 +87,14 @@ public abstract class BaseBox : MonoBehaviour
     /// </summary>
     public virtual void RemoveSaveBox()
     {
-        BoxController.Instance.RemoveBoxSave(IDPopup);
+        PopupController.Instance.RemoveBoxSave(IDPopup);
     }
 
     #region Close Box
     public virtual void Close()
     {
         if (!IsNotStack)
-            BoxController.Instance.Remove();
+            PopupController.Instance.Remove();
 
         DoClose();
     }
@@ -112,7 +112,7 @@ public abstract class BaseBox : MonoBehaviour
             OnCloseBox = null;
         }
 
-        BoxController.Instance.OnActionOnClosedOneBox();
+        PopupController.Instance.OnActionOnClosedOneBox();
     }
 
     private void OnApplicationQuit()
@@ -156,7 +156,7 @@ public abstract class BaseBox : MonoBehaviour
     }
 }
 
-public class BaseBox<T> : BaseBox where T : BaseBox
+public class BasePopup<T> : BasePopup where T : BasePopup
 {
     private static string _resourcePath;
     public static string ResourcePath => _resourcePath;
@@ -175,7 +175,7 @@ public class BaseBox<T> : BaseBox where T : BaseBox
 
     public static T Create()
     {
-        _resourcePath = $"Boxes/{typeof(T).FullName}";
+        _resourcePath = $"Popups/{typeof(T).FullName}";
         return Create(_resourcePath);
     }
     

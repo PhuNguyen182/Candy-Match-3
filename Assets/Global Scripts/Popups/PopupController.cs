@@ -5,11 +5,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using GlobalScripts.Service;
 
-public class BoxController : SingletonClass<BoxController>, IService
+public class PopupController : SingletonClass<PopupController>, IService
 {
     public const int BaseIndexLayer = 20;
 
-    private Stack<BaseBox> boxStack = new Stack<BaseBox>();
+    private Stack<BasePopup> boxStack = new Stack<BasePopup>();
     private readonly Subject<Unit> _pressEscapeSubject = new Subject<Unit>();
     private readonly Subject<bool> _showPopupSubject = new Subject<bool>();
     public Observable<Unit> PressEscapeObservable => _pressEscapeSubject;
@@ -28,7 +28,7 @@ public class BoxController : SingletonClass<BoxController>, IService
     public event Action ActionOnClosedOneBox;
     public Observable<bool> TriggerShowPopUp => _showPopupSubject;
 
-    public BoxController()
+    public PopupController()
     {
         Initialize();
     }
@@ -52,7 +52,7 @@ public class BoxController : SingletonClass<BoxController>, IService
         SceneManager.sceneLoaded += (scene, mode) => OnLevelWasLoaded();
     }
 
-    public void AddNewBackObj(BaseBox obj)
+    public void AddNewBackObj(BasePopup obj)
     {
         boxStack.Push(obj);
         _showPopupSubject.OnNext(true);
@@ -77,7 +77,7 @@ public class BoxController : SingletonClass<BoxController>, IService
         if (boxStack.Count == 0)
             return;
 
-        BaseBox obj = boxStack.Pop();
+        BasePopup obj = boxStack.Pop();
         if (boxStack.Count == 0)
             OnStackEmpty();
 
@@ -89,7 +89,7 @@ public class BoxController : SingletonClass<BoxController>, IService
     /// </summary>
     public bool IsShowingPopup()
     {
-        BaseBox[] lst_backObjs = boxStack.ToArray();
+        BasePopup[] lst_backObjs = boxStack.ToArray();
         int lenght = lst_backObjs.Length;
 
         for (int i = lenght - 1; i >= 0; i--)
@@ -105,7 +105,7 @@ public class BoxController : SingletonClass<BoxController>, IService
 
     public void DebugStack()
     {
-        BaseBox[] lst_backObjs = boxStack.ToArray();
+        BasePopup[] lst_backObjs = boxStack.ToArray();
         int lenght = lst_backObjs.Length;
         for (int i = lenght - 1; i >= 0; i--)
         {
@@ -197,15 +197,15 @@ public class BoxController : SingletonClass<BoxController>, IService
     #endregion
 
 
-    public bool IsPopupCurrent(BaseBox baseBox)
+    public bool IsPopupCurrent(BasePopup baseBox)
     {
-        BaseBox boxShowing = boxStack.Count > 0 ? boxStack.Peek() : null;
+        BasePopup boxShowing = boxStack.Count > 0 ? boxStack.Peek() : null;
         return boxShowing != null && baseBox != null && boxShowing == baseBox;
     }
 
     public void CloseAll()
     {
-        BaseBox[] lst_backObjs = boxStack.ToArray();
+        BasePopup[] lst_backObjs = boxStack.ToArray();
         int lenght = lst_backObjs.Length;
 
         for (int i = lenght - 1; i >= 0; i--)

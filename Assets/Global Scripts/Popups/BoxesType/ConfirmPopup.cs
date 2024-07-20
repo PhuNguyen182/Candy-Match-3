@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class ConfirmBox : BaseBox<ConfirmBox>
+public class ConfirmPopup : BasePopup<ConfirmPopup>
 {
     [Header("Notice Texts")]
     [SerializeField] private TMP_Text titleMessage;
@@ -41,7 +41,7 @@ public class ConfirmBox : BaseBox<ConfirmBox>
         Close();
     }
 
-    public ConfirmBox AddMessage(string titleString, string messageString = "", string yesString = null,
+    public ConfirmPopup AddMessage(string titleString, string messageString = "", string yesString = null,
     string noString = null)
     {
         AddMessageYesNo(titleString, messageString, null, null, yesString, noString);
@@ -50,13 +50,13 @@ public class ConfirmBox : BaseBox<ConfirmBox>
         return ShowCloseButton(false);
     }
 
-    public ConfirmBox AddMessageUpdate(string messageString = "", bool isAutoLockEscape = false)
+    public ConfirmPopup AddMessageUpdate(string messageString = "", bool isAutoLockEscape = false)
     {
         messageText.text = messageString;
         return ShowCloseButton(false);
     }
 
-    public ConfirmBox AddMessageOK(string titleString, string messageString = "", Action onOKClick = null,
+    public ConfirmPopup AddMessageOK(string titleString, string messageString = "", Action onOKClick = null,
         string okString = null, bool isAutoLockEscape = false)
     {
         titleMessage.text = titleString;
@@ -71,7 +71,7 @@ public class ConfirmBox : BaseBox<ConfirmBox>
         return this;
     }
 
-    public ConfirmBox AddMessageYesNo(string titleString, string messageString = "", Action onYesClick = null,
+    public ConfirmPopup AddMessageYesNo(string titleString, string messageString = "", Action onYesClick = null,
         Action onNoClick = null, string yesString = null, string noString = null, Action OnCloseBoxAction = null)
     {
         titleMessage.text = titleString;
@@ -90,22 +90,22 @@ public class ConfirmBox : BaseBox<ConfirmBox>
         return EnableBackground();
     }
 
-    public ConfirmBox EnableBackground()
+    public ConfirmPopup EnableBackground()
     {
         backGround.SetActive(true);
         return this;
     }
 
-    public ConfirmBox ShowCloseButton(bool isShow)
+    public ConfirmPopup ShowCloseButton(bool isShow)
     {
         closeButton.gameObject.SetActive(isShow);
         return this;
     }
 
-    public ConfirmBox SetPopupAutoLockEscape(bool isLockEscape = false)
+    public ConfirmPopup SetPopupAutoLockEscape(bool isLockEscape = false)
     {
         _isAutoLockEscape = isLockEscape;
-        BoxController.Instance.isLockEscape = isLockEscape;
+        PopupController.Instance.isLockEscape = isLockEscape;
         return this;
     }
 
@@ -113,9 +113,15 @@ public class ConfirmBox : BaseBox<ConfirmBox>
     {
         if (_isAutoLockEscape)
         {
-            BoxController.Instance.isLockEscape = false;
+            PopupController.Instance.isLockEscape = false;
         }
 
         base.Close();
+    }
+
+    protected override void DoClose()
+    {
+        // Perform animation here
+        base.DoClose();
     }
 }

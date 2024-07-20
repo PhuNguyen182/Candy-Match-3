@@ -3,21 +3,21 @@ using System;
 using UnityEngine;
 using TMPro;
 
-public class WaitingBox : MonoBehaviour
+public class WaitingPopup : MonoBehaviour
 {
     [SerializeField] TMP_Text messageText;
 
     private Action _onTimeOut;
-    private static WaitingBox _instance;
+    private static WaitingPopup _instance;
     private IDisposable _waitDispose;
 
-    public const string WaitingBoxPath = "Boxes/WaitingBox";
+    public const string WaitingBoxPath = "Popups/WaitingPopup";
 
-    public static WaitingBox Setup()
+    public static WaitingPopup Setup()
     {
         if (_instance == null)
         {
-            _instance = Instantiate(Resources.Load<WaitingBox>(WaitingBoxPath));
+            _instance = Instantiate(Resources.Load<WaitingPopup>(WaitingBoxPath));
         }
 
         _instance.gameObject.SetActive(true);
@@ -27,14 +27,14 @@ public class WaitingBox : MonoBehaviour
 
     public void ShowWaiting()
     {
-        BoxController.Instance.isLockEscape = true;
+        PopupController.Instance.isLockEscape = true;
         gameObject.SetActive(true);
     }
 
 
     public void HideWaiting(bool isLockEscape = false)
     {
-        BoxController.Instance.isLockEscape = isLockEscape;
+        PopupController.Instance.isLockEscape = isLockEscape;
 
         gameObject.SetActive(false);
 
