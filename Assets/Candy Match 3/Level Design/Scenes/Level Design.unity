@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 391042897}
   - component: {fileID: 391042898}
   m_Layer: 0
-  m_Name: Top Item Tilemap
+  m_Name: Stateful Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1728,7 +1728,7 @@ MonoBehaviour:
   gridInformation: {fileID: 1640025282}
   boardTilemap: {fileID: 583834200}
   itemTilemap: {fileID: 269106886}
-  topItemTilemap: {fileID: 391042897}
+  statefulTilemap: {fileID: 391042897}
 --- !u!4 &2095715574
 Transform:
   m_ObjectHideFlags: 0
