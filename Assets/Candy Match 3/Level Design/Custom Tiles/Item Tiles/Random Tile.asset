@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52814a621b27b4247aa3d8f99e4da341, type: 3}
+  m_Script: {fileID: 11500000, guid: ed540ef0fda8a554a81ab49bdb0af8e8, type: 3}
   m_Name: Random Tile
   m_EditorClassIdentifier: 
   m_Sprite: {fileID: 21300000, guid: 6f25ba13ac050774aa73738145a3441e, type: 3}
@@ -36,3 +36,5 @@ MonoBehaviour:
   m_ColliderType: 1
   itemId: 0
   itemType: 1
+  primaryState: 0
+  secondaryState: 0

@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed540ef0fda8a554a81ab49bdb0af8e8, type: 3}
-  m_Name: Unbreakable Tile
+  m_Script: {fileID: 11500000, guid: 6c2bd966ed4ff974a8801781d63f6b5e, type: 3}
+  m_Name: Booster Blue Horizontal Tile
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: b726b9353ae0bc149821e7b6d33cf5da, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6f71e081c6c44fe48a68f54f7c10ac75, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -35,6 +35,8 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemType: 31
+  itemType: 3
   primaryState: 0
   secondaryState: 0
+  candyColor: 1
+  colorBoosterType: 2

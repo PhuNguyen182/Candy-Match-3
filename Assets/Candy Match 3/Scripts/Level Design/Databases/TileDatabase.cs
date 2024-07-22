@@ -17,15 +17,15 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
         [Space(3)]
         [SerializeField] private List<ColorItemTile> colorItemTiles;
         [Space(3)]
-        [SerializeField] private List<BreakableTile> breakableTiles;
+        [SerializeField] private List<SingleBreakableTile> breakableTiles;
         [Space(3)]
         [SerializeField] private List<CollectibleTile> collectibleTiles;
         [Space(3)]
         [SerializeField] private List<BoosterTile> boosterTiles;
         [Space(3)]
-        [SerializeField] private List<TopItemTile> topItemTiles;
+        [SerializeField] private List<StatefulTile> topItemTiles;
         [Space(3)]
-        [SerializeField] private List<ItemTile> itemTiles;
+        [SerializeField] private List<SingleItemTile> itemTiles;
 
         public BoardTile GetBoardTile()
         {
@@ -37,7 +37,7 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
             return colorItemTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType);
         }
 
-        public BreakableTile GetBreakableTile(int id, ItemType itemType, int healthPoint)
+        public SingleBreakableTile GetBreakableTile(int id, ItemType itemType, int healthPoint)
         {
             return breakableTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType && tile.HealthPoint == healthPoint);
         }
@@ -47,7 +47,7 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
             return collectibleTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType);
         }
 
-        public TopItemTile GetTopItemTile(int id, TopGroupType groupType, int healthPoint)
+        public StatefulTile GetTopItemTile(int id, StatefulGroupType groupType, int healthPoint)
         {
             return topItemTiles.FirstOrDefault(tile => tile.ItemID == id && tile.GroupType == groupType && tile.HealthPoint == healthPoint);
         }
@@ -57,7 +57,7 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
             return boosterTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType);
         }
 
-        public ItemTile GetItemTile(int id, ItemType itemType)
+        public SingleItemTile GetItemTile(int id, ItemType itemType)
         {
             return itemTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType);
         }

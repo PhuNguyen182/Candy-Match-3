@@ -187,5 +187,29 @@ namespace GlobalScripts.Extensions
                 return false;
             }
         }
+
+        public static bool ReadInts(this JsonReader reader, out int? x, out int? y
+            , out int? value1, out int? value2, out int? value3, out int? value4, out int? value5, out int? value6)
+        {
+            x = y = value1 = value2 = value3 = value4 = value5 = value6 = 0;
+
+            try
+            {
+                reader.ReadInt(out x);
+                reader.ReadInt(out y);
+                reader.ReadInt(out value1);
+                reader.ReadInt(out value2);
+                reader.ReadInt(out value3);
+                reader.ReadInt(out value4);
+                reader.ReadInt(out value5);
+                reader.ReadInt(out value6);
+                return true;
+            }
+            catch
+            {
+                Debug.LogError("Cannot read interger numbers!");
+                return false;
+            }
+        }
     }
 }
