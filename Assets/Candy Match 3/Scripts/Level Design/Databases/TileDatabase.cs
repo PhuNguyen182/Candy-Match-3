@@ -17,13 +17,15 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
         [Space(3)]
         [SerializeField] private List<ColorItemTile> colorItemTiles;
         [Space(3)]
+        [SerializeField] private List<ColorBoosterTile> colorBoosterTiles;
+        [Space(3)]
         [SerializeField] private List<SingleBreakableTile> breakableTiles;
         [Space(3)]
         [SerializeField] private List<CollectibleTile> collectibleTiles;
         [Space(3)]
         [SerializeField] private List<BoosterTile> boosterTiles;
         [Space(3)]
-        [SerializeField] private List<StatefulTile> topItemTiles;
+        [SerializeField] private List<StatefulTile> statefulTiles;
         [Space(3)]
         [SerializeField] private List<SingleItemTile> itemTiles;
 
@@ -37,6 +39,11 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
             return colorItemTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType);
         }
 
+        public ColorBoosterTile GetBoosterTile(int id, CandyColor candyColor, ColorBoosterType boosterType)
+        {
+            return colorBoosterTiles.FirstOrDefault(tile => tile.ItemID == id && tile.CandyColor == candyColor && tile.ColorBoosterType == boosterType);
+        }
+
         public SingleBreakableTile GetBreakableTile(int id, ItemType itemType, int healthPoint)
         {
             return breakableTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType && tile.HealthPoint == healthPoint);
@@ -47,9 +54,9 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
             return collectibleTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType);
         }
 
-        public StatefulTile GetTopItemTile(int id, StatefulGroupType groupType, int healthPoint)
+        public StatefulTile GetStatefulTile(int id, StatefulGroupType groupType, int healthPoint)
         {
-            return topItemTiles.FirstOrDefault(tile => tile.ItemID == id && tile.GroupType == groupType && tile.HealthPoint == healthPoint);
+            return statefulTiles.FirstOrDefault(tile => tile.ItemID == id && tile.GroupType == groupType && tile.HealthPoint == healthPoint);
         }
 
         public BoosterTile GetBoosterTile(int id, ItemType itemType)
