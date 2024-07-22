@@ -7,18 +7,15 @@ using Newtonsoft.Json;
 
 namespace CandyMatch3.Scripts.Common.CustomData
 {
-    [JsonConverter(typeof(BlockItemPositionConverter))]
-    public class BlockItemPosition : BaseBlockPosition<BlockItemData>
+    public class StatefulBlockPosition : BaseBlockPosition<StatefulBlockData>
     {
 
     }
 
-    public struct BlockItemData
+    public struct StatefulBlockData
     {
         public int ID;
         public int HealthPoint;
-        public ItemType ItemType;
-        public int PrimaryState;
-        public int SecondaryState;
+        public StatefulGroupType GroupType;
     }
 }

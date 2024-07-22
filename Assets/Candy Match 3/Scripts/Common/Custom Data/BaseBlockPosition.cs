@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CandyMatch3.Scripts.Common.CustomData
 {
-    public class BaseItemPosition<TItemData>
+    public class BaseBlockPosition<TItemData>
     {
         public TItemData ItemData;
         public Vector3Int Position;

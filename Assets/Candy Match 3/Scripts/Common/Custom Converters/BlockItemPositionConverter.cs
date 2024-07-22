@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 namespace CandyMatch3.Scripts.Common.CustomConverters
 {
-    public class BlockItemPositionConterter : JsonConverter<BlockItemPosition>
+    public class BlockItemPositionConverter : JsonConverter<BlockItemPosition>
     {
         public override BlockItemPosition ReadJson(JsonReader reader, Type objectType, BlockItemPosition existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
