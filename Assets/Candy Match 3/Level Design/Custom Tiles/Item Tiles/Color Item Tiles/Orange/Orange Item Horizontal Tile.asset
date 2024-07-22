@@ -35,7 +35,6 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Orange Horizontal
-  itemType: 10
+  itemType: 11
   candyColor: 3
   colorType: 2

@@ -35,7 +35,6 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Green Horizontal
-  itemType: 6
+  itemType: 7
   candyColor: 2
   colorType: 2

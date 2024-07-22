@@ -35,7 +35,6 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Orange Vertical
-  itemType: 11
+  itemType: 12
   candyColor: 3
   colorType: 3

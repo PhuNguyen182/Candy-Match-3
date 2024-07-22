@@ -35,7 +35,6 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Purple
-  itemType: 13
+  itemType: 14
   candyColor: 4
   colorType: 1

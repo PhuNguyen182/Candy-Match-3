@@ -6,47 +6,54 @@ namespace CandyMatch3.Scripts.Common.Enums
     public enum ItemType
     {
         None = 0,
+        Random = 1,
 
-        Blue = 1,
-        BlueHorizontal = 2,
-        BlueVertical = 3,
-        BlueWrapped = 4,
+        #region Colored Item
+        Blue = 2,
+        BlueHorizontal = 3,
+        BlueVertical = 4,
+        BlueWrapped = 5,
 
-        Green = 5,
-        GreenHorizontal = 6,
-        GreenVertical = 7,
-        GreenWrapped = 8,
+        Green = 6,
+        GreenHorizontal = 7,
+        GreenVertical = 8,
+        GreenWrapped = 9,
 
-        Orange = 9,
-        OrangeHorizontal = 10,
-        OrangeVertical = 11,
-        OrangeWrapped = 12,
+        Orange = 10,
+        OrangeHorizontal = 11,
+        OrangeVertical = 12,
+        OrangeWrapped = 13,
 
-        Purple = 13,
-        PurpleHorizontal = 14,
-        PurpleVertical = 15,
-        PurpleWrapped = 16,
+        Purple = 14,
+        PurpleHorizontal = 15,
+        PurpleVertical = 16,
+        PurpleWrapped = 17,
 
-        Red = 17,
-        RedHorizontal = 18,
-        RedVertical = 19,
-        RedWrapped = 20,
+        Red = 18,
+        RedHorizontal = 19,
+        RedVertical = 20,
+        RedWrapped = 21,
 
-        Yellow = 21,
-        YellowHorizontal = 22,
-        YellowVertical = 23,
-        YellowWrapped = 24,
+        Yellow = 22,
+        YellowHorizontal = 23,
+        YellowVertical = 24,
+        YellowWrapped = 25,
+        #endregion
 
-        Biscuit = 25,
-        Cherry = 26,
-        Chocolate = 27,
-        Cream = 28,
-        Marshmallow = 29,
-        Unbreakable = 30,
-        Watermelon = 31,
-        ColorBomb = 32, // Similar to rainbow entity
-        Bomb = 33, // Explore 3x3
+        // Original
+        #region Speccial Item
+        Biscuit = 26,
+        Cherry = 27,
+        Chocolate = 28,
+        Cream = 29,
+        Marshmallow = 30,
+        Unbreakable = 31,
+        Watermelon = 32,
+        #endregion
 
-        Random = 34,
+        #region Booster
+        ColorBomb = 33, // Similar to rainbow entity
+        Bomb = 34, // Explore 3x3
+        #endregion
     }
 }

@@ -35,6 +35,5 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Chocolate
+  itemType: 28
   healthPoint: 1
-  itemType: 27

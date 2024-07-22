@@ -35,6 +35,5 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Marshmallow
+  itemType: 30
   healthPoint: 1
-  itemType: 29

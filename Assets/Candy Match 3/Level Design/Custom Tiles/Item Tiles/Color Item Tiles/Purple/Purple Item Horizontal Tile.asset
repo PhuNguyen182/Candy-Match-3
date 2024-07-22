@@ -35,7 +35,6 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Purple Horizontal
-  itemType: 14
+  itemType: 15
   candyColor: 4
   colorType: 2

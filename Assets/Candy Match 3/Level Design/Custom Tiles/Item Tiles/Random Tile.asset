@@ -35,5 +35,4 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Random
-  itemType: 34
+  itemType: 1

@@ -35,7 +35,6 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Red Horizontal
-  itemType: 18
+  itemType: 19
   candyColor: 5
   colorType: 2

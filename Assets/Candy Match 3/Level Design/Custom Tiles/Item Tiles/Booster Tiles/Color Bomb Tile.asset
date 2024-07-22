@@ -35,5 +35,4 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Color Bomb
-  itemType: 32
+  itemType: 33

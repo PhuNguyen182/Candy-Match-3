@@ -35,7 +35,6 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Yellow
-  itemType: 21
+  itemType: 22
   candyColor: 6
   colorType: 1

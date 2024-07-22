@@ -35,5 +35,4 @@ MonoBehaviour:
   m_Flags: 1
   m_ColliderType: 1
   itemId: 0
-  itemName: Unbreakable
-  itemType: 30
+  itemType: 31
