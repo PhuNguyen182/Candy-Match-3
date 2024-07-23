@@ -24,8 +24,6 @@ namespace GlobalScripts.Utils
                     await Addressables.DownloadDependenciesAsync(key, autoRelease);
                     return true;
                 }
-
-                return false;
             }
 
             return false;
@@ -44,8 +42,6 @@ namespace GlobalScripts.Utils
                     await Addressables.DownloadDependenciesAsync(key, autoRelease);
                     return true;
                 }
-
-                return false;
             }
 
             return false;
