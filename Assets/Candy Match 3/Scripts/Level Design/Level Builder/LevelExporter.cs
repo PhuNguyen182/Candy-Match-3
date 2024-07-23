@@ -178,6 +178,20 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                         }
                     });
                 }
+
+                else if(singleItemTile is BoosterTile boosterTile)
+                {
+                    _levelModel.BoosterItemPositions.Add(new BlockItemPosition
+                    {
+                        Position = position,
+                        ItemData = new BlockItemData
+                        {
+                            ID = boosterTile.ItemID,
+                            ItemType = boosterTile.ItemType,
+                            HealthPoint = 100
+                        }
+                    });
+                }
             }
 
             return this;

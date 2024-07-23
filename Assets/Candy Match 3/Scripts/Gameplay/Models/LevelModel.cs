@@ -12,6 +12,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models
         public List<BoardBlockPosition> BoardBlockPositions = new();
         public List<BlockItemPosition> ColorBlockItemPositions = new();
         public List<BlockItemPosition> ColorBoosterItemPositions = new();
+        public List<BlockItemPosition> BoosterItemPositions = new();
         public List<BlockItemPosition> RandomBlockItemPositions = new();
         public List<BlockItemPosition> BreakableItemPositions = new();
         public List<BlockItemPosition> UnbreakableItemPositions = new();
@@ -24,6 +25,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models
             BoardBlockPositions.Clear();
             ColorBlockItemPositions.Clear();
             ColorBoosterItemPositions.Clear();
+            BoosterItemPositions.Clear();
             RandomBlockItemPositions.Clear();
             BreakableItemPositions.Clear();
             UnbreakableItemPositions.Clear();

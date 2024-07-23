@@ -101,6 +101,19 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             return this;
         }
 
+        public LevelImporter BuildBooster(Tilemap tilemap, List<BlockItemPosition> blockPositions)
+        {
+            for (int i = 0; i < blockPositions.Count; i++)
+            {
+                int id = blockPositions[i].ItemData.ID;
+                ItemType itemType = blockPositions[i].ItemData.ItemType;
+                BoosterTile boosterTile = _tileDatabase.GetBoosterTile(id, itemType);
+                tilemap.SetTile(blockPositions[i].Position, boosterTile);
+            }
+
+            return this;
+        }
+
         public LevelImporter BuildCollectible(Tilemap tilemap, List<BlockItemPosition> blockPositions)
         {
             for (int i = 0; i < blockPositions.Count; i++)
