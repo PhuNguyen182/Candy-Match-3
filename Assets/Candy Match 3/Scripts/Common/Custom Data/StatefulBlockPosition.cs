@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 
 namespace CandyMatch3.Scripts.Common.CustomData
 {
+    [JsonConverter(typeof(StatefulBlockPositionConverter))]
     public class StatefulBlockPosition : BaseBlockPosition<StatefulBlockData>
     {
 

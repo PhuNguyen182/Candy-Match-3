@@ -15,6 +15,10 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
     {
         [SerializeField] private BoardTile boardTile;
         [Space(3)]
+        [SerializeField] private RandomTile randomTile;
+        [Space(3)]
+        [SerializeField] private UnbreakableTile unbreakableTile;
+        [Space(3)]
         [SerializeField] private List<SpawnerTile> spawnerTiles;
         [Space(3)]
         [SerializeField] private List<ColorItemTile> colorItemTiles;
@@ -28,12 +32,20 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
         [SerializeField] private List<BoosterTile> boosterTiles;
         [Space(3)]
         [SerializeField] private List<StatefulTile> statefulTiles;
-        [Space(3)]
-        [SerializeField] private List<SingleItemTile> itemTiles;
 
         public BoardTile GetBoardTile()
         {
             return boardTile;
+        }
+
+        public RandomTile GetRandomTile()
+        {
+            return randomTile;
+        }
+
+        public UnbreakableTile GetUnbreakableTile()
+        {
+            return unbreakableTile;
         }
 
         public SpawnerTile GetSpawnerTile(int id)
@@ -46,7 +58,7 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
             return colorItemTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType);
         }
 
-        public ColorBoosterTile GetBoosterTile(int id, CandyColor candyColor, ColorBoosterType boosterType)
+        public ColorBoosterTile GetColorBoosterTile(int id, CandyColor candyColor, ColorBoosterType boosterType)
         {
             return colorBoosterTiles.FirstOrDefault(tile => tile.ItemID == id && tile.CandyColor == candyColor && tile.ColorBoosterType == boosterType);
         }
@@ -69,11 +81,6 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
         public BoosterTile GetBoosterTile(int id, ItemType itemType)
         {
             return boosterTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType);
-        }
-
-        public SingleItemTile GetItemTile(int id, ItemType itemType)
-        {
-            return itemTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType);
         }
     }
 }
