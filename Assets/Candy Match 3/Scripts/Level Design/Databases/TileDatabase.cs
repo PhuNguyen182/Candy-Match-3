@@ -15,6 +15,8 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
     {
         [SerializeField] private BoardTile boardTile;
         [Space(3)]
+        [SerializeField] private List<SpawnerTile> spawnerTiles;
+        [Space(3)]
         [SerializeField] private List<ColorItemTile> colorItemTiles;
         [Space(3)]
         [SerializeField] private List<ColorBoosterTile> colorBoosterTiles;
@@ -32,6 +34,11 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
         public BoardTile GetBoardTile()
         {
             return boardTile;
+        }
+
+        public SpawnerTile GetSpawnerTile(int id)
+        {
+            return spawnerTiles.FirstOrDefault(tile => tile.ItemID == id);
         }
 
         public ColorItemTile GetColorItemTile(int id, ItemType itemType)

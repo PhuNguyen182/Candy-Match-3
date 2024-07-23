@@ -13,6 +13,17 @@ MonoBehaviour:
   m_Name: Tile Database
   m_EditorClassIdentifier: 
   boardTile: {fileID: 11400000, guid: cb74c9ec7b42ae24dbd6f977254c2c69, type: 2}
+  spawnerTiles:
+  - {fileID: 11400000, guid: c19ca72b71aa1624c97ebca86abb813a, type: 2}
+  - {fileID: 11400000, guid: a6c902c7a9f1887448c575e74eddcf5d, type: 2}
+  - {fileID: 11400000, guid: ce2ea3d85a9bc58418bd248a208fea78, type: 2}
+  - {fileID: 11400000, guid: e0556acb9aa1f1d44814aed884cd243b, type: 2}
+  - {fileID: 11400000, guid: d03bf151625c6574a8732489a1ca9307, type: 2}
+  - {fileID: 11400000, guid: 13bd10c331f33c444b9311c7a75c35bb, type: 2}
+  - {fileID: 11400000, guid: 8142ed67532e2bb43b50f96f02f97623, type: 2}
+  - {fileID: 11400000, guid: ac2ef3c0dadb70b46b5b67477fcac62e, type: 2}
+  - {fileID: 11400000, guid: 18917bebb3ec59643b556a74a5ef5320, type: 2}
+  - {fileID: 11400000, guid: fc40e04eb6e24414090bee5cae0c45d1, type: 2}
   colorItemTiles:
   - {fileID: 11400000, guid: 3f98516e48e3d9b419a469c59c579c37, type: 2}
   - {fileID: 11400000, guid: 751da709a5fb2424b8e9a4e52499ed99, type: 2}
