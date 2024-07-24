@@ -1858,6 +1858,7 @@ MonoBehaviour:
   spawnerRules: []
   boardTilemap: {fileID: 583834200}
   itemTilemap: {fileID: 269106886}
+  spawnerTilemap: {fileID: 773047408}
   statefulTilemap: {fileID: 391042897}
 --- !u!4 &2095715574
 Transform:

@@ -19,11 +19,11 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 {
     public class LevelExporter
     {
-        private readonly LevelModel _levelModel = new();
+        private readonly LevelModel _levelModel;
 
         public LevelExporter()
         {
-            _levelModel.ClearModel();
+            _levelModel = new();
         }
 
         private bool IsColorTile(SingleItemTile tile)
@@ -38,6 +38,12 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                 return false;
 
             return true;
+        }
+
+        public LevelExporter ClearModel()
+        {
+            _levelModel.ClearModel();
+            return this;
         }
 
         public LevelExporter BuildTargetMove(int targetMove)

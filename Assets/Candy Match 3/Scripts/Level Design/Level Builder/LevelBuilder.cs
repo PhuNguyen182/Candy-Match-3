@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,24 +32,31 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
         [SerializeField] private Tilemap itemTilemap;
+        [SerializeField] private Tilemap spawnerTilemap;
         [SerializeField] private Tilemap statefulTilemap;
+
+        private LevelExporter _levelExporter;
+        private LevelImporter _levelImporter;
 
         [HorizontalGroup(GroupID = "Map Clear 1")]
         [Button]
         private void ClearEntities()
         {
+            itemTilemap.ClearAllTiles();
         }
 
         [HorizontalGroup(GroupID = "Map Clear 1")]
         [Button]
-        private void ClearCeil()
+        private void ClearStateful()
         {
+            statefulTilemap.ClearAllTiles();
         }
 
         [HorizontalGroup(GroupID = "Map Clear 2")]
         [Button]
-        private void ClearBoardBottom()
+        private void ClearSpawners()
         {
+            spawnerTilemap.ClearAllTiles();
         }
 
         [HorizontalGroup(GroupID = "Map Clear 2")]
@@ -59,27 +67,88 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         }
 
         [Button]
-        private void ClearAll()
+        private void ClearAllTilemap()
         {
+            boardTilemap.ClearAllTiles();
+            itemTilemap.ClearAllTiles();
+            statefulTilemap.ClearAllTiles();
         }
 
         [Button]
-        private void ScanTilemaps()
+        private void ScanAllTilemaps()
         {
+            boardTilemap.CompressBounds();
+            itemTilemap.CompressBounds();
+            statefulTilemap.CompressBounds();
         }
 
         [HorizontalGroup(GroupID = "Level Builder")]
         [Button(Style = ButtonStyle.Box)]
-        public void Export(int level, bool useResource = true)
+        public void Export(int level, bool writeToFile = true)
         {
-            ScanTilemaps();
-
+            ScanAllTilemaps();
+            string levelName = $"level_{level}";
+            _levelExporter.ClearModel()
+                          .BuildTargetMove(targetMove)
+                          .BuildScoreRule(scoreRule)
+                          .BuildLevelTarget(targetModels)
+                          .BuildBoardFill(boardFillRules)
+                          .BuildSpawnRule(spawnerRules)
+                          .BuildBoard(boardTilemap)
+                          .BuildColorItems(itemTilemap)
+                          .BuildSingleItems(itemTilemap)
+                          .BuildStateful(statefulTilemap)
+                          .BuildSpawner(spawnerTilemap)
+                          .Export(levelName, writeToFile);
         }
 
         [HorizontalGroup(GroupID = "Level Builder")]
         [Button(Style = ButtonStyle.Box)]
-        private void Import(int level, bool useResource = true)
+        private void Import(int level, bool readFromFile = true)
         {
+            if (readFromFile)
+            {
+                string levelData;
+                string levelPath = $"Assets/Candy Match 3/Level Data/level_{level}.txt";
+
+                using (StreamReader streamReader = new StreamReader(levelPath))
+                {
+                    levelData = streamReader.ReadToEnd();
+                    streamReader.Close();
+                }
+
+                LevelModel levelModel;
+                using (StringReader stringReader = new(levelData))
+                {
+                    using (JsonReader jsonReader = new JsonTextReader(stringReader))
+                    {
+                        JsonSerializer jsonSerializer = new();
+                        levelModel = jsonSerializer.Deserialize<LevelModel>(jsonReader);
+                        jsonReader.Close();
+                    }
+
+                    stringReader.Close();
+                }
+
+                _levelImporter = new(tileDatabase);
+                _levelImporter.BuildTargetMove(levelModel.TargetMove, out targetMove)
+                              .BuildScoreRule(levelModel.ScoreRule, out scoreRule)
+                              .BuildSpawnRule(levelModel.SpawnerRules, out spawnerRules)
+                              .BuildBoardFill(levelModel.BoardFillRule, out boardFillRules)
+                              .BuildLevelTarget(levelModel.LevelTargetData, out targetModels)
+                              .BuildBoard(boardTilemap, levelModel.BoardBlockPositions)
+                              .BuildColorTiles(itemTilemap, levelModel.ColorBlockItemPositions)
+                              .BuildColorBoosterTiles(itemTilemap, levelModel.ColorBoosterItemPositions)
+                              .BuildRandomTiles(itemTilemap, levelModel.RandomBlockItemPositions)
+                              .BuildBreakable(itemTilemap, levelModel.BreakableItemPositions)
+                              .BuildUnbreakable(itemTilemap, levelModel.UnbreakableItemPositions)
+                              .BuildBooster(itemTilemap, levelModel.BoosterItemPositions)
+                              .BuildCollectible(itemTilemap, levelModel.CollectibleItemPositions)
+                              .BuildStateful(statefulTilemap, levelModel.StatefulBlockPositions)
+                              .BuildSpawner(spawnerTilemap, levelModel.SpawnerBlockPositions)
+                              .Import();
+            }
         }
     }
 }
+#endif
