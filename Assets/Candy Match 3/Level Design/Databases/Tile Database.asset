@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Tile Database
   m_EditorClassIdentifier: 
   boardTile: {fileID: 11400000, guid: cb74c9ec7b42ae24dbd6f977254c2c69, type: 2}
+  randomTile: {fileID: 11400000, guid: 0ff5e6bf6c72dbb4f8e1a28f54ce6f8c, type: 2}
+  unbreakableTile: {fileID: 11400000, guid: 223f079af68b50b4ba2060db83a6e100, type: 2}
   spawnerTiles:
   - {fileID: 11400000, guid: c19ca72b71aa1624c97ebca86abb813a, type: 2}
   - {fileID: 11400000, guid: a6c902c7a9f1887448c575e74eddcf5d, type: 2}
@@ -65,6 +67,3 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6f68bfd2ca1259a4dbf0dbce04f1007a, type: 2}
   - {fileID: 11400000, guid: c8d1daaf2288ef146b7c9a40dfb3c7ab, type: 2}
   - {fileID: 11400000, guid: 9783b5a5b4c9393448c0a34cdb7fda7c, type: 2}
-  itemTiles:
-  - {fileID: 11400000, guid: 0ff5e6bf6c72dbb4f8e1a28f54ce6f8c, type: 2}
-  - {fileID: 11400000, guid: 223f079af68b50b4ba2060db83a6e100, type: 2}

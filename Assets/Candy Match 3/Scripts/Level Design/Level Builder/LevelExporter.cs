@@ -1,16 +1,19 @@
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using CandyMatch3.Scripts.Common.CustomData;
-using CandyMatch3.Scripts.LevelDesign.CustomTiles.BoardTiles;
-using CandyMatch3.Scripts.Gameplay.Models;
-using GlobalScripts.Extensions;
-using CandyMatch3.Scripts.LevelDesign.CustomTiles.ItemTiles;
-using CandyMatch3.Scripts.LevelDesign.CustomTiles;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.CustomData;
+using CandyMatch3.Scripts.Gameplay.Models;
+using CandyMatch3.Scripts.LevelDesign.CustomTiles.ItemTiles;
+using CandyMatch3.Scripts.LevelDesign.CustomTiles.BoardTiles;
 using CandyMatch3.Scripts.LevelDesign.CustomTiles.TopTiles;
+using CandyMatch3.Scripts.LevelDesign.CustomTiles;
+using GlobalScripts.Extensions;
 using GlobalScripts.Utils;
+using Newtonsoft.Json;
+using UnityEditor;
 
 namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 {
@@ -35,6 +38,58 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                 return false;
 
             return true;
+        }
+
+        public LevelExporter BuildTargetMove(int targetMove)
+        {
+            _levelModel.TargetMove = targetMove;
+            return this;
+        }
+
+        public LevelExporter BuildScoreRule(ScoreRule scoreRule)
+        {
+            _levelModel.ScoreRule = scoreRule;
+            return this;
+        }
+
+        public LevelExporter BuildLevelTarget(List<TargetModel> targetModels)
+        {
+            for (int i = 0; i < targetModels.Count; i++)
+            {
+                _levelModel.LevelTargetData.Add(new LevelTargetData
+                {
+                    DataValue = new TargetData
+                    {
+                        TargetAmount = targetModels[i].TargetAmount,
+                        Target = targetModels[i].Target
+                    }
+                });
+            }
+
+            return this;
+        }
+
+        public LevelExporter BuildSpawnRule(List<SpawnRule> spawnRules)
+        {
+            _levelModel.SpawnerRules = spawnRules;
+            return this;
+        }
+
+        public LevelExporter BuildBoardFill(List<Gameplay.Models.ColorFillData> colorFillDatas)
+        {
+            for (int i = 0; i < colorFillDatas.Count; i++)
+            {
+                _levelModel.BoardFillRule.Add(new ColorFillBlockData
+                {
+                    DataValue = new Common.CustomData.ColorFillData
+                    {
+                        Coefficient = colorFillDatas[i].Coefficient,
+                        Color = colorFillDatas[i].Color,
+                    }
+                });
+            }
+
+            return this;
         }
 
         public LevelExporter BuildBoard(Tilemap tilemap)
@@ -245,6 +300,28 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             }
 
             return this;
+        }
+
+        public string Export(string level, bool writeToFile = true)
+        {
+            string levelPath = $"Assets/Candy Match 3/Level Data/{level}.txt";
+            string json = JsonConvert.SerializeObject(_levelModel, Formatting.None);
+
+            if (writeToFile)
+            {
+                using (StreamWriter writer = new(levelPath))
+                {
+                    writer.Write(json);
+                    writer.Close();
+                }
+
+#if UNITY_EDITOR
+                AssetDatabase.ImportAsset(levelPath);
+#endif
+            }
+
+            Debug.Log(writeToFile ? json : "Get level data at output placeholder!");
+            return json;
         }
     }
 }

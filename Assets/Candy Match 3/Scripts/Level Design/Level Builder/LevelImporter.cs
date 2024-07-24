@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using CandyMatch3.Scripts.Common.CustomData;
+using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.LevelDesign.Databases;
 using CandyMatch3.Scripts.LevelDesign.CustomTiles.TopTiles;
 using CandyMatch3.Scripts.LevelDesign.CustomTiles.BoardTiles;
@@ -20,6 +21,58 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         public LevelImporter(TileDatabase tileDatabase)
         {
             _tileDatabase = tileDatabase;
+        }
+
+        public LevelImporter BuildTargetMove(int savedTargetMove, out int targetMove)
+        {
+            targetMove = savedTargetMove;
+            return this;
+        }
+
+        public LevelImporter BuildScoreRule(ScoreRule savedScoreRule, out ScoreRule scoreRule)
+        {
+            scoreRule = savedScoreRule;
+            return this;
+        }
+
+        public LevelImporter BuildLevelTarget(List<LevelTargetData> levelTargetDatas, out List<TargetModel> targetModels)
+        {
+            List<TargetModel> targets = new();
+
+            for (int i = 0; i < levelTargetDatas.Count; i++)
+            {
+                targets.Add(new TargetModel
+                {
+                    TargetAmount = levelTargetDatas[i].DataValue.TargetAmount,
+                    Target = levelTargetDatas[i].DataValue.Target
+                });
+            }
+
+            targetModels = targets;
+            return this;
+        }
+
+        public LevelImporter BuildSpawnRule(List<SpawnRule> savedSpawnRules, out List<SpawnRule> spawnRules)
+        {
+            spawnRules = savedSpawnRules;
+            return this;
+        }
+
+        public LevelImporter BuildBoardFill(List<ColorFillBlockData> colorFills, out List<Gameplay.Models.ColorFillData> colorFillDatas)
+        {
+            List<Gameplay.Models.ColorFillData> colors = new();
+
+            for (int i = 0; i < colorFills.Count; i++)
+            {
+                colors.Add(new Gameplay.Models.ColorFillData
+                {
+                    Coefficient = colorFills[i].DataValue.Coefficient,
+                    Color = colorFills[i].DataValue.Color,
+                });
+            }
+
+            colorFillDatas = colors;
+            return this;
         }
 
         public LevelImporter BuildBoard(Tilemap tilemap, List<BoardBlockPosition> blockPositions)

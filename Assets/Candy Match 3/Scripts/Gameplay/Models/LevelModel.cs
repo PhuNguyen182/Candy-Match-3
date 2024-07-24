@@ -9,6 +9,14 @@ namespace CandyMatch3.Scripts.Gameplay.Models
     [Serializable]
     public class LevelModel
     {
+        public int TargetMove = 0;
+        public ScoreRule ScoreRule = new();
+
+        public List<SpawnRule> SpawnerRules = new();
+        public List<ColorFillBlockData> BoardFillRule = new();
+        public List<LevelTargetData> LevelTargetData = new();
+
+        #region Level Board And Items
         public List<BoardBlockPosition> BoardBlockPositions = new();
         public List<BlockItemPosition> ColorBlockItemPositions = new();
         public List<BlockItemPosition> ColorBoosterItemPositions = new();
@@ -19,9 +27,17 @@ namespace CandyMatch3.Scripts.Gameplay.Models
         public List<BlockItemPosition> CollectibleItemPositions = new();
         public List<StatefulBlockPosition> StatefulBlockPositions = new();
         public List<SpawnerBlockPosition> SpawnerBlockPositions = new();
+        #endregion
 
         public void ClearModel()
         {
+            TargetMove = 0;
+            ScoreRule.Dispose();
+
+            SpawnerRules.Clear();
+            BoardFillRule.Clear();
+            LevelTargetData.Clear();
+
             BoardBlockPositions.Clear();
             ColorBlockItemPositions.Clear();
             ColorBoosterItemPositions.Clear();

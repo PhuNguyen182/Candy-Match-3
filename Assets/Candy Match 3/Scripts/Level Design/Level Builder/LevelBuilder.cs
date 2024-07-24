@@ -15,6 +15,19 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         [SerializeField] private TileDatabase tileDatabase;
         [SerializeField] private GridInformation gridInformation;
 
+        [Header("Level Rules")]
+        [SerializeField] private int targetMove = 0;
+        [SerializeField] private ScoreRule scoreRule;
+        [SerializeField] private List<TargetModel> targetModels;
+
+        [Space(5)]
+        [Tooltip("This rules are used to define how random block are filled in the level board via their probabilities")]
+        [SerializeField] private List<ColorFillData> boardFillRules;
+        
+        [Space(5)]
+        [Tooltip("This rules are used to define how spawners generate new item in the level board via their probabilities")]
+        [SerializeField] private List<SpawnRule> spawnerRules;
+
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
         [SerializeField] private Tilemap itemTilemap;
