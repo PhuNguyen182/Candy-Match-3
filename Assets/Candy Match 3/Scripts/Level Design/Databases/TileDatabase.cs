@@ -19,6 +19,8 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
         [Space(3)]
         [SerializeField] private UnbreakableTile unbreakableTile;
         [Space(3)]
+        [SerializeField] private List<RuledRandomTile> ruledRandomTiles;
+        [Space(3)]
         [SerializeField] private List<SpawnerTile> spawnerTiles;
         [Space(3)]
         [SerializeField] private List<ColorItemTile> colorItemTiles;
@@ -46,6 +48,11 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
         public UnbreakableTile GetUnbreakableTile()
         {
             return unbreakableTile;
+        }
+
+        public RuledRandomTile GetRuledRandomTile(int id)
+        {
+            return ruledRandomTiles.FirstOrDefault(tile => tile.ItemID == id);
         }
 
         public SpawnerTile GetSpawnerTile(int id)

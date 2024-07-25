@@ -15,6 +15,13 @@ MonoBehaviour:
   boardTile: {fileID: 11400000, guid: cb74c9ec7b42ae24dbd6f977254c2c69, type: 2}
   randomTile: {fileID: 11400000, guid: 0ff5e6bf6c72dbb4f8e1a28f54ce6f8c, type: 2}
   unbreakableTile: {fileID: 11400000, guid: 223f079af68b50b4ba2060db83a6e100, type: 2}
+  ruledRandomTiles:
+  - {fileID: 11400000, guid: 3c83bd66eff6e4b4bbb823c6f2de5f78, type: 2}
+  - {fileID: 11400000, guid: 2d5ede67151da5a4bb0edb3ff3ac5508, type: 2}
+  - {fileID: 11400000, guid: 6e6a02b56a187444580501248bc19c77, type: 2}
+  - {fileID: 11400000, guid: fde72bf38718e894dbcd5909441d5d97, type: 2}
+  - {fileID: 11400000, guid: d6b93d993c1d9f34c929ee4d5fef7b8c, type: 2}
+  - {fileID: 11400000, guid: f3711f4d1f1873b449b220d9b5f7389e, type: 2}
   spawnerTiles:
   - {fileID: 11400000, guid: c19ca72b71aa1624c97ebca86abb813a, type: 2}
   - {fileID: 11400000, guid: a6c902c7a9f1887448c575e74eddcf5d, type: 2}
