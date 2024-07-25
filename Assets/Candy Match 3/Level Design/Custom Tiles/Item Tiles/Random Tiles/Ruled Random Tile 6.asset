@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c76df7903314b494e9037d2362f37609, type: 3}
   m_Name: Ruled Random Tile 6
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: 21300000, guid: b2b59f9cb9a2955468c9de737a2c1a67, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cef31d030387d564ab5f8c4a1f0fdd46, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
@@ -34,8 +34,7 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  itemId: 0
+  itemId: 6
   itemType: 1
   primaryState: 0
   secondaryState: 0
-  candyColor: 0
