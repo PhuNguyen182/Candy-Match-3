@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -308,9 +309,11 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             return this;
         }
 
-        public string Export(string level, bool writeToFile = true)
+        public string Export(int level, bool writeToFile = true)
         {
-            string levelPath = $"Assets/Candy Match 3/Level Data/{level}.txt";
+            string levelName = $"level_{level}";
+            string folder = GetLevelRangeFolderName(level);
+            string levelPath = $"Assets/Candy Match 3/Level Data/{folder}/{levelName}.txt";
             string json = JsonConvert.SerializeObject(_levelModel, Formatting.None);
 
             if (writeToFile)
@@ -321,13 +324,21 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                     writer.Close();
                 }
 
-#if UNITY_EDITOR
                 AssetDatabase.ImportAsset(levelPath);
-#endif
             }
 
             Debug.Log(writeToFile ? json : "Get level data at output placeholder!");
             return json;
         }
+
+        private string GetLevelRangeFolderName(int level)
+        {
+            int mod = level % 100;
+            int div = level / 100;
+            string levelRange = mod != 0 ? $"Level_{div * 100 + 1}_{(div + 1) * 100}" 
+                                         : $"Level_{(div - 1) * 100 + 1}_{div * 100}";
+            return levelRange;
+        }
     }
 }
+#endif

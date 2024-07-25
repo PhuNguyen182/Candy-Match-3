@@ -87,7 +87,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         public void Export(int level, bool writeToFile = true)
         {
             ScanAllTilemaps();
-            string levelName = $"level_{level}";
+            _levelExporter = new();
             _levelExporter.ClearModel()
                           .BuildTargetMove(targetMove)
                           .BuildScoreRule(scoreRule)
@@ -99,7 +99,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                           .BuildSingleItems(itemTilemap)
                           .BuildStateful(statefulTilemap)
                           .BuildSpawner(spawnerTilemap)
-                          .Export(levelName, writeToFile);
+                          .Export(level, writeToFile);
         }
 
         [HorizontalGroup(GroupID = "Level Builder")]
@@ -109,7 +109,9 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             if (readFromFile)
             {
                 string levelData;
-                string levelPath = $"Assets/Candy Match 3/Level Data/level_{level}.txt";
+                string levelName = $"level_{level}";
+                string folder = GetLevelRangeFolderName(level);
+                string levelPath = $"Assets/Candy Match 3/Level Data/{folder}/{levelName}.txt";
 
                 using (StreamReader streamReader = new StreamReader(levelPath))
                 {
@@ -148,6 +150,15 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                               .BuildSpawner(spawnerTilemap, levelModel.SpawnerBlockPositions)
                               .Import();
             }
+        }
+
+        private string GetLevelRangeFolderName(int level)
+        {
+            int mod = level % 100;
+            int div = level / 100;
+            string levelRange = mod != 0 ? $"Level_{div * 100 + 1}_{(div + 1) * 100}"
+                                         : $"Level_{(div - 1) * 100 + 1}_{div * 100}";
+            return levelRange;
         }
     }
 }

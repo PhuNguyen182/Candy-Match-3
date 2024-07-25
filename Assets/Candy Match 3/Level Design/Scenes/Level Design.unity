@@ -1847,7 +1847,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileDatabase: {fileID: 11400000, guid: f6726b3f937ba334f8580c6528205f29, type: 2}
   gridInformation: {fileID: 1640025282}
-  targetMove: 0
+  targetMove: 302
   scoreRule:
     MaxScore: 0
     Star1Score: 0
