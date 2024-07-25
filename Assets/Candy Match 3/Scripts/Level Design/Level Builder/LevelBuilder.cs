@@ -18,15 +18,21 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 
         [Header("Level Rules")]
         [SerializeField] private int targetMove = 0;
+        [Header("Score Model")]
         [SerializeField] private ScoreRule scoreRule;
+        [Header("Targets")]
         [SerializeField] private List<TargetModel> targetModels;
 
-        [Space(5)]
-        [Tooltip("This rules are used to define how random block are filled in the level board via their probabilities")]
+        [Header("Board Fill Rules")]
+        [Tooltip("This rules are used to define how random blocks are filled in the level board via their probabilities")]
         [SerializeField] private List<ColorFillData> boardFillRules;
-        
-        [Space(5)]
-        [Tooltip("This rules are used to define how spawners generate new item in the level board via their probabilities")]
+
+        [Header("Ruled Random Fills")]
+        [Tooltip("This rules are used to define how ruled random colors are filled in the level board via their probabilities")]
+        [SerializeField] private List<ColorFillData> ruledRandomFills;
+
+        [Header("Spawner Rules")]
+        [Tooltip("This rules are used to define how spawners generate new items in the level board via their probabilities")]
         [SerializeField] private List<SpawnRule> spawnerRules;
 
         [Header("Tilemaps")]
@@ -93,6 +99,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                           .BuildScoreRule(scoreRule)
                           .BuildLevelTarget(targetModels)
                           .BuildBoardFill(boardFillRules)
+                          .BuildRuledRandomFill(ruledRandomFills)
                           .BuildSpawnRule(spawnerRules)
                           .BuildBoard(boardTilemap)
                           .BuildColorItems(itemTilemap)
@@ -110,7 +117,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             {
                 string levelData;
                 string levelName = $"level_{level}";
-                string folder = GetLevelRangeFolderName(level);
+                string folder = LevelFolderClassifyer.GetLevelRangeFolderName(level);
                 string levelPath = $"Assets/Candy Match 3/Level Data/{folder}/{levelName}.txt";
 
                 using (StreamReader streamReader = new StreamReader(levelPath))
@@ -137,11 +144,13 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                               .BuildScoreRule(levelModel.ScoreRule, out scoreRule)
                               .BuildSpawnRule(levelModel.SpawnerRules, out spawnerRules)
                               .BuildBoardFill(levelModel.BoardFillRule, out boardFillRules)
+                              .BuildRuledRandomFill(levelModel.RuledRandomFill, out ruledRandomFills)
                               .BuildLevelTarget(levelModel.LevelTargetData, out targetModels)
                               .BuildBoard(boardTilemap, levelModel.BoardBlockPositions)
                               .BuildColorTiles(itemTilemap, levelModel.ColorBlockItemPositions)
                               .BuildColorBoosterTiles(itemTilemap, levelModel.ColorBoosterItemPositions)
                               .BuildRandomTiles(itemTilemap, levelModel.RandomBlockItemPositions)
+                              .BuildRuledRandom(itemTilemap, levelModel.RuledRandomBlockPositions)
                               .BuildBreakable(itemTilemap, levelModel.BreakableItemPositions)
                               .BuildUnbreakable(itemTilemap, levelModel.UnbreakableItemPositions)
                               .BuildBooster(itemTilemap, levelModel.BoosterItemPositions)
@@ -150,15 +159,6 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                               .BuildSpawner(spawnerTilemap, levelModel.SpawnerBlockPositions)
                               .Import();
             }
-        }
-
-        private string GetLevelRangeFolderName(int level)
-        {
-            int mod = level % 100;
-            int div = level / 100;
-            string levelRange = mod != 0 ? $"Level_{div * 100 + 1}_{(div + 1) * 100}"
-                                         : $"Level_{(div - 1) * 100 + 1}_{div * 100}";
-            return levelRange;
         }
     }
 }

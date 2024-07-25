@@ -52,13 +52,52 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             return this;
         }
 
-        public LevelImporter BuildSpawnRule(List<SpawnRule> savedSpawnRules, out List<SpawnRule> spawnRules)
+        public LevelImporter BuildSpawnRule(List<SpawnRuleBlockData> savedSpawnRules, out List<SpawnRule> spawnRules)
         {
-            spawnRules = savedSpawnRules;
+            List<SpawnRule> newSpawnRules = new();
+
+            for (int i = 0; i < savedSpawnRules.Count; i++)
+            {
+                List<Gameplay.Models.ColorFillData> colorFillDatas = new();
+                
+                for (int j = 0; j < savedSpawnRules[i].ColorFillDatas.Count; j++)
+                {
+                    colorFillDatas.Add(new Gameplay.Models.ColorFillData
+                    {
+                        Coefficient = savedSpawnRules[i].ColorFillDatas[j].DataValue.Coefficient,
+                        Color = savedSpawnRules[i].ColorFillDatas[j].DataValue.Color
+                    });
+                }
+
+                newSpawnRules.Add(new SpawnRule
+                {
+                    ID = savedSpawnRules[i].ID,
+                    ColorFillDatas = colorFillDatas
+                });
+            }
+
+            spawnRules = newSpawnRules;
             return this;
         }
 
         public LevelImporter BuildBoardFill(List<ColorFillBlockData> colorFills, out List<Gameplay.Models.ColorFillData> colorFillDatas)
+        {
+            List<Gameplay.Models.ColorFillData> colors = new();
+
+            for (int i = 0; i < colorFills.Count; i++)
+            {
+                colors.Add(new Gameplay.Models.ColorFillData
+                {
+                    Coefficient = colorFills[i].DataValue.Coefficient,
+                    Color = colorFills[i].DataValue.Color,
+                });
+            }
+
+            colorFillDatas = colors;
+            return this;
+        }
+
+        public LevelImporter BuildRuledRandomFill(List<ColorFillBlockData> colorFills, out List<Gameplay.Models.ColorFillData> colorFillDatas)
         {
             List<Gameplay.Models.ColorFillData> colors = new();
 
@@ -108,7 +147,12 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             for (int i = 0; i < blockItemPositions.Count; i++)
             {
                 int id = blockItemPositions[i].ItemData.ID;
-                byte[] boosterState = NumericUtils.IntToBytes(blockItemPositions[i].ItemData.PrimaryState);
+                int primaryState = blockItemPositions[i].ItemData.PrimaryState;
+
+                if (primaryState == 0)
+                    continue;
+
+                byte[] boosterState = NumericUtils.IntToBytes(primaryState);
                 CandyColor candyColor = (CandyColor)boosterState[0];
                 ColorBoosterType colorBoosterType = (ColorBoosterType)boosterState[1];
                 ColorBoosterTile colorBoosterTile = _tileDatabase.GetColorBoosterTile(id, candyColor, colorBoosterType);
@@ -124,6 +168,18 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             {
                 RandomTile colorItemTile = _tileDatabase.GetRandomTile();
                 tilemap.SetTile(blockItemPositions[i].Position, colorItemTile);
+            }
+
+            return this;
+        }
+
+        public LevelImporter BuildRuledRandom(Tilemap tilemap, List<BlockItemPosition> blockItemPositions)
+        {
+            for (int i = 0; i < blockItemPositions.Count; i++)
+            {
+                int id = blockItemPositions[i].ItemData.ID;
+                RuledRandomTile ruledRandomTile = _tileDatabase.GetRuledRandomTile(id);
+                tilemap.SetTile(blockItemPositions[i].Position, ruledRandomTile);
             }
 
             return this;

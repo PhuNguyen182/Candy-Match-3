@@ -12,8 +12,9 @@ namespace CandyMatch3.Scripts.Gameplay.Models
         public int TargetMove = 0;
         public ScoreRule ScoreRule = new();
 
-        public List<SpawnRule> SpawnerRules = new();
+        public List<SpawnRuleBlockData> SpawnerRules = new();
         public List<ColorFillBlockData> BoardFillRule = new();
+        public List<ColorFillBlockData> RuledRandomFill = new();
         public List<LevelTargetData> LevelTargetData = new();
 
         #region Level Board And Items
@@ -22,6 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models
         public List<BlockItemPosition> ColorBoosterItemPositions = new();
         public List<BlockItemPosition> BoosterItemPositions = new();
         public List<BlockItemPosition> RandomBlockItemPositions = new();
+        public List<BlockItemPosition> RuledRandomBlockPositions = new();
         public List<BlockItemPosition> BreakableItemPositions = new();
         public List<BlockItemPosition> UnbreakableItemPositions = new();
         public List<BlockItemPosition> CollectibleItemPositions = new();
@@ -36,6 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models
 
             SpawnerRules.Clear();
             BoardFillRule.Clear();
+            RuledRandomFill.Clear();
             LevelTargetData.Clear();
 
             BoardBlockPositions.Clear();
@@ -43,6 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models
             ColorBoosterItemPositions.Clear();
             BoosterItemPositions.Clear();
             RandomBlockItemPositions.Clear();
+            RuledRandomBlockPositions.Clear();
             BreakableItemPositions.Clear();
             UnbreakableItemPositions.Clear();
             CollectibleItemPositions.Clear();
