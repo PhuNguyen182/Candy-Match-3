@@ -73,10 +73,18 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         }
 
         [Button]
-        private void ClearAllTilemap()
+        private void ClearAllBoard()
         {
+            targetMove = 0;
+            scoreRule.Dispose();
+            targetModels.Clear();
+            boardFillRules.Clear();
+            ruledRandomFills.Clear();
+            spawnerRules.Clear();
+
             boardTilemap.ClearAllTiles();
             itemTilemap.ClearAllTiles();
+            spawnerTilemap.ClearAllTiles();
             statefulTilemap.ClearAllTiles();
         }
 

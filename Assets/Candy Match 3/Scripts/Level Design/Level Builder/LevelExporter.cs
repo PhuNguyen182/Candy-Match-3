@@ -378,6 +378,9 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 
             if (writeToFile)
             {
+                if (!File.Exists($"Assets/Candy Match 3/Level Data/{folder}"))
+                    Directory.CreateDirectory($"Assets/Candy Match 3/Level Data/{folder}");
+
                 using (StreamWriter writer = new(levelPath))
                 {
                     writer.Write(json);

@@ -43,6 +43,7 @@ namespace CandyMatch3.Scripts.Common.CustomConverters
             writer.WriteValue(value.Position.x);
             writer.WriteValue(value.Position.y);
             writer.WriteValue(value.ItemData.ID);
+            writer.WriteValue(value.ItemData.HealthPoint);
             writer.WriteValue((int)value.ItemData.ItemType);
             writer.WriteValue(value.ItemData.PrimaryState);
             writer.WriteValue(value.ItemData.SecondaryState);
