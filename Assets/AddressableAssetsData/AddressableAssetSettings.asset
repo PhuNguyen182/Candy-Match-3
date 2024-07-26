@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 06ed18c18a5d23b49af58777de41366b
   m_currentHash:
     serializedVersion: 2
-    Hash: cf999e339c705600a693cfc4849fe94a
+    Hash: 2737c24310eaa893e0c908fc8a641f03
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -46,6 +46,7 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 265b8f38e7b92ff4abf0f829dd855435, type: 2}
   - {fileID: 11400000, guid: 10e4eab5b39c1734597832cb2dcf3044, type: 2}
+  - {fileID: 11400000, guid: 6055493f85150cb4eb2e1c7d97e12f71, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -70,6 +71,34 @@ MonoBehaviour:
     - m_InheritedParent: 
       m_Id: 98af167be691dac4f8def0cd0041e0fb
       m_ProfileName: Android
+      m_Values:
+      - m_Id: fa902c13f6d74c0439be373c10a7a11d
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 0bfc07bd41e0c764a919e2e96d22ebb9
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: dc0007a168beb3743830b76e91b75e0f
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 9f8c3c157b2e5e54da89f9ba1d3436fe
+        m_Value: ServerData/[BuildTarget]
+      - m_Id: c3912124f71eb694ca2de1436180d235
+        m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+    - m_InheritedParent: 
+      m_Id: f197f3e83615f154eaa696633fabb490
+      m_ProfileName: Windows
+      m_Values:
+      - m_Id: fa902c13f6d74c0439be373c10a7a11d
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: 0bfc07bd41e0c764a919e2e96d22ebb9
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: dc0007a168beb3743830b76e91b75e0f
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 9f8c3c157b2e5e54da89f9ba1d3436fe
+        m_Value: ServerData/[BuildTarget]
+      - m_Id: c3912124f71eb694ca2de1436180d235
+        m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+    - m_InheritedParent: 
+      m_Id: ce282496b89b35848809920476fecf9a
+      m_ProfileName: iOS
       m_Values:
       - m_Id: fa902c13f6d74c0439be373c10a7a11d
         m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
@@ -114,7 +143,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: efd1128fd031adb429ab84614d190213, type: 2}
   - {fileID: 11400000, guid: 88d7a204295068a49a1b202353c38825, type: 2}
   - {fileID: 11400000, guid: 0ddbd72bcb6206b45800353b00de7334, type: 2}
-  m_ActiveProfileId: 98af167be691dac4f8def0cd0041e0fb
+  m_ActiveProfileId: f197f3e83615f154eaa696633fabb490
   m_HostingServicesManager:
     m_HostingServiceInfos: []
     m_Settings: {fileID: 11400000}

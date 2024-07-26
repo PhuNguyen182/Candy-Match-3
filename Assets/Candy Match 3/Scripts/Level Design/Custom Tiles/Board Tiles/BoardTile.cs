@@ -16,10 +16,10 @@ namespace CandyMatch3.Scripts.LevelDesign.CustomTiles.BoardTiles
             base.GetTileData(position, tilemap, ref tileData);
             
             if ((position.x % 2 == 0 && position.y % 2 == 0) || (position.x % 2 != 0 && position.y % 2 != 0))
-                sprite = evenSprite;
+                tileData.sprite = evenSprite;
             
             else if((position.x % 2 == 0 && position.y % 2 != 0) || (position.x % 2 != 0 && position.y % 2 == 0))
-                sprite = oddSprite;
+                tileData.sprite = oddSprite;
         }
     }
 }

@@ -66,7 +66,7 @@ namespace GlobalScripts.Extensions
             }
         }
 
-        public static void ForEach(this BoundsInt boundsInt, Action<Vector3Int> callback)
+        public static void ForEach2D(this BoundsInt boundsInt, Action<Vector3Int> callback)
         {
             for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
             {
@@ -77,7 +77,21 @@ namespace GlobalScripts.Extensions
             }
         }
 
-        public static IEnumerable<Vector3Int> Iterator(this BoundsInt boundsInt)
+        public static void ForEach3D(this BoundsInt boundsInt, Action<Vector3Int> callback)
+        {
+            for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
+            {
+                for (int y = boundsInt.yMin; y <= boundsInt.yMax; y++)
+                {
+                    for (int z = boundsInt.zMin; z <= boundsInt.zMax; z++)
+                    {
+                        callback.Invoke(new Vector3Int(x, y, z));
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<Vector3Int> Iterator2D(this BoundsInt boundsInt)
         {
             for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
             {
@@ -88,7 +102,21 @@ namespace GlobalScripts.Extensions
             }
         }
 
-        public static IEnumerable<Vector3Int> IteratorIgnoreCorner(this BoundsInt boundsInt)
+        public static IEnumerable<Vector3Int> Iterator3D(this BoundsInt boundsInt)
+        {
+            for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
+            {
+                for (int y = boundsInt.yMin; y <= boundsInt.yMax; y++)
+                {
+                    for (int z = boundsInt.zMin; z <= boundsInt.zMax; z++)
+                    {
+                        yield return new Vector3Int(x, y, z);
+                    }
+                }
+            }
+        }
+
+        public static IEnumerable<Vector3Int> IteratorIgnoreCorner2D(this BoundsInt boundsInt)
         {
             for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
             {
