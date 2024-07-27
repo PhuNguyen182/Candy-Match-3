@@ -5,9 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Sirenix.OdinInspector;
+using GlobalScripts.Extensions;
 using CandyMatch3.Scripts.LevelDesign.Databases;
 using CandyMatch3.Scripts.Gameplay.Models;
+using CandyMatch3.Scripts.LevelDesign.CustomTiles;
 using Newtonsoft.Json;
+using CandyMatch3.Scripts.LevelDesign.CustomTiles.TopTiles;
 
 namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 {
@@ -73,6 +76,13 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         }
 
         [Button]
+        private void ScanAllTilemaps()
+        {
+            CompressTilemaps();
+            ValidateLevelBoard();
+        }
+
+        [Button]
         private void ClearAllBoard()
         {
             targetMove = 0;
@@ -88,14 +98,77 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             statefulTilemap.ClearAllTiles();
         }
 
-        [Button]
-        private void ScanAllTilemaps()
+        #region Tilemap Validation
+        private void CompressTilemaps()
         {
             boardTilemap.CompressBounds();
             itemTilemap.CompressBounds();
             statefulTilemap.CompressBounds();
         }
 
+        private void ValidateLevelBoard()
+        {
+            gridInformation.Reset();
+            ValidateBoardTilemap();
+            ValidateItemTilemap();
+            ValidateSpawnerTilemap();
+            ValidateStatefulTilemap();
+        }
+
+        private void ValidateBoardTilemap()
+        {
+            var boardPositions = boardTilemap.cellBounds.Iterator2D();
+            
+            foreach (Vector3Int position in boardPositions)
+            {
+                gridInformation.SetPositionProperty(position, BoardConstants.BoardTileValidate, 1);
+            }
+        }
+
+        private void ValidateItemTilemap()
+        {
+            itemTilemap.cellBounds.ForEach2D(position =>
+            {
+                SingleItemTile itemTile = itemTilemap.GetTile<SingleItemTile>(position);
+                
+                if(itemTile != null)
+                {
+                    if (!itemTile.ValidateTile(position, itemTilemap, gridInformation))
+                        itemTilemap.SetTile(position, null);
+                }
+            });
+        }
+
+        private void ValidateSpawnerTilemap()
+        {
+            spawnerTilemap.cellBounds.ForEach2D(position =>
+            {
+                SpawnerTile spawnerTile = spawnerTilemap.GetTile<SpawnerTile>(position);
+
+                if(spawnerTile != null)
+                {
+                    if (!spawnerTile.ValidateTile(position, spawnerTilemap, gridInformation))
+                        spawnerTilemap.SetTile(position, null);
+                }
+            });
+        }
+
+        private void ValidateStatefulTilemap()
+        {
+            statefulTilemap.cellBounds.ForEach2D(position =>
+            {
+                StatefulTile statefulTile = statefulTilemap.GetTile<StatefulTile>(position);
+
+                if (statefulTile != null)
+                {
+                    if (!statefulTile.ValidateTile(position, statefulTilemap, gridInformation))
+                        statefulTilemap.SetTile(position, null);
+                }
+            });
+        }
+        #endregion
+
+        #region Level Exporter And Importer
         [HorizontalGroup(GroupID = "Level Builder")]
         [Button(Style = ButtonStyle.Box)]
         public void Export(int level, bool writeToFile = true)
@@ -168,6 +241,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                               .Import();
             }
         }
+        #endregion
     }
 }
 #endif
