@@ -6,11 +6,12 @@ namespace CandyMatch3.Scripts.Common.Enums
     public enum LockStates
     {
         None = 0,
-        Moving = 1 << 1,
-        Breaking = 1 << 2,
-        Replacing = 1 << 3,
-        Matching = 1 << 4,
-        Swapping = 1 << 5,
-        Exiting = 1 << 6
+        Idling = 1 << 1,
+        Moving = 1 << 2,
+        Breaking = 1 << 3,
+        Replacing = 1 << 4,
+        Matching = 1 << 5,
+        Swapping = 1 << 6,
+        Exiting = 1 << 7
     }
 }

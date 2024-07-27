@@ -7,7 +7,7 @@ namespace GlobalScripts.Pool
 {
     public class AutoDespawn : MonoBehaviour, IUpdateHandler
     {
-        [SerializeField] private float duration;
+        [SerializeField] private float duration = 1;
 
         private float _timer = 0;
 

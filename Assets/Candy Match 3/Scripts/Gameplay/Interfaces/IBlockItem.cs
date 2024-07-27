@@ -10,6 +10,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
     {
         public int ItemID { get; }
         public bool IsMatchable { get; }
+        public bool CanMove { get; }
         
         public ItemType ItemType { get; }
         public CandyColor CandyColor { get; }
@@ -19,6 +20,9 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 
         public UniTask ItemBlast();
 
+        public void InitMessages();
+        public void SetItemID(int itemId);
+        public void SetMatchable(bool isMatchable);
         public void SetWorldPosition(Vector3 position);
         public void ReleaseItem();
     }

@@ -7,10 +7,10 @@ using UnityEngine.Tilemaps;
 using Sirenix.OdinInspector;
 using GlobalScripts.Extensions;
 using CandyMatch3.Scripts.LevelDesign.Databases;
-using CandyMatch3.Scripts.Gameplay.Models;
-using CandyMatch3.Scripts.LevelDesign.CustomTiles;
-using Newtonsoft.Json;
 using CandyMatch3.Scripts.LevelDesign.CustomTiles.TopTiles;
+using CandyMatch3.Scripts.LevelDesign.CustomTiles;
+using CandyMatch3.Scripts.Gameplay.Models;
+using Newtonsoft.Json;
 
 namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 {
