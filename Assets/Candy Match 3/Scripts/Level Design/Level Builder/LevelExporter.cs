@@ -15,6 +15,7 @@ using GlobalScripts.Extensions;
 using GlobalScripts.Utils;
 using Newtonsoft.Json;
 using UnityEditor;
+using UnityEngine.XR;
 
 namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 {
@@ -180,6 +181,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                         {
                             ID = colorItemTile.ItemID,
                             ItemType = colorItemTile.ItemType,
+                            ItemColor = colorItemTile.CandyColor,
                             HealthPoint = 1,
                         }
                     });
@@ -203,6 +205,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                         {
                             ID = colorBoosterTile.ItemID,
                             ItemType = colorBoosterTile.ItemType,
+                            ItemColor = colorBoosterTile.CandyColor,
                             HealthPoint = 1,
                             PrimaryState = NumericUtils.BytesToInt(boosterState)
                         }
@@ -372,14 +375,16 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         public string Export(int level, bool writeToFile = true)
         {
             string levelName = $"level_{level}";
+            string prefix = "Assets/Candy Match 3/Level Data";
             string folder = LevelFolderClassifyer.GetLevelRangeFolderName(level);
-            string levelPath = $"Assets/Candy Match 3/Level Data/{folder}/{levelName}.txt";
+
+            string levelPath = $"{prefix}/{folder}/{levelName}.txt";
             string json = JsonConvert.SerializeObject(_levelModel, Formatting.None);
 
             if (writeToFile)
             {
-                if (!File.Exists($"Assets/Candy Match 3/Level Data/{folder}"))
-                    Directory.CreateDirectory($"Assets/Candy Match 3/Level Data/{folder}");
+                if (!File.Exists($"{prefix}/{folder}"))
+                    Directory.CreateDirectory($"{prefix}/{folder}");
 
                 using (StreamWriter writer = new(levelPath))
                 {

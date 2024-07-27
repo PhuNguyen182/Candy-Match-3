@@ -198,8 +198,10 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             {
                 string levelData;
                 string levelName = $"level_{level}";
+                string prefix = "Assets/Candy Match 3/Level Data";
+
                 string folder = LevelFolderClassifyer.GetLevelRangeFolderName(level);
-                string levelPath = $"Assets/Candy Match 3/Level Data/{folder}/{levelName}.txt";
+                string levelPath = $"{prefix}/{folder}/{levelName}.txt";
 
                 using (StreamReader streamReader = new StreamReader(levelPath))
                 {
