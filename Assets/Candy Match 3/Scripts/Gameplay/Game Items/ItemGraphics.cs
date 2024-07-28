@@ -9,7 +9,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] private SpriteRenderer itemRenderer;
         [SerializeField] private Animator itemAnimator;
 
-        public void SetSprite(Sprite sprite)
+        public SpriteRenderer ItemRanderer => itemRenderer;
+
+        public void SetItemSprite(Sprite sprite)
         {
             itemRenderer.sprite = sprite;
         }

@@ -16,6 +16,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] protected ItemGraphics itemGraphics;
 
         protected CancellationToken destroyToken;
+        protected MaterialPropertyBlock itemPropertyBlock = new();
 
         public int ItemID => itemId;
 
@@ -63,18 +64,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         protected void InitOriginalMessages() { }
 
-        public abstract void ReleaseItem();
+        public virtual void InitMessages() { }
 
-        public abstract void InitMessages();
+        public virtual void ReleaseItem() { }
 
         public virtual void ResetItem()
         {
             InitMessages();
         }
 
-        public virtual async UniTask ItemBlast()
+        public virtual UniTask ItemBlast()
         {
-            await UniTask.CompletedTask;
+            return UniTask.CompletedTask;
         }
 
         public void SetWorldPosition(Vector3 position)
