@@ -16,7 +16,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] protected ItemGraphics itemGraphics;
 
         protected CancellationToken destroyToken;
-        protected MaterialPropertyBlock itemPropertyBlock = new();
 
         public int ItemID => itemId;
 
