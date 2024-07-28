@@ -12,6 +12,56 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed62fa02fbe43a14da82b857167f9aad, type: 3}
   m_Name: Item Database
   m_EditorClassIdentifier: 
+  ColorModels:
+  - CandyColor: 1
+    ColorBoosterType: 1
+  - CandyColor: 2
+    ColorBoosterType: 1
+  - CandyColor: 3
+    ColorBoosterType: 1
+  - CandyColor: 4
+    ColorBoosterType: 1
+  - CandyColor: 5
+    ColorBoosterType: 1
+  - CandyColor: 6
+    ColorBoosterType: 1
+  ColorBoosterModels:
+  - CandyColor: 1
+    ColorBoosterType: 2
+  - CandyColor: 1
+    ColorBoosterType: 3
+  - CandyColor: 1
+    ColorBoosterType: 4
+  - CandyColor: 2
+    ColorBoosterType: 2
+  - CandyColor: 2
+    ColorBoosterType: 3
+  - CandyColor: 2
+    ColorBoosterType: 4
+  - CandyColor: 3
+    ColorBoosterType: 2
+  - CandyColor: 3
+    ColorBoosterType: 3
+  - CandyColor: 3
+    ColorBoosterType: 4
+  - CandyColor: 4
+    ColorBoosterType: 2
+  - CandyColor: 4
+    ColorBoosterType: 3
+  - CandyColor: 4
+    ColorBoosterType: 4
+  - CandyColor: 5
+    ColorBoosterType: 2
+  - CandyColor: 5
+    ColorBoosterType: 3
+  - CandyColor: 5
+    ColorBoosterType: 4
+  - CandyColor: 6
+    ColorBoosterType: 2
+  - CandyColor: 6
+    ColorBoosterType: 3
+  - CandyColor: 6
+    ColorBoosterType: 4
   ColoredItem: {fileID: 6507351951568524209, guid: e1da0ee252951344f92b13dc002b4b98, type: 3}
   ColoredBooster: {fileID: 7063991163602557052, guid: 47e0e9f62a0e60e4c8bbbb01d3293721, type: 3}
   Boosters:

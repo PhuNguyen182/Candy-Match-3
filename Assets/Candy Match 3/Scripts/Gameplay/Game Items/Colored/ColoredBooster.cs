@@ -22,6 +22,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override bool CanMove => true;
 
+        public ColorBoosterType ColorBoosterType => colorBoosterType;
+
         public override void ResetItem()
         {
             base.ResetItem();

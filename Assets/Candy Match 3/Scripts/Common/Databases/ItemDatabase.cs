@@ -5,6 +5,7 @@ using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GameItems;
 using CandyMatch3.Scripts.Gameplay.GameItems.Colored;
 using CandyMatch3.Scripts.Gameplay.GameItems.Boosters;
+using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Common.Databases
@@ -12,6 +13,11 @@ namespace CandyMatch3.Scripts.Common.Databases
     [CreateAssetMenu(fileName = "Item Database", menuName = "Scriptable Objects/Databases/Item Database")]
     public class ItemDatabase : ScriptableObject
     {
+        [Header("Color Models")]
+        [SerializeField] public List<ItemColorModel> ColorModels;
+        [SerializeField] public List<ItemColorModel> ColorBoosterModels;
+
+        [Header("Items")]
         [SerializeField] public ColoredItem ColoredItem;
         [SerializeField] public ColoredBooster ColoredBooster;
         [SerializeField] public List<BaseBoosterItem> Boosters;
