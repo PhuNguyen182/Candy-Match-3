@@ -12,6 +12,9 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         private IGridStateful _gridStateful;
         private IGridCellView _gridCellView;
 
+        public bool IsSpawner { get; set; }
+        public bool IsExitable { get; set; }
+
         public ItemType ItemType => _blockItem.ItemType;
 
         public CandyColor CandyColor => _blockItem.CandyColor;
@@ -20,7 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
         public Vector3Int GridPosition { get; set; }
 
-        public Vector3 WorldPosition => _blockItem.WorldPosition;
+        public Vector3 WorldPosition { get; set; }
 
         public IGridStateful GridStateful => _gridStateful;
 

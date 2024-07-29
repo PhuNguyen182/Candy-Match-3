@@ -7,11 +7,14 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 {
     public interface IGridCell
     {
+        public bool IsSpawner { get; set; }
+        public bool IsExitable { get; set; }
+
         public ItemType ItemType { get; }
         public LockStates LockStates { get; set; }
         public CandyColor CandyColor { get; }
 
-        public Vector3 WorldPosition { get; }
+        public Vector3 WorldPosition { get; set; }
         public Vector3Int GridPosition { get; set; }
         public IGridStateful GridStateful { get; }
         public IGridCellView GridCellView { get; }
