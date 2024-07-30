@@ -10,6 +10,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 {
     public class ItemAnimation : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer itemRenderer;
+
         [Header("Movement")]
         [SerializeField] private float moveDuration = 0.3f;
         [SerializeField] private Ease moveEase = Ease.OutQuad;
@@ -18,6 +20,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] private float fadeDuration = 0.3f;
         [SerializeField] private Ease fadeEase = Ease.InOutSine;
 
+        private int _originalSortingOrder;
+
         private Tweener _moveTween;
         private Tweener _swapTween;
 
@@ -25,6 +29,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private void Awake()
         {
+            _originalSortingOrder = itemRenderer.sortingOrder;
             _destroyToken = this.GetCancellationTokenOnDestroy();
         }
 
@@ -41,6 +46,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private Tweener CreateMoveTween(Vector3 toPosition, float duration, Ease ease)
         {
             return transform.DOMove(toPosition, duration).SetEase(ease).SetAutoKill(false);
+        }
+
+        private void SwapItemLayer(bool isPrioritized)
+        {
+            itemRenderer.sortingOrder = isPrioritized ? _originalSortingOrder + 1 : _originalSortingOrder;
         }
 
         private void OnDestroy()
