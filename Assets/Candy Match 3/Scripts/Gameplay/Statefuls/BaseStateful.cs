@@ -12,6 +12,10 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public abstract StatefulGroupType GroupType { get; }
 
+        public abstract bool IsLocked { get; }
+
+        public abstract bool CanContainItem { get; }
+
         public abstract void SetHealthPoint(int healthPoint);
 
         public abstract bool Break();

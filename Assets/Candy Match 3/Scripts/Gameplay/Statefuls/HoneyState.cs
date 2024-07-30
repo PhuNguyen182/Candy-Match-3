@@ -9,10 +9,15 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
     {
         private int _healthPoint;
         private int _maxHealthPoint;
+        private bool _canContainItem;
 
         public override int MaxHealthPoint => _maxHealthPoint;
 
         public override StatefulGroupType GroupType => StatefulGroupType.Honey;
+
+        public override bool IsLocked => false;
+
+        public override bool CanContainItem => _canContainItem;
 
         public override bool Break()
         {
@@ -21,6 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
             if(_healthPoint > 0)
             {
                 // Do logic thing here
+                Release();
                 return false;
             }
 
@@ -31,11 +37,13 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
         {
             _maxHealthPoint = healthPoint;
             _healthPoint = healthPoint;
+            _canContainItem = false;
         }
 
         public override void Release()
         {
             // When clear state, emit a message to score the target
+            _canContainItem = true;
         }
     }
 }

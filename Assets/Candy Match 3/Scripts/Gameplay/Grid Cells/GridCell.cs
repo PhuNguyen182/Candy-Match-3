@@ -12,7 +12,13 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         private IGridStateful _gridStateful;
         private IGridCellView _gridCellView;
 
+        public bool HasItem => _blockItem != null;
+        public bool IsMoveable => LockStates == LockStates.None;
+        public bool CanSetItem => _gridStateful.CanContainItem && !_gridStateful.IsLocked;
+        public bool CanContainItem => _gridStateful.CanContainItem;
+
         public bool IsSpawner { get; set; }
+        public bool CanPassThrough { get; set; }
         public bool IsExitable { get; set; }
 
         public ItemType ItemType => _blockItem.ItemType;

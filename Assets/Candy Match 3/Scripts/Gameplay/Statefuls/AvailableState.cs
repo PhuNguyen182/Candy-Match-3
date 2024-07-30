@@ -1,7 +1,7 @@
-using CandyMatch3.Scripts.Common.Enums;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Statefuls
 {
@@ -10,6 +10,10 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
         public override int MaxHealthPoint { get; }
 
         public override StatefulGroupType GroupType => StatefulGroupType.Available;
+
+        public override bool IsLocked => false;
+
+        public override bool CanContainItem => true;
 
         public override bool Break()
         {

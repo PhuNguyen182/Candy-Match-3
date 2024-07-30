@@ -7,7 +7,13 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 {
     public interface IGridCell
     {
+        public bool HasItem { get; }
+        public bool IsMoveable { get; }
+        public bool CanSetItem { get; }
+        public bool CanContainItem { get; }
+        
         public bool IsSpawner { get; set; }
+        public bool CanPassThrough { get; set; }
         public bool IsExitable { get; set; }
 
         public ItemType ItemType { get; }
