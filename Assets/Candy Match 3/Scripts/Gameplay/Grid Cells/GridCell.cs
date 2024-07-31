@@ -59,6 +59,12 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public void SetGridCellView(IGridCellView gridView)
         {
             _gridCellView = gridView;
+            _gridCellView.SetGridPosition(GridPosition);
+        }
+
+        public void SetGridCellViewPosition()
+        {
+            _gridCellView.SetWorldPosition(WorldPosition);
         }
 
         public void SetGridStateful(IGridStateful stateful)

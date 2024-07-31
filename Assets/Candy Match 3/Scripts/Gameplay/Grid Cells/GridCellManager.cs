@@ -23,10 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
         public IGridCell Get(Vector3Int position)
         {
-            if (_kpv.TryGetValue(position, out IGridCell gridCell))
-                return gridCell;
-
-            return null;
+            return _kpv.TryGetValue(position, out IGridCell gridCell) ? gridCell : null;
         }
 
         public IGridCell Add(IGridCell gridCell)
@@ -36,7 +33,11 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             else
                 _kpv[gridCell.GridPosition] = gridCell;
 
-            _kpv[gridCell.GridPosition].WorldPosition = ConvertGridToWorldFunction.Invoke(gridCell.GridPosition);
+            Vector3 worldPosition = ConvertGridToWorldFunction.Invoke(gridCell.GridPosition);
+            
+            _kpv[gridCell.GridPosition].WorldPosition = worldPosition;
+            _kpv[gridCell.GridPosition].SetGridCellViewPosition();
+            
             return _kpv[gridCell.GridPosition];
         }
 

@@ -52,7 +52,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             {
                 ColorBoosterType.Horizontal => horizontalSprites,
                 ColorBoosterType.Vertical => verticalSprites,
-                ColorBoosterType.Wrapped => verticalSprites,
+                ColorBoosterType.Wrapped => wrappedSprites,
                 _ => null
             };
 

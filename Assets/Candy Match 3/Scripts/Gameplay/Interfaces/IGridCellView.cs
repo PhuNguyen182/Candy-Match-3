@@ -10,5 +10,6 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 
         public void PlayGlowGroundCell();
         public void SetGridPosition(Vector3Int position);
+        public void SetWorldPosition(Vector3 position);
     }
 }

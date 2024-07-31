@@ -29,11 +29,17 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public void SetGridPosition(Vector3Int position)
         {
             gridPosition = position;
+            gameObject.name = $"Grid Cell: ({gridPosition.x}, {gridPosition.y})";
         }
 
         public void PlayGlowGroundCell()
         {
 
+        }
+
+        public void SetWorldPosition(Vector3 position)
+        {
+            transform.position = position;
         }
 
 #if UNITY_EDITOR

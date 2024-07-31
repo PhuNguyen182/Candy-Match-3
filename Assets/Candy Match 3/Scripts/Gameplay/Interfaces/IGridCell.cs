@@ -26,6 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public IGridCellView GridCellView { get; }
         public IBlockItem BlockItem { get; }
 
+        public void SetGridCellViewPosition();
         public void SetBlockItem(IBlockItem blockItem);
         public void SetGridStateful(IGridStateful stateful);
         public void SetGridCellView(IGridCellView gridView);

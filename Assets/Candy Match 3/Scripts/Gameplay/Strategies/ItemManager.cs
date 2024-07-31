@@ -21,16 +21,18 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             _itemFactory = itemFactory;
         }
 
-        public IBlockItem Create(BlockItemData itemData)
+        public IBlockItem Create(BlockItemPosition itemData)
         {
-            IBlockItem item = _itemFactory.Produce(itemData);
+            IBlockItem item = _itemFactory.Produce(itemData.ItemData);
             return item;
         }
 
-        public IBlockItem Add(BlockItemData itemData)
+        public IBlockItem Add(BlockItemPosition itemData)
         {
             IBlockItem item = Create(itemData);
-            return _metaItemManager.Add(item);
+            IGridCell gridCell = _gridCellManager.Get(itemData.Position);
+            gridCell.SetBlockItem(item);
+            return _metaItemManager.Add(itemData.Position, item);
         }
 
         public void Remove(IBlockItem item)

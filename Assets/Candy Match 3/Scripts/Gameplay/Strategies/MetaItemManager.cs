@@ -15,13 +15,13 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             return _metaItem.TryGetValue(position, out IBlockItem item) ? item : null;
         }
 
-        public IBlockItem Add(IBlockItem blockItem)
+        public IBlockItem Add(Vector3Int position, IBlockItem blockItem)
         {
-            if (!_metaItem.ContainsKey(blockItem.GridPosition))
-                _metaItem.Add(blockItem.GridPosition, blockItem);
+            if (!_metaItem.ContainsKey(position))
+                _metaItem.Add(position, blockItem);
             
             else
-                _metaItem[blockItem.GridPosition] = blockItem;
+                _metaItem[position] = blockItem;
             
             return blockItem;
         }

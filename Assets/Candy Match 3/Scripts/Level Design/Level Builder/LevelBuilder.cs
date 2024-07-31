@@ -44,6 +44,9 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         [SerializeField] private Tilemap spawnerTilemap;
         [SerializeField] private Tilemap statefulTilemap;
 
+        [HideInInspector]
+        public string LevelData;
+
         private LevelExporter _levelExporter;
         private LevelImporter _levelImporter;
 
@@ -175,19 +178,19 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         {
             ScanAllTilemaps();
             _levelExporter = new();
-            _levelExporter.ClearModel()
-                          .BuildTargetMove(targetMove)
-                          .BuildScoreRule(scoreRule)
-                          .BuildLevelTarget(targetModels)
-                          .BuildBoardFill(boardFillRules)
-                          .BuildRuledRandomFill(ruledRandomFills)
-                          .BuildSpawnRule(spawnerRules)
-                          .BuildBoard(boardTilemap)
-                          .BuildColorItems(itemTilemap)
-                          .BuildSingleItems(itemTilemap)
-                          .BuildStateful(statefulTilemap)
-                          .BuildSpawner(spawnerTilemap)
-                          .Export(level, writeToFile);
+            LevelData = _levelExporter.ClearModel()
+                                      .BuildTargetMove(targetMove)
+                                      .BuildScoreRule(scoreRule)
+                                      .BuildLevelTarget(targetModels)
+                                      .BuildBoardFill(boardFillRules)
+                                      .BuildRuledRandomFill(ruledRandomFills)
+                                      .BuildSpawnRule(spawnerRules)
+                                      .BuildBoard(boardTilemap)
+                                      .BuildColorItems(itemTilemap)
+                                      .BuildSingleItems(itemTilemap)
+                                      .BuildStateful(statefulTilemap)
+                                      .BuildSpawner(spawnerTilemap)
+                                      .Export(level, writeToFile);
         }
 
         [HorizontalGroup(GroupID = "Level Builder")]

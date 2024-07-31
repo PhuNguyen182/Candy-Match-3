@@ -52,7 +52,7 @@ namespace CandyMatch3.Scripts.Common.Factories
         {
             for (int i = 0; i < _itemDatabase.ColorModels.Count; i++)
             {
-                if(blockItemData.ItemColor == _itemDatabase.ColorModels[i].CandyColor)
+                if(blockItemData.ItemColor == _itemDatabase.ColorModels[i].CandyColor && blockItemData.PrimaryState == 0)
                 {
                     ColoredItem coloredItem = SimplePool.Spawn(_itemDatabase.ColoredItem
                                                                , _itemContainer
@@ -70,12 +70,12 @@ namespace CandyMatch3.Scripts.Common.Factories
 
         private BaseItem ProduceColorBoosterItem(BlockItemData blockItemData)
         {
+            byte[] boosterProperties = NumericUtils.IntToBytes(blockItemData.PrimaryState);
+            ColorBoosterType colorBoosterType = (ColorBoosterType)boosterProperties[1];
+
             for (int i = 0; i < _itemDatabase.ColorBoosterModels.Count; i++)
             {
-                byte[] boosterProperties = NumericUtils.IntToBytes(blockItemData.PrimaryState);
-
                 CandyColor candyColor = _itemDatabase.ColorBoosterModels[i].CandyColor;
-                ColorBoosterType colorBoosterType = (ColorBoosterType)boosterProperties[1];
 
                 if (blockItemData.ItemColor == candyColor && colorBoosterType == _itemDatabase.ColorBoosterModels[i].ColorBoosterType)
                 {
@@ -85,6 +85,7 @@ namespace CandyMatch3.Scripts.Common.Factories
                                                                      , Quaternion.identity);
                     coloredBooster.SetItemID(blockItemData.ID);
                     coloredBooster.SetColor(blockItemData.ItemColor);
+                    coloredBooster.SetBoosterColor(colorBoosterType);
                     coloredBooster.ResetItem();
                     return coloredBooster;
                 }
