@@ -6,7 +6,19 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Candy Match 3/Scenes/Boost.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Candy Match 3/Scenes/Loading.unity
+    guid: b56f9df99765bf04d8e6a2c59a4e1552
+  - enabled: 1
+    path: Assets/Candy Match 3/Scenes/Mainhome.unity
+    guid: a50f4845d5926e743a9dad48b72962fc
+  - enabled: 1
+    path: Assets/Candy Match 3/Scenes/Transition.unity
+    guid: fddfcadf5cf22ec41ac5ce08e37aaf47
+  - enabled: 1
+    path: Assets/Candy Match 3/Scenes/Gameplay.unity
+    guid: b15d77395a241f948a4772981e99169a
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 8d5916c34d1dc7147aaee31a8981aeda, type: 2}
