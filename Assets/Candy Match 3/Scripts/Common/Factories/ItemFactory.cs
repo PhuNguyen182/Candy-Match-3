@@ -76,8 +76,9 @@ namespace CandyMatch3.Scripts.Common.Factories
             for (int i = 0; i < _itemDatabase.ColorBoosterModels.Count; i++)
             {
                 CandyColor candyColor = _itemDatabase.ColorBoosterModels[i].CandyColor;
+                ColorBoosterType colorBooster = _itemDatabase.ColorBoosterModels[i].ColorBoosterType;
 
-                if (blockItemData.ItemColor == candyColor && colorBoosterType == _itemDatabase.ColorBoosterModels[i].ColorBoosterType)
+                if (blockItemData.ItemColor == candyColor && colorBoosterType == colorBooster)
                 {
                     ColoredBooster coloredBooster = SimplePool.Spawn(_itemDatabase.ColoredBooster
                                                                      , _itemContainer
