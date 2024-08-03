@@ -19,6 +19,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public int ItemID => itemId;
 
+        public abstract bool CanBeReplace { get; }
+
         public abstract bool IsMatchable { get; }
 
         public abstract bool CanMove { get; }
@@ -75,6 +77,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public virtual UniTask ItemBlast()
         {
             return UniTask.CompletedTask;
+        }
+
+        public void SetItemType(ItemType itemType)
+        {
+            this.itemType = itemType;
         }
 
         public void SetWorldPosition(Vector3 position)

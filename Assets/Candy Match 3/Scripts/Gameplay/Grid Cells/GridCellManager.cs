@@ -30,12 +30,13 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         {
             if (!_kpv.ContainsKey(gridCell.GridPosition))
                 _kpv.Add(gridCell.GridPosition, gridCell);
+
             else
                 _kpv[gridCell.GridPosition] = gridCell;
 
             Vector3 worldPosition = ConvertGridToWorldFunction.Invoke(gridCell.GridPosition);
             
-            _kpv[gridCell.GridPosition].WorldPosition = worldPosition;
+            _kpv[gridCell.GridPosition].SetWorldPosition(worldPosition);
             _kpv[gridCell.GridPosition].SetGridCellViewPosition();
             
             return _kpv[gridCell.GridPosition];

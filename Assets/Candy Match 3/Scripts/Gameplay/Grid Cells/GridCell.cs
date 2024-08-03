@@ -8,6 +8,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 {
     public class GridCell : IGridCell
     {
+        private Vector3 _worldPosition;
         private IBlockItem _blockItem;
         private IGridStateful _gridStateful;
         private IGridCellView _gridCellView;
@@ -27,9 +28,9 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
         public LockStates LockStates { get; set; }
 
-        public Vector3Int GridPosition { get; set; }
+        public Vector3 WorldPosition => _worldPosition;
 
-        public Vector3 WorldPosition { get; set; }
+        public Vector3Int GridPosition { get; set; }
 
         public IGridStateful GridStateful => _gridStateful;
 
@@ -70,6 +71,11 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public void SetGridStateful(IGridStateful stateful)
         {
             _gridStateful = stateful;
+        }
+
+        public void SetWorldPosition(Vector3 position)
+        {
+            _worldPosition = position;
         }
     }
 }

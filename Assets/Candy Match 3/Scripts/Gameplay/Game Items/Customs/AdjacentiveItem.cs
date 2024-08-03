@@ -8,6 +8,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
     public class AdjacentiveItem : BaseItem, IAdjcentBreakable
     {
+        public override bool CanBeReplace => false;
+
         public override bool IsMatchable => false;
 
         public override bool CanMove => false;

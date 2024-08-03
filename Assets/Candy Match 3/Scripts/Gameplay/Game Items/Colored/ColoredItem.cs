@@ -12,6 +12,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [Header("Colored Sprites")]
         [SerializeField] private Sprite[] candyColors;
 
+        public override bool CanBeReplace => true;
+
         public override bool IsMatchable => true;
 
         public override bool CanMove => true;

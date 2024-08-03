@@ -8,6 +8,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 {
     public abstract class BaseBoosterItem : BaseItem, IBooster
     {
+        public override bool CanBeReplace => false;
+
         public override bool IsMatchable => false;
 
         public override bool CanMove => true;

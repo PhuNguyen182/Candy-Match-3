@@ -59,6 +59,7 @@ namespace CandyMatch3.Scripts.Common.Factories
                                                                , Vector3.zero
                                                                , Quaternion.identity);
                     coloredItem.SetItemID(blockItemData.ID);
+                    coloredItem.SetItemType(blockItemData.ItemType);
                     coloredItem.SetColor(blockItemData.ItemColor);
                     coloredItem.ResetItem();
                     return coloredItem;
@@ -85,6 +86,7 @@ namespace CandyMatch3.Scripts.Common.Factories
                                                                      , Vector3.zero
                                                                      , Quaternion.identity);
                     coloredBooster.SetItemID(blockItemData.ID);
+                    coloredBooster.SetItemType(blockItemData.ItemType);
                     coloredBooster.SetColor(blockItemData.ItemColor);
                     coloredBooster.SetBoosterColor(colorBoosterType);
                     coloredBooster.ResetItem();

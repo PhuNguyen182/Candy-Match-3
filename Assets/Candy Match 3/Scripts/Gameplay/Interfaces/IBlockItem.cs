@@ -11,6 +11,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public int ItemID { get; }
         public bool IsMatchable { get; }
         public bool CanMove { get; }
+        public bool CanBeReplace { get; }
         
         public ItemType ItemType { get; }
         public CandyColor CandyColor { get; }
@@ -22,6 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 
         public void InitMessages();
         public void SetItemID(int itemId);
+        public void SetItemType(ItemType itemType);
         public void SetMatchable(bool isMatchable);
         public void SetWorldPosition(Vector3 position);
         public void ReleaseItem();

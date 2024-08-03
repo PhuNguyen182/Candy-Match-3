@@ -15,6 +15,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public override bool CanMove => true;
 
+        public override bool CanBeReplace => false;
+
         public int MaxHealthPoint => _maxHealthPoint;
 
         public override void ResetItem()

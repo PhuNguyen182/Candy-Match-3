@@ -12,6 +12,7 @@ using CandyMatch3.Scripts.Gameplay.GameTasks;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Common.SingleConfigs;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.Statefuls;
 
 namespace CandyMatch3.Scripts.Gameplay.Controllers
 {
@@ -73,6 +74,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 
                 gridCell = new();
                 gridCell.GridPosition = gridPosition;
+
+                IGridStateful gridStateful = new AvailableState();
+                gridCell.SetGridStateful(gridStateful);
                 gridCell.SetGridCellView(gridCellView);
                 _gridCellManager.Add(gridCell);
             }

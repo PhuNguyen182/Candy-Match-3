@@ -7,6 +7,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
     public class CollectibleItem : BaseItem
     {
+        public override bool CanBeReplace => false;
+
         public override bool IsMatchable => false;
 
         public override bool CanMove => true;

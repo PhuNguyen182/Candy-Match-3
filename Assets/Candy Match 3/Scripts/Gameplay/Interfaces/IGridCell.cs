@@ -20,7 +20,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public LockStates LockStates { get; set; }
         public CandyColor CandyColor { get; }
 
-        public Vector3 WorldPosition { get; set; }
+        public Vector3 WorldPosition { get; }
         public Vector3Int GridPosition { get; set; }
         public IGridStateful GridStateful { get; }
         public IGridCellView GridCellView { get; }
@@ -28,6 +28,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 
         public void SetGridCellViewPosition();
         public void SetBlockItem(IBlockItem blockItem);
+        public void SetWorldPosition(Vector3 position);
         public void SetGridStateful(IGridStateful stateful);
         public void SetGridCellView(IGridCellView gridView);
         public void ReleaseGrid();
