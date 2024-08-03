@@ -58,21 +58,21 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 
             for (int i = 0; i < savedSpawnRules.Count; i++)
             {
-                List<Gameplay.Models.ColorFillData> colorFillDatas = new();
+                List<SpawnerData> colorFillDatas = new();
                 
-                for (int j = 0; j < savedSpawnRules[i].ColorFillDatas.Count; j++)
+                for (int j = 0; j < savedSpawnRules[i].ItemSpawnerData.Count; j++)
                 {
-                    colorFillDatas.Add(new Gameplay.Models.ColorFillData
+                    colorFillDatas.Add(new SpawnerData
                     {
-                        Coefficient = savedSpawnRules[i].ColorFillDatas[j].DataValue.Coefficient,
-                        Color = savedSpawnRules[i].ColorFillDatas[j].DataValue.Color
+                        Coefficient = savedSpawnRules[i].ItemSpawnerData[j].DataValue.Coefficient,
+                        ItemType = savedSpawnRules[i].ItemSpawnerData[j].DataValue.ItemTypel
                     });
                 }
 
                 newSpawnRules.Add(new SpawnRule
                 {
                     ID = savedSpawnRules[i].ID,
-                    ColorFillDatas = colorFillDatas
+                    SpawnerData = colorFillDatas
                 });
             }
 
