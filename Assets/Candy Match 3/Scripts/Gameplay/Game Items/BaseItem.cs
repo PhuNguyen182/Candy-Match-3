@@ -23,7 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public abstract bool IsMatchable { get; }
 
-        public abstract bool CanMove { get; }
+        public abstract bool IsMoveable { get; }
 
         public ItemType ItemType => itemType;
 

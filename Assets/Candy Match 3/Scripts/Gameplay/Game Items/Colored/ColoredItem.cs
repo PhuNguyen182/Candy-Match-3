@@ -7,8 +7,10 @@ using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredItem : BaseItem, ISetColor
+    public class ColoredItem : BaseItem, ISetColor, IItemAnimation
     {
+        [SerializeField] private ItemAnimation itemAnimation;
+
         [Header("Colored Sprites")]
         [SerializeField] private Sprite[] candyColors;
 
@@ -16,7 +18,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override bool IsMatchable => true;
 
-        public override bool CanMove => true;
+        public override bool IsMoveable => true;
 
         public override void ResetItem()
         {
@@ -53,6 +55,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             };
 
             itemGraphics.SetItemSprite(colorSprite);
+        }
+
+        public UniTask BounceOnTap()
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public UniTask BounceInDirection(Vector3 direction)
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public UniTask MoveTo(Vector3 position)
+        {
+            return itemAnimation.MoveTo(position);
+        }
+
+        public UniTask JumpDown(float amplitude)
+        {
+            return UniTask.CompletedTask;
         }
     }
 }

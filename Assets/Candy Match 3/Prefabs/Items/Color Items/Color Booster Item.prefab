@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7063991163602557052}
   - component: {fileID: 8241515987592640655}
   - component: {fileID: 3690093505019425503}
+  - component: {fileID: 1493207833021039645}
   m_Layer: 0
   m_Name: Color Booster Item
   m_TagString: Untagged
@@ -54,6 +55,7 @@ MonoBehaviour:
   candyColor: 0
   itemGraphics: {fileID: 8241515987592640655}
   colorBoosterType: 0
+  itemAnimation: {fileID: 1493207833021039645}
   wrappedSprites:
   - {fileID: 21300000, guid: 8f810f7319d6b0143b436535d013e36f, type: 3}
   - {fileID: 21300000, guid: 0055b1848a41d4f6596e8aaf62fda7a8, type: 3}
@@ -112,6 +114,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1493207833021039645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297088511453682728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9558d9deeff5a4492fbf48ac285830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemRenderer: {fileID: 8555525281269574999}
+  moveDuration: 0.3
+  moveEase: 6
+  fadeDuration: 0.3
+  fadeEase: 4
 --- !u!1 &2643673101626527850
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +213,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &5004555710778462025
 GameObject:

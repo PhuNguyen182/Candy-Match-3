@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: 4790585721594293809}
   - component: {fileID: 8001319631256867966}
   - component: {fileID: 5560585968869825224}
+  - component: {fileID: 8135801071543168540}
   m_Layer: 0
   m_Name: Bomb Booster
   m_TagString: Untagged
@@ -169,6 +170,7 @@ MonoBehaviour:
   itemType: 34
   candyColor: 0
   itemGraphics: {fileID: 8001319631256867966}
+  itemAnimation: {fileID: 8135801071543168540}
 --- !u!114 &8001319631256867966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +208,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8135801071543168540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713319220276862342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9558d9deeff5a4492fbf48ac285830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemRenderer: {fileID: 4667085470101029547}
+  moveDuration: 0.3
+  moveEase: 6
+  fadeDuration: 0.3
+  fadeEase: 4
 --- !u!1 &6883864861691450518
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,5 +391,5 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0

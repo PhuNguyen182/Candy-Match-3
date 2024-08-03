@@ -11,7 +11,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override bool IsMatchable => false;
 
-        public override bool CanMove => false;
+        public override bool IsMoveable => false;
 
         public override void InitMessages()
         {

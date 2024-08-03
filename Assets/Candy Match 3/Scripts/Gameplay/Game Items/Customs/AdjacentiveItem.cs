@@ -12,7 +12,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public override bool IsMatchable => false;
 
-        public override bool CanMove => false;
+        public override bool IsMoveable => false;
 
         public bool Break()
         {

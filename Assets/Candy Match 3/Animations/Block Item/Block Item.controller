@@ -207,7 +207,7 @@ BlendTree:
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
-  m_BlendParameter: Amtitude
+  m_BlendParameter: Amptitude
   m_BlendParameterY: Blend
   m_MinThreshold: 0
   m_MaxThreshold: 1
@@ -335,7 +335,7 @@ AnimatorController:
   m_Name: Block Item
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: Amtitude
+  - m_Name: Amptitude
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0

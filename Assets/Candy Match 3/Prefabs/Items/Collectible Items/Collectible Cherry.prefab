@@ -82,7 +82,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1637562412150069543
 GameObject:
@@ -96,6 +96,7 @@ GameObject:
   - component: {fileID: 6097607378805445519}
   - component: {fileID: 2456649845628900080}
   - component: {fileID: 7378486016232513816}
+  - component: {fileID: 4015053891642020334}
   m_Layer: 0
   m_Name: Collectible Cherry
   m_TagString: Untagged
@@ -137,6 +138,7 @@ MonoBehaviour:
   itemType: 27
   candyColor: 0
   itemGraphics: {fileID: 2456649845628900080}
+  itemAnimation: {fileID: 4015053891642020334}
 --- !u!114 &2456649845628900080
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,6 +176,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4015053891642020334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637562412150069543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9558d9deeff5a4492fbf48ac285830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemRenderer: {fileID: 2779670235256699062}
+  moveDuration: 0.3
+  moveEase: 6
+  fadeDuration: 0.3
+  fadeEase: 4
 --- !u!1 &3924759962866103046
 GameObject:
   m_ObjectHideFlags: 0

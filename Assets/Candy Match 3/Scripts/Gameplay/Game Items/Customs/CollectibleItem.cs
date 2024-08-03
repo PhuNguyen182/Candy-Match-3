@@ -1,17 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
-    public class CollectibleItem : BaseItem
+    public class CollectibleItem : BaseItem, IItemAnimation
     {
+        [SerializeField] private ItemAnimation itemAnimation;
+
         public override bool CanBeReplace => false;
 
         public override bool IsMatchable => false;
 
-        public override bool CanMove => true;
+        public override bool IsMoveable => true;
+
+        public UniTask BounceInDirection(Vector3 direction)
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public UniTask BounceOnTap()
+        {
+            return UniTask.CompletedTask;
+        }
 
         public override void InitMessages()
         {
@@ -19,6 +32,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
         }
 
         public override UniTask ItemBlast()
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public UniTask JumpDown(float amplitude)
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public UniTask MoveTo(Vector3 position)
         {
             return UniTask.CompletedTask;
         }

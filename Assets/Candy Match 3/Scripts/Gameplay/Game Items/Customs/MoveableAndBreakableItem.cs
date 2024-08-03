@@ -6,14 +6,16 @@ using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
-    public class MoveableAndBreakableItem : BaseItem, ISetHealthPoint, IAdjcentBreakable
+    public class MoveableAndBreakableItem : BaseItem, ISetHealthPoint, IAdjcentBreakable, IItemAnimation
     {
+        [SerializeField] private ItemAnimation itemAnimation;
+
         private int _healthPoint;
         private int _maxHealthPoint;
 
         public override bool IsMatchable => false;
 
-        public override bool CanMove => true;
+        public override bool IsMoveable => true;
 
         public override bool CanBeReplace => false;
 
@@ -56,6 +58,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             }
 
             return true;
+        }
+
+        public UniTask BounceOnTap()
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public UniTask BounceInDirection(Vector3 direction)
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public UniTask MoveTo(Vector3 position)
+        {
+            return itemAnimation.MoveTo(position);
+        }
+
+        public UniTask JumpDown(float amplitude)
+        {
+            return UniTask.CompletedTask;
         }
     }
 }
