@@ -90,9 +90,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemAnimator: {fileID: 3690093505019425503}
-  bottomState: {fileID: 0}
+  bottomState: {fileID: 7464532411603574514}
   itemRenderer: {fileID: 8555525281269574999}
-  topState: {fileID: 0}
+  topState: {fileID: 7630585003075964698}
 --- !u!95 &3690093505019425503
 Animator:
   serializedVersion: 5
@@ -103,7 +103,7 @@ Animator:
   m_GameObject: {fileID: 1297088511453682728}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2b69371575556e44fbe9c494a937890c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -126,8 +126,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa9558d9deeff5a4492fbf48ac285830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemAnimator: {fileID: 3690093505019425503}
   itemRenderer: {fileID: 8555525281269574999}
-  moveDuration: 0.3
+  swapDuration: 0.3
   moveEase: 6
   fadeDuration: 0.3
   fadeEase: 4

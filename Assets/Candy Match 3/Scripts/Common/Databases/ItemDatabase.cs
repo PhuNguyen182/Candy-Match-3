@@ -2,10 +2,10 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Gameplay.GameItems;
 using CandyMatch3.Scripts.Gameplay.GameItems.Colored;
 using CandyMatch3.Scripts.Gameplay.GameItems.Boosters;
-using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Common.Databases

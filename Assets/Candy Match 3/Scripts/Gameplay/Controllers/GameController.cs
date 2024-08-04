@@ -31,6 +31,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private GridCellManager _gridCellManager;
         private FillBoardTask _fillBoardTask;
         private BreakGridTask _breakGridTask;
+        private GameTaskManager _gameTaskManager;
 
         private void Awake()
         {
@@ -43,6 +44,14 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             {
                 LevelModel levelModel = PlayGameConfig.Current.LevelModel;
                 GenerateLevel(levelModel);
+            }
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                _gameTaskManager.CheckMoveOnStart();
             }
         }
 
@@ -59,6 +68,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _fillBoardTask = new(boardTilemap, tileDatabase, _itemManager, _metaItemManager);
             _fillBoardTask.AddTo(ref builder);
+
+            _gameTaskManager = new(_gridCellManager);
+            _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(this.destroyCancellationToken);
         }
@@ -83,6 +95,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _fillBoardTask.SetBoardFillRule(levelModel.BoardFillRule);
             _fillBoardTask.BuildBoard(levelModel.BoardBlockPositions);
+            _gridCellManager.SetBoardActiveArea(boardTilemap);
 
             for (int i = 0; i < levelModel.ColorBlockItemPositions.Count; i++)
             {
@@ -113,6 +126,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             {
                 _itemManager.Add(levelModel.CollectibleItemPositions[i]);
             }
+
+            //_gameTaskManager.CheckMoveOnStart();
         }
 
         public Vector3 ConvertGridToWorld(Vector3Int position)

@@ -304,8 +304,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa9558d9deeff5a4492fbf48ac285830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemAnimator: {fileID: 3911552257597649888}
   itemRenderer: {fileID: 1786424778959506459}
-  moveDuration: 0.3
+  swapDuration: 0.3
   moveEase: 6
   fadeDuration: 0.3
   fadeEase: 4

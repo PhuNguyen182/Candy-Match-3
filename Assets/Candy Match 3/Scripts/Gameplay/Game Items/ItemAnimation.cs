@@ -5,15 +5,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using CandyMatch3.Scripts.Common.Constants;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems
 {
     public class ItemAnimation : MonoBehaviour
     {
+        [SerializeField] private Animator itemAnimator;
         [SerializeField] private SpriteRenderer itemRenderer;
 
         [Header("Movement")]
-        [SerializeField] private float moveDuration = 0.3f;
+        [SerializeField] private float swapDuration = 0.3f;
         [SerializeField] private Ease moveEase = Ease.OutQuad;
 
         [Header("Fading")]
@@ -33,14 +35,21 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             _destroyToken = this.GetCancellationTokenOnDestroy();
         }
 
-        public UniTask MoveTo(Vector3 toPosition)
+        public UniTask MoveTo(Vector3 toPosition, float duration)
         {
-            _moveTween ??= CreateMoveTween(toPosition, moveDuration, moveEase);
+            _moveTween ??= CreateMoveTween(toPosition, duration, moveEase);
             _moveTween.ChangeStartValue(transform.position);
             _moveTween.ChangeEndValue(toPosition);
             _moveTween.Play();
 
             return UniTask.Delay(TimeSpan.FromSeconds(_moveTween.Duration()), cancellationToken: _destroyToken);
+        }
+
+        public void JumpDown(float amptitude)
+        {
+            float magnitude = Mathf.Clamp01(1f - amptitude);
+            itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
+            itemAnimator.SetFloat(ItemAnimationHashKeys.AmptitudeHash, magnitude);
         }
 
         private Tweener CreateMoveTween(Vector3 toPosition, float duration, Ease ease)

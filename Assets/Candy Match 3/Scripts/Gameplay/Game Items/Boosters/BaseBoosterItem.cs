@@ -30,14 +30,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 
         public abstract void Explode();
 
-        public UniTask JumpDown(float amplitude)
+        public void JumpDown(float amptitude)
         {
-            return UniTask.CompletedTask;
+            itemAnimation.JumpDown(amptitude);
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask MoveTo(Vector3 position, float duration)
         {
-            return itemAnimation.MoveTo(position);
+            return itemAnimation.MoveTo(position, duration);
         }
     }
 }

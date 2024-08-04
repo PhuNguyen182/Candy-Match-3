@@ -9,7 +9,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
     {
         public UniTask BounceOnTap();
         public UniTask BounceInDirection(Vector3 direction);
-        public UniTask MoveTo(Vector3 position);
-        public UniTask JumpDown(float amplitude);
+        public UniTask MoveTo(Vector3 position, float duration);
+        public void JumpDown(float amptitude);
     }
 }

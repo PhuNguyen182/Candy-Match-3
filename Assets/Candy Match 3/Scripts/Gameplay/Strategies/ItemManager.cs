@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GridCells;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.CustomData;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Factories;
 
 namespace CandyMatch3.Scripts.Gameplay.Strategies
@@ -31,7 +31,10 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
         {
             IBlockItem item = Create(itemData);
             IGridCell gridCell = _gridCellManager.Get(itemData.Position);
+
             gridCell.SetBlockItem(item);
+            item.SetWorldPosition(gridCell.WorldPosition);
+
             return _metaItemManager.Add(itemData.Position, item);
         }
 

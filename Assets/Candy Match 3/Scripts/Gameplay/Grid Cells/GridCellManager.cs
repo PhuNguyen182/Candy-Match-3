@@ -3,12 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using UnityEngine.Tilemaps;
 
 namespace CandyMatch3.Scripts.Gameplay.GridCells
 {
     public class GridCellManager : IDisposable
     {
+        private BoundsInt _boardActiveBounds;
         private Dictionary<Vector3Int, IGridCell> _kpv;
+
+        public int BoardWidth => MaxPosition.x - MinPosition.x;
+        public int BoardHeight => _boardActiveBounds.yMax - _boardActiveBounds.yMin;
+
+        public Vector3Int MinPosition => _boardActiveBounds.min;
+        public Vector3Int MaxPosition => _boardActiveBounds.max - Vector3Int.one;
 
         public Func<Vector3Int, Vector3> ConvertGridToWorldFunction { get; }
         public Func<Vector3, Vector3Int> ConvertWorldToGridFunction { get; }
@@ -49,6 +57,29 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
                 IGridCell gridCell = _kpv[position];
                 gridCell.ReleaseGrid();
                 _kpv[position] = null;
+            }
+        }
+
+        public void SetBoardActiveArea(Tilemap boardArea)
+        {
+            boardArea.CompressBounds();
+            _boardActiveBounds = boardArea.cellBounds;
+            Debug.Log($"{MinPosition} {MaxPosition}");
+        }
+
+        public IEnumerable<Vector3Int> Iterator()
+        {
+            foreach (Vector3Int position in _kpv.Keys)
+            {
+                yield return position;
+            }
+        }
+
+        public void ForEach(Action<Vector3Int> callback)
+        {
+            foreach (Vector3Int position in _kpv.Keys)
+            {
+                callback.Invoke(position);
             }
         }
 

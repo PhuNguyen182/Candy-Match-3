@@ -220,8 +220,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa9558d9deeff5a4492fbf48ac285830, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemAnimator: {fileID: 5560585968869825224}
   itemRenderer: {fileID: 4667085470101029547}
-  moveDuration: 0.3
+  swapDuration: 0.3
   moveEase: 6
   fadeDuration: 0.3
   fadeEase: 4

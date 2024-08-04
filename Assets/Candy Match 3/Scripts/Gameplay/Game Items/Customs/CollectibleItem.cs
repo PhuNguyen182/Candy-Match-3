@@ -36,14 +36,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             return UniTask.CompletedTask;
         }
 
-        public UniTask JumpDown(float amplitude)
+        public void JumpDown(float amptitude)
         {
-            return UniTask.CompletedTask;
+            itemAnimation.JumpDown(amptitude);
         }
 
-        public UniTask MoveTo(Vector3 position)
+        public UniTask MoveTo(Vector3 position, float duration)
         {
-            return UniTask.CompletedTask;
+            return itemAnimation.MoveTo(position, duration);
         }
 
         public override void ReleaseItem()

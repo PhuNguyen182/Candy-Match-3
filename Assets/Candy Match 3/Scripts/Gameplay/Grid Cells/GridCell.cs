@@ -9,33 +9,28 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
     public class GridCell : IGridCell
     {
         private Vector3 _worldPosition;
+
         private IBlockItem _blockItem;
         private IGridStateful _gridStateful;
         private IGridCellView _gridCellView;
 
         public bool HasItem => _blockItem != null;
-        public bool IsMoveable => LockStates == LockStates.None;
-        public bool CanSetItem => _gridStateful.CanContainItem && !_gridStateful.IsLocked;
+        public bool IsMoveable => LockStates == LockStates.None && HasItem;
+        public bool CanSetItem => _gridStateful.CanContainItem && !_gridStateful.IsLocked && !HasItem;
         public bool CanContainItem => _gridStateful.CanContainItem;
-
         public bool IsSpawner { get; set; }
         public bool CanPassThrough { get; set; }
         public bool IsExitable { get; set; }
 
         public ItemType ItemType => _blockItem.ItemType;
-
         public CandyColor CandyColor => _blockItem.CandyColor;
-
         public LockStates LockStates { get; set; }
 
         public Vector3 WorldPosition => _worldPosition;
-
         public Vector3Int GridPosition { get; set; }
 
         public IGridStateful GridStateful => _gridStateful;
-
         public IGridCellView GridCellView => _gridCellView;
-
         public IBlockItem BlockItem => _blockItem;
 
         public void ReleaseGrid()
@@ -53,7 +48,6 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             if (_blockItem != null)
             {
                 _blockItem.GridPosition = GridPosition;
-                _blockItem.SetWorldPosition(WorldPosition);
             }
         }
 
