@@ -4,8 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
 using CandyMatch3.Scripts.Common.Constants;
+using DG.Tweening;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems
 {
@@ -13,6 +13,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
     {
         [SerializeField] private Animator itemAnimator;
         [SerializeField] private SpriteRenderer itemRenderer;
+        [SerializeField] private AnimationCurve fallenCurve;
 
         [Header("Movement")]
         [SerializeField] private float swapDuration = 0.3f;
@@ -48,8 +49,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public void JumpDown(float amptitude)
         {
             float magnitude = Mathf.Clamp01(1f - amptitude);
+            float smoothedMagnitude = fallenCurve.Evaluate(magnitude);
+            itemAnimator.SetFloat(ItemAnimationHashKeys.AmptitudeHash, smoothedMagnitude);
             itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
-            itemAnimator.SetFloat(ItemAnimationHashKeys.AmptitudeHash, magnitude);
         }
 
         private Tweener CreateMoveTween(Vector3 toPosition, float duration, Ease ease)
