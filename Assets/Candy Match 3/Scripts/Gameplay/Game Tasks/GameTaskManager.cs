@@ -23,7 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _gridCellManager = gridCellManager;
 
-            _breakGridTask = new();
+            _breakGridTask = new(_gridCellManager);
             _checkGridTask = new(_gridCellManager);            
             _moveItemTask = new(_gridCellManager, _checkGridTask);
 

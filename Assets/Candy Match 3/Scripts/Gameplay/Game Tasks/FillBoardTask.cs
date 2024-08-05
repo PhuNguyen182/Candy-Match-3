@@ -18,18 +18,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly Tilemap _boardTilemap;
         private readonly TileDatabase _tileDatabase;
         private readonly ItemManager _itemManager;
-        private readonly MetaItemManager _metaItemManager;
 
         private List<float> _colorDistributes = new();
         private List<ColorFillBlockData> _boardFillRule = new();
         private List<ColorFillBlockData> _ruledRandomFill = new();
 
-        public FillBoardTask(Tilemap boardTilemap, TileDatabase tileDatabase, ItemManager itemManager, MetaItemManager metaItemManager)
+        public FillBoardTask(Tilemap boardTilemap, TileDatabase tileDatabase, ItemManager itemManager)
         {
             _boardTilemap = boardTilemap;
             _itemManager = itemManager;
             _tileDatabase = tileDatabase;
-            _metaItemManager = metaItemManager;
         }
 
         private void SetRandomColorDistribute()
