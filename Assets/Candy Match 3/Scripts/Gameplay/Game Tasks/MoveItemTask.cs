@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
@@ -53,8 +54,21 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!startCell.IsMoveable)
                 return;
 
+            IBlockItem startItem = startCell.BlockItem;
+            
+            if (!startItem.IsMoveable)
+                return;
+
             int fallStepCount = 0;
             Vector3Int targetPosition;
+
+            //List<Vector3Int> dropDownPositions = GetDropPositions(startCell);
+            //List<Vector3Int> filtedDropPositions = FilterPositions(checkPosition, dropDownPositions);
+
+            //if (filtedDropPositions.Count < 1)
+            //    return;
+
+            //targetPosition = filtedDropPositions[filtedDropPositions.Count - 1];
 
             if (!CanFallDown(startCell, out targetPosition))
                 return;
@@ -63,7 +77,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             fallStepCount = checkPosition.y - boardBottomHeight;
 
             IGridCell targetCell = _gridCellManager.Get(targetPosition);
-            IBlockItem startItem = startCell.BlockItem;
 
             startCell.SetBlockItem(null);
             targetCell.SetBlockItem(startItem);
@@ -94,6 +107,96 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             targetPosition = targetCell.GridPosition;
             return targetCell != gridCell;
+        }
+
+        private bool CanMoveStepDown(IGridCell gridCell, out Vector3Int targetPosition)
+        {
+            Vector3Int checkPosition = gridCell.GridPosition + _direction;
+            
+            if (_checkGridTask.Check(checkPosition))
+            {
+                targetPosition = checkPosition;
+                return true;
+            }
+
+            targetPosition = Vector3Int.zero;
+            return false;
+        }
+
+        private List<Vector3Int> GetDropPositions(IGridCell gridCell)
+        {
+            List<Vector3Int> dropPositions = new();
+            //IGridCell stepCell = gridCell;
+
+            while (CanMoveStepDown(gridCell, out Vector3Int nextPosition))
+            {
+                gridCell = _gridCellManager.Get(nextPosition);
+                dropPositions.Add(nextPosition);
+            }
+
+            if (!CanSlideDiagonally(gridCell, out Vector3Int diagonalPosition))
+                return dropPositions;
+
+            dropPositions.Add(diagonalPosition);
+            IGridCell diagonalCell = _gridCellManager.Get(diagonalPosition);
+            dropPositions.AddRange(GetDropPositions(diagonalCell));
+
+            return dropPositions;
+        }
+
+        private bool CanSlideDiagonally(IGridCell gridCell, out Vector3Int diagonalPosition)
+        {
+            bool canSlideLeft = CanSlideDiagonally(gridCell, Vector3Int.left, out diagonalPosition);
+            bool canSlideRight = CanSlideDiagonally(gridCell, Vector3Int.right, out diagonalPosition);
+            return canSlideLeft || canSlideRight;
+        }
+
+        private bool CanSlideDiagonally(IGridCell gridCell, Vector3Int direction, out Vector3Int diagonalPosition)
+        {
+            Vector3Int nextPosition = gridCell.GridPosition + direction;
+            Vector3Int downPosition = gridCell.GridPosition + _direction;
+            IGridCell downCell = _gridCellManager.Get(downPosition);
+
+            if (_checkGridTask.Check(nextPosition) && downCell != null && !downCell.GridStateful.IsLocked)
+            {
+                return CanMoveStepDown(gridCell, out diagonalPosition);
+            }
+
+            diagonalPosition = Vector3Int.zero;
+            return false;
+        }
+
+        private List<Vector3Int> FilterPositions(Vector3Int checkPosition, List<Vector3Int> queuePositions)
+        {
+            HashSet<Vector3Int> filtedPositions = new();
+            // To do: To be added
+
+            if (queuePositions.Count < 2)
+                return queuePositions;
+
+            int startColumn = checkPosition.x;
+
+            for (int i = 0; i < queuePositions.Count; i++)
+            {
+                Vector3Int position = queuePositions[i];
+
+                if(position.x == position.x)
+                {
+                    if(i == queuePositions.Count - 1)
+                    {
+                        filtedPositions.Add(position);
+                        continue;
+                    }
+                }
+
+                if (i > 0)
+                    filtedPositions.Add(queuePositions[i - 1]);
+
+                filtedPositions.Add(position);
+                startColumn = position.x;
+            }
+
+            return filtedPositions.ToList();
         }
 
         public void Dispose()

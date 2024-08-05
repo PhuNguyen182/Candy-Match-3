@@ -64,7 +64,6 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         {
             boardArea.CompressBounds();
             _boardActiveBounds = boardArea.cellBounds;
-            Debug.Log($"{MinPosition} {MaxPosition}");
         }
 
         public IEnumerable<Vector3Int> Iterator()

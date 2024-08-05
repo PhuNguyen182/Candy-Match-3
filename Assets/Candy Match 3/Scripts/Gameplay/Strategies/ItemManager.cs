@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.CustomData;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Factories;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.GridCells;
 
 namespace CandyMatch3.Scripts.Gameplay.Strategies
 {
@@ -46,6 +47,22 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
                 IGridCell gridCell = _gridCellManager.Get(item.GridPosition);
                 gridCell.SetBlockItem(null);
             }
+        }
+
+        public ItemType GetItemTypeFromColor(CandyColor color)
+        {
+            ItemType itemType = color switch
+            {
+                CandyColor.Blue => ItemType.Blue,
+                CandyColor.Green => ItemType.Green,
+                CandyColor.Orange => ItemType.Orange,
+                CandyColor.Purple => ItemType.Purple,
+                CandyColor.Red => ItemType.Red,
+                CandyColor.Yellow => ItemType.Yellow,
+                _ => ItemType.None
+            };
+
+            return itemType;
         }
     }
 }

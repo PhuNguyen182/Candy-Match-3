@@ -94,6 +94,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             }
 
             _fillBoardTask.SetBoardFillRule(levelModel.BoardFillRule);
+            _fillBoardTask.SetRuledRandomFill(levelModel.RuledRandomFill);
             _fillBoardTask.BuildBoard(levelModel.BoardBlockPositions);
             _gridCellManager.SetBoardActiveArea(boardTilemap);
 
@@ -127,7 +128,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 _itemManager.Add(levelModel.CollectibleItemPositions[i]);
             }
 
-            //_gameTaskManager.CheckMoveOnStart();
+            _fillBoardTask.BuildRandom(levelModel.RandomBlockItemPositions);
+            _fillBoardTask.BuildRuledRandom(levelModel.RuledRandomBlockPositions);
         }
 
         public Vector3 ConvertGridToWorld(Vector3Int position)
