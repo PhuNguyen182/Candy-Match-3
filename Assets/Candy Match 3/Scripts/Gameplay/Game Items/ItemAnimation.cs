@@ -39,17 +39,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public UniTask MoveTo(Vector3 toPosition, float duration)
         {
             _moveTween ??= CreateMoveTween(toPosition, duration, moveEase);
-            _moveTween.ChangeStartValue(transform.position);
-            _moveTween.ChangeEndValue(toPosition);
+            _moveTween.ChangeValues(transform.position, toPosition, duration);
             _moveTween.Play();
 
-            return UniTask.Delay(TimeSpan.FromSeconds(_moveTween.Duration()), cancellationToken: _destroyToken);
+            TimeSpan totalDuration = TimeSpan.FromSeconds(_moveTween.Duration());
+            return UniTask.Delay(totalDuration , cancellationToken: _destroyToken);
         }
 
         public void JumpDown(float amptitude)
         {
-            float magnitude = Mathf.Clamp01(1f - amptitude);
-            float smoothedMagnitude = fallenCurve.Evaluate(magnitude);
+            float magnitude = Mathf.Clamp01(amptitude);
+            float smoothedMagnitude = fallenCurve.Evaluate(1 - magnitude);
             itemAnimator.SetFloat(ItemAnimationHashKeys.AmptitudeHash, smoothedMagnitude);
             itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
         }

@@ -130,6 +130,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _fillBoardTask.BuildRandom(levelModel.RandomBlockItemPositions);
             _fillBoardTask.BuildRuledRandom(levelModel.RuledRandomBlockPositions);
+
+            _gameTaskManager.CheckMoveOnStart();
         }
 
         public Vector3 ConvertGridToWorld(Vector3Int position)
