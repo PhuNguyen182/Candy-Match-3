@@ -10,6 +10,7 @@ using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.LevelDesign.Databases;
 using CandyMatch3.Scripts.Gameplay.GameTasks;
 using CandyMatch3.Scripts.Common.Databases;
+using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Common.SingleConfigs;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Statefuls;
@@ -24,6 +25,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private Transform gridContainer;
         [SerializeField] private Transform itemContainer;
         [SerializeField] private GridCellView gridCellViewPrefab;
+        [SerializeField] private BoardInput boardInput;
 
         private ItemFactory _itemFactory;
         private ItemManager _itemManager;
@@ -69,7 +71,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _fillBoardTask = new(boardTilemap, tileDatabase, _itemManager);
             _fillBoardTask.AddTo(ref builder);
 
-            _gameTaskManager = new(_gridCellManager);
+            _gameTaskManager = new(boardInput, _gridCellManager);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(this.destroyCancellationToken);

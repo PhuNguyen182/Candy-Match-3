@@ -59,6 +59,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public UniTask BounceOnTap()
         {
+            itemAnimation.BounceTap();
             return UniTask.CompletedTask;
         }
 

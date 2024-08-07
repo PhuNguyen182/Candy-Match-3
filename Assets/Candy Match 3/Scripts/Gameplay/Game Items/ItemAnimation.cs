@@ -54,6 +54,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
         }
 
+        public void BounceTap()
+        {
+            itemAnimator.SetTrigger(ItemAnimationHashKeys.BounceHash);
+        }
+
         private Tweener CreateMoveTween(Vector3 toPosition, float duration, Ease ease)
         {
             return transform.DOMove(toPosition, duration).SetEase(ease).SetAutoKill(false);
