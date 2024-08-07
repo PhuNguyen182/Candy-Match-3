@@ -9,15 +9,9 @@ namespace GlobalScripts.Extensions
 {
     public static class BoundsExtension
     {
-        public static BoundsInt GetBounds2D(this Vector3Int position, int range)
+        public static BoundsInt GetBounds2D(this Vector3Int position, int range = 0)
         {
-            return new BoundsInt
-            {
-                xMin = position.x - range / 2,
-                xMax = position.x + range / 2,
-                yMin = position.y - range / 2,
-                yMax = position.y + range / 2,
-            };
+            return new BoundsInt(position + new Vector3Int(-1, -1) * range, new(2 * range + 1, 2 * range + 1));
         }
 
         public static BoundsInt Expand2D(this BoundsInt boundsInt, int range)

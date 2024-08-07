@@ -15,17 +15,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _gridCellManager = gridCellManager;
         }
 
-        public bool Check(Vector3Int checkPosition)
-        {
-            IGridCell gridCell = _gridCellManager.Get(checkPosition);
-
-            if (gridCell == null)
-                return false;
-
-            if (!gridCell.CanSetItem)
-                return false;
-
-            return true;
-        }
+        
     }
 }

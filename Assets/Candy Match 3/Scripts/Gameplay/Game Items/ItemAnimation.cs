@@ -49,7 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public void JumpDown(float amptitude)
         {
             float magnitude = Mathf.Clamp01(amptitude);
-            float smoothedMagnitude = fallenCurve.Evaluate(1 - magnitude);
+            float smoothedMagnitude = fallenCurve.Evaluate(magnitude);
             itemAnimator.SetFloat(ItemAnimationHashKeys.AmptitudeHash, smoothedMagnitude);
             itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
         }

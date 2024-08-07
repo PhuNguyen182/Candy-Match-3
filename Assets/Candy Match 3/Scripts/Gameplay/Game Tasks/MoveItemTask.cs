@@ -1,11 +1,8 @@
 using System;
-using System.Linq;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
-using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
@@ -22,6 +19,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private CancellationToken _token;
         private CancellationTokenSource _tcs;
 
+        private IDisposable _disposable;
+
         public MoveItemTask(GridCellManager gridCellManager, CheckGridTask checkGridTask)
         {
             _gridCellManager = gridCellManager;
@@ -33,74 +32,70 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask MoveItems()
         {
-            using (var moveListPool = ListPool<UniTask>.Get(out List<UniTask> moveTasks))
+            var x = _gridCellManager.Iterator();
+            foreach (var item in x)
             {
-                _gridCellManager.ForEach(position =>
+                var cell = _gridCellManager.Get(item);
+                if (CheckMove(cell))
                 {
-                    IGridCell gridCell = _gridCellManager.Get(position);
-                    if(CheckMove(gridCell))
-                        moveTasks.Add(MoveItem(gridCell));
-                });
-
-                await UniTask.WhenAll(moveTasks);
+                    //await MoveItem(cell);
+                    MoveItem(cell).Forget();
+                }
             }
         }
 
-        private async UniTask MoveItem(IGridCell gridCell)
+        private async UniTask MoveItem(IGridCell moveGridCell)
         {
-            IGridCell currentCell = gridCell;
-            IBlockItem blockItem = currentCell.BlockItem;
+            IGridCell currentGrid = moveGridCell;
+            Vector3Int startPosition = currentGrid.GridPosition;
+            IBlockItem blockItem = currentGrid.BlockItem;
 
             int moveStepCount = 0;
-            int moveColumnCheck = 0;
-            Vector3Int fromPosition = currentCell.GridPosition;
+            int checkColumnIndex = 0;
 
-            while (moveColumnCheck < 3)
+            while (checkColumnIndex < 3)
             {
                 IGridCell toGridCell;
-                _direction = moveColumnCheck switch
+
+                _direction = checkColumnIndex switch
                 {
                     0 => new(0, -1),
                     1 => new(-1, -1),
                     2 => new(1, -1),
-                    _ => Vector3Int.zero
+                    _ => new(0, 0)
                 };
 
-                Vector3Int toPosition = fromPosition + _direction;
+                Vector3Int toPosition = startPosition + _direction;
                 toGridCell = _gridCellManager.Get(toPosition);
-                
-                if (!CheckCellEmpty(toGridCell, out IGridCell targetCell))
+
+                if(!CheckCellEmpty(toGridCell, out IGridCell targetCell))
                 {
-                    moveColumnCheck = moveColumnCheck + 1;
+                    moveStepCount = 0;
+                    checkColumnIndex = checkColumnIndex + 1;
                     continue;
                 }
 
+                checkColumnIndex = 0;
                 toGridCell = targetCell;
-                toPosition = toGridCell.GridPosition;
-
-                moveColumnCheck = 0;
                 toGridCell.SetBlockItem(blockItem);
-                currentCell.SetBlockItem(null);
-                currentCell.LockStates = LockStates.None;
-                toGridCell.LockStates = LockStates.Moving;
-                await AnimateMovingItem(blockItem, targetCell, 1, false);
-                fromPosition = toPosition;
-                currentCell = toGridCell;
+                currentGrid.SetBlockItem(null);
+                await AnimateMovingItem(blockItem, toGridCell, moveStepCount);
+                startPosition = toPosition;
+                currentGrid = toGridCell;
+
                 moveStepCount = moveStepCount + 1;
             }
         }
 
-        private async UniTask AnimateMovingItem(IBlockItem blockItem, IGridCell targetCell, int stepCount, bool boundOnGround)
+        private async UniTask AnimateMovingItem(IBlockItem blockItem, IGridCell targetCell, int stepCount)
         {
             if (blockItem is IItemAnimation animation)
             {
                 int boardHeight = _gridCellManager.BoardHeight;
                 float moveSpeed = Match3Constants.BaseItemMoveSpeed + Match3Constants.FallenAccelaration * stepCount;
-                float fallDuration = (1 + stepCount) / moveSpeed;
+                float fallDuration = 1 / moveSpeed;
                 await animation.MoveTo(targetCell.WorldPosition, fallDuration);
-
-                if(boundOnGround)
-                    animation.JumpDown(1.0f * stepCount / boardHeight);
+                animation.JumpDown(1.0f * stepCount / boardHeight);
             }
         }
 
