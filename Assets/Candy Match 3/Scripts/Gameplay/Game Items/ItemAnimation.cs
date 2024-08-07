@@ -17,7 +17,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         [Header("Movement")]
         [SerializeField] private float swapDuration = 0.3f;
+        [SerializeField] private float bounceDuration = 0.3f;
         [SerializeField] private Ease moveEase = Ease.OutQuad;
+        [SerializeField] private Ease bounceEase = Ease.OutQuad;
 
         [Header("Fading")]
         [SerializeField] private float fadeDuration = 0.3f;
@@ -26,6 +28,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private int _originalSortingOrder;
 
         private Tweener _moveTween;
+        private Tweener _bounceMoveTween;
         private Tweener _swapTween;
 
         private CancellationToken _destroyToken;
@@ -46,6 +49,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             return UniTask.Delay(totalDuration , cancellationToken: _destroyToken);
         }
 
+        public UniTask BounceMove(Vector3 position)
+        {
+            _bounceMoveTween ??= CreateMoveBounceTween(position);
+            _bounceMoveTween.ChangeStartValue(transform.position);
+            _bounceMoveTween.ChangeEndValue(position);
+
+            _bounceMoveTween.Rewind();
+            _bounceMoveTween.Play();
+
+            float duration = _bounceMoveTween.Duration();
+            return UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken: _destroyToken);
+        }
+
         public void JumpDown(float amptitude)
         {
             float magnitude = Mathf.Clamp01(amptitude);
@@ -57,6 +73,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public void BounceTap()
         {
             itemAnimator.SetTrigger(ItemAnimationHashKeys.BounceHash);
+        }
+
+        private Tweener CreateMoveBounceTween(Vector3 position)
+        {
+            return transform.DOMove(position, bounceDuration)
+                            .SetEase(bounceEase).SetLoops(2, LoopType.Yoyo)
+                            .SetAutoKill(false);
         }
 
         private Tweener CreateMoveTween(Vector3 toPosition, float duration, Ease ease)

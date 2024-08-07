@@ -7,6 +7,7 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
+using UnityEngine.InputSystem;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -15,6 +16,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly GridCellManager _gridCellManager;
         private readonly CheckGridTask _checkGridTask;
 
+        private int _boardHeight;
         private Vector3Int _direction;
         private CancellationToken _token;
         private CancellationTokenSource _tcs;
@@ -85,17 +87,28 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 moveStepCount = moveStepCount + 1;
             }
+
+            blockItem.SetWorldPosition(currentGrid.WorldPosition);
+            AnimateItemJumpDown(blockItem, moveStepCount);
         }
 
         private async UniTask AnimateMovingItem(IBlockItem blockItem, IGridCell targetCell, int stepCount)
         {
             if (blockItem is IItemAnimation animation)
             {
-                int boardHeight = _gridCellManager.BoardHeight;
                 float moveSpeed = Match3Constants.BaseItemMoveSpeed + Match3Constants.FallenAccelaration * stepCount;
                 float fallDuration = 1 / moveSpeed;
                 await animation.MoveTo(targetCell.WorldPosition, fallDuration);
-                animation.JumpDown(1.0f * stepCount / boardHeight);
+            }
+        }
+
+        private void AnimateItemJumpDown(IBlockItem blockItem, int stepCount)
+        {
+            if(blockItem is IItemAnimation animation)
+            {
+                _boardHeight = _gridCellManager.BoardHeight;
+                float moveStep = stepCount == 0 ? 2 : stepCount;
+                animation.JumpDown(1.0f * moveStep / _boardHeight);
             }
         }
 
