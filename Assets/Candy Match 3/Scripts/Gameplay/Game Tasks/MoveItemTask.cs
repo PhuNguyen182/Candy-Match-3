@@ -115,8 +115,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if(blockItem is IItemAnimation animation)
             {
                 _boardHeight = _gridCellManager.BoardHeight;
-                float moveStep = Mathf.Clamp(stepCount, 3, _boardHeight);
-                animation.JumpDown(1.0f * moveStep / _boardHeight);
+                animation.JumpDown(1.0f * stepCount / _boardHeight);
             }
         }
 
