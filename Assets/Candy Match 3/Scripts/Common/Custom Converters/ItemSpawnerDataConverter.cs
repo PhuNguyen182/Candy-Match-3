@@ -25,7 +25,7 @@ namespace CandyMatch3.Scripts.Common.CustomConverters
                     DataValue = new ItemSpawner
                     {
                         Coefficient = coefficient.Value,
-                        ItemTypel = (ItemType)itemType.Value
+                        ItemType = (ItemType)itemType.Value
                     }
                 };
             }
@@ -37,7 +37,7 @@ namespace CandyMatch3.Scripts.Common.CustomConverters
         {
             writer.WriteStartArray();
             writer.WriteValue(value.DataValue.Coefficient);
-            writer.WriteValue((int)value.DataValue.ItemTypel);
+            writer.WriteValue((int)value.DataValue.ItemType);
             writer.WriteEndArray();
         }
     }

@@ -49,6 +49,45 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             }
         }
 
+        public CandyColor GetColorFromItemType(ItemType itemType)
+        {
+            CandyColor candyColor = itemType switch
+            {
+                ItemType.Blue => CandyColor.Blue,
+                ItemType.BlueHorizontal => CandyColor.Blue,
+                ItemType.BlueVertical => CandyColor.Blue,
+                ItemType.BlueWrapped => CandyColor.Blue,
+
+                ItemType.Green => CandyColor.Green,
+                ItemType.GreenHorizontal => CandyColor.Green,
+                ItemType.GreenVertical => CandyColor.Green,
+                ItemType.GreenWrapped => CandyColor.Green,
+
+                ItemType.Orange => CandyColor.Orange,
+                ItemType.OrangeHorizontal => CandyColor.Orange,
+                ItemType.OrangeVertical => CandyColor.Orange,
+                ItemType.OrangeWrapped => CandyColor.Orange,
+
+                ItemType.Purple => CandyColor.Purple,
+                ItemType.PurpleHorizontal => CandyColor.Purple,
+                ItemType.PurpleVertical => CandyColor.Purple,
+                ItemType.PurpleWrapped => CandyColor.Purple,
+
+                ItemType.Red => CandyColor.Red,
+                ItemType.RedHorizontal => CandyColor.Red,
+                ItemType.RedVertical => CandyColor.Red,
+                ItemType.RedWrapped => CandyColor.Red,
+
+                ItemType.Yellow => CandyColor.Yellow,
+                ItemType.YellowHorizontal => CandyColor.Yellow,
+                ItemType.YellowVertical => CandyColor.Yellow,
+                ItemType.YellowWrapped => CandyColor.Yellow,
+                _ => CandyColor.None
+            };
+
+            return candyColor;
+        }
+
         public ItemType GetItemTypeFromColor(CandyColor color)
         {
             ItemType itemType = color switch

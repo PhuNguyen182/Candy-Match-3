@@ -16,6 +16,6 @@ namespace CandyMatch3.Scripts.Common.CustomData
     public struct ItemSpawner
     {
         public int Coefficient;
-        public ItemType ItemTypel;
+        public ItemType ItemType;
     }
 }

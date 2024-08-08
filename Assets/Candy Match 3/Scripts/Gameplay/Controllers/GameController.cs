@@ -71,7 +71,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _fillBoardTask = new(boardTilemap, tileDatabase, _itemManager);
             _fillBoardTask.AddTo(ref builder);
 
-            _gameTaskManager = new(boardInput, _gridCellManager);
+            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(this.destroyCancellationToken);
@@ -134,6 +134,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _fillBoardTask.BuildRandom(levelModel.RandomBlockItemPositions);
             _fillBoardTask.BuildRuledRandom(levelModel.RuledRandomBlockPositions);
 
+            _gameTaskManager.SetSpawnRules(levelModel.SpawnerRules);
             _gameTaskManager.CheckMoveOnStart();
         }
 

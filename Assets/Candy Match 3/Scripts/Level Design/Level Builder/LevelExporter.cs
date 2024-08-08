@@ -91,7 +91,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                         DataValue = new ItemSpawner
                         {
                             Coefficient = spawnRules[i].SpawnerData[j].Coefficient,
-                            ItemTypel = spawnRules[i].SpawnerData[j].ItemType
+                            ItemType = spawnRules[i].SpawnerData[j].ItemType
                         }
                     });
                 }

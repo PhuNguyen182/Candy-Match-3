@@ -65,7 +65,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                     colorFillDatas.Add(new SpawnerData
                     {
                         Coefficient = savedSpawnRules[i].ItemSpawnerData[j].DataValue.Coefficient,
-                        ItemType = savedSpawnRules[i].ItemSpawnerData[j].DataValue.ItemTypel
+                        ItemType = savedSpawnRules[i].ItemSpawnerData[j].DataValue.ItemType
                     });
                 }
 
