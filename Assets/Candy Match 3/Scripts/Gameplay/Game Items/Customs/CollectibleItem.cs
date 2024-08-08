@@ -18,12 +18,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public UniTask BounceInDirection(Vector3 direction)
         {
-            return UniTask.CompletedTask;
+            return itemAnimation.BounceMove(direction);
         }
 
-        public UniTask BounceOnTap()
+        public void BounceOnTap()
         {
-            return UniTask.CompletedTask;
+            itemAnimation.BounceTap();
         }
 
         public override void InitMessages()

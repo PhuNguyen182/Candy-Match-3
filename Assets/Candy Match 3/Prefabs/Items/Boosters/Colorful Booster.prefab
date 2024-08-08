@@ -299,7 +299,9 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   swapDuration: 0.3
-  moveEase: 6
+  bounceDuration: 0.3
+  moveEase: 1
+  bounceEase: 6
   fadeDuration: 0.3
   fadeEase: 4
 --- !u!1 &5633761027109006939

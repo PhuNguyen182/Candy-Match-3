@@ -29,8 +29,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _inputProcessor.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager);
-            _checkGridTask = new(_gridCellManager);            
-            _moveItemTask = new(_gridCellManager, _checkGridTask);
+            _moveItemTask = new(_gridCellManager);
+            
+            _checkGridTask = new(_gridCellManager, _moveItemTask);
+            _checkGridTask.AddTo(ref builder);
+
+            _moveItemTask.SetCheckGridTask(_checkGridTask);
 
             _disposable = builder.Build();
         }

@@ -6,8 +6,10 @@ using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
-    public class UnmoveableAndBreakableItem : BaseItem, ISetHealthPoint, IAdjcentBreakable
+    public class UnmoveableAndBreakableItem : BaseItem, ISetHealthPoint, IAdjcentBreakable, IItemAnimation
     {
+        [SerializeField] private ItemAnimation itemAnimation;
+
         private int _healthPoint;
         private int _maxHealthPoint;
 
@@ -56,6 +58,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             }
 
             return true;
+        }
+
+        public void BounceOnTap()
+        {
+            itemAnimation.BounceTap();
+        }
+
+        public UniTask BounceInDirection(Vector3 direction)
+        {
+            return itemAnimation.BounceMove(direction);
+        }
+
+        public UniTask MoveTo(Vector3 position, float duration)
+        {
+            return UniTask.CompletedTask;
+        }
+
+        public void JumpDown(float amptitude)
+        {
+            
         }
     }
 }

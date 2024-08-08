@@ -46,7 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                             if (gridCell.HasItem)
                             {
                                 if (gridCell.BlockItem is IItemAnimation animation)
-                                    animation.BounceOnTap().Forget();
+                                    animation.BounceOnTap();
                             }
                         }
                     }

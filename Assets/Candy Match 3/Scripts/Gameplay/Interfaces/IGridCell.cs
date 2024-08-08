@@ -7,6 +7,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 {
     public interface IGridCell
     {
+        public int GridID { get; }
         public bool CanMove { get; }
         public bool HasItem { get; }
         public bool IsMoveable { get; }
@@ -27,6 +28,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public IGridCellView GridCellView { get; }
         public IBlockItem BlockItem { get; }
 
+        public void SetGridID(int gridId);
         public void SetGridCellViewPosition();
         public void SetBlockItem(IBlockItem blockItem);
         public void SetWorldPosition(Vector3 position);

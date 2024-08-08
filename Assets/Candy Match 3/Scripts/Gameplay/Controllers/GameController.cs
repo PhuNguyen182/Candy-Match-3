@@ -92,6 +92,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 IGridStateful gridStateful = new AvailableState();
                 gridCell.SetGridStateful(gridStateful);
                 gridCell.SetGridCellView(gridCellView);
+                gridCell.SetGridID(gridCellView.gameObject.GetInstanceID());
                 _gridCellManager.Add(gridCell);
             }
 

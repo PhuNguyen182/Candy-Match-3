@@ -60,14 +60,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             return true;
         }
 
-        public UniTask BounceOnTap()
+        public void BounceOnTap()
         {
-            return UniTask.CompletedTask;
+            itemAnimation.BounceTap();
         }
 
         public UniTask BounceInDirection(Vector3 direction)
         {
-            return UniTask.CompletedTask;
+            return itemAnimation.BounceMove(direction);
         }
 
         public UniTask MoveTo(Vector3 position, float duration)

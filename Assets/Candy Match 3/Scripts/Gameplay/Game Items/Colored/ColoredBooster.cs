@@ -88,14 +88,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             SimplePool.Despawn(this.gameObject);
         }
 
-        public UniTask BounceOnTap()
+        public void BounceOnTap()
         {
-            return UniTask.CompletedTask;
+            itemAnimation.BounceTap();
         }
 
         public UniTask BounceInDirection(Vector3 direction)
         {
-            return UniTask.CompletedTask;
+            return itemAnimation.BounceMove(direction);
         }
 
         public UniTask MoveTo(Vector3 position, float duration)

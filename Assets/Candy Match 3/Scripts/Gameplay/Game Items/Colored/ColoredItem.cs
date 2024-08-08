@@ -57,15 +57,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             itemGraphics.SetItemSprite(colorSprite);
         }
 
-        public UniTask BounceOnTap()
+        public void BounceOnTap()
         {
             itemAnimation.BounceTap();
-            return UniTask.CompletedTask;
         }
 
         public UniTask BounceInDirection(Vector3 direction)
         {
-            return UniTask.CompletedTask;
+            return itemAnimation.BounceMove(direction);
         }
 
         public UniTask MoveTo(Vector3 position, float duration)
