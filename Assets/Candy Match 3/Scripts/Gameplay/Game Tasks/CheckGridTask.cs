@@ -13,6 +13,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     public class CheckGridTask : IDisposable
     {
         private readonly MoveItemTask _moveItemTask;
+        private readonly SpawnItemTask _spawnItemTask;
         private readonly GridCellManager _gridCellManager;
 
         private List<Vector3Int> _positionsToCheck;
@@ -20,10 +21,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private IDisposable _disposable;
 
-        public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask)
+        public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask)
         {
             _moveItemTask = moveItemTask;
             _gridCellManager = gridCellManager;
+            _spawnItemTask = spawnItemTask;
 
             _positionsToCheck = new();
             _checkPositions = new();
@@ -47,6 +49,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 for (int i = 0; i < _positionsToCheck.Count; i++)
                 {
                     IGridCell checkCell = _gridCellManager.Get(_positionsToCheck[i]);
+
+                    if (_spawnItemTask.CheckSpawnable(checkCell))
+                    {
+                        _spawnItemTask.Spawn(checkCell.GridPosition).Forget();
+                    }
 
                     if (_moveItemTask.CheckMoveable(checkCell))
                     {

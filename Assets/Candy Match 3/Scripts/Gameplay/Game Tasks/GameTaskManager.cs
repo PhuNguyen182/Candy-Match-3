@@ -18,11 +18,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly CheckGridTask _checkGridTask;
         private readonly MoveItemTask _moveItemTask;
-        private readonly SpawnItemTask _spawnItemTask;
 
         private IDisposable _disposable;
 
-        public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager)
+        public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -34,25 +33,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _breakGridTask = new(_gridCellManager);
             _moveItemTask = new(_gridCellManager);
             
-            _checkGridTask = new(_gridCellManager, _moveItemTask);
+            _checkGridTask = new(_gridCellManager, _moveItemTask, spawnItemTask);
             _checkGridTask.AddTo(ref builder);
 
             _moveItemTask.SetCheckGridTask(_checkGridTask);
             
-            _spawnItemTask = new(_gridCellManager, itemManager);
-            _spawnItemTask.AddTo(ref builder);
-
             _disposable = builder.Build();
         }
 
         public void CheckMoveOnStart()
         {
             _moveItemTask.MoveItems().Forget();
-        }
-
-        public void SetSpawnRules(List<SpawnRuleBlockData> spawnRuleData)
-        {
-            _spawnItemTask.SetItemSpawnerData(spawnRuleData);
         }
 
         public void Dispose()

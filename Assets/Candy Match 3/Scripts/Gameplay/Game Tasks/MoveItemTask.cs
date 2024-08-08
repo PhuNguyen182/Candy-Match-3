@@ -38,7 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             await UniTask.CompletedTask;
             for (int i = -4; i < 5; i++)
             {
-                IGridCell cell = _gridCellManager.Get(new(i, 1));
+                IGridCell cell = _gridCellManager.Get(new(i, 4));
                 if (CheckMoveable(cell))
                     MoveItem(cell).Forget();
             }
@@ -132,19 +132,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return false;
 
             return gridCell.CanSetItem;
-        }
-
-        private bool CheckDiagonalMove(Vector3Int checkPosition, Vector3Int direction)
-        {
-            Vector3Int position = checkPosition + direction;
-            IGridCell checkCell = _gridCellManager.Get(position);
-
-            if (checkCell.CanContainItem)
-                return false;
-            if (checkCell.HasItem)
-                return !checkCell.IsMoveable;
-
-            return true;
         }
 
         public bool CheckMoveable(IGridCell gridCell)

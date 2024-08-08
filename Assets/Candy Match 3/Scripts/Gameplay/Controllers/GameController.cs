@@ -19,11 +19,20 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 {
     public class GameController : MonoBehaviour
     {
+        [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
+
+        [Header("Databases")]
         [SerializeField] private ItemDatabase itemDatabase;
         [SerializeField] private TileDatabase tileDatabase;
+        [SerializeField] private MiscCollection miscCollection;
+
+        [Header("Containers")]
         [SerializeField] private Transform gridContainer;
         [SerializeField] private Transform itemContainer;
+        [SerializeField] private Transform miscContainer;
+
+        [Header("Board Utils")]
         [SerializeField] private GridCellView gridCellViewPrefab;
         [SerializeField] private BoardInput boardInput;
 
@@ -33,6 +42,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private GridCellManager _gridCellManager;
         private FillBoardTask _fillBoardTask;
         private BreakGridTask _breakGridTask;
+        private SpawnItemTask _spawnItemTask;
         private GameTaskManager _gameTaskManager;
 
         private void Awake()
@@ -46,14 +56,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             {
                 LevelModel levelModel = PlayGameConfig.Current.LevelModel;
                 GenerateLevel(levelModel);
-            }
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                _gameTaskManager.CheckMoveOnStart();
             }
         }
 
@@ -71,7 +73,10 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _fillBoardTask = new(boardTilemap, tileDatabase, _itemManager);
             _fillBoardTask.AddTo(ref builder);
 
-            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager);
+            _spawnItemTask = new(_gridCellManager, _itemManager);
+            _spawnItemTask.AddTo(ref builder);
+
+            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(this.destroyCancellationToken);
@@ -131,10 +136,20 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 _itemManager.Add(levelModel.CollectibleItemPositions[i]);
             }
 
+            for (int i = 0; i < levelModel.SpawnerBlockPositions.Count; i++)
+            {
+                IGridCell gridCell = _gridCellManager.Get(levelModel.SpawnerBlockPositions[i].Position);
+                gridCell.IsSpawner = true;
+
+                _spawnItemTask.AddSpawnerPosition(levelModel.SpawnerBlockPositions[i]);
+                Vector3 spawnerPosition = ConvertGridToWorld(levelModel.SpawnerBlockPositions[i].Position + Vector3Int.up);
+                Instantiate(miscCollection.SpawnerMask, spawnerPosition, Quaternion.identity, miscContainer);
+            }
+
             _fillBoardTask.BuildRandom(levelModel.RandomBlockItemPositions);
             _fillBoardTask.BuildRuledRandom(levelModel.RuledRandomBlockPositions);
 
-            _gameTaskManager.SetSpawnRules(levelModel.SpawnerRules);
+            _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
             _gameTaskManager.CheckMoveOnStart();
         }
 

@@ -121,10 +121,15 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         private void ValidateBoardTilemap()
         {
             var boardPositions = boardTilemap.cellBounds.Iterator2D();
-            
             foreach (Vector3Int position in boardPositions)
             {
                 gridInformation.SetPositionProperty(position, BoardConstants.BoardTileValidate, 1);
+            }
+
+            var spawnerPositions = spawnerTilemap.cellBounds.Iterator2D();
+            foreach (Vector3Int position in spawnerPositions)
+            {
+                gridInformation.SetPositionProperty(position + Vector3Int.up, BoardConstants.SpawnerTileValidate, 1);
             }
         }
 
