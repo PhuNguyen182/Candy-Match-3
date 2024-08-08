@@ -264,6 +264,19 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             return this;
         }
 
+        public LevelImporter BuildCollectibleCheck(Tilemap tilemap, List<CollectibleCheckBlockPosition> blockPositions)
+        {
+            tilemap.ClearAllTiles();
+
+            for (int i = 0; i < blockPositions.Count; i++)
+            {
+                CollectibleCheckTile collectibleCheckTile = _tileDatabase.GetCollectibleCheck();
+                tilemap.SetTile(blockPositions[i].Position, collectibleCheckTile);
+            }
+
+            return this;
+        }
+
         public void Import()
         {
             Debug.Log("Import Successfully!");

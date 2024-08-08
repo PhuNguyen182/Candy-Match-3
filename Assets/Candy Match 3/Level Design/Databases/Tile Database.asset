@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Tile Database
   m_EditorClassIdentifier: 
   boardTile: {fileID: 11400000, guid: cb74c9ec7b42ae24dbd6f977254c2c69, type: 2}
+  collectibleCheckTile: {fileID: 11400000, guid: addb03ade61271f499654e7bccaae9b8, type: 2}
   randomTile: {fileID: 11400000, guid: 0ff5e6bf6c72dbb4f8e1a28f54ce6f8c, type: 2}
   unbreakableTile: {fileID: 11400000, guid: 223f079af68b50b4ba2060db83a6e100, type: 2}
   ruledRandomTiles:

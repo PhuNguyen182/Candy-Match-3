@@ -146,6 +146,15 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 Instantiate(miscCollection.SpawnerMask, spawnerPosition, Quaternion.identity, miscContainer);
             }
 
+            for (int i = 0; i < levelModel.CollectibleCheckBlockPositions.Count; i++)
+            {
+                IGridCell gridCell = _gridCellManager.Get(levelModel.CollectibleCheckBlockPositions[i].Position);
+                gridCell.IsCollectible = true;
+
+                Vector3 checkPosition = ConvertGridToWorld(levelModel.CollectibleCheckBlockPositions[i].Position);
+                Instantiate(miscCollection.CollectibleCheckSign, checkPosition, Quaternion.identity, miscContainer);
+            }
+
             _fillBoardTask.BuildRandom(levelModel.RandomBlockItemPositions);
             _fillBoardTask.BuildRuledRandom(levelModel.RuledRandomBlockPositions);
 

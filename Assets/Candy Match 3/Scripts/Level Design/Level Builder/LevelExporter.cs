@@ -371,6 +371,27 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             return this;
         }
 
+        public LevelExporter BuildCollectibleCheck(Tilemap tilemap)
+        {
+            var mapPositions = tilemap.cellBounds.Iterator2D();
+
+            foreach (Vector3Int position in mapPositions)
+            {
+                CollectibleCheckTile collectibleCheckTile = tilemap.GetTile<CollectibleCheckTile>(position);
+
+                if (collectibleCheckTile == null)
+                    continue;
+
+                _levelModel.CollectibleCheckBlockPositions.Add(new CollectibleCheckBlockPosition
+                {
+                    Position = position,
+                    ItemData = new()
+                });
+            }
+
+            return this;
+        }
+
         public string Export(int level, bool writeToFile = true)
         {
             string levelName = $"level_{level}";

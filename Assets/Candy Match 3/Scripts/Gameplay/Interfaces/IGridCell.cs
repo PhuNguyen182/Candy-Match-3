@@ -16,7 +16,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         
         public bool IsSpawner { get; set; }
         public bool CanPassThrough { get; set; }
-        public bool IsExitable { get; set; }
+        public bool IsCollectible { get; set; }
 
         public ItemType ItemType { get; }
         public LockStates LockStates { get; set; }

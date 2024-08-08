@@ -43,6 +43,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         [SerializeField] private Tilemap itemTilemap;
         [SerializeField] private Tilemap spawnerTilemap;
         [SerializeField] private Tilemap statefulTilemap;
+        [SerializeField] private Tilemap collectibleCheckTilemap;
 
         [HideInInspector]
         public string LevelData;
@@ -55,6 +56,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         private void ClearEntities()
         {
             itemTilemap.ClearAllTiles();
+            collectibleCheckTilemap.ClearAllTiles();
         }
 
         [HorizontalGroup(GroupID = "Map Clear 1")]
@@ -99,6 +101,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             itemTilemap.ClearAllTiles();
             spawnerTilemap.ClearAllTiles();
             statefulTilemap.ClearAllTiles();
+            collectibleCheckTilemap.ClearAllTiles();
         }
 
         #region Tilemap Validation
@@ -107,6 +110,8 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             boardTilemap.CompressBounds();
             itemTilemap.CompressBounds();
             statefulTilemap.CompressBounds();
+            spawnerTilemap.CompressBounds();
+            collectibleCheckTilemap.CompressBounds();
         }
 
         private void ValidateLevelBoard()
@@ -195,6 +200,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                                       .BuildSingleItems(itemTilemap)
                                       .BuildStateful(statefulTilemap)
                                       .BuildSpawner(spawnerTilemap)
+                                      .BuildCollectibleCheck(collectibleCheckTilemap)
                                       .Export(level, writeToFile);
         }
 
@@ -248,6 +254,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                               .BuildCollectible(itemTilemap, levelModel.CollectibleItemPositions)
                               .BuildStateful(statefulTilemap, levelModel.StatefulBlockPositions)
                               .BuildSpawner(spawnerTilemap, levelModel.SpawnerBlockPositions)
+                              .BuildCollectibleCheck(collectibleCheckTilemap, levelModel.CollectibleCheckBlockPositions)
                               .Import();
             }
         }

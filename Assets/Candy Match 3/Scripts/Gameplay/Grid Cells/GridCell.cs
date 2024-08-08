@@ -23,7 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public bool CanContainItem => _gridStateful.CanContainItem;
         public bool IsSpawner { get; set; }
         public bool CanPassThrough { get; set; }
-        public bool IsExitable { get; set; }
+        public bool IsCollectible { get; set; }
 
         public ItemType ItemType => _blockItem.ItemType;
         public CandyColor CandyColor => _blockItem.CandyColor;

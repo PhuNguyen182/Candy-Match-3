@@ -1744,7 +1744,7 @@ Tilemap:
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Origin: {x: -4, y: 0, z: 0}
-  m_Size: {x: 9, y: 6, z: 1}
+  m_Size: {x: 9, y: 5, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -2285,115 +2285,25 @@ MonoBehaviour:
     name: BoardTileValidate
   - position: {x: 4, y: 4, z: 0}
     name: BoardTileValidate
-  - position: {x: -4, y: 1, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -4, y: 2, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -4, y: 3, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -4, y: 4, z: 0}
-    name: SpawnerTileValidate
   - position: {x: -4, y: 5, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -4, y: 6, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -3, y: 1, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -3, y: 2, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -3, y: 3, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -3, y: 4, z: 0}
     name: SpawnerTileValidate
   - position: {x: -3, y: 5, z: 0}
     name: SpawnerTileValidate
-  - position: {x: -3, y: 6, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -2, y: 1, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -2, y: 2, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -2, y: 3, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -2, y: 4, z: 0}
-    name: SpawnerTileValidate
   - position: {x: -2, y: 5, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -2, y: 6, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -1, y: 1, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -1, y: 2, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -1, y: 3, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: -1, y: 4, z: 0}
     name: SpawnerTileValidate
   - position: {x: -1, y: 5, z: 0}
     name: SpawnerTileValidate
-  - position: {x: -1, y: 6, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 0, y: 1, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 0, y: 2, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 0, y: 3, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 0, y: 4, z: 0}
-    name: SpawnerTileValidate
   - position: {x: 0, y: 5, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 0, y: 6, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 1, y: 1, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 1, y: 2, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 1, y: 3, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 1, y: 4, z: 0}
     name: SpawnerTileValidate
   - position: {x: 1, y: 5, z: 0}
     name: SpawnerTileValidate
-  - position: {x: 1, y: 6, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 2, y: 1, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 2, y: 2, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 2, y: 3, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 2, y: 4, z: 0}
-    name: SpawnerTileValidate
   - position: {x: 2, y: 5, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 2, y: 6, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 3, y: 1, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 3, y: 2, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 3, y: 3, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 3, y: 4, z: 0}
     name: SpawnerTileValidate
   - position: {x: 3, y: 5, z: 0}
     name: SpawnerTileValidate
-  - position: {x: 3, y: 6, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 4, y: 1, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 4, y: 2, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 4, y: 3, z: 0}
-    name: SpawnerTileValidate
-  - position: {x: 4, y: 4, z: 0}
-    name: SpawnerTileValidate
   - position: {x: 4, y: 5, z: 0}
     name: SpawnerTileValidate
-  - position: {x: 4, y: 6, z: 0}
-    name: SpawnerTileValidate
-  m_PositionIntValues: 010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_PositionIntValues: 010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
   m_PositionStringKeys: []
   m_PositionStringValues: []
   m_PositionFloatKeys: []
@@ -2433,7 +2343,152 @@ Transform:
   - {fileID: 269106884}
   - {fileID: 773047406}
   - {fileID: 391042899}
+  - {fileID: 1897150874}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1897150871
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1897150874}
+  - component: {fileID: 1897150872}
+  - component: {fileID: 1897150873}
+  m_Layer: 0
+  m_Name: Collectible Check Tilemap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1839735485 &1897150872
+Tilemap:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897150871}
+  m_Enabled: 1
+  m_Tiles: {}
+  m_AnimatedTiles: {}
+  m_TileAssetArray:
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  m_TileSpriteArray:
+  - m_RefCount: 0
+    m_Data: {fileID: 0}
+  m_TileMatrixArray:
+  - m_RefCount: 0
+    m_Data:
+      e00: 4.131e-42
+      e01: 0
+      e02: -1.616307e-38
+      e03: -1.616307e-38
+      e10: 0
+      e11: 0
+      e12: 8.3e-43
+      e13: 8.3e-43
+      e20: 3.188254e+12
+      e21: -2.7446531e-21
+      e22: 2.9866185e-28
+      e23: 1.012433e-39
+      e30: 4.5904e-41
+      e31: 8.35e-43
+      e32: 8.31e-43
+      e33: 8.34e-43
+  m_TileColorArray:
+  - m_RefCount: 0
+    m_Data: {r: NaN, g: NaN, b: NaN, a: NaN}
+  m_TileObjectToInstantiateArray: []
+  m_AnimationFrameRate: 1
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Origin: {x: -4, y: -4, z: 0}
+  m_Size: {x: 9, y: 4, z: 1}
+  m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
+  m_TileOrientation: 0
+  m_TileOrientationMatrix:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+--- !u!483693784 &1897150873
+TilemapRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897150871}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -664089845
+  m_SortingLayer: 5
+  m_SortingOrder: 1
+  m_ChunkSize: {x: 32, y: 32, z: 32}
+  m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
+  m_MaxChunkCount: 16
+  m_MaxFrameAge: 16
+  m_SortOrder: 0
+  m_Mode: 0
+  m_DetectChunkCullingBounds: 0
+  m_MaskInteraction: 0
+--- !u!4 &1897150874
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1897150871}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1640025284}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1949513531
 GameObject:
@@ -2599,7 +2654,8 @@ MonoBehaviour:
   itemTilemap: {fileID: 269106886}
   spawnerTilemap: {fileID: 773047408}
   statefulTilemap: {fileID: 391042897}
-  LevelData: '{"TargetMove":30,"ScoreRule":{"MaxScore":10000,"Star1Score":2000,"Star2Score":5000,"Star3Score":8000},"SpawnerRules":[{"ID":0,"ItemSpawnerData":[[1000,2],[1000,6]]},{"ID":1,"ItemSpawnerData":[[200,2],[200,10]]}],"BoardFillRule":[[1000,1],[1000,3],[1000,5]],"RuledRandomFill":[[1000,2],[1000,5],[1000,6]],"LevelTargetData":[[3,1],[4,3],[5,5]],"BoardBlockPositions":[[-4,-4],[-4,-3],[-4,-2],[-4,-1],[-4,0],[-4,1],[-4,2],[-4,3],[-4,4],[-3,-4],[-3,-3],[-3,-2],[-3,-1],[-3,0],[-3,1],[-3,2],[-3,3],[-3,4],[-2,-4],[-2,-3],[-2,-2],[-2,-1],[-2,0],[-2,1],[-2,2],[-2,3],[-2,4],[-1,-4],[-1,-3],[-1,-2],[-1,-1],[-1,0],[-1,1],[-1,2],[-1,3],[-1,4],[0,-4],[0,-3],[0,-2],[0,-1],[0,0],[0,1],[0,2],[0,3],[0,4],[1,-4],[1,-3],[1,-2],[1,-1],[1,0],[1,1],[1,2],[1,3],[1,4],[2,-4],[2,-3],[2,-2],[2,-1],[2,0],[2,1],[2,2],[2,3],[2,4],[3,-4],[3,-3],[3,-2],[3,-1],[3,0],[3,1],[3,2],[3,3],[3,4],[4,-4],[4,-3],[4,-2],[4,-1],[4,0],[4,1],[4,2],[4,3],[4,4]],"ColorBlockItemPositions":[[-3,-4,0,1,18,5,0,0],[-3,-2,0,1,14,4,0,0],[-3,0,0,1,10,3,0,0],[-3,4,0,1,2,1,0,0],[-1,-2,0,1,14,4,0,0],[-1,0,0,1,10,3,0,0],[-1,2,0,1,6,2,0,0],[-1,4,0,1,2,1,0,0],[1,-4,0,1,22,6,0,0],[1,-2,0,1,14,4,0,0],[1,2,0,1,6,2,0,0],[1,4,0,1,2,1,0,0],[3,-2,0,1,14,4,0,0],[3,0,0,1,10,3,0,0],[3,2,0,1,6,2,0,0],[3,4,0,1,2,1,0,0],[4,-1,0,1,10,3,0,0],[4,0,0,1,10,3,0,0],[4,1,0,1,6,2,0,0],[4,2,0,1,6,2,0,0],[4,3,0,1,2,1,0,0],[4,4,0,1,2,1,0,0]],"ColorBoosterItemPositions":[[-4,-4,0,1,19,5,517,0],[-4,-3,0,1,16,4,772,0],[-4,-2,0,1,15,4,516,0],[-4,-1,0,1,12,3,771,0],[-4,0,0,1,11,3,515,0],[-4,1,0,1,8,2,770,0],[-4,2,0,1,7,2,514,0],[-4,3,0,1,4,1,769,0],[-4,4,0,1,3,1,513,0],[-3,-3,0,1,17,4,1028,0],[-3,-1,0,1,13,3,1027,0],[-3,3,0,1,5,1,1025,0],[-2,-4,0,1,20,5,773,0],[-2,-3,0,1,16,4,772,0],[-2,-2,0,1,15,4,516,0],[-2,-1,0,1,12,3,771,0],[-2,0,0,1,11,3,515,0],[-2,1,0,1,8,2,770,0],[-2,3,0,1,4,1,769,0],[-2,4,0,1,3,1,513,0],[-1,-4,0,1,21,5,1029,0],[-1,-3,0,1,17,4,1028,0],[-1,-1,0,1,13,3,1027,0],[-1,1,0,1,9,2,1026,0],[-1,3,0,1,5,1,1025,0],[0,-4,0,1,23,6,518,0],[0,-3,0,1,16,4,772,0],[0,-2,0,1,15,4,516,0],[0,1,0,1,8,2,770,0],[0,2,0,1,7,2,514,0],[0,3,0,1,4,1,769,0],[0,4,0,1,3,1,513,0],[1,-3,0,1,17,4,1028,0],[1,-1,0,1,13,3,1027,0],[1,1,0,1,9,2,1026,0],[1,3,0,1,5,1,1025,0],[2,-4,0,1,24,6,774,0],[2,-3,0,1,16,4,772,0],[2,-2,0,1,15,4,516,0],[2,-1,0,1,12,3,771,0],[2,0,0,1,11,3,515,0],[2,1,0,1,8,2,770,0],[2,2,0,1,7,2,514,0],[2,3,0,1,4,1,769,0],[2,4,0,1,3,1,513,0],[3,-4,0,1,25,6,1030,0],[3,-3,0,1,17,4,1028,0],[3,-1,0,1,13,3,1027,0],[3,1,0,1,9,2,1026,0],[3,3,0,1,5,1,1025,0]],"BoosterItemPositions":[[4,-3,0,100,33,0,0,0],[4,-2,0,100,34,0,0,0]],"RandomBlockItemPositions":[],"RuledRandomBlockPositions":[],"BreakableItemPositions":[[0,-1,0,1,30,0,0,0],[0,0,0,1,26,0,0,0],[1,0,0,1,28,0,0,0]],"UnbreakableItemPositions":[[-2,2,0,100,31,0,0,0]],"CollectibleItemPositions":[[-3,1,0,100,32,0,0,0],[-3,2,0,100,27,0,0,0]],"StatefulBlockPositions":[],"SpawnerBlockPositions":[]}'
+  collectibleCheckTilemap: {fileID: 1897150872}
+  LevelData: '{"TargetMove":30,"ScoreRule":{"MaxScore":10000,"Star1Score":2000,"Star2Score":5000,"Star3Score":8000},"SpawnerRules":[{"ID":0,"ItemSpawnerData":[[1000,2],[1000,6],[1000,18],[1000,22]]}],"BoardFillRule":[[1000,1],[1000,3],[1000,5],[1000,2],[1000,4],[1000,6]],"RuledRandomFill":[[0,2],[0,5],[1000,6]],"LevelTargetData":[[3,1],[4,3],[5,5]],"BoardBlockPositions":[[-4,-4],[-4,-3],[-4,-2],[-4,-1],[-4,0],[-4,1],[-4,2],[-4,3],[-4,4],[-3,-4],[-3,-3],[-3,-2],[-3,-1],[-3,0],[-3,1],[-3,2],[-3,3],[-3,4],[-2,-4],[-2,-3],[-2,-2],[-2,-1],[-2,0],[-2,1],[-2,2],[-2,3],[-2,4],[-1,-4],[-1,-3],[-1,-2],[-1,-1],[-1,0],[-1,1],[-1,2],[-1,3],[-1,4],[0,-4],[0,-3],[0,-2],[0,-1],[0,0],[0,1],[0,2],[0,3],[0,4],[1,-4],[1,-3],[1,-2],[1,-1],[1,0],[1,1],[1,2],[1,3],[1,4],[2,-4],[2,-3],[2,-2],[2,-1],[2,0],[2,1],[2,2],[2,3],[2,4],[3,-4],[3,-3],[3,-2],[3,-1],[3,0],[3,1],[3,2],[3,3],[3,4],[4,-4],[4,-3],[4,-2],[4,-1],[4,0],[4,1],[4,2],[4,3],[4,4]],"ColorBlockItemPositions":[[-4,4,0,1,2,1,0,0],[-3,4,0,1,6,2,0,0],[-2,4,0,1,2,1,0,0],[-1,4,0,1,6,2,0,0],[0,4,0,1,2,1,0,0],[1,4,0,1,6,2,0,0],[2,4,0,1,2,1,0,0],[3,4,0,1,6,2,0,0],[4,4,0,1,2,1,0,0]],"ColorBoosterItemPositions":[],"BoosterItemPositions":[],"CollectibleCheckBlockPositions":[[-4,-4],[-3,-4],[-2,-4],[-1,-4],[0,-4],[1,-4],[2,-4],[3,-4],[4,-4]],"RandomBlockItemPositions":[],"RuledRandomBlockPositions":[],"BreakableItemPositions":[],"UnbreakableItemPositions":[[-4,-4,0,100,31,0,0,0],[-3,-4,0,100,31,0,0,0],[-2,-4,0,100,31,0,0,0],[-1,-4,0,100,31,0,0,0],[0,-4,0,100,31,0,0,0],[1,-4,0,100,31,0,0,0],[2,-4,0,100,31,0,0,0],[3,-4,0,100,31,0,0,0],[4,-4,0,100,31,0,0,0]],"CollectibleItemPositions":[],"StatefulBlockPositions":[],"SpawnerBlockPositions":[[-4,4,0],[-3,4,0],[-2,4,0],[-1,4,0],[0,4,0],[1,4,0],[2,4,0],[3,4,0],[4,4,0]]}'
 --- !u!4 &2095715574
 Transform:
   m_ObjectHideFlags: 0

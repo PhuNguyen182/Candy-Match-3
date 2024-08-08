@@ -24,6 +24,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models
         public List<BlockItemPosition> ColorBlockItemPositions = new();
         public List<BlockItemPosition> ColorBoosterItemPositions = new();
         public List<BlockItemPosition> BoosterItemPositions = new();
+        public List<CollectibleCheckBlockPosition> CollectibleCheckBlockPositions = new();
         #endregion
 
         #region Random Items
@@ -54,6 +55,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models
             ColorBlockItemPositions.Clear();
             ColorBoosterItemPositions.Clear();
             BoosterItemPositions.Clear();
+            CollectibleCheckBlockPositions.Clear();
 
             RandomBlockItemPositions.Clear();
             RuledRandomBlockPositions.Clear();
