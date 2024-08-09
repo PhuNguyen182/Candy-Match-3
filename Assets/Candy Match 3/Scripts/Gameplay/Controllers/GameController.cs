@@ -43,6 +43,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private FillBoardTask _fillBoardTask;
         private BreakGridTask _breakGridTask;
         private SpawnItemTask _spawnItemTask;
+        private SwapItemTask _swapItemTask;
         private GameTaskManager _gameTaskManager;
 
         private void Awake()
@@ -76,7 +77,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _spawnItemTask = new(_gridCellManager, _itemManager);
             _spawnItemTask.AddTo(ref builder);
 
-            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask);
+            _swapItemTask = new(_gridCellManager);
+            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask, _swapItemTask);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(this.destroyCancellationToken);
@@ -160,6 +162,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
             _gameTaskManager.CheckMoveOnStart();
+            _gameTaskManager.SetInputActive(true);
         }
 
         public Vector3 ConvertGridToWorld(Vector3Int position)

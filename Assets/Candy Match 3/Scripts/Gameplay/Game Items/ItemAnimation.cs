@@ -6,6 +6,7 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Common.Constants;
 using DG.Tweening;
+using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems
 {
@@ -47,6 +48,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
             TimeSpan totalDuration = TimeSpan.FromSeconds(_moveTween.Duration());
             return UniTask.Delay(totalDuration , cancellationToken: _destroyToken);
+        }
+
+        public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
+        {
+            SwapItemLayer(isMoveFirst);
+            _moveTween ??= CreateMoveTween(position, duration, moveEase);
+            _moveTween.ChangeValues(transform.position, position, duration);
+            _moveTween.Play();
+            SwapItemLayer(false);
+
+            TimeSpan totalDuration = TimeSpan.FromSeconds(_moveTween.Duration());
+            return UniTask.Delay(totalDuration, cancellationToken: _destroyToken);
         }
 
         public UniTask BounceMove(Vector3 position)

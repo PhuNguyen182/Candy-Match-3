@@ -6,15 +6,6 @@
             "id": "432da7c4-e9fe-4b23-8552-4f0cf2d9c0d0",
             "actions": [
                 {
-                    "name": "Tap",
-                    "type": "Button",
-                    "id": "45e0c25d-c331-4317-8204-1a1ee1b5c2bf",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Position",
                     "type": "Value",
                     "id": "03ac8226-2bf1-4452-8a73-c093e141166a",
@@ -34,28 +25,6 @@
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "b4f29ea2-f960-4311-9212-5f322341137a",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Tap",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e3c4a841-59c8-4ec9-ad45-444b03790338",
-                    "path": "<Touchscreen>/primaryTouch/tap",
-                    "interactions": "Tap",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Tap",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "",
                     "id": "468f73a1-a57f-4f97-a029-bdc97b23f219",

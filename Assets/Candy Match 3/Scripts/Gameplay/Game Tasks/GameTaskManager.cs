@@ -7,13 +7,12 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using Cysharp.Threading.Tasks;
-using CandyMatch3.Scripts.Common.CustomData;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
     public class GameTaskManager : IDisposable
     {
-        private readonly InputProcessor _inputProcessor;
+        private readonly InputProcessTask _inputProcessor;
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
         private readonly CheckGridTask _checkGridTask;
@@ -21,13 +20,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private IDisposable _disposable;
 
-        public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask)
+        public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask, SwapItemTask swapItemTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
             _gridCellManager = gridCellManager;
 
-            _inputProcessor = new(boardInput, _gridCellManager);
+            _inputProcessor = new(boardInput, _gridCellManager, swapItemTask);
             _inputProcessor.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager);
@@ -44,6 +43,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void CheckMoveOnStart()
         {
             _moveItemTask.MoveItems().Forget();
+        }
+
+        public void SetInputActive(bool isActive)
+        {
+            _inputProcessor.IsActive = isActive;
         }
 
         public void Dispose()

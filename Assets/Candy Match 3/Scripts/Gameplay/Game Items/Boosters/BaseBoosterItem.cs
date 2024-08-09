@@ -39,5 +39,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
         {
             return itemAnimation.MoveTo(position, duration);
         }
+
+        public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
+        {
+            return itemAnimation.SwapTo(position, duration, isMoveFirst);
+        }
     }
 }
