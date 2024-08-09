@@ -56,27 +56,27 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void OnPress()
         {
-            if (_boardInput.IsPressed)
+            if (!_boardInput.IsPressed)
+                return;
+
+            GridCellView gridCellView = _boardInput.GetGridCellView();
+
+            if (gridCellView == null)
+                return;
+
+            IGridCell gridCell = _gridCellManager.Get(gridCellView.GridPosition);
+
+            if (gridCell != null && gridCell.HasItem)
             {
-                GridCellView gridCellView = _boardInput.GetGridCellView();
-
-                if (gridCellView == null)
-                    return;
-
-                IGridCell gridCell = _gridCellManager.Get(gridCellView.GridPosition);
-
-                if (gridCell != null && gridCell.HasItem)
-                {
-                    _isGridSelected = true;
-                    _selectecGridCell = gridCell;
-                    _processGridCell = gridCell;
-                    _selectedPosition = _boardInput.WorldMoudePosition;
-                    _selectedGridPosition = gridCell.GridPosition;
-                }
-
-                else
-                    _isGridSelected = false;
+                _isGridSelected = true;
+                _selectecGridCell = gridCell;
+                _processGridCell = gridCell;
+                _selectedPosition = _boardInput.WorldMoudePosition;
+                _selectedGridPosition = gridCell.GridPosition;
             }
+
+            else
+                _isGridSelected = false;
         }
 
         private void OnDrag()
