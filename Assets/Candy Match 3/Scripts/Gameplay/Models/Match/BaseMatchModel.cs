@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
-    public abstract class BaseMatchModel
+    public abstract class BaseMatchModel : IDisposable
     {
         protected readonly GridCellManager gridCellManager;
 
@@ -81,6 +82,11 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             }
 
             return gridCells;
+        }
+
+        public void Dispose()
+        {
+            matchCellPositions.Clear();
         }
     }
 }
