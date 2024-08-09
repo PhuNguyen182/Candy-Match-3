@@ -2,25 +2,55 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
     public class MatchTModel : BaseMatchModel
     {
-        /*
-         * Default:
-         *      X O X
-         *        X
-         *        X
-         */
-        protected override List<Vector3Int> matchCellPositions => new()
+        public override MatchType MatchType => MatchType.MatchT;
+
+        public MatchTModel(GridCellManager gridCellManager) : base(gridCellManager) { }
+
+        protected override List<SequencePosition> matchCellPositions => new()
         {
-            new(0, -1), new(1, 0), new(0, -1), new(0, 2)
+            new(new() { new(0, -1), new(1, 0), new(0, -1), new(0, -2) }),
         };
 
         public override List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection)
         {
-            return null;
+            List<IGridCell> matchCells = new();
+
+            if (inDirection == Vector3Int.down)
+            {
+                matchCells = GetMatchCellSFromSequence(gridPosition, matchCellPositions[0], 0);
+                if (matchCells.Count >= 4)
+                    return matchCells;
+            }
+
+            else if (inDirection == Vector3Int.up)
+            {
+                matchCells = GetMatchCellSFromSequence(gridPosition, matchCellPositions[0], 180);
+                if (matchCells.Count >= 4)
+                    return matchCells;
+            }
+
+            else if (inDirection == Vector3Int.right)
+            {
+                matchCells = GetMatchCellSFromSequence(gridPosition, matchCellPositions[0], 90);
+                if (matchCells.Count >= 4)
+                    return matchCells;
+            }
+
+            else if (inDirection == Vector3Int.left)
+            {
+                matchCells = GetMatchCellSFromSequence(gridPosition, matchCellPositions[0], -90);
+                if (matchCells.Count >= 4)
+                    return matchCells;
+            }
+
+            return matchCells;
         }
     }
 }

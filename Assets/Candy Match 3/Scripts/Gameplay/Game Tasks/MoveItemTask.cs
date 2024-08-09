@@ -105,7 +105,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (blockItem is IItemAnimation animation)
             {
                 float moveSpeed = Match3Constants.BaseItemMoveSpeed + Match3Constants.FallenAccelaration * stepCount;
-                float fallDuration = 1 / moveSpeed + Time.deltaTime * stepCount;
+                float fallDuration = 1 / moveSpeed;
                 await animation.MoveTo(targetCell.WorldPosition, fallDuration);
             }
         }
