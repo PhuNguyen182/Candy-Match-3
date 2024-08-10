@@ -41,14 +41,15 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private MetaItemManager _metaItemManager;
         private GridCellManager _gridCellManager;
         private FillBoardTask _fillBoardTask;
-        private MatchItemsTask _matchItemsTask;
         private BreakGridTask _breakGridTask;
+        private MatchItemsTask _matchItemsTask;
         private SpawnItemTask _spawnItemTask;
-        private SwapItemTask _swapItemTask;
+        
         private GameTaskManager _gameTaskManager;
 
         private void Awake()
         {
+            Setup();
             Initialize();
         }
 
@@ -59,6 +60,11 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 LevelModel levelModel = PlayGameConfig.Current.LevelModel;
                 GenerateLevel(levelModel);
             }
+        }
+
+        private void Setup()
+        {
+            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
         }
 
         private void Initialize()
@@ -75,14 +81,14 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _fillBoardTask = new(boardTilemap, tileDatabase, _itemManager);
             _fillBoardTask.AddTo(ref builder);
 
-            _matchItemsTask = new(_gridCellManager);
+            _breakGridTask = new(_gridCellManager, _metaItemManager);
+            _matchItemsTask = new(_gridCellManager, _breakGridTask);
             _matchItemsTask.AddTo(ref builder);
 
             _spawnItemTask = new(_gridCellManager, _matchItemsTask, _itemManager);
             _spawnItemTask.AddTo(ref builder);
 
-            _swapItemTask = new(_gridCellManager, _matchItemsTask);
-            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask, _swapItemTask);
+            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask, _matchItemsTask, _metaItemManager, _breakGridTask);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(this.destroyCancellationToken);

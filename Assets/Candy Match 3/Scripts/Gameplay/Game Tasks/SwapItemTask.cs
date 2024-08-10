@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
@@ -52,17 +51,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             toCell.SetBlockItem(fromItem);
             fromItem.SetWorldPosition(toCell.WorldPosition);
 
-            MatchType matchType;
-            List<IGridCell> matchedCells;
-
             if (isSwapBack)
             {
-                bool isMatched = _matchItemsTask.CheckMatch(toPosition, swapDirection, out matchedCells, out matchType)
-                                 || _matchItemsTask.CheckMatch(fromPosition, swapDirection * -1, out matchedCells, out matchType);
+                bool isMatchedTo = await _matchItemsTask.CheckMatch(toPosition, swapDirection);
+                bool isMatchedFrom = await _matchItemsTask.CheckMatch(fromPosition, swapDirection * -1);
+                bool isMatched = isMatchedTo || isMatchedFrom;
+                
                 if (!isMatched)
                     await SwapItem(toPosition, fromPosition, false);
-                else
-                    Debug.Log("Match Found!");
             }
         }
     }

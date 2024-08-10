@@ -52,12 +52,6 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 return true;
             }
 
-            else if (_match3Model.CheckMatch(checkPosition, inDirection, out matchedCells))
-            {
-                matchType = _match3Model.MatchType;
-                return true;
-            }
-
             else if (_matchLModel.CheckMatch(checkPosition, inDirection, out matchedCells))
             {
                 matchType = _matchLModel.MatchType;
@@ -67,6 +61,12 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             else if (_matchTModel.CheckMatch(checkPosition, inDirection, out matchedCells))
             {
                 matchType = _matchTModel.MatchType;
+                return true;
+            }
+
+            else if (_match3Model.CheckMatch(checkPosition, inDirection, out matchedCells))
+            {
+                matchType = _match3Model.MatchType;
                 return true;
             }
 

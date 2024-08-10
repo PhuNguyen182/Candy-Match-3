@@ -26,7 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public bool IsCollectible { get; set; }
 
         public ItemType ItemType => _blockItem.ItemType;
-        public CandyColor CandyColor => _blockItem.CandyColor;
+        public CandyColor CandyColor => HasItem ? _blockItem.CandyColor : CandyColor.None;
         public LockStates LockStates { get; set; }
 
         public Vector3 WorldPosition => _worldPosition;

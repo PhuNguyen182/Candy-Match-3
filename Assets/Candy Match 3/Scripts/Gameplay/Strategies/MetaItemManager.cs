@@ -8,7 +8,25 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
 {
     public class MetaItemManager : IDisposable
     {
-        private readonly Dictionary<Vector3Int, IBlockItem> _metaItem = new();
+        private readonly HashSet<IBlockItem> _blueItems; 
+        private readonly HashSet<IBlockItem> _greenItems; 
+        private readonly HashSet<IBlockItem> _orangeItems; 
+        private readonly HashSet<IBlockItem> _purpleItems; 
+        private readonly HashSet<IBlockItem> _redItems; 
+        private readonly HashSet<IBlockItem> _yellowItems;
+        
+        private readonly Dictionary<Vector3Int, IBlockItem> _metaItem;
+
+        public MetaItemManager()
+        {
+            _metaItem = new();
+            _blueItems = new();
+            _greenItems = new();
+            _orangeItems = new();
+            _purpleItems = new();
+            _redItems = new();
+            _yellowItems = new();
+        }
 
         public IBlockItem Get(Vector3Int position)
         {
@@ -32,9 +50,26 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
                 _metaItem.Remove(blockItem.GridPosition);
         }
 
+        public void RemoveAt(Vector3Int position)
+        {
+            if (_metaItem.ContainsKey(position))
+                _metaItem.Remove(position);
+        }
+
+        public void ReleaseGridCell(Vector3Int position)
+        {
+            Add(position, null);
+        }
+
         public void Dispose()
         {
             _metaItem.Clear();
+            _blueItems.Clear();
+            _greenItems.Clear();
+            _orangeItems.Clear();
+            _purpleItems.Clear();
+            _redItems.Clear();
+            _yellowItems.Clear();
         }
     }
 }

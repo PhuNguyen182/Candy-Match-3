@@ -23,32 +23,33 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         protected override List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection)
         {
             List<IGridCell> matchCells = new();
+            int minMatchCount = GetMinMatchCount();
 
             if (inDirection == Vector3Int.down)
             {
                 matchCells = GetMatchCellsFromSequence(gridPosition, matchCellPositions[0], 0);
-                if (matchCells.Count >= 4)
+                if (matchCells.Count >= minMatchCount)
                     return matchCells;
             }
 
             else if (inDirection == Vector3Int.up)
             {
                 matchCells = GetMatchCellsFromSequence(gridPosition, matchCellPositions[0], 180);
-                if (matchCells.Count >= 4)
+                if (matchCells.Count >= minMatchCount)
                     return matchCells;
             }
 
             else if (inDirection == Vector3Int.right)
             {
                 matchCells = GetMatchCellsFromSequence(gridPosition, matchCellPositions[0], 90);
-                if (matchCells.Count >= 4)
+                if (matchCells.Count >= minMatchCount)
                     return matchCells;
             }
 
             else if (inDirection == Vector3Int.left)
             {
                 matchCells = GetMatchCellsFromSequence(gridPosition, matchCellPositions[0], -90);
-                if (matchCells.Count >= 4)
+                if (matchCells.Count >= minMatchCount)
                     return matchCells;
             }
 

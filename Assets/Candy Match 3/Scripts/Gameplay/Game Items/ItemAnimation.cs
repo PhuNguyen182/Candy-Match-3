@@ -6,7 +6,6 @@ using UnityEngine;
 using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Common.Constants;
 using DG.Tweening;
-using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems
 {

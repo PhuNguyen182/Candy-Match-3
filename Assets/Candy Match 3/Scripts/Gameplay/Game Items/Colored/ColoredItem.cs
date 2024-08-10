@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredItem : BaseItem, ISetColor, IItemAnimation
+    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
@@ -55,6 +55,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             };
 
             itemGraphics.SetItemSprite(colorSprite);
+        }
+
+        public bool Break()
+        {
+            ReleaseItem();
+            return true;
         }
 
         public void BounceOnTap()

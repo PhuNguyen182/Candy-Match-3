@@ -26,14 +26,15 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         protected override List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection)
         {
             List<IGridCell> matchGrids = new();
+            int minMatchCount = GetMinMatchCount();
 
             for (int i = 0; i < matchCellPositions.Count; i++)
             {
                 for (int j = 0; j < _checkAngles.Length; j++)
                 {
                     matchGrids = GetMatchCellsFromSequence(gridPosition, matchCellPositions[i], _checkAngles[j]);
-                    if (matchGrids.Count >= 2)
-                        break;
+                    if (matchGrids.Count >= minMatchCount)
+                        return matchGrids;
                 }
             }
 

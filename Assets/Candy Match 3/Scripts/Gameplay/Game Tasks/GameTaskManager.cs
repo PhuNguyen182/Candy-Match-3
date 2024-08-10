@@ -17,26 +17,28 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly CheckGridTask _checkGridTask;
         private readonly MoveItemTask _moveItemTask;
+        private readonly SwapItemTask _swapItemTask;
 
         private IDisposable _disposable;
 
-        public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask, SwapItemTask swapItemTask)
+        public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask
+            , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
             _gridCellManager = gridCellManager;
 
-            _inputProcessor = new(boardInput, _gridCellManager, swapItemTask);
+            _swapItemTask = new(_gridCellManager, matchItemsTask);
+            _inputProcessor = new(boardInput, _gridCellManager, _swapItemTask);
             _inputProcessor.AddTo(ref builder);
 
-            _breakGridTask = new(_gridCellManager);
+            _breakGridTask = new(_gridCellManager, metaItemManager);
             _moveItemTask = new(_gridCellManager);
 
             _checkGridTask = new(_gridCellManager, _moveItemTask, spawnItemTask);
             _checkGridTask.AddTo(ref builder);
 
-            _moveItemTask.SetCheckGridTask(_checkGridTask);
-            
+            SetCheckGridTask();
             _disposable = builder.Build();
         }
 
@@ -48,6 +50,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void SetInputActive(bool isActive)
         {
             _inputProcessor.IsActive = isActive;
+        }
+
+        private void SetCheckGridTask()
+        {
+            _moveItemTask.SetCheckGridTask(_checkGridTask);
+            _breakGridTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

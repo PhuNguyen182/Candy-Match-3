@@ -30,16 +30,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             IGridCell checkGrid = gridCellManager.Get(gridPosition);
             List<IGridCell> matchedCells = GetMatchResult(gridPosition, inDirection);
 
-            int minMatchCount = MatchType switch
-            {
-                MatchType.Match3 => 2,
-                MatchType.Match4 => 3,
-                MatchType.Match5 => 4,
-                MatchType.MatchL => 4,
-                MatchType.MatchT => 4,
-                _ => 100
-            };
-
+            int minMatchCount = GetMinMatchCount();
             bool isMatchable = matchedCells.Count >= minMatchCount;
 
             if (isMatchable)
@@ -77,8 +68,12 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         {
             List<IGridCell> gridCells = new();
             List<Vector3Int> checkSteps = GetRotatePositions(sequence.Sequence, angle);
+            
             IGridCell checkCell = gridCellManager.Get(position);
             CandyColor candyColor = checkCell.CandyColor;
+            
+            if (candyColor == CandyColor.None)
+                return gridCells;
 
             for (int i = 0; i < checkSteps.Count; i++)
             {
@@ -100,6 +95,21 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             }
 
             return gridCells;
+        }
+
+        protected int GetMinMatchCount()
+        {
+            int minMatchCount = MatchType switch
+            {
+                MatchType.Match3 => 2,
+                MatchType.Match4 => 3,
+                MatchType.Match5 => 4,
+                MatchType.MatchL => 4,
+                MatchType.MatchT => 4,
+                _ => 100
+            };
+
+            return minMatchCount;
         }
 
         public void Dispose()
