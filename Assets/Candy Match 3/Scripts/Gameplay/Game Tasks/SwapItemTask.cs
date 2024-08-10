@@ -52,9 +52,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             toCell.SetBlockItem(fromItem);
             fromItem.SetWorldPosition(toCell.WorldPosition);
 
-            if(isSwapBack)
+            MatchType matchType;
+            List<IGridCell> matchedCells;
+
+            if (isSwapBack)
             {
-                if (!_matchItemsTask.CheckMatch(toPosition, swapDirection, out var matchedCells, out MatchType matchType))
+                bool isMatched = _matchItemsTask.CheckMatch(toPosition, swapDirection, out matchedCells, out matchType)
+                                 || _matchItemsTask.CheckMatch(fromPosition, swapDirection * -1, out matchedCells, out matchType);
+                if (!isMatched)
                     await SwapItem(toPosition, fromPosition, false);
                 else
                     Debug.Log("Match Found!");

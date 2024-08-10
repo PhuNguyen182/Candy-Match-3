@@ -20,7 +20,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             };
         }
 
-        public override List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection)
+        protected override List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection)
         {
             List<IGridCell> matchCells = new();
 

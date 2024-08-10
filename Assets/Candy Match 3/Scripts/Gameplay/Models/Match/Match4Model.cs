@@ -22,7 +22,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
         protected override List<SequencePosition> matchCellPositions { get; }
 
-        public override List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection)
+        protected override List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection)
         {
             List<IGridCell> matchCells = new();
             if(inDirection == Vector3Int.down || inDirection == Vector3Int.up)

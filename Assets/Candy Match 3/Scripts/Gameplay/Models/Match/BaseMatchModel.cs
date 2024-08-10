@@ -23,7 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             this.gridCellManager = gridCellManager;
         }
 
-        public abstract List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection);
+        protected abstract List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection);
 
         public bool CheckMatch(Vector3Int gridPosition, Vector3Int inDirection, out List<IGridCell> matchCells)
         {
