@@ -29,10 +29,26 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         {
             IGridCell checkGrid = gridCellManager.Get(gridPosition);
             List<IGridCell> matchedCells = GetMatchResult(gridPosition, inDirection);
-            
-            matchedCells.Add(checkGrid);
+
+            int minMatchCount = MatchType switch
+            {
+                MatchType.Match3 => 2,
+                MatchType.Match4 => 3,
+                MatchType.Match5 => 4,
+                MatchType.MatchL => 4,
+                MatchType.MatchT => 4,
+                _ => 100
+            };
+
+            bool isMatchable = matchedCells.Count >= minMatchCount;
+
+            if (isMatchable)
+                matchedCells.Add(checkGrid);
+            else
+                matchedCells.Clear();
+
             matchCells = matchedCells;
-            return matchCells.Count >= 2;
+            return isMatchable;
         }
 
         protected List<Vector3Int> GetRotatePositions(List<Vector3Int> checkPositions, int angle)
@@ -57,28 +73,30 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             return rotateMatchPositions;
         }
 
-        protected List<IGridCell> GetMatchCellSFromSequence(Vector3Int position, SequencePosition sequence, int angle)
+        protected List<IGridCell> GetMatchCellsFromSequence(Vector3Int position, SequencePosition sequence, int angle)
         {
             List<IGridCell> gridCells = new();
-            List<Vector3Int> seq = GetRotatePositions(sequence.Sequence, angle);
+            List<Vector3Int> checkSteps = GetRotatePositions(sequence.Sequence, angle);
             IGridCell checkCell = gridCellManager.Get(position);
             CandyColor candyColor = checkCell.CandyColor;
 
-            for (int i = 0; i < seq.Count; i++)
+            for (int i = 0; i < checkSteps.Count; i++)
             {
-                IGridCell gridCell = gridCellManager.Get(seq[i]);
+                IGridCell gridCell = gridCellManager.Get(position + checkSteps[i]);
 
                 if (gridCell == null)
-                    continue;
+                    break;
 
                 if (!gridCell.HasItem)
-                    continue;
+                    break;
 
                 if (!gridCell.BlockItem.IsMatchable)
-                    continue;
+                    break;
 
-                if (gridCell.CandyColor == candyColor)
-                    gridCells.Add(gridCell);
+                if (gridCell.CandyColor != candyColor)
+                    break;
+
+                gridCells.Add(gridCell);
             }
 
             return gridCells;

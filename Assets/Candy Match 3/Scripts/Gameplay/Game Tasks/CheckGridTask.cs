@@ -40,7 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void Update()
         {
-            if(_checkPositions.Count > 0)
+            if (_checkPositions.Count > 0)
             {
                 _positionsToCheck.Clear();
                 _positionsToCheck.AddRange(_checkPositions);

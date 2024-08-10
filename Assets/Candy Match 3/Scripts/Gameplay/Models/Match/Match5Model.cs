@@ -10,28 +10,30 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
     public class Match5Model : BaseMatchModel
     {
         public override MatchType MatchType => MatchType.Match5;
+        protected override List<SequencePosition> matchCellPositions { get; }
 
-        public Match5Model(GridCellManager gridCellManager) : base(gridCellManager) { }
-
-        protected override List<SequencePosition> matchCellPositions => new()
+        public Match5Model(GridCellManager gridCellManager) : base(gridCellManager)
         {
-            new(new() { new(1, 0), new(2, 0), new(3, 0), new(4, 0) }), // use for falling check
-            new(new() { new(-2, 0), new(-1, 0), new(1, 0), new(2, 0) }),
-        };
+            matchCellPositions = new()
+            {
+                new(new() { new(1, 0), new(2, 0), new(3, 0), new(4, 0) }), // use for falling check
+                new(new() { new(-2, 0), new(-1, 0), new(1, 0), new(2, 0) }),
+            };
+        }
 
         public override List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection)
         {
             List<IGridCell> matchCells = new();
             if (inDirection == Vector3Int.down || inDirection == Vector3Int.up)
             {
-                matchCells = GetMatchCellSFromSequence(gridPosition, matchCellPositions[1], 0);
+                matchCells = GetMatchCellsFromSequence(gridPosition, matchCellPositions[1], 0);
                 if (matchCells.Count >= 3)
                     return matchCells;
             }
 
             else if (inDirection == Vector3Int.left || inDirection == Vector3Int.right)
             {
-                matchCells = GetMatchCellSFromSequence(gridPosition, matchCellPositions[1], 90);
+                matchCells = GetMatchCellsFromSequence(gridPosition, matchCellPositions[1], 90);
                 if (matchCells.Count >= 3)
                     return matchCells;
             }

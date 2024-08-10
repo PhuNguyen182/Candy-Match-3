@@ -17,7 +17,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] private AnimationCurve fallenCurve;
 
         [Header("Movement")]
-        [SerializeField] private float swapDuration = 0.3f;
         [SerializeField] private float bounceDuration = 0.3f;
         [SerializeField] private Ease moveEase = Ease.OutQuad;
         [SerializeField] private Ease bounceEase = Ease.OutQuad;

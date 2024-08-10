@@ -41,6 +41,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private MetaItemManager _metaItemManager;
         private GridCellManager _gridCellManager;
         private FillBoardTask _fillBoardTask;
+        private MatchItemsTask _matchItemsTask;
         private BreakGridTask _breakGridTask;
         private SpawnItemTask _spawnItemTask;
         private SwapItemTask _swapItemTask;
@@ -74,10 +75,13 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _fillBoardTask = new(boardTilemap, tileDatabase, _itemManager);
             _fillBoardTask.AddTo(ref builder);
 
-            _spawnItemTask = new(_gridCellManager, _itemManager);
+            _matchItemsTask = new(_gridCellManager);
+            _matchItemsTask.AddTo(ref builder);
+
+            _spawnItemTask = new(_gridCellManager, _matchItemsTask, _itemManager);
             _spawnItemTask.AddTo(ref builder);
 
-            _swapItemTask = new(_gridCellManager);
+            _swapItemTask = new(_gridCellManager, _matchItemsTask);
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask, _swapItemTask);
             _gameTaskManager.AddTo(ref builder);
 

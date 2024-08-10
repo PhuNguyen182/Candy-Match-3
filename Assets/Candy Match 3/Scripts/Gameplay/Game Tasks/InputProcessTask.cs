@@ -18,7 +18,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly SwapItemTask _swapItemTask;
 
         private bool _isSwapped = false;
-        private bool _isGridSelected = false;
 
         private Vector2 _movePosition;
         private Vector3 _selectedPosition;
@@ -68,15 +67,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (gridCell != null && gridCell.HasItem)
             {
-                _isGridSelected = true;
                 _selectecGridCell = gridCell;
                 _processGridCell = gridCell;
                 _selectedPosition = _boardInput.WorldMoudePosition;
                 _selectedGridPosition = gridCell.GridPosition;
             }
-
-            else
-                _isGridSelected = false;
         }
 
         private void OnDrag()
@@ -96,7 +91,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _isSwapped = true;
             Vector3Int swapDirection = GetSwapDirection(moveDirection);
             Vector3Int swapToPosition = checkPosition + swapDirection;
-            _swapItemTask.SwapItem(checkPosition, swapToPosition).Forget();
+            _swapItemTask.SwapItem(checkPosition, swapToPosition, true).Forget();
 
             // Reset this variable to null to prevent duplicated action inside Update loop
             _selectecGridCell = null;

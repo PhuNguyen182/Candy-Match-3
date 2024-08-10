@@ -10,13 +10,15 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
     public class MatchTModel : BaseMatchModel
     {
         public override MatchType MatchType => MatchType.MatchT;
+        protected override List<SequencePosition> matchCellPositions { get; }
 
-        public MatchTModel(GridCellManager gridCellManager) : base(gridCellManager) { }
-
-        protected override List<SequencePosition> matchCellPositions => new()
+        public MatchTModel(GridCellManager gridCellManager) : base(gridCellManager)
         {
-            new(new() { new(0, -1), new(1, 0), new(0, -1), new(0, -2) }),
-        };
+            matchCellPositions = new()
+            {
+                new(new() { new(0, -1), new(1, 0), new(0, -1), new(0, -2) }),
+            };
+        }
 
         public override List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection)
         {
@@ -24,28 +26,28 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
             if (inDirection == Vector3Int.down)
             {
-                matchCells = GetMatchCellSFromSequence(gridPosition, matchCellPositions[0], 0);
+                matchCells = GetMatchCellsFromSequence(gridPosition, matchCellPositions[0], 0);
                 if (matchCells.Count >= 4)
                     return matchCells;
             }
 
             else if (inDirection == Vector3Int.up)
             {
-                matchCells = GetMatchCellSFromSequence(gridPosition, matchCellPositions[0], 180);
+                matchCells = GetMatchCellsFromSequence(gridPosition, matchCellPositions[0], 180);
                 if (matchCells.Count >= 4)
                     return matchCells;
             }
 
             else if (inDirection == Vector3Int.right)
             {
-                matchCells = GetMatchCellSFromSequence(gridPosition, matchCellPositions[0], 90);
+                matchCells = GetMatchCellsFromSequence(gridPosition, matchCellPositions[0], 90);
                 if (matchCells.Count >= 4)
                     return matchCells;
             }
 
             else if (inDirection == Vector3Int.left)
             {
-                matchCells = GetMatchCellSFromSequence(gridPosition, matchCellPositions[0], -90);
+                matchCells = GetMatchCellsFromSequence(gridPosition, matchCellPositions[0], -90);
                 if (matchCells.Count >= 4)
                     return matchCells;
             }

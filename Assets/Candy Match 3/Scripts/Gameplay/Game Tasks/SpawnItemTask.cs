@@ -17,15 +17,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly ItemManager _itemManager;
         private readonly GridCellManager _gridCellManager;
+        private readonly MatchItemsTask _matchItemsTask;
 
         private Dictionary<Vector3Int, int> _spawnerPoints;
         private Dictionary<int, WeightedSpawnRule> _spawnRules;
 
-        public SpawnItemTask(GridCellManager gridCellManager, ItemManager itemManager)
+        public SpawnItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask, ItemManager itemManager)
         {
             _spawnerPoints = new();
-            _itemManager = itemManager;
             _gridCellManager = gridCellManager;
+            _matchItemsTask = matchItemsTask;
+            _itemManager = itemManager;
         }
 
         public void SetItemSpawnerData(List<SpawnRuleBlockData> spawnRuleData)
