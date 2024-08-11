@@ -4,6 +4,7 @@ using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
+using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -34,7 +35,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             IBlockItem fromItem = fromCell.BlockItem;
             IBlockItem toItem = toCell.BlockItem;
-            Vector3Int swapDirection = toPosition - fromPosition;
 
             if (!fromCell.IsMoveable || !toItem.IsMoveable)
                 return;
@@ -53,13 +53,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (isSwapBack)
             {
-                bool isMatchedTo = await _matchItemsTask.CheckMatch(toPosition, swapDirection);
-                bool isMatchedFrom = await _matchItemsTask.CheckMatch(fromPosition, swapDirection * -1);
-                bool isMatched = isMatchedTo || isMatchedFrom;
-                
-                if (!isMatched)
-                    await SwapItem(toPosition, fromPosition, false);
+                CheckMatchOnSwap(fromPosition, toPosition).Forget();
             }
+        }
+
+        private async UniTask CheckMatchOnSwap(Vector3Int fromPosition, Vector3Int toPosition)
+        {
+            bool isMatchedTo = _matchItemsTask.CheckMatch(toPosition);
+            bool isMatchedFrom = _matchItemsTask.CheckMatch(fromPosition);
+            bool isMatched = isMatchedTo || isMatchedFrom;
+
+            if (!isMatched)
+                await SwapItem(toPosition, fromPosition, false);
         }
     }
 }

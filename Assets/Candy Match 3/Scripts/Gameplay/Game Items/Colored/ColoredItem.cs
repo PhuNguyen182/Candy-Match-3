@@ -32,7 +32,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override async UniTask ItemBlast()
         {
-            await UniTask.CompletedTask;
+            await itemAnimation.DisappearOnMatch();
         }
 
         public override void ReleaseItem()
@@ -59,7 +59,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public bool Break()
         {
-            ReleaseItem();
             return true;
         }
 

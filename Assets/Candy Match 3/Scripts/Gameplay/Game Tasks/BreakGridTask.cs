@@ -50,9 +50,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (breakable.Break())
                 {
-                    // To do: execute breaking stateful before execute break grid
                     await blockItem.ItemBlast();
+                    blockItem.ReleaseItem();
                     ReleaseGridCell(gridCell);
+                    _checkGridTask.CheckInDirection(gridCell.GridPosition, Vector3Int.up);
                     return true;
                 }
             }

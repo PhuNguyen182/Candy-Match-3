@@ -14,6 +14,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     public class MoveItemTask : IDisposable
     {
         private readonly GridCellManager _gridCellManager;
+        private readonly MatchItemsTask _matchItemsTask;
 
         private CheckGridTask _checkGridTask;
 
@@ -25,9 +26,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private IDisposable _disposable;
 
-        public MoveItemTask(GridCellManager gridCellManager)
+        public MoveItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask)
         {
             _gridCellManager = gridCellManager;
+            _matchItemsTask = matchItemsTask;
 
             _tcs = new();
             _token = _tcs.Token;
@@ -70,7 +72,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (!CheckCellEmpty(toGridCell, out IGridCell targetCell))
                 {
-                    moveStepCount = 0;
+                    moveStepCount = 1;
                     checkColumnIndex = checkColumnIndex + 1;
                     continue;
                 }
@@ -86,6 +88,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 await UniTask.NextFrame(_token);
                 moveStepCount = moveStepCount + 1;
                 ExportMoveStep(moveStepCount, out outputMoveStep);
+
                 _checkGridTask.CheckInDirection(currentGrid.GridPosition, Vector3Int.up);
                 await AnimateMovingItem(blockItem, toGridCell, moveStepCount);
 
@@ -97,6 +100,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             currentGrid.LockStates = LockStates.None;
             blockItem.SetWorldPosition(currentGrid.WorldPosition);
             AnimateItemJumpDown(blockItem, outputMoveStep);
+
+            //await _matchItemsTask.CheckMatchOnEndMove(currentGrid.GridPosition);
             _checkGridTask.CheckInDirection(currentGrid.GridPosition, Vector3Int.up);
         }
 
@@ -115,7 +120,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if(blockItem is IItemAnimation animation)
             {
                 _boardHeight = _gridCellManager.BoardHeight;
-                animation.JumpDown(1.0f * stepCount / _boardHeight);
+                if(stepCount > 0)
+                    animation.JumpDown(1.0f * stepCount / _boardHeight);
             }
         }
 

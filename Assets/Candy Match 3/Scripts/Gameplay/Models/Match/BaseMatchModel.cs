@@ -16,6 +16,8 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         /// This property can be rotated, so do not list all cases in this collection
         /// </summary>
         protected abstract List<SequencePosition> matchCellPositions { get; }
+        protected int[] _checkAngles = new[] { 0, 90, 180, -90 };
+
         public abstract MatchType MatchType { get; }
 
         public BaseMatchModel(GridCellManager gridCellManager)
@@ -23,12 +25,28 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             this.gridCellManager = gridCellManager;
         }
 
-        protected abstract List<IGridCell> GetMatchResult(Vector3Int gridPosition, Vector3Int inDirection);
+        protected List<IGridCell> GetMatchResult(Vector3Int gridPosition)
+        {
+            List<IGridCell> matchGrids = new();
+            int minMatchCount = GetMinMatchCount();
 
-        public bool CheckMatch(Vector3Int gridPosition, Vector3Int inDirection, out List<IGridCell> matchCells)
+            for (int i = 0; i < matchCellPositions.Count; i++)
+            {
+                for (int j = 0; j < _checkAngles.Length; j++)
+                {
+                    matchGrids = GetMatchCellsFromSequence(gridPosition, matchCellPositions[i], _checkAngles[j]);
+                    if (matchGrids.Count >= minMatchCount)
+                        return matchGrids;
+                }
+            }
+
+            return matchGrids;
+        }
+
+        public bool CheckMatch(Vector3Int gridPosition, out List<IGridCell> matchCells)
         {
             IGridCell checkGrid = gridCellManager.Get(gridPosition);
-            List<IGridCell> matchedCells = GetMatchResult(gridPosition, inDirection);
+            List<IGridCell> matchedCells = GetMatchResult(gridPosition);
 
             int minMatchCount = GetMinMatchCount();
             bool isMatchable = matchedCells.Count >= minMatchCount;

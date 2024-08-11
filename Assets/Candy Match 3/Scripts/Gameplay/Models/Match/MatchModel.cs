@@ -38,33 +38,33 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             _disposable = builder.Build();
         }
 
-        public bool CheckMatch(Vector3Int checkPosition, Vector3Int inDirection, out List<IGridCell> matchedCells, out MatchType matchType)
+        public bool CheckMatch(Vector3Int checkPosition, out List<IGridCell> matchedCells, out MatchType matchType)
         {
-            if (_match5Model.CheckMatch(checkPosition, inDirection, out matchedCells))
+            if (_match5Model.CheckMatch(checkPosition, out matchedCells))
             {
                 matchType = _match5Model.MatchType;
                 return true;
             }
 
-            else if(_match4Model.CheckMatch(checkPosition, inDirection, out matchedCells))
-            {
-                matchType = _match4Model.MatchType;
-                return true;
-            }
-
-            else if (_matchLModel.CheckMatch(checkPosition, inDirection, out matchedCells))
+            else if (_matchLModel.CheckMatch(checkPosition, out matchedCells))
             {
                 matchType = _matchLModel.MatchType;
                 return true;
             }
 
-            else if (_matchTModel.CheckMatch(checkPosition, inDirection, out matchedCells))
+            else if (_matchTModel.CheckMatch(checkPosition, out matchedCells))
             {
                 matchType = _matchTModel.MatchType;
                 return true;
             }
 
-            else if (_match3Model.CheckMatch(checkPosition, inDirection, out matchedCells))
+            else if(_match4Model.CheckMatch(checkPosition, out matchedCells))
+            {
+                matchType = _match4Model.MatchType;
+                return true;
+            }
+
+            else if (_match3Model.CheckMatch(checkPosition, out matchedCells))
             {
                 matchType = _match3Model.MatchType;
                 return true;

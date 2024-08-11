@@ -81,8 +81,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell == null)
                 return false;
             
-            if (!gridCell.IsSpawner)
-                return false;
+            //if (!gridCell.IsSpawner)
+            //    return false;
 
             if (gridCell.HasItem)
                 return false;
