@@ -171,7 +171,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _fillBoardTask.BuildRuledRandom(levelModel.RuledRandomBlockPositions);
 
             _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
-            _gameTaskManager.CheckMoveOnStart();
+            //_gameTaskManager.CheckMoveOnStart();
             _gameTaskManager.SetInputActive(true);
         }
 

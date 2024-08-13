@@ -32,26 +32,36 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public bool CheckMatch(Vector3Int position)
         {
-            MatchType matchType;
-            List<IGridCell> matchedCells;
-            bool isMatch = _matchModel.CheckMatch(position, out matchedCells, out matchType);
+            IGridCell gridCell = _gridCellManager.Get(position);
 
-            if (isMatch)
-                _breakGridTask.BreakMatch(matchedCells, matchType).Forget();
+            if (gridCell.HasItem && gridCell.BlockItem.IsMatchable)
+            {
+                bool isMatch = _matchModel.CheckMatch(position, out MatchResult matchResult);
 
-            return isMatch;
+                if (isMatch)
+                    _breakGridTask.BreakMatch(matchResult).Forget();
+
+                return isMatch;
+            }
+
+            return false;
         }
 
-        public async UniTask<bool> CheckMatchOnEndMove(Vector3Int position)
+        public void Match(Vector3Int position)
         {
-            MatchType matchType;
-            List<IGridCell> matchedCells;
-            bool isMatch = _matchModel.CheckMatch(position, out matchedCells, out matchType);
+            MatchResult matchResult;
+            bool isMatch = _matchModel.CheckMatch(position, out matchResult);
 
             if (isMatch)
-                await _breakGridTask.BreakMatch(matchedCells, matchType);
+            {
 
-            return isMatch;
+            }
+        }
+
+        public bool CheckMatchAtPosition(Vector3Int position)
+        {
+            IGridCell gridCell = _gridCellManager.Get(position);
+            return gridCell.HasItem && gridCell.BlockItem.IsMatchable;
         }
 
         public void Dispose()

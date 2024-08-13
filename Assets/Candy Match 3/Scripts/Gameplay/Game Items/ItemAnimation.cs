@@ -84,7 +84,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public UniTask DisappearOnMatch()
         {
             itemAnimator.SetBool(ItemAnimationHashKeys.MatchHash, true);
-            return UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _destroyToken);
+            return UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: _destroyToken);
         }
 
         public void BounceTap()
@@ -111,7 +111,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private void OnDisable()
         {
-            //itemAnimator.SetBool(ItemAnimationHashKeys.MatchHash, false);
+            
         }
 
         private void OnDestroy()

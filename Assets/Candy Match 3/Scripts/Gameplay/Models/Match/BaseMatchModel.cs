@@ -16,7 +16,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         /// This property can be rotated, so do not list all cases in this collection
         /// </summary>
         protected abstract List<SequencePosition> matchCellPositions { get; }
-        protected int[] _checkAngles = new[] { 0, 90, 180, -90 };
+        protected int[] checkAngles = new[] { 0, 90, 180, -90 };
 
         public abstract MatchType MatchType { get; }
 
@@ -25,38 +25,41 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             this.gridCellManager = gridCellManager;
         }
 
-        protected List<IGridCell> GetMatchResult(Vector3Int gridPosition)
+        protected MatchResult GetMatchResult(Vector3Int gridPosition)
         {
-            List<IGridCell> matchGrids = new();
+            List<Vector3Int> matchSequence = new();
             int minMatchCount = GetMinMatchCount();
 
             for (int i = 0; i < matchCellPositions.Count; i++)
             {
-                for (int j = 0; j < _checkAngles.Length; j++)
+                matchSequence = GetMatchCellsFromSequence(gridPosition, matchCellPositions[i]);
+                if (matchSequence.Count >= minMatchCount)
                 {
-                    matchGrids = GetMatchCellsFromSequence(gridPosition, matchCellPositions[i], _checkAngles[j]);
-                    if (matchGrids.Count >= minMatchCount)
-                        return matchGrids;
+                    return new MatchResult
+                    {
+                        MatchType = MatchType,
+                        Position = gridPosition,
+                        MatchSequence = matchSequence,
+                    };
                 }
             }
 
-            return matchGrids;
+            return new MatchResult { MatchSequence = new() };
         }
 
-        public bool CheckMatch(Vector3Int gridPosition, out List<IGridCell> matchCells)
+        public bool CheckMatch(Vector3Int gridPosition, out MatchResult matchResult)
         {
-            IGridCell checkGrid = gridCellManager.Get(gridPosition);
-            List<IGridCell> matchedCells = GetMatchResult(gridPosition);
+            MatchResult result = GetMatchResult(gridPosition);
 
             int minMatchCount = GetMinMatchCount();
-            bool isMatchable = matchedCells.Count >= minMatchCount;
+            bool isMatchable = result.MatchSequence.Count >= minMatchCount;
 
             if (isMatchable)
-                matchedCells.Add(checkGrid);
+                result.MatchSequence.Add(gridPosition);
             else
-                matchedCells.Clear();
+                result.MatchSequence.Clear();
 
-            matchCells = matchedCells;
+            matchResult = result;
             return isMatchable;
         }
 
@@ -82,10 +85,9 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             return rotateMatchPositions;
         }
 
-        protected List<IGridCell> GetMatchCellsFromSequence(Vector3Int position, SequencePosition sequence, int angle)
+        protected List<Vector3Int> GetMatchCellsFromSequence(Vector3Int position, SequencePosition sequence)
         {
-            List<IGridCell> gridCells = new();
-            List<Vector3Int> checkSteps = GetRotatePositions(sequence.Sequence, angle);
+            List<Vector3Int> gridCells = new();
             
             IGridCell checkCell = gridCellManager.Get(position);
             CandyColor candyColor = checkCell.CandyColor;
@@ -93,9 +95,9 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             if (candyColor == CandyColor.None)
                 return gridCells;
 
-            for (int i = 0; i < checkSteps.Count; i++)
+            for (int i = 0; i < sequence.Sequence.Count; i++)
             {
-                IGridCell gridCell = gridCellManager.Get(position + checkSteps[i]);
+                IGridCell gridCell = gridCellManager.Get(position + sequence.Sequence[i]);
 
                 if (gridCell == null)
                     break;
@@ -109,7 +111,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 if (gridCell.CandyColor != candyColor)
                     break;
 
-                gridCells.Add(gridCell);
+                gridCells.Add(gridCell.GridPosition);
             }
 
             return gridCells;

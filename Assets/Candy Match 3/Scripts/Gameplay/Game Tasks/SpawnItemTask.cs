@@ -8,8 +8,8 @@ using CandyMatch3.Scripts.Gameplay.Models.SpawnRules;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.CustomData;
 using CandyMatch3.Scripts.Gameplay.Strategies;
-using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Common.Constants;
+using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -80,15 +80,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if (gridCell == null)
                 return false;
-            
-            //if (!gridCell.IsSpawner)
-            //    return false;
+
+            if (!gridCell.CanContainItem)
+                return false;
 
             if (gridCell.HasItem)
                 return false;
 
-            if (gridCell.IsMoveable)
-                return false;
+            //if (gridCell.IsMoveable)
+            //    return false;
 
             return true;
         }

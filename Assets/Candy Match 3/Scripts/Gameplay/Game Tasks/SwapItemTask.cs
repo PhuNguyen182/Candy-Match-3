@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
-using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -39,6 +39,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!fromCell.IsMoveable || !toItem.IsMoveable)
                 return;
 
+            fromCell.LockStates = LockStates.Swapping;
+            toCell.LockStates = LockStates.Swapping;
+
             if(fromItem is IItemAnimation fromAnimation && toItem is IItemAnimation toAnimation)
             {
                 UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
@@ -53,18 +56,25 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (isSwapBack)
             {
-                CheckMatchOnSwap(fromPosition, toPosition).Forget();
+                CheckMatchOnSwap(fromCell, toCell).Forget();
             }
+
+            fromCell.LockStates = LockStates.None;
+            toCell.LockStates = LockStates.None;
         }
 
-        private async UniTask CheckMatchOnSwap(Vector3Int fromPosition, Vector3Int toPosition)
+        private async UniTask CheckMatchOnSwap(IGridCell fromCell, IGridCell toCell)
         {
-            bool isMatchedTo = _matchItemsTask.CheckMatch(toPosition);
-            bool isMatchedFrom = _matchItemsTask.CheckMatch(fromPosition);
-            bool isMatched = isMatchedTo || isMatchedFrom;
+            bool isMatchedTo = _matchItemsTask.CheckMatch(toCell.GridPosition);
+            bool isMatchedFrom = _matchItemsTask.CheckMatch(fromCell.GridPosition);
+            bool isMatched = isMatchedFrom || isMatchedTo;
 
             if (!isMatched)
-                await SwapItem(toPosition, fromPosition, false);
+            {
+                fromCell.LockStates = LockStates.None;
+                toCell.LockStates = LockStates.None;
+                await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
+            }
         }
     }
 }

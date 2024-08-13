@@ -65,7 +65,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             IGridCell gridCell = _gridCellManager.Get(gridCellView.GridPosition);
 
-            if (gridCell != null && gridCell.HasItem)
+            if (gridCell != null)
             {
                 _selectecGridCell = gridCell;
                 _processGridCell = gridCell;
@@ -79,7 +79,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!_boardInput.IsDragging)
                 return;
 
-            if (_selectecGridCell == null)
+            if (_selectecGridCell == null || !_selectecGridCell.HasItem)
                 return;
 
             Vector3Int checkPosition = _selectecGridCell.GridPosition;
