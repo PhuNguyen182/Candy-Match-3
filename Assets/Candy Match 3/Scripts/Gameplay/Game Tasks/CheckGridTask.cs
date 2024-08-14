@@ -12,20 +12,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
     public class CheckGridTask : IDisposable
     {
-        private readonly MoveItemTask _moveItemTask;
-        private readonly SpawnItemTask _spawnItemTask;
         private readonly GridCellManager _gridCellManager;
+        private readonly MoveItemTask _moveItemTask;
+        private readonly MatchItemsTask _matchItemsTask;
+        private readonly SpawnItemTask _spawnItemTask;
 
         private List<Vector3Int> _positionsToCheck;
         private HashSet<Vector3Int> _checkPositions;
 
         private IDisposable _disposable;
 
-        public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask)
+        public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask, MatchItemsTask matchItemsTask)
         {
             _moveItemTask = moveItemTask;
             _gridCellManager = gridCellManager;
             _spawnItemTask = spawnItemTask;
+            _matchItemsTask = matchItemsTask;
 
             _positionsToCheck = new();
             _checkPositions = new();
@@ -68,6 +70,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             foreach (Vector3Int position in bounds.Iterator2D())
             {
                 _checkPositions.Add(position);
+            }
+        }
+
+        public void CheckMatchAtPosition(Vector3Int position)
+        {
+            if(_matchItemsTask.CheckMatchAtPosition(position))
+            {
+                // To do: check match logic
             }
         }
 

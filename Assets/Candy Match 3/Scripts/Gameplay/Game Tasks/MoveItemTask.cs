@@ -14,22 +14,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     public class MoveItemTask : IDisposable
     {
         private readonly GridCellManager _gridCellManager;
-        private readonly MatchItemsTask _matchItemsTask;
 
         private CheckGridTask _checkGridTask;
 
         private int _boardHeight;
-        private Vector3Int _direction;
 
         private CancellationToken _token;
         private CancellationTokenSource _tcs;
 
         private IDisposable _disposable;
 
-        public MoveItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask)
+        public MoveItemTask(GridCellManager gridCellManager)
         {
             _gridCellManager = gridCellManager;
-            _matchItemsTask = matchItemsTask;
 
             _tcs = new();
             _token = _tcs.Token;
@@ -38,9 +35,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public async UniTask MoveItems()
         {
             await UniTask.CompletedTask;
-            for (int i = -4; i < 5; i++)
+            //for (int i = -4; i < 5; i++)
             {
-                IGridCell cell = _gridCellManager.Get(new(i, 4));
+                IGridCell cell = _gridCellManager.Get(new(0, 4));
                 if (CheckMoveable(cell))
                     MoveItem(cell).Forget();
             }
@@ -49,7 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public async UniTask MoveItem(IGridCell moveGridCell)
         {
             IGridCell currentGrid = moveGridCell;
-            Vector3Int checkDirection = Vector3Int.zero;
+            
             Vector3Int startPosition = currentGrid.GridPosition;
             IBlockItem blockItem = currentGrid.BlockItem;
 
@@ -60,7 +57,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             while (checkColumnIndex < 3)
             {
                 IGridCell toGridCell;
-                _direction = checkColumnIndex switch
+                Vector3Int moveDirection = Vector3Int.zero;
+                Vector3Int checkDirection = Vector3Int.zero;
+
+                moveDirection = checkColumnIndex switch
                 {
                     0 => new(0, -1),
                     1 => new(-1, -1),
@@ -71,7 +71,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (checkColumnIndex != 0)
                     checkDirection = Vector3Int.up;
 
-                Vector3Int toPosition = startPosition + _direction;
+                Vector3Int toPosition = startPosition + moveDirection;
                 toGridCell = _gridCellManager.Get(toPosition);
 
                 if (!CheckCellEmpty(toGridCell, out IGridCell targetCell))
@@ -91,6 +91,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 checkColumnIndex = 0;
                 toGridCell.SetBlockItem(blockItem);
+                
+                toGridCell.IsMoving = true;
                 currentGrid.LockStates = LockStates.None;
                 toGridCell.LockStates = LockStates.Moving;
                 currentGrid.SetBlockItem(null);
@@ -98,18 +100,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 moveStepCount = moveStepCount + 1;
                 ExportMoveStep(moveStepCount, out outputMoveStep);
 
-                _checkGridTask.CheckAt(currentGrid.GridPosition, 1);
+                _checkGridTask.CheckAt(startPosition, 1);
                 await AnimateMovingItem(blockItem, toGridCell, moveStepCount);
 
+                toGridCell.IsMoving = false;
                 startPosition = toPosition;
                 currentGrid = toGridCell;
             }
 
-            currentGrid.LockStates = LockStates.Moving;
+            currentGrid.IsMoving = false;
+            currentGrid.LockStates = LockStates.None;
             blockItem.SetWorldPosition(currentGrid.WorldPosition);
             AnimateItemJumpDown(blockItem, outputMoveStep);
-            //_matchItemsTask.CheckMatch(currentGrid.GridPosition);
-            currentGrid.LockStates = LockStates.None;
+
+            if (checkColumnIndex == 0)
+                return;
+
+            _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
+            _checkGridTask.CheckAt(startPosition, 1);
         }
 
         private async UniTask AnimateMovingItem(IBlockItem blockItem, IGridCell targetCell, int stepCount)
@@ -153,6 +161,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return false;
 
                 if (!checkCell.CanMove)
+                    return true;
+
+                if (checkCell.IsMoving)
                     return false;
 
                 if (checkCell.HasItem)
