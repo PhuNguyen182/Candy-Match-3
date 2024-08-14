@@ -48,6 +48,20 @@ namespace CandyMatch3.Scripts.Common.Factories
             return blockItem;
         }
 
+        public ItemType FindColorBooster(ColorBoosterType colorBoosterType, CandyColor candyColor)
+        {
+            for (int i = 0; i < _itemDatabase.ColorBoosterModels.Count; i++)
+            {
+                CandyColor color = _itemDatabase.ColorBoosterModels[i].CandyColor;
+                ColorBoosterType boosterType = _itemDatabase.ColorBoosterModels[i].ColorBoosterType;
+
+                if (candyColor == color && colorBoosterType == boosterType)
+                    return _itemDatabase.ColorBoosterModels[i].ItemType;
+            }
+
+            return ItemType.None;
+        }
+
         private BaseItem ProduceColorItem(BlockItemData blockItemData)
         {
             for (int i = 0; i < _itemDatabase.ColorModels.Count; i++)

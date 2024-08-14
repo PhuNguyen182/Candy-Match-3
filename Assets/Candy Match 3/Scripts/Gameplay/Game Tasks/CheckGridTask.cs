@@ -17,6 +17,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly MatchItemsTask _matchItemsTask;
         private readonly SpawnItemTask _spawnItemTask;
 
+        private bool _anyItemMove;
         private List<Vector3Int> _positionsToCheck;
         private HashSet<Vector3Int> _checkPositions;
 
@@ -48,6 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _positionsToCheck.AddRange(_checkPositions);
                 _checkPositions.Clear();
 
+                _anyItemMove = false;
                 for (int i = 0; i < _positionsToCheck.Count; i++)
                 {
                     IGridCell checkCell = _gridCellManager.Get(_positionsToCheck[i]);
@@ -59,6 +61,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     if (_moveItemTask.CheckMoveable(checkCell))
                     {
+                        _anyItemMove = true;
                         _moveItemTask.MoveItem(checkCell).Forget();
                     }
                 }
@@ -73,15 +76,30 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public void CheckMatchAtPosition(Vector3Int position)
+        public async UniTask CheckMatchAtPosition(Vector3Int position)
         {
-            if(_matchItemsTask.CheckMatchAtPosition(position))
+            if(_matchItemsTask.CheckMatchAt(position))
             {
                 // To do: check match logic
+                await _matchItemsTask.Match(position);
             }
         }
 
-        public void CheckAt(Vector3Int position, int range)
+        public void CheckCross(Vector3Int position)
+        {
+            _checkPositions.Add(position);
+            _checkPositions.Add(position + Vector3Int.left);
+            _checkPositions.Add(position + Vector3Int.right);
+            _checkPositions.Add(position + Vector3Int.down);
+            _checkPositions.Add(position + Vector3Int.up);
+        }
+
+        public void CheckRange(BoundsInt boundsRange)
+        {
+            AddRangeToCheck(boundsRange);
+        }
+
+        public void CheckAroundPosition(Vector3Int position, int range)
         {
             BoundsInt checkRange = position.GetBounds2D(range);
             AddRangeToCheck(checkRange);
@@ -94,6 +112,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
+            _positionsToCheck.Clear();
+            _checkPositions.Clear();
             _disposable.Dispose();
         }
     }

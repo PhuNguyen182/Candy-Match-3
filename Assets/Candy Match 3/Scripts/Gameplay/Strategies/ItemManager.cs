@@ -103,5 +103,23 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
 
             return itemType;
         }
+
+        public ItemType GetBoosterTypeFromMatch(MatchType matchType, CandyColor candyColor)
+        {
+            if (matchType == MatchType.Match5)
+                return ItemType.ColorBomb;
+
+            ColorBoosterType boosterColor = matchType switch
+            {
+                MatchType.Match4Horizontal => ColorBoosterType.Horizontal,
+                MatchType.Match4Vertical => ColorBoosterType.Vertical,
+                MatchType.MatchL => ColorBoosterType.Wrapped,
+                MatchType.MatchT => ColorBoosterType.Wrapped,
+                _ => ColorBoosterType.None
+            };
+
+            ItemType booster = _itemFactory.FindColorBooster(boosterColor, candyColor);
+            return booster;
+        }
     }
 }

@@ -32,17 +32,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _token = _tcs.Token;
         }
 
-        public async UniTask MoveItems()
-        {
-            await UniTask.CompletedTask;
-            //for (int i = -4; i < 5; i++)
-            {
-                IGridCell cell = _gridCellManager.Get(new(0, 4));
-                if (CheckMoveable(cell))
-                    MoveItem(cell).Forget();
-            }
-        }
-
         public async UniTask MoveItem(IGridCell moveGridCell)
         {
             IGridCell currentGrid = moveGridCell;
@@ -100,7 +89,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 moveStepCount = moveStepCount + 1;
                 ExportMoveStep(moveStepCount, out outputMoveStep);
 
-                _checkGridTask.CheckAt(startPosition, 1);
+                _checkGridTask.CheckAroundPosition(startPosition, 1);
                 await AnimateMovingItem(blockItem, toGridCell, moveStepCount);
 
                 toGridCell.IsMoving = false;
@@ -113,11 +102,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             blockItem.SetWorldPosition(currentGrid.WorldPosition);
             AnimateItemJumpDown(blockItem, outputMoveStep);
 
-            if (checkColumnIndex == 0)
+            if(outputMoveStep != 0)
+                await _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
+
+            if (checkColumnIndex == 0 || checkColumnIndex > 2)
                 return;
 
-            _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
-            _checkGridTask.CheckAt(startPosition, 1);
+            _checkGridTask.CheckAroundPosition(startPosition, 1);
+        }
+
+        // Test check match from to to bottom
+        private void CheckMatchAtColumn(Vector3Int position)
+        {
+            for (int i = -2; i <= 0; i++)
+            {
+                //_checkGridTask.CheckMatchAtPosition(position + new Vector3Int(i, 1));
+            }
         }
 
         private async UniTask AnimateMovingItem(IBlockItem blockItem, IGridCell targetCell, int stepCount)

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ebc1abc7d96bb34cbf0344413d89a28, type: 3}
   m_Name: Effect Database
   m_EditorClassIdentifier: 
-  SoundEffect: {fileID: 0}
+  SoundEffect: {fileID: 5103234775272179244, guid: d354c4e6c9d95224ebd722bc14dda0d0, type: 3}

@@ -38,9 +38,9 @@ namespace GlobalScripts.Extensions
             return new BoundsInt
             {
                 xMin = firstPosition.x,
-                xMax = lastPosition.x,
+                xMax = lastPosition.x + 1,
                 yMin = firstPosition.y,
-                yMax = lastPosition.y
+                yMax = lastPosition.y + 1
             };
         }
 
@@ -129,6 +129,23 @@ namespace GlobalScripts.Extensions
                         continue;
 
                     yield return new Vector3Int(x, y);
+                }
+            }
+        }
+
+        public static IEnumerator<Vector3Int> GetBorder2D(this BoundsInt bounds)
+        {
+            for (int x = bounds.xMin; x < bounds.xMax; x++)
+            {
+                for (int y = bounds.yMin; y < bounds.yMax; y++)
+                {
+                    if (x > bounds.xMin && x < bounds.xMax - 2)
+                        continue;
+
+                    if (y > bounds.yMin && y < bounds.yMax - 2)
+                        continue;
+
+                    yield return new(x, y);
                 }
             }
         }

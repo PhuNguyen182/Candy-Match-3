@@ -8,6 +8,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
     public struct MatchResult
     {
         public MatchType MatchType;
+        public CandyColor CandyColor;
         public Vector3Int Position;
         public List<Vector3Int> MatchSequence;
     }

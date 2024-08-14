@@ -1,4 +1,5 @@
 using R3;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,7 @@ using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Common.SingleConfigs;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Statefuls;
+using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.Controllers
 {
@@ -43,9 +45,10 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private FillBoardTask _fillBoardTask;
         private BreakGridTask _breakGridTask;
         private MatchItemsTask _matchItemsTask;
-        private SpawnItemTask _spawnItemTask;
-        
+        private SpawnItemTask _spawnItemTask;        
         private GameTaskManager _gameTaskManager;
+
+        private CancellationToken _destroyToken;
 
         private void Awake()
         {
@@ -64,6 +67,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
         private void Setup()
         {
+            _destroyToken = this.GetCancellationTokenOnDestroy();
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
         }
 
@@ -81,7 +85,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _fillBoardTask = new(boardTilemap, tileDatabase, _itemManager);
             _fillBoardTask.AddTo(ref builder);
 
-            _breakGridTask = new(_gridCellManager, _metaItemManager);
+            _breakGridTask = new(_gridCellManager, _metaItemManager, _itemManager);
+            _breakGridTask.AddTo(ref builder);
+
             _matchItemsTask = new(_gridCellManager, _breakGridTask);
             _matchItemsTask.AddTo(ref builder);
 
@@ -91,7 +97,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask, _matchItemsTask, _metaItemManager, _breakGridTask);
             _gameTaskManager.AddTo(ref builder);
 
-            builder.RegisterTo(this.destroyCancellationToken);
+            builder.RegisterTo(_destroyToken);
         }
 
         private void GenerateLevel(LevelModel levelModel)
@@ -171,7 +177,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _fillBoardTask.BuildRuledRandom(levelModel.RuledRandomBlockPositions);
 
             _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
-            _gameTaskManager.CheckMoveOnStart();
             _gameTaskManager.SetInputActive(true);
         }
 

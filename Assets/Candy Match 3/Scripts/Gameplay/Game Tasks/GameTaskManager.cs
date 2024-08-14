@@ -12,6 +12,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
     public class GameTaskManager : IDisposable
     {
+        private readonly MatchItemsTask _matchItemsTask;
         private readonly InputProcessTask _inputProcessor;
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
@@ -27,24 +28,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             DisposableBuilder builder = Disposable.CreateBuilder();
 
             _gridCellManager = gridCellManager;
+            _matchItemsTask = matchItemsTask;
 
-            _swapItemTask = new(_gridCellManager, matchItemsTask);
+            _swapItemTask = new(_gridCellManager, _matchItemsTask);
             _inputProcessor = new(boardInput, _gridCellManager, _swapItemTask);
             _inputProcessor.AddTo(ref builder);
 
             _breakGridTask = breakGridTask;
-            _moveItemTask = new(_gridCellManager);
 
-            _checkGridTask = new(_gridCellManager, _moveItemTask, spawnItemTask, matchItemsTask);
+            _moveItemTask = new(_gridCellManager);
+            _moveItemTask.AddTo(ref builder);
+
+            _checkGridTask = new(_gridCellManager, _moveItemTask, spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 
             SetCheckGridTask();
             _disposable = builder.Build();
-        }
-
-        public void CheckMoveOnStart()
-        {
-            _moveItemTask.MoveItems().Forget();
         }
 
         public void SetInputActive(bool isActive)
@@ -56,6 +55,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             _moveItemTask.SetCheckGridTask(_checkGridTask);
             _breakGridTask.SetCheckGridTask(_checkGridTask);
+            _matchItemsTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

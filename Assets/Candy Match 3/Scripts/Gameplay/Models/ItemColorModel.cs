@@ -8,5 +8,6 @@ namespace CandyMatch3.Scripts.Gameplay.Models
     {
         public CandyColor CandyColor;
         public ColorBoosterType ColorBoosterType;
+        public ItemType ItemType;
     }
 }
