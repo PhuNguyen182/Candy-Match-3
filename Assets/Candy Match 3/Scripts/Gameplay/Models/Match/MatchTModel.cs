@@ -8,7 +8,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
     public class MatchTModel : BaseMatchModel
     {
-        protected override int minMatchCount => 3;
+        protected override int minMatchCount => 4;
         public override MatchType MatchType => MatchType.MatchT;
         protected override List<SequencePattern> sequencePattern { get; }
 

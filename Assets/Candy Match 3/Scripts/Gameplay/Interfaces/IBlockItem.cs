@@ -27,5 +27,6 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public void SetMatchable(bool isMatchable);
         public void SetWorldPosition(Vector3 position);
         public void ReleaseItem();
+        public string GetName();
     }
 }

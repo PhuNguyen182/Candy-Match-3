@@ -1,6 +1,7 @@
 using R3;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _adjacentSteps;
         private IDisposable _disposable;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
+
         public MatchItemsTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
@@ -40,22 +44,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 new(0, -1)
             };
 
+            _cts = new();
+            _token = _cts.Token;
+
             _vector3IntComparer = new();
             DisposableBuilder builder = Disposable.CreateBuilder();
             _matchRule.AddTo(ref builder);
             _disposable = builder.Build();
         }
 
-        public bool CheckMatch(Vector3Int position)
+        public bool CheckMatchInSwap(Vector3Int position)
         {
-            IGridCell gridCell = _gridCellManager.Get(position);
-
-            if (gridCell.HasItem && gridCell.BlockItem.IsMatchable)
+            if(CheckMatchAt(position))
             {
-                bool isMatch = _matchRule.CheckMatch(position, out MatchResult matchResult);
-
-                if (isMatch)
-                    _breakGridTask.BreakMatch(matchResult).Forget();
+                MatchResult matchResult;
+                bool isMatch = _matchRule.CheckMatch(position, out matchResult);
+                
+                if(isMatch)
+                    ProcessMatch(matchResult).Forget();
 
                 return isMatch;
             }
@@ -128,6 +134,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 adjacentPositionList.Clear();
                 await UniTask.WhenAll(matchTasks);
 
+                await UniTask.DelayFrame(6, PlayerLoopTiming.FixedUpdate, _token);
                 BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
                 _checkGridTask.CheckRange(checkMatchBounds);
             }
@@ -136,7 +143,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public bool CheckMatchAt(Vector3Int checkPosition)
         {
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
-            return gridCell.HasItem && gridCell.BlockItem.IsMatchable;
+            return gridCell.HasItem && gridCell.BlockItem.IsMatchable && !gridCell.IsLocked;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
@@ -146,6 +153,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
+            _cts.Dispose();
             _adjacentSteps.Clear();
             _disposable.Dispose();
         }

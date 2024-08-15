@@ -104,10 +104,10 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             return itemType;
         }
 
-        public ItemType GetBoosterTypeFromMatch(MatchType matchType, CandyColor candyColor)
+        public (ItemType, ColorBoosterType) GetBoosterTypeFromMatch(MatchType matchType, CandyColor candyColor)
         {
             if (matchType == MatchType.Match5)
-                return ItemType.ColorBomb;
+                return (ItemType.ColorBomb, ColorBoosterType.None);
 
             ColorBoosterType boosterColor = matchType switch
             {
@@ -119,7 +119,7 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             };
 
             ItemType booster = _itemFactory.FindColorBooster(boosterColor, candyColor);
-            return booster;
+            return (booster, boosterColor);
         }
     }
 }

@@ -1,5 +1,6 @@
 using R3;
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _positionsToCheck;
         private HashSet<Vector3Int> _checkPositions;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
+
         private IDisposable _disposable;
 
         public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask, MatchItemsTask matchItemsTask)
@@ -32,6 +36,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _positionsToCheck = new();
             _checkPositions = new();
+
+            _cts = new();
+            _token = _cts.Token;
 
             DisposableBuilder builder = Disposable.CreateBuilder();
             
@@ -80,7 +87,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if(_matchItemsTask.CheckMatchAt(position))
             {
-                // To do: check match logic
+                await UniTask.DelayFrame(6, PlayerLoopTiming.FixedUpdate, _token);
                 await _matchItemsTask.Match(position);
             }
         }
@@ -112,6 +119,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
+            _cts.Dispose();
             _positionsToCheck.Clear();
             _checkPositions.Clear();
             _disposable.Dispose();

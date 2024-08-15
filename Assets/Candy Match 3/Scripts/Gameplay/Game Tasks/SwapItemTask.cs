@@ -42,12 +42,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             fromCell.LockStates = LockStates.Swapping;
             toCell.LockStates = LockStates.Swapping;
 
-            if(fromItem is IItemAnimation fromAnimation && toItem is IItemAnimation toAnimation)
+            if (fromItem is IItemAnimation fromAnimation && toItem is IItemAnimation toAnimation)
             {
                 UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
                 UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
                 await UniTask.WhenAll(fromMoveTask, toMoveTask);
             }
+
+            fromCell.LockStates = LockStates.None;
+            toCell.LockStates = LockStates.None;
 
             fromCell.SetBlockItem(toItem);
             toItem.SetWorldPosition(fromCell.WorldPosition);
@@ -58,15 +61,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 CheckMatchOnSwap(fromCell, toCell).Forget();
             }
-
-            fromCell.LockStates = LockStates.None;
-            toCell.LockStates = LockStates.None;
         }
 
         private async UniTask CheckMatchOnSwap(IGridCell fromCell, IGridCell toCell)
         {
-            bool isMatchedTo = _matchItemsTask.CheckMatch(toCell.GridPosition);
-            bool isMatchedFrom = _matchItemsTask.CheckMatch(fromCell.GridPosition);
+            bool isMatchedTo = _matchItemsTask.CheckMatchInSwap(toCell.GridPosition);
+            bool isMatchedFrom = _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
             bool isMatched = isMatchedFrom || isMatchedTo;
 
             if (!isMatched)

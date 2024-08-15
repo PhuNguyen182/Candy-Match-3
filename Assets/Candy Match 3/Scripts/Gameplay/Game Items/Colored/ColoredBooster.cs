@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,6 +32,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             base.ResetItem();
             SetMatchable(true);
+        }
+
+        public override void SetMatchable(bool isMatchable)
+        {
+            _isMatchable = isMatchable;
         }
 
         public override void InitMessages()
@@ -75,7 +81,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public async UniTask Activate()
         {
-            await UniTask.CompletedTask;
+            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: destroyCancellationToken);
         }
 
         public void Explode()

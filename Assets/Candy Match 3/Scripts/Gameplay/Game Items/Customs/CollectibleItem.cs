@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
-    public class CollectibleItem : BaseItem, IItemAnimation
+    public class CollectibleItem : BaseItem, IItemAnimation, ICollectible
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
@@ -24,6 +24,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
         public void BounceOnTap()
         {
             itemAnimation.BounceTap();
+        }
+
+        public UniTask Collect()
+        {
+            return UniTask.CompletedTask;
         }
 
         public override void InitMessages()

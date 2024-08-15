@@ -13,6 +13,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
     public class MoveItemTask : IDisposable
     {
+        private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
 
         private CheckGridTask _checkGridTask;
@@ -24,9 +25,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private IDisposable _disposable;
 
-        public MoveItemTask(GridCellManager gridCellManager)
+        public MoveItemTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
+            _breakGridTask = breakGridTask;
 
             _tcs = new();
             _token = _tcs.Token;
@@ -102,21 +104,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             blockItem.SetWorldPosition(currentGrid.WorldPosition);
             AnimateItemJumpDown(blockItem, outputMoveStep);
 
-            if(outputMoveStep != 0)
-                await _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
-
-            if (checkColumnIndex == 0 || checkColumnIndex > 2)
-                return;
-
-            _checkGridTask.CheckAroundPosition(startPosition, 1);
-        }
-
-        // Test check match from to to bottom
-        private void CheckMatchAtColumn(Vector3Int position)
-        {
-            for (int i = -2; i <= 0; i++)
+            if (blockItem is ICollectible collectible)
             {
-                //_checkGridTask.CheckMatchAtPosition(position + new Vector3Int(i, 1));
+                await collectible.Collect();
+                _breakGridTask.ReleaseGridCell(currentGrid);
+                _checkGridTask.CheckAroundPosition(startPosition, 1);
+            }
+
+            else
+            {
+                if (outputMoveStep == 0)
+                    return;
+
+                await _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
+                _checkGridTask.CheckAroundPosition(startPosition, 1);
             }
         }
 

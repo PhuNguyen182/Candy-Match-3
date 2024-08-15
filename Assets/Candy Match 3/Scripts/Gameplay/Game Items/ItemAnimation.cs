@@ -81,10 +81,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
         }
 
-        public UniTask DisappearOnMatch()
+        public UniTask DisappearOnMatch(bool isMatch)
         {
-            itemAnimator.SetBool(ItemAnimationHashKeys.MatchHash, true);
-            return UniTask.Delay(TimeSpan.FromSeconds(0.2f), cancellationToken: _destroyToken);
+            itemAnimator.SetBool(ItemAnimationHashKeys.MatchHash, isMatch);
+            return UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _destroyToken);
         }
 
         public void BounceTap()
@@ -107,11 +107,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private void SwapItemLayer(bool isPrioritized)
         {
             itemRenderer.sortingOrder = isPrioritized ? _originalSortingOrder + 1 : _originalSortingOrder;
-        }
-
-        private void OnDisable()
-        {
-            
         }
 
         private void OnDestroy()

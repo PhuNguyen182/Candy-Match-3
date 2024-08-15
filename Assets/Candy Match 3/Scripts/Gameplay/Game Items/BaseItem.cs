@@ -79,6 +79,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             return UniTask.CompletedTask;
         }
 
+        public string GetName()
+        {
+            return $"Name: {gameObject.name}, position: {WorldPosition}, is active: {isActiveAndEnabled}";
+        }
+
         public void SetItemType(ItemType itemType)
         {
             this.itemType = itemType;

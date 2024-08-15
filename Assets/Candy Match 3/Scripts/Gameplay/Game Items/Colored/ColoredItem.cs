@@ -23,6 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public override void ResetItem()
         {
             base.ResetItem();
+            itemAnimation.DisappearOnMatch(false).Forget();
         }
 
         public override void InitMessages()
@@ -32,7 +33,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override async UniTask ItemBlast()
         {
-            await itemAnimation.DisappearOnMatch();
+            await itemAnimation.DisappearOnMatch(true);
         }
 
         public override void ReleaseItem()

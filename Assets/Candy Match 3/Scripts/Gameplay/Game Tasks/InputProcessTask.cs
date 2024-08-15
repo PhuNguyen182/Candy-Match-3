@@ -141,7 +141,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return;
 
             if (gridCell.BlockItem is IItemAnimation animation)
+            {
                 animation.BounceOnTap();
+                Debug.Log(gridCell.BlockItem.GetName());
+            }
         }
 
         public void Dispose()
