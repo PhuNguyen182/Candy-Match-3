@@ -8,6 +8,7 @@ using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Common.Constants;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -83,12 +84,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public async UniTask CheckMatchAtPosition(Vector3Int position)
+        public void CheckMatchAtPosition(Vector3Int position)
         {
             if(_matchItemsTask.CheckMatchAt(position))
             {
-                await UniTask.DelayFrame(6, PlayerLoopTiming.FixedUpdate, _token);
-                await _matchItemsTask.Match(position);
+                _matchItemsTask.Match(position).Forget();
             }
         }
 

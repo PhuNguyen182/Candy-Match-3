@@ -81,7 +81,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 checkColumnIndex = 0;
-                toGridCell.SetBlockItem(blockItem);
+                toGridCell.SetBlockItem(blockItem, false);
                 
                 toGridCell.IsMoving = true;
                 currentGrid.LockStates = LockStates.None;
@@ -101,6 +101,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             currentGrid.IsMoving = false;
             currentGrid.LockStates = LockStates.None;
+
             blockItem.SetWorldPosition(currentGrid.WorldPosition);
             AnimateItemJumpDown(blockItem, outputMoveStep);
 
@@ -114,9 +115,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             else
             {
                 if (outputMoveStep == 0)
+                {
+                    _checkGridTask.CheckAroundPosition(startPosition, 1);
                     return;
+                }
 
-                await _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
+                _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
                 _checkGridTask.CheckAroundPosition(startPosition, 1);
             }
         }

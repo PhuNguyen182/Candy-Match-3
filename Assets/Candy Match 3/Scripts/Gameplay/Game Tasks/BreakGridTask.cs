@@ -85,7 +85,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     checkBoundsPositions.Add(activeRange.max);
 
                     await UniTask.WhenAll(breakTasks);
-                    await UniTask.DelayFrame(6, PlayerLoopTiming.FixedUpdate, _token);
+                    await UniTask.DelayFrame(9, PlayerLoopTiming.Update, _token);
 
                     BoundsInt checkBounds = BoundsExtension.Encapsulate(checkBoundsPositions);
                     _checkGridTask.CheckRange(checkBounds);
@@ -127,11 +127,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         }
 
         public async UniTask SpawnBooster(IGridCell gridCell, MatchType matchType, CandyColor candyColor)
-        {            
+        {
             if (gridCell.HasItem)
             {
-                gridCell.LockStates = LockStates.Matching;
+                gridCell.LockStates = LockStates.Replacing;
                 IBlockItem blockItem = gridCell.BlockItem;
+
+                if (blockItem is IBooster booster)
+                {
+                    await booster.Activate(); // use activate booster task later
+                    ReleaseGridCell(gridCell);
+                }
 
                 if (blockItem is IBreakable breakable)
                 {
@@ -141,26 +147,29 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         ReleaseGridCell(gridCell);
                     }
                 }
-            }
 
-            (ItemType booster, ColorBoosterType boosterType) = _itemManager.GetBoosterTypeFromMatch(matchType, candyColor);
-            byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
+                (ItemType itemType, ColorBoosterType boosterType) = _itemManager.GetBoosterTypeFromMatch(matchType, candyColor);
+                byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
 
-            _itemManager.Add(new BlockItemPosition
-            {
-                Position = gridCell.GridPosition,
-                ItemData = new BlockItemData
+                _itemManager.Add(new BlockItemPosition
                 {
-                    ID = 0,
-                    HealthPoint = 1,
-                    ItemType = booster,
-                    ItemColor = candyColor,
-                    PrimaryState = NumericUtils.BytesToInt(boosterProperty)
-                }
-            });
+                    Position = gridCell.GridPosition,
+                    ItemData = new BlockItemData
+                    {
+                        ID = 0,
+                        HealthPoint = 1,
+                        ItemType = itemType,
+                        ItemColor = candyColor,
+                        PrimaryState = NumericUtils.BytesToInt(boosterProperty)
+                    }
+                });
+
+                await UniTask.NextFrame(_token);
+                gridCell.LockStates = LockStates.None;
+            }
         }
 
-        public async UniTask BreakMatchItem(IGridCell gridCell, int matchCount, MatchType matchType)
+        public async UniTask BreakMatchItem(IGridCell gridCell, int matchCount)
         {
             if (!gridCell.HasItem)
                 return;
@@ -174,33 +183,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 ReleaseGridCell(gridCell);
             }
 
-            if(blockItem is IBreakable breakable)
+            if (blockItem is IBreakable breakable)
             {
                 if (breakable.Break())
                 {
-                    // To do: do different effect
                     await blockItem.ItemBlast();
                     ReleaseGridCell(gridCell);
                 }
             }
 
             gridCell.LockStates = LockStates.None;
-        }
-
-        public async UniTask BreakMatch(MatchResult matchResult)
-        {
-            using (var listPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
-            {
-                for (int i = 0; i < matchResult.MatchSequence.Count; i++)
-                {
-                    IGridCell gridCell = _gridCellManager.Get(matchResult.MatchSequence[i]);
-
-                    gridCell.LockStates = LockStates.Matching;
-                    breakTasks.Add(Break(gridCell));
-                }
-
-                await UniTask.WhenAll(breakTasks);
-            }
         }
 
         public async UniTask BreakAdjacent(IGridCell gridCell)

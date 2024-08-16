@@ -81,7 +81,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public string GetName()
         {
-            return $"Name: {gameObject.name}, position: {WorldPosition}, is active: {isActiveAndEnabled}";
+            return $"Name: {gameObject.name}, position: {WorldPosition}, is active: {isActiveAndEnabled}, type: {itemType}";
         }
 
         public void SetItemType(ItemType itemType)

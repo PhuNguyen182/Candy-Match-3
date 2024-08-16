@@ -19,6 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly GridCellManager _gridCellManager;
         private readonly MatchItemsTask _matchItemsTask;
 
+        private CheckGridTask _checkGridTask;
         private Dictionary<Vector3Int, int> _spawnerPoints;
         private Dictionary<int, WeightedSpawnRule> _spawnRules;
 
@@ -67,13 +68,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             Vector3 spawnPosition = _gridCellManager.ConvertGridToWorldFunction(position);
             
             blockItem.SetWorldPosition(upWorldPosition);
-            gridCell.SetBlockItem(blockItem);
+            gridCell.SetBlockItem(blockItem, false);
 
             if (blockItem is IItemAnimation animation)
             {
                 float duration = 1f / Match3Constants.BaseItemMoveSpeed;
                 await animation.MoveTo(spawnPosition, duration);
             }
+
+            _checkGridTask.CheckMatchAtPosition(gridCell.GridPosition);
         }
 
         public bool CheckSpawnable(IGridCell gridCell)
@@ -87,10 +90,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell.HasItem)
                 return false;
 
-            //if (gridCell.IsMoveable)
-            //    return false;
+            if (!gridCell.IsSpawner)
+                return false;
 
             return true;
+        }
+
+        public void SetCheckGridTask(CheckGridTask checkGridTask)
+        {
+            _checkGridTask = checkGridTask;
         }
 
         public void Dispose()

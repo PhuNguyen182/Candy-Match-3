@@ -67,6 +67,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
         private void Setup()
         {
+            //Time.timeScale = 0.1f;
             _destroyToken = this.GetCancellationTokenOnDestroy();
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
         }

@@ -83,7 +83,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public UniTask DisappearOnMatch(bool isMatch)
         {
-            itemAnimator.SetBool(ItemAnimationHashKeys.MatchHash, isMatch);
+            if(isMatch)
+                itemAnimator.SetTrigger(ItemAnimationHashKeys.MatchHash);
+            else
+                itemAnimator.ResetTrigger(ItemAnimationHashKeys.MatchHash);
+            
             return UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _destroyToken);
         }
 

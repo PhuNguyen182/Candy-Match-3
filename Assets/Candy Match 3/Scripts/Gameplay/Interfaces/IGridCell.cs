@@ -32,7 +32,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 
         public void SetGridID(int gridId);
         public void SetGridCellViewPosition();
-        public void SetBlockItem(IBlockItem blockItem);
+        public void SetBlockItem(IBlockItem blockItem, bool isSnapped = true);
         public void SetWorldPosition(Vector3 position);
         public void SetGridStateful(IGridStateful stateful);
         public void SetGridCellView(IGridCellView gridView);

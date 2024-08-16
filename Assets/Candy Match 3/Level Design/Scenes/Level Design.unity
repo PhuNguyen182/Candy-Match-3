@@ -3154,10 +3154,6 @@ MonoBehaviour:
     Color: 6
   - Coefficient: 1000
     Color: 2
-  - Coefficient: 1000
-    Color: 3
-  - Coefficient: 1000
-    Color: 4
   ruledRandomFills:
   - Coefficient: 0
     Color: 2
@@ -3174,10 +3170,6 @@ MonoBehaviour:
       ItemType: 6
     - Coefficient: 1000
       ItemType: 22
-    - Coefficient: 1000
-      ItemType: 10
-    - Coefficient: 1000
-      ItemType: 14
   boardTilemap: {fileID: 583834200}
   itemTilemap: {fileID: 269106886}
   spawnerTilemap: {fileID: 773047408}

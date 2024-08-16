@@ -108,6 +108,9 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 if (!gridCell.BlockItem.IsMatchable)
                     break;
 
+                if (gridCell.IsMoving)
+                    break;
+
                 if (gridCell.CandyColor != candyColor)
                     break;
 

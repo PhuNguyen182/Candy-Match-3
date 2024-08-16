@@ -5,6 +5,7 @@ using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Common.Constants;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
@@ -81,7 +82,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public async UniTask Activate()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: destroyCancellationToken);
+            await UniTask.Delay(TimeSpan.FromSeconds(Match3Constants.ItemReleaseDelay), cancellationToken: destroyCancellationToken);
         }
 
         public void Explode()

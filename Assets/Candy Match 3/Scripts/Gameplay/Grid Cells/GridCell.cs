@@ -52,13 +52,15 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             _gridId = gridId;
         }
 
-        public void SetBlockItem(IBlockItem blockItem)
+        public void SetBlockItem(IBlockItem blockItem, bool isSnapped = true)
         {
             _blockItem = blockItem;
             
             if (_blockItem != null)
             {
                 _blockItem.GridPosition = GridPosition;
+                if (isSnapped)
+                    blockItem.SetWorldPosition(WorldPosition);
             }
         }
 

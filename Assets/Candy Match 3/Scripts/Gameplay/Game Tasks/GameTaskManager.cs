@@ -19,6 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly CheckGridTask _checkGridTask;
         private readonly MoveItemTask _moveItemTask;
         private readonly SwapItemTask _swapItemTask;
+        private readonly SpawnItemTask _spawnItemTask;
 
         private IDisposable _disposable;
 
@@ -38,7 +39,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _moveItemTask = new(_gridCellManager, _breakGridTask);
             _moveItemTask.AddTo(ref builder);
 
-            _checkGridTask = new(_gridCellManager, _moveItemTask, spawnItemTask, _matchItemsTask);
+            _spawnItemTask = spawnItemTask;
+            _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 
             SetCheckGridTask();
@@ -55,6 +57,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _moveItemTask.SetCheckGridTask(_checkGridTask);
             _breakGridTask.SetCheckGridTask(_checkGridTask);
             _matchItemsTask.SetCheckGridTask(_checkGridTask);
+            _spawnItemTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

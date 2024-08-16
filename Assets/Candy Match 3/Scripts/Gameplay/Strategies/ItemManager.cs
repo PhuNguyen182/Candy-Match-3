@@ -34,8 +34,6 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             IGridCell gridCell = _gridCellManager.Get(itemData.Position);
 
             gridCell.SetBlockItem(item);
-            item.SetWorldPosition(gridCell.WorldPosition);
-
             return _metaItemManager.Add(itemData.Position, item);
         }
 

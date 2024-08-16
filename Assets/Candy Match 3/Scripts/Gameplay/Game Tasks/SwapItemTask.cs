@@ -66,15 +66,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private async UniTask CheckMatchOnSwap(IGridCell fromCell, IGridCell toCell)
         {
             bool isMatchedTo = _matchItemsTask.CheckMatchInSwap(toCell.GridPosition);
-            bool isMatchedFrom = _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
-            bool isMatched = isMatchedFrom || isMatchedTo;
-
-            if (!isMatched)
+            if (!isMatchedTo)
             {
-                fromCell.LockStates = LockStates.None;
-                toCell.LockStates = LockStates.None;
-                await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
+                bool isMatchedFrom = _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
+
+                if (!isMatchedFrom)
+                {
+                    fromCell.LockStates = LockStates.None;
+                    toCell.LockStates = LockStates.None;
+                    await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
+                }
             }
+
+            else
+                _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
         }
     }
 }

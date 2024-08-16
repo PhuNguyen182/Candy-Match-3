@@ -13,6 +13,7 @@ using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
 using GlobalScripts.Comparers;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.Common.Constants;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -76,6 +77,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (isMatch)
             {
+                await UniTask.DelayFrame(Match3Constants.ItemReleaseFrameDelay, PlayerLoopTiming.FixedUpdate, _token);
                 await ProcessMatch(matchResult);
             }
         }
@@ -96,21 +98,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     
                     boundPositions.Add(position);
                     IGridCell gridCell = _gridCellManager.Get(position);
+                    
+                    if (gridCell.LockStates == LockStates.Matching)
+                        return;
 
                     if (matchType != MatchType.Match3 && gridCell.GridPosition == matchResult.Position)
-                    {
                         matchTasks.Add(_breakGridTask.SpawnBooster(gridCell, matchType, candyColor));
-                    }
 
                     else
-                    {
-                        matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count, matchType));
-                    }
+                        matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count));
 
                     for (int j = 0; j < _adjacentSteps.Count; j++)
-                    {
                         adjacentPositions.Add(position + _adjacentSteps[j]);
-                    }
                 }
 
                 int count = boundPositions.Count;
@@ -122,19 +121,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 boundPositions.Add(min);
                 boundPositions.Add(max);
 
-                List<Vector3Int> adjacentPositionList = adjacentPositions.ToList();
-
-                for (int i = 0; i < adjacentPositionList.Count; i++)
+                foreach (Vector3Int adjacentPosition in adjacentPositions)
                 {
-                    Vector3Int position = adjacentPositionList[i];
-                    IGridCell gridCell = _gridCellManager.Get(position);
+                    IGridCell gridCell = _gridCellManager.Get(adjacentPosition);
                     matchTasks.Add(_breakGridTask.BreakAdjacent(gridCell));
                 }
 
-                adjacentPositionList.Clear();
                 await UniTask.WhenAll(matchTasks);
-
-                await UniTask.DelayFrame(6, PlayerLoopTiming.FixedUpdate, _token);
+                await UniTask.DelayFrame(Match3Constants.ItemReleaseFrameDelay, PlayerLoopTiming.FixedUpdate, _token);
                 BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
                 _checkGridTask.CheckRange(checkMatchBounds);
             }
@@ -143,7 +137,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public bool CheckMatchAt(Vector3Int checkPosition)
         {
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
-            return gridCell.HasItem && gridCell.BlockItem.IsMatchable && !gridCell.IsLocked;
+            return gridCell.HasItem && gridCell.BlockItem.IsMatchable 
+                    && !gridCell.IsLocked && !gridCell.IsMoving;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

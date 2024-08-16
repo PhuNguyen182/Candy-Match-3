@@ -132,7 +132,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private bool IsCloseToDirection(Vector2 checkDirection, Vector2 closeDirection)
         {
             float dotProduct = Vector2.Dot(checkDirection, closeDirection.normalized);
-            return dotProduct > 0.5f && dotProduct <= 1f;
+            return dotProduct >= 0.5f && dotProduct <= 1f;
         }
 
         private void ProcessItemBounce(IGridCell gridCell, bool isSwapped)

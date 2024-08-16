@@ -249,7 +249,7 @@ Animator:
   m_GameObject: {fileID: 5628999218794800045}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2c5342120a0980b4189642d42b246c24, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -298,7 +298,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  swapDuration: 0.3
   bounceDuration: 0.3
   moveEase: 1
   bounceEase: 6
