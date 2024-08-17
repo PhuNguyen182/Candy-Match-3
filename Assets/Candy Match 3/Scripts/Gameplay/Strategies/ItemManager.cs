@@ -109,8 +109,8 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
 
             ColorBoosterType boosterColor = matchType switch
             {
-                MatchType.Match4Horizontal => ColorBoosterType.Horizontal,
-                MatchType.Match4Vertical => ColorBoosterType.Vertical,
+                MatchType.Match4Horizontal => ColorBoosterType.Vertical,
+                MatchType.Match4Vertical => ColorBoosterType.Horizontal,
                 MatchType.MatchL => ColorBoosterType.Wrapped,
                 MatchType.MatchT => ColorBoosterType.Wrapped,
                 _ => ColorBoosterType.None

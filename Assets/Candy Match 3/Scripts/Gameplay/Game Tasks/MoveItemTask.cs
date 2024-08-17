@@ -92,7 +92,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 ExportMoveStep(moveStepCount, out outputMoveStep);
 
                 _checkGridTask.CheckAroundPosition(startPosition, 1);
-                await AnimateMovingItem(blockItem, toGridCell, moveStepCount);
+                await AnimateFallingItem(blockItem, toGridCell, moveStepCount);
 
                 toGridCell.IsMoving = false;
                 startPosition = toPosition;
@@ -125,7 +125,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        private async UniTask AnimateMovingItem(IBlockItem blockItem, IGridCell targetCell, int stepCount)
+        private async UniTask AnimateFallingItem(IBlockItem blockItem, IGridCell targetCell, int stepCount)
         {
             if (blockItem is IItemAnimation animation)
             {

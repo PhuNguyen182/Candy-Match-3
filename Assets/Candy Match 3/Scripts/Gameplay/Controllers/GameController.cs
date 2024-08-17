@@ -174,8 +174,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 Instantiate(miscCollection.CollectibleCheckSign, checkPosition, Quaternion.identity, miscContainer);
             }
 
-            _fillBoardTask.BuildRandom(levelModel.RandomBlockItemPositions);
+            // Build ruled random first, then build random later
             _fillBoardTask.BuildRuledRandom(levelModel.RuledRandomBlockPositions);
+            _fillBoardTask.BuildRandom(levelModel.RandomBlockItemPositions);
 
             _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
             _gameTaskManager.SetInputActive(true);
