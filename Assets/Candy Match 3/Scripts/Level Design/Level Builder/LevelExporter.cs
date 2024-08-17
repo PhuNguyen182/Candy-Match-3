@@ -82,16 +82,16 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 
             for (int i = 0; i < spawnRules.Count; i++)
             {
-                List<ColorFillBlockData> colorFillData = new();
+                List<ItemSpawnerData> itemSpawnerData = new();
 
-                for (int j = 0; j < spawnRules[i].ColorFillDatas.Count; j++)
+                for (int j = 0; j < spawnRules[i].SpawnerData.Count; j++)
                 {
-                    colorFillData.Add(new ColorFillBlockData
+                    itemSpawnerData.Add(new ItemSpawnerData
                     {
-                        DataValue = new Common.CustomData.ColorFillData
+                        DataValue = new ItemSpawner
                         {
-                            Coefficient = spawnRules[i].ColorFillDatas[j].Coefficient,
-                            Color = spawnRules[i].ColorFillDatas[j].Color
+                            Coefficient = spawnRules[i].SpawnerData[j].Coefficient,
+                            ItemType = spawnRules[i].SpawnerData[j].ItemType
                         }
                     });
                 }
@@ -99,7 +99,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                 SpawnRuleBlockData spawnRuleBlockData = new SpawnRuleBlockData
                 {
                     ID = spawnRules[i].ID,
-                    ColorFillDatas = colorFillData
+                    ItemSpawnerData = itemSpawnerData
                 };
 
                 spawnRuleData.Add(spawnRuleBlockData);
@@ -180,6 +180,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                         {
                             ID = colorItemTile.ItemID,
                             ItemType = colorItemTile.ItemType,
+                            ItemColor = colorItemTile.CandyColor,
                             HealthPoint = 1,
                         }
                     });
@@ -203,6 +204,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                         {
                             ID = colorBoosterTile.ItemID,
                             ItemType = colorBoosterTile.ItemType,
+                            ItemColor = colorBoosterTile.CandyColor,
                             HealthPoint = 1,
                             PrimaryState = NumericUtils.BytesToInt(boosterState)
                         }
@@ -369,17 +371,40 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             return this;
         }
 
+        public LevelExporter BuildCollectibleCheck(Tilemap tilemap)
+        {
+            var mapPositions = tilemap.cellBounds.Iterator2D();
+
+            foreach (Vector3Int position in mapPositions)
+            {
+                CollectibleCheckTile collectibleCheckTile = tilemap.GetTile<CollectibleCheckTile>(position);
+
+                if (collectibleCheckTile == null)
+                    continue;
+
+                _levelModel.CollectibleCheckBlockPositions.Add(new CollectibleCheckBlockPosition
+                {
+                    Position = position,
+                    ItemData = new()
+                });
+            }
+
+            return this;
+        }
+
         public string Export(int level, bool writeToFile = true)
         {
             string levelName = $"level_{level}";
+            string prefix = "Assets/Candy Match 3/Level Data";
             string folder = LevelFolderClassifyer.GetLevelRangeFolderName(level);
-            string levelPath = $"Assets/Candy Match 3/Level Data/{folder}/{levelName}.txt";
+
+            string levelPath = $"{prefix}/{folder}/{levelName}.txt";
             string json = JsonConvert.SerializeObject(_levelModel, Formatting.None);
 
             if (writeToFile)
             {
-                if (!File.Exists($"Assets/Candy Match 3/Level Data/{folder}"))
-                    Directory.CreateDirectory($"Assets/Candy Match 3/Level Data/{folder}");
+                if (!File.Exists($"{prefix}/{folder}"))
+                    Directory.CreateDirectory($"{prefix}/{folder}");
 
                 using (StreamWriter writer = new(levelPath))
                 {

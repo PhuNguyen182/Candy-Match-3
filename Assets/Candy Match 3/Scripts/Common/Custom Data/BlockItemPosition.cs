@@ -18,6 +18,7 @@ namespace CandyMatch3.Scripts.Common.CustomData
         public int ID;
         public int HealthPoint;
         public ItemType ItemType;
+        public CandyColor ItemColor;
         public int PrimaryState;
         public int SecondaryState;
     }

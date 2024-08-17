@@ -13,12 +13,12 @@ namespace CandyMatch3.Scripts.Common.CustomConverters
     {
         public override BlockItemPosition ReadJson(JsonReader reader, Type objectType, BlockItemPosition existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            if(reader.ReadInts(out int? x, out int? y, out int? id, out int? healthPoint, out int? itemType, out int? primaryState, out int? secondaryState))
+            if(reader.ReadInts(out int? x, out int? y, out int? id, out int? healthPoint, out int? itemType, out int? itemColor, out int? primaryState, out int? secondaryState))
             {
                 reader.Read();
             }
 
-            if(x.HasValue && y.HasValue && id.HasValue && healthPoint.HasValue && itemType.HasValue && primaryState.HasValue && secondaryState.HasValue)
+            if(x.HasValue && y.HasValue && id.HasValue && healthPoint.HasValue && itemType.HasValue && itemColor.HasValue && primaryState.HasValue && secondaryState.HasValue)
             {
                 return new BlockItemPosition
                 {
@@ -28,6 +28,7 @@ namespace CandyMatch3.Scripts.Common.CustomConverters
                         ID = id.Value,
                         HealthPoint = healthPoint.Value,
                         ItemType = (ItemType)itemType.Value,
+                        ItemColor = (CandyColor)itemColor.Value,
                         PrimaryState = primaryState.Value,
                         SecondaryState = secondaryState.Value
                     }
@@ -45,6 +46,7 @@ namespace CandyMatch3.Scripts.Common.CustomConverters
             writer.WriteValue(value.ItemData.ID);
             writer.WriteValue(value.ItemData.HealthPoint);
             writer.WriteValue((int)value.ItemData.ItemType);
+            writer.WriteValue((int)value.ItemData.ItemColor);
             writer.WriteValue(value.ItemData.PrimaryState);
             writer.WriteValue(value.ItemData.SecondaryState);
             writer.WriteEndArray();

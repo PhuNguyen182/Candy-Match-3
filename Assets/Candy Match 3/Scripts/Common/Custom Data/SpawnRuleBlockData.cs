@@ -7,6 +7,6 @@ namespace CandyMatch3.Scripts.Common.CustomData
     public class SpawnRuleBlockData
     {
         public int ID;
-        public List<ColorFillBlockData> ColorFillDatas = new();
+        public List<ItemSpawnerData> ItemSpawnerData = new();
     }
 }

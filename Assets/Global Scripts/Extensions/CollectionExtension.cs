@@ -6,7 +6,7 @@ namespace GlobalScripts.Extensions
 {
     public static class CollectionExtension
     {
-        public static void Shuffle<T>(List<T> list)
+        public static void Shuffle<T>(this List<T> list)
         {
             int count = list.Count;
 

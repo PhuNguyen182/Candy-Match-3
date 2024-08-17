@@ -8,10 +8,16 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             int div = level / 100;
             string levelRange;
 
-            if (mod != 0)
-                levelRange = $"Level_{div * 100 + 1}_{(div + 1) * 100}";
+            if (level <= 0)
+                levelRange = "Level_000";
+            
             else
-                levelRange = $"Level_{(div - 1) * 100 + 1}_{div * 100}";
+            {
+                if (mod != 0)
+                    levelRange = $"Level_{div * 100 + 1}_{(div + 1) * 100}";
+                else
+                    levelRange = $"Level_{(div - 1) * 100 + 1}_{div * 100}";
+            }
 
             return levelRange;
         }
