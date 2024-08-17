@@ -13,7 +13,6 @@ using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
 using GlobalScripts.Comparers;
 using UnityEngine.Pool;
-using CandyMatch3.Scripts.Common.Constants;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -59,7 +58,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if(CheckMatchAt(position))
             {
                 MatchResult matchResult;
-                bool isMatch = _matchRule.CheckMatch(position, out matchResult);
+                bool isMatch = IsMatchable(position, out matchResult);
                 
                 if(isMatch)
                     ProcessMatch(matchResult).Forget();
@@ -70,16 +69,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return false;
         }
 
-        public async UniTask Match(Vector3Int position)
+        public async UniTask<bool> Match(Vector3Int position)
         {
             MatchResult matchResult;
-            bool isMatch = _matchRule.CheckMatch(position, out matchResult);
+            bool isMatch = IsMatchable(position, out matchResult);
 
             if (isMatch)
-            {
-                //await UniTask.DelayFrame(Match3Constants.ItemReleaseFrameDelay, PlayerLoopTiming.FixedUpdate, _token);
                 await ProcessMatch(matchResult);
-            }
+
+            return isMatch;
         }
 
         private async UniTask ProcessMatch(MatchResult matchResult)
@@ -128,7 +126,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 await UniTask.WhenAll(matchTasks);
-                //await UniTask.DelayFrame(Match3Constants.ItemReleaseFrameDelay, PlayerLoopTiming.FixedUpdate, _token);
                 BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
                 _checkGridTask.CheckRange(checkMatchBounds);
             }
@@ -139,6 +136,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
             return gridCell.HasItem && gridCell.BlockItem.IsMatchable 
                     && !gridCell.IsLocked && !gridCell.IsMoving;
+        }
+
+        public bool IsMatchable(Vector3Int position, out MatchResult matchResult)
+        {
+            return _matchRule.CheckMatch(position, out matchResult);
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
