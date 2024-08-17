@@ -7,6 +7,6 @@ namespace CandyMatch3.Scripts.Gameplay.Models
     public class SpawnRule
     {
         public int ID;
-        public List<ColorFillData> ColorFillDatas = new();
+        public List<SpawnerData> SpawnerData = new();
     }
 }

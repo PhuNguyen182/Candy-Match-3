@@ -78,7 +78,7 @@ public abstract class BasePopup : MonoBehaviour
     }
 
     /// <summary>
-    /// Move the popup into Save Stack
+    /// MoveItems the popup into Save Stack
     /// </summary>
     public virtual void SaveBox()
     {

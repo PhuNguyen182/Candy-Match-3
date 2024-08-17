@@ -58,21 +58,21 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 
             for (int i = 0; i < savedSpawnRules.Count; i++)
             {
-                List<Gameplay.Models.ColorFillData> colorFillDatas = new();
+                List<SpawnerData> colorFillDatas = new();
                 
-                for (int j = 0; j < savedSpawnRules[i].ColorFillDatas.Count; j++)
+                for (int j = 0; j < savedSpawnRules[i].ItemSpawnerData.Count; j++)
                 {
-                    colorFillDatas.Add(new Gameplay.Models.ColorFillData
+                    colorFillDatas.Add(new SpawnerData
                     {
-                        Coefficient = savedSpawnRules[i].ColorFillDatas[j].DataValue.Coefficient,
-                        Color = savedSpawnRules[i].ColorFillDatas[j].DataValue.Color
+                        Coefficient = savedSpawnRules[i].ItemSpawnerData[j].DataValue.Coefficient,
+                        ItemType = savedSpawnRules[i].ItemSpawnerData[j].DataValue.ItemType
                     });
                 }
 
                 newSpawnRules.Add(new SpawnRule
                 {
                     ID = savedSpawnRules[i].ID,
-                    ColorFillDatas = colorFillDatas
+                    SpawnerData = colorFillDatas
                 });
             }
 
@@ -259,6 +259,19 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                 int id = blockPositions[i].ItemData.ID;
                 SpawnerTile spawnerTile = _tileDatabase.GetSpawnerTile(id);
                 tilemap.SetTile(blockPositions[i].Position, spawnerTile);
+            }
+
+            return this;
+        }
+
+        public LevelImporter BuildCollectibleCheck(Tilemap tilemap, List<CollectibleCheckBlockPosition> blockPositions)
+        {
+            tilemap.ClearAllTiles();
+
+            for (int i = 0; i < blockPositions.Count; i++)
+            {
+                CollectibleCheckTile collectibleCheckTile = _tileDatabase.GetCollectibleCheck();
+                tilemap.SetTile(blockPositions[i].Position, collectibleCheckTile);
             }
 
             return this;

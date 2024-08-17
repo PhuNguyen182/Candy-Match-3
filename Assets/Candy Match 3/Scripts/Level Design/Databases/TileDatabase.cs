@@ -15,6 +15,8 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
     {
         [SerializeField] private BoardTile boardTile;
         [Space(3)]
+        [SerializeField] private CollectibleCheckTile collectibleCheckTile;
+        [Space(3)]
         [SerializeField] private RandomTile randomTile;
         [Space(3)]
         [SerializeField] private UnbreakableTile unbreakableTile;
@@ -38,6 +40,11 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
         public BoardTile GetBoardTile()
         {
             return boardTile;
+        }
+
+        public CollectibleCheckTile GetCollectibleCheck()
+        {
+            return collectibleCheckTile;
         }
 
         public RandomTile GetRandomTile()

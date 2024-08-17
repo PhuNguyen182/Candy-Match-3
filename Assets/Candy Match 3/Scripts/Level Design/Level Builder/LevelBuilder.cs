@@ -5,7 +5,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using Sirenix.OdinInspector;
+using GlobalScripts.Extensions;
 using CandyMatch3.Scripts.LevelDesign.Databases;
+using CandyMatch3.Scripts.LevelDesign.CustomTiles.TopTiles;
+using CandyMatch3.Scripts.LevelDesign.CustomTiles;
 using CandyMatch3.Scripts.Gameplay.Models;
 using Newtonsoft.Json;
 
@@ -40,6 +43,10 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         [SerializeField] private Tilemap itemTilemap;
         [SerializeField] private Tilemap spawnerTilemap;
         [SerializeField] private Tilemap statefulTilemap;
+        [SerializeField] private Tilemap collectibleCheckTilemap;
+
+        [HideInInspector]
+        public string LevelData;
 
         private LevelExporter _levelExporter;
         private LevelImporter _levelImporter;
@@ -49,6 +56,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         private void ClearEntities()
         {
             itemTilemap.ClearAllTiles();
+            collectibleCheckTilemap.ClearAllTiles();
         }
 
         [HorizontalGroup(GroupID = "Map Clear 1")]
@@ -73,6 +81,13 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         }
 
         [Button]
+        private void ScanAllTilemaps()
+        {
+            CompressTilemaps();
+            ValidateLevelBoard();
+        }
+
+        [Button]
         private void ClearAllBoard()
         {
             targetMove = 0;
@@ -86,35 +101,107 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             itemTilemap.ClearAllTiles();
             spawnerTilemap.ClearAllTiles();
             statefulTilemap.ClearAllTiles();
+            collectibleCheckTilemap.ClearAllTiles();
         }
 
-        [Button]
-        private void ScanAllTilemaps()
+        #region Tilemap Validation
+        private void CompressTilemaps()
         {
             boardTilemap.CompressBounds();
             itemTilemap.CompressBounds();
             statefulTilemap.CompressBounds();
+            spawnerTilemap.CompressBounds();
+            collectibleCheckTilemap.CompressBounds();
         }
 
+        private void ValidateLevelBoard()
+        {
+            gridInformation.Reset();
+            ValidateBoardTilemap();
+            ValidateItemTilemap();
+            ValidateSpawnerTilemap();
+            ValidateStatefulTilemap();
+        }
+
+        private void ValidateBoardTilemap()
+        {
+            var boardPositions = boardTilemap.cellBounds.Iterator2D();
+            foreach (Vector3Int position in boardPositions)
+            {
+                gridInformation.SetPositionProperty(position, BoardConstants.BoardTileValidate, 1);
+            }
+
+            var spawnerPositions = spawnerTilemap.cellBounds.Iterator2D();
+            foreach (Vector3Int position in spawnerPositions)
+            {
+                gridInformation.SetPositionProperty(position + Vector3Int.up, BoardConstants.SpawnerTileValidate, 1);
+            }
+        }
+
+        private void ValidateItemTilemap()
+        {
+            itemTilemap.cellBounds.ForEach2D(position =>
+            {
+                SingleItemTile itemTile = itemTilemap.GetTile<SingleItemTile>(position);
+                
+                if(itemTile != null)
+                {
+                    if (!itemTile.ValidateTile(position, itemTilemap, gridInformation))
+                        itemTilemap.SetTile(position, null);
+                }
+            });
+        }
+
+        private void ValidateSpawnerTilemap()
+        {
+            spawnerTilemap.cellBounds.ForEach2D(position =>
+            {
+                SpawnerTile spawnerTile = spawnerTilemap.GetTile<SpawnerTile>(position);
+
+                if(spawnerTile != null)
+                {
+                    if (!spawnerTile.ValidateTile(position, spawnerTilemap, gridInformation))
+                        spawnerTilemap.SetTile(position, null);
+                }
+            });
+        }
+
+        private void ValidateStatefulTilemap()
+        {
+            statefulTilemap.cellBounds.ForEach2D(position =>
+            {
+                StatefulTile statefulTile = statefulTilemap.GetTile<StatefulTile>(position);
+
+                if (statefulTile != null)
+                {
+                    if (!statefulTile.ValidateTile(position, statefulTilemap, gridInformation))
+                        statefulTilemap.SetTile(position, null);
+                }
+            });
+        }
+        #endregion
+
+        #region Level Exporter And Importer
         [HorizontalGroup(GroupID = "Level Builder")]
         [Button(Style = ButtonStyle.Box)]
         public void Export(int level, bool writeToFile = true)
         {
             ScanAllTilemaps();
             _levelExporter = new();
-            _levelExporter.ClearModel()
-                          .BuildTargetMove(targetMove)
-                          .BuildScoreRule(scoreRule)
-                          .BuildLevelTarget(targetModels)
-                          .BuildBoardFill(boardFillRules)
-                          .BuildRuledRandomFill(ruledRandomFills)
-                          .BuildSpawnRule(spawnerRules)
-                          .BuildBoard(boardTilemap)
-                          .BuildColorItems(itemTilemap)
-                          .BuildSingleItems(itemTilemap)
-                          .BuildStateful(statefulTilemap)
-                          .BuildSpawner(spawnerTilemap)
-                          .Export(level, writeToFile);
+            LevelData = _levelExporter.ClearModel()
+                                      .BuildTargetMove(targetMove)
+                                      .BuildScoreRule(scoreRule)
+                                      .BuildLevelTarget(targetModels)
+                                      .BuildBoardFill(boardFillRules)
+                                      .BuildRuledRandomFill(ruledRandomFills)
+                                      .BuildSpawnRule(spawnerRules)
+                                      .BuildBoard(boardTilemap)
+                                      .BuildColorItems(itemTilemap)
+                                      .BuildSingleItems(itemTilemap)
+                                      .BuildStateful(statefulTilemap)
+                                      .BuildSpawner(spawnerTilemap)
+                                      .BuildCollectibleCheck(collectibleCheckTilemap)
+                                      .Export(level, writeToFile);
         }
 
         [HorizontalGroup(GroupID = "Level Builder")]
@@ -125,8 +212,10 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
             {
                 string levelData;
                 string levelName = $"level_{level}";
+                string prefix = "Assets/Candy Match 3/Level Data";
+
                 string folder = LevelFolderClassifyer.GetLevelRangeFolderName(level);
-                string levelPath = $"Assets/Candy Match 3/Level Data/{folder}/{levelName}.txt";
+                string levelPath = $"{prefix}/{folder}/{levelName}.txt";
 
                 using (StreamReader streamReader = new StreamReader(levelPath))
                 {
@@ -165,9 +254,11 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                               .BuildCollectible(itemTilemap, levelModel.CollectibleItemPositions)
                               .BuildStateful(statefulTilemap, levelModel.StatefulBlockPositions)
                               .BuildSpawner(spawnerTilemap, levelModel.SpawnerBlockPositions)
+                              .BuildCollectibleCheck(collectibleCheckTilemap, levelModel.CollectibleCheckBlockPositions)
                               .Import();
             }
         }
+        #endregion
     }
 }
 #endif
