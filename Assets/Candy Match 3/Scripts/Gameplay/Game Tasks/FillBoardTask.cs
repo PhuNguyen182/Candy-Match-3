@@ -2,14 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using UnityEngine.Tilemaps;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.CustomData;
+using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.LevelDesign.Databases;
 using CandyMatch3.Scripts.LevelDesign.CustomTiles.BoardTiles;
 using CandyMatch3.Scripts.Gameplay.Strategies;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
 using GlobalScripts.Probabilities;
 using GlobalScripts.Extensions;
+using Random = UnityEngine.Random;
+using System.Linq;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -18,16 +23,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly Tilemap _boardTilemap;
         private readonly TileDatabase _tileDatabase;
         private readonly ItemManager _itemManager;
+        private readonly GridCellManager _gridCellManager;
 
-        private List<float> _colorDistributes = new();
-        private List<ColorFillBlockData> _boardFillRule = new();
-        private List<ColorFillBlockData> _ruledRandomFill = new();
+        private List<CandyColor> _candyColors;
+        private List<float> _colorDistributes;
+        private List<ColorFillBlockData> _boardFillRule;
+        private List<ColorFillBlockData> _ruledRandomFill;
 
-        public FillBoardTask(Tilemap boardTilemap, TileDatabase tileDatabase, ItemManager itemManager)
+        public FillBoardTask(GridCellManager gridCellManager, Tilemap boardTilemap, TileDatabase tileDatabase, ItemManager itemManager)
         {
+            _gridCellManager = gridCellManager;
             _boardTilemap = boardTilemap;
             _itemManager = itemManager;
             _tileDatabase = tileDatabase;
+
+            _candyColors = new();
+            _colorDistributes = new();
+            _boardFillRule = new();
+            _ruledRandomFill = new();
         }
 
         private void SetRandomColorDistribute()
@@ -36,6 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             for (int i = 0; i < _boardFillRule.Count; i++)
             {
+                _candyColors.Add(_boardFillRule[i].DataValue.Color);
                 colorRatios.Add(_boardFillRule[i].DataValue.Coefficient);
             }
 
@@ -97,7 +111,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             for (int i = 0; i < blockPositions.Count; i++)
             {
-                CandyColor randomColor = GetRandomColor();
+                Vector3Int position = blockPositions[i].Position;
+                CandyColor randomColor = GetRandomColorItem(position);
                 ItemType itemType = _itemManager.GetItemTypeFromColor(randomColor);
 
                 BlockItemData itemData = new BlockItemData
@@ -110,7 +125,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 BlockItemPosition itemPosition = new()
                 {
-                    Position = blockPositions[i].Position,
+                    Position = position,
                     ItemData = itemData
                 };
 
@@ -143,10 +158,58 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
+        private CandyColor GetRandomColorItem(Vector3Int position)
+        {
+            using(var listPool = HashSetPool<CandyColor>.Get(out HashSet<CandyColor> candyColors))
+            {
+                for (int i = 0; i < _candyColors.Count; i++)
+                {
+                    candyColors.Add(_candyColors[i]);
+                }
+
+                IGridCell leftCell1 = _gridCellManager.Get(position + new Vector3Int(-1, 0));
+                IGridCell leftCell2 = _gridCellManager.Get(position + new Vector3Int(-2, 0));
+
+                if(leftCell1 != null && leftCell2 != null && leftCell1.HasItem && leftCell2.HasItem)
+                {
+                    if(leftCell1.CandyColor == leftCell2.CandyColor)
+                    {
+                        candyColors.Remove(leftCell1.CandyColor);
+                    }
+                }
+
+                IGridCell downCell1 = _gridCellManager.Get(position + new Vector3Int(0, -1));
+                IGridCell downCell2 = _gridCellManager.Get(position + new Vector3Int(0, -2));
+
+                if (downCell1 != null && downCell2 != null && downCell1.HasItem && downCell2.HasItem)
+                {
+                    if (downCell1.CandyColor == downCell2.CandyColor)
+                    {
+                        candyColors.Remove(downCell1.CandyColor);
+                    }
+                }
+
+                CandyColor randomColor;
+                
+                if (candyColors.Count == _candyColors.Count)
+                    randomColor = GetRandomColor();
+                
+                else
+                {
+                    int randIndex = Random.Range(0, candyColors.Count);
+                    randomColor = candyColors.ElementAt(randIndex);
+                }
+
+                return randomColor;
+            }
+        }
+
         public void Dispose()
         {
+            _candyColors.Clear();
             _colorDistributes.Clear();
             _boardFillRule.Clear();
+            _ruledRandomFill.Clear();
         }
     }
 }

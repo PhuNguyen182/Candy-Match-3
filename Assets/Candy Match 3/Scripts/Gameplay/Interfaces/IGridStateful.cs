@@ -6,6 +6,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
     {
         public bool IsLocked { get; }
         public bool CanContainItem { get; }
+        public bool IsAvailable { get; }
         public StatefulGroupType GroupType { get; }
         
         public void Release();

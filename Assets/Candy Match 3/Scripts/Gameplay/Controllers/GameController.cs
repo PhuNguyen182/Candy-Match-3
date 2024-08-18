@@ -83,7 +83,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _itemFactory = new(itemDatabase, itemContainer);
             _itemManager = new(_gridCellManager, _metaItemManager, _itemFactory);
 
-            _fillBoardTask = new(boardTilemap, tileDatabase, _itemManager);
+            _fillBoardTask = new(_gridCellManager, boardTilemap, tileDatabase, _itemManager);
             _fillBoardTask.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager, _metaItemManager, _itemManager);

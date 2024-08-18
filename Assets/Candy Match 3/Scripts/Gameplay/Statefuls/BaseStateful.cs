@@ -16,6 +16,8 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public abstract bool CanContainItem { get; }
 
+        public abstract bool IsAvailable { get; }
+
         public abstract void SetHealthPoint(int healthPoint);
 
         public abstract bool Break();

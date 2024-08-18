@@ -14,6 +14,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public bool IsMoveable { get; }
         public bool CanSetItem { get; }
         public bool CanContainItem { get; }
+        public bool IsAvailable { get; }
         
         public bool IsMoving { get; set; }
         public bool IsSpawner { get; set; }

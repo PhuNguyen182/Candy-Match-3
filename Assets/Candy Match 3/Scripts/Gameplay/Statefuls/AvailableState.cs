@@ -15,6 +15,8 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override bool CanContainItem => true;
 
+        public override bool IsAvailable => true;
+
         public override bool Break()
         {
             return false;

@@ -19,6 +19,8 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override bool CanContainItem => _canContainItem;
 
+        public override bool IsAvailable => true;
+
         public override bool Break()
         {
             _healthPoint = _healthPoint - 1;
