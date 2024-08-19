@@ -167,6 +167,7 @@ MonoBehaviour:
   itemId: 0
   itemType: 28
   candyColor: 0
+  targetType: 26
   itemGraphics: {fileID: 5347523752585622243}
 --- !u!114 &5347523752585622243
 MonoBehaviour:

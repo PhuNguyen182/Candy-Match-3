@@ -10,11 +10,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
+        public bool IsIgnored { get; set; }
+
         public override bool CanBeReplace => false;
 
         public override bool IsMatchable => false;
 
         public override bool IsMoveable => true;
+
+        public override void ReleaseItem()
+        {
+            base.ReleaseItem();
+            IsIgnored = false;
+        }
 
         public abstract UniTask Activate();
 

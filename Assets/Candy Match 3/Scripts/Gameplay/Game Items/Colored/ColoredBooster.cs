@@ -27,12 +27,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override bool CanBeReplace => false;
 
+        public bool IsIgnored { get; set; }
+
         public ColorBoosterType ColorBoosterType => colorBoosterType;
 
         public override void ResetItem()
         {
             base.ResetItem();
             SetMatchable(true);
+            IsIgnored = false;
         }
 
         public override void SetMatchable(bool isMatchable)
@@ -78,6 +81,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             };
 
             itemGraphics.SetItemSprite(colorSprite);
+            SetTargetType();
         }
 
         public async UniTask Activate()
@@ -118,6 +122,38 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
             return itemAnimation.SwapTo(position, duration, isMoveFirst);
+        }
+
+        private void SetTargetType()
+        {
+            targetType = itemType switch
+            {
+                ItemType.BlueHorizontal => TargetEnum.BlueHorizontal,
+                ItemType.BlueVertical => TargetEnum.BlueVertical,
+                ItemType.BlueWrapped => TargetEnum.BlueWrapped,
+
+                ItemType.GreenHorizontal => TargetEnum.GreenHorizontal,
+                ItemType.GreenVertical => TargetEnum.GreenVertical,
+                ItemType.GreenWrapped => TargetEnum.GreenWrapped,
+
+                ItemType.OrangeHorizontal => TargetEnum.OrangeHorizontal,
+                ItemType.OrangeVertical => TargetEnum.OrangeVertical,
+                ItemType.OrangeWrapped => TargetEnum.OrangeWrapped,
+
+                ItemType.PurpleHorizontal => TargetEnum.PurpleHorizontal,
+                ItemType.PurpleVertical => TargetEnum.PurpleVertical,
+                ItemType.PurpleWrapped => TargetEnum.PurpleWrapped,
+
+                ItemType.RedHorizontal => TargetEnum.RedHorizontal,
+                ItemType.RedVertical => TargetEnum.RedVertical,
+                ItemType.RedWrapped => TargetEnum.RedWrapped,
+
+                ItemType.YellowHorizontal => TargetEnum.YellowHorizontal,
+                ItemType.YellowVertical => TargetEnum.YellowVertical,
+                ItemType.YellowWrapped => TargetEnum.YellowWrapped,
+
+                _ => TargetEnum.None
+            };
         }
     }
 }

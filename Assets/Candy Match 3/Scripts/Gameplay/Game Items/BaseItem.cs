@@ -13,6 +13,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] protected int itemId = 0;
         [SerializeField] protected ItemType itemType = ItemType.None;
         [SerializeField] protected CandyColor candyColor = CandyColor.None;
+        [SerializeField] protected TargetEnum targetType = TargetEnum.None;
         [SerializeField] protected ItemGraphics itemGraphics;
 
         protected CancellationToken destroyToken;
@@ -26,6 +27,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public abstract bool IsMoveable { get; }
 
         public ItemType ItemType => itemType;
+
+        public TargetEnum TargetType => targetType;
 
         public CandyColor CandyColor => candyColor;
 

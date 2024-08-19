@@ -63,6 +63,7 @@ MonoBehaviour:
   breakableTiles:
   - {fileID: 11400000, guid: 0168f94cc07aac14ca532383116c3f60, type: 2}
   - {fileID: 11400000, guid: 948fcfd7f06a13544bbe382fa87a7619, type: 2}
+  - {fileID: 11400000, guid: 6b761666fa3b2d64582bdfc33dc3fb31, type: 2}
   - {fileID: 11400000, guid: 21eadc9a103dd14428994ba96d5de864, type: 2}
   collectibleTiles:
   - {fileID: 11400000, guid: 8dda438f9ea46734a8b234d0687dc8a4, type: 2}
