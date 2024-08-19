@@ -38,4 +38,4 @@ MonoBehaviour:
   itemType: 30
   primaryState: 0
   secondaryState: 0
-  healthPoint: 2
+  healthPoint: 1

@@ -6,6 +6,7 @@ using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Gameplay.Strategies;
+using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
@@ -20,6 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly MoveItemTask _moveItemTask;
         private readonly SwapItemTask _swapItemTask;
         private readonly SpawnItemTask _spawnItemTask;
+        private readonly ActivateBoosterTask _activateBoosterTask;
 
         private IDisposable _disposable;
 
@@ -38,6 +40,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _breakGridTask = breakGridTask;
             _moveItemTask = new(_gridCellManager, _breakGridTask);
             _moveItemTask.AddTo(ref builder);
+
+            _activateBoosterTask = new(_gridCellManager, _breakGridTask);
+            _activateBoosterTask.AddTo(ref builder);
+
+            _breakGridTask.SetActivateBoosterTask(_activateBoosterTask);
+            _swapItemTask.SetActivateBoosterTask(_activateBoosterTask);
 
             _spawnItemTask = spawnItemTask;
             _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
@@ -58,6 +66,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _breakGridTask.SetCheckGridTask(_checkGridTask);
             _matchItemsTask.SetCheckGridTask(_checkGridTask);
             _spawnItemTask.SetCheckGridTask(_checkGridTask);
+            _activateBoosterTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

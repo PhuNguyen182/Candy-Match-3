@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 
@@ -12,6 +13,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly GridCellManager _gridCellManager;
         private readonly MatchItemsTask _matchItemsTask;
+
+        private ActivateBoosterTask _activateBoosterTask;
 
         public SwapItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask)
         {
@@ -59,7 +62,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (isSwapBack)
             {
-                CheckMatchOnSwap(fromCell, toCell).Forget();
+                if (fromItem is IBooster booster1)
+                {
+                    if(toItem.CandyColor != CandyColor.None)
+                        await _activateBoosterTask.ActivateBoosterOnSwap(toCell, toItem.CandyColor);
+                    else
+                        await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
+                }
+                
+                else if(toItem is IBooster booster2)
+                {
+                    if (fromItem.CandyColor != CandyColor.None)
+                        await _activateBoosterTask.ActivateBoosterOnSwap(fromCell, fromItem.CandyColor);
+                    else
+                        await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
+                }
+                
+                else
+                    CheckMatchOnSwap(fromCell, toCell).Forget();
             }
         }
 
@@ -80,6 +100,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else
                 _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
+        }
+
+        public void SetActivateBoosterTask(ActivateBoosterTask activateBoosterTask)
+        {
+            _activateBoosterTask = activateBoosterTask; ;
         }
     }
 }

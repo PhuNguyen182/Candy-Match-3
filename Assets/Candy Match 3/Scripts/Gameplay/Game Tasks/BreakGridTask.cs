@@ -7,7 +7,7 @@ using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using CandyMatch3.Scripts.Gameplay.Models.Match;
+using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Common.CustomData;
 using Cysharp.Threading.Tasks;
@@ -24,6 +24,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly List<Vector3Int> _adjacentStepCheck;
         
         private CheckGridTask _checkGridTask;
+        private ActivateBoosterTask _activateBoosterTask;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
@@ -56,16 +57,28 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if(gridCell != null && gridCell.HasItem)
             {
                 gridCell.LockStates = LockStates.Breaking;
-
                 IBlockItem blockItem = gridCell.BlockItem;
+
+                if (blockItem is IBooster booster)
+                {
+                    await booster.Activate();
+                    await _activateBoosterTask.ActivateBooster(gridCell);
+                    ReleaseGridCell(gridCell);
+                    gridCell.LockStates = LockStates.None;
+                    return;
+                }
+
                 if (blockItem is IBreakable breakable)
                 {
                     if (breakable.Break())
                     {
                         await blockItem.ItemBlast();
+                        await _activateBoosterTask.ActivateBooster(gridCell);
                         ReleaseGridCell(gridCell);
                     }
                 }
+
+                gridCell.LockStates = LockStates.None;
             }
         }
 
@@ -108,6 +121,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (blockItem is IBooster booster)
             {
                 await booster.Activate(); // use activate booster task later
+                await _activateBoosterTask.ActivateBooster(gridCell);
                 ReleaseGridCell(gridCell);
                 return true;
             }
@@ -146,6 +160,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     if (breakable.Break())
                     {
                         //await blockItem.ItemBlast();
+                        await _activateBoosterTask.ActivateBooster(gridCell);
                         ReleaseGridCell(gridCell);
                     }
                 }
@@ -181,6 +196,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if(blockItem is IBooster booster)
             {
                 await booster.Activate(); // Do logic active booster later
+                await _activateBoosterTask.ActivateBooster(gridCell);
                 ReleaseGridCell(gridCell);
             }
 
@@ -215,6 +231,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;
+        }
+
+        public void SetActivateBoosterTask(ActivateBoosterTask activateBoosterTask)
+        {
+            _activateBoosterTask = activateBoosterTask;
         }
 
         public void ReleaseGridCell(IGridCell gridCell)

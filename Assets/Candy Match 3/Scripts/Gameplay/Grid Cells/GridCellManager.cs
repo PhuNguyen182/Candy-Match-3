@@ -29,6 +29,11 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             ConvertWorldToGridFunction = convertWorldToGridFunction;
         }
 
+        public BoundsInt GetActiveBounds()
+        {
+            return _boardActiveBounds;
+        }
+
         public IGridCell Get(Vector3Int position)
         {
             return _kpv.TryGetValue(position, out IGridCell gridCell) ? gridCell : null;

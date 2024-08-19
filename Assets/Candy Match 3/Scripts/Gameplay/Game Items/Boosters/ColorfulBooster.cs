@@ -16,5 +16,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
         {
             
         }
+
+        public override void ReleaseItem()
+        {
+            SimplePool.Despawn(this.gameObject);
+        }
     }
 }

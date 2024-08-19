@@ -22,6 +22,8 @@ namespace CandyMatch3.Scripts.Common.Databases
         [SerializeField] public ColoredBooster ColoredBooster;
         [SerializeField] public List<BaseBoosterItem> Boosters;
         [SerializeField] public List<BaseItem> SpecialItems;
+        [SerializeField] public List<BaseItem> CollectibleItems;
+        [SerializeField] public BaseItem UnbreakableItem;
 
         public BaseBoosterItem GetBooster(ItemType boosterType)
         {
@@ -31,6 +33,11 @@ namespace CandyMatch3.Scripts.Common.Databases
         public BaseItem GetItemByType(ItemType itemType)
         {
             return SpecialItems.FirstOrDefault(item => item.ItemType == itemType);
+        }
+
+        public BaseItem GetCollectibleItemByType(ItemType itemType)
+        {
+            return CollectibleItems.FirstOrDefault(item => item.ItemType == itemType);
         }
     }
 }

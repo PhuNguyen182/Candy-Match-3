@@ -46,7 +46,7 @@ namespace GlobalScripts.Extensions
 
         public static IEnumerable<Vector3Int> GetRow(this BoundsInt boundsInt, Vector3Int checkPosition)
         {
-            for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
+            for (int x = boundsInt.xMin; x < boundsInt.xMax; x++)
             {
                 yield return new Vector3Int(x, checkPosition.y);
             }
@@ -54,7 +54,7 @@ namespace GlobalScripts.Extensions
 
         public static IEnumerable<Vector3Int> GetColumn(this BoundsInt boundsInt, Vector3Int checkPosition)
         {
-            for (int y = boundsInt.yMin; y <= boundsInt.yMax; y++)
+            for (int y = boundsInt.yMin; y < boundsInt.yMax; y++)
             {
                 yield return new Vector3Int(checkPosition.x, y);
             }
