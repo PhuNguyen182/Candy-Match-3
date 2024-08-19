@@ -94,7 +94,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _checkGridTask.CheckAroundPosition(startPosition, 1);
                 await AnimateFallingItem(blockItem, toGridCell, moveStepCount);
 
-                toGridCell.IsMoving = false;
                 startPosition = toPosition;
                 currentGrid = toGridCell;
             }
@@ -114,6 +113,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else
             {
+                //await UniTask.DelayFrame(Match3Constants.ItemReleaseFrameDelay, PlayerLoopTiming.Update, _token);
                 _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
                 _checkGridTask.CheckAroundPosition(startPosition, 1);
             }

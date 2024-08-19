@@ -47,26 +47,33 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 return;
             
             IBlockItem blockItem = gridCell.BlockItem;
-            if(blockItem is ISetColorBooster colorBooster)
+            if (blockItem is IBooster booster)
             {
-                ColorBoosterType colorBoosterType = colorBooster.ColorBoosterType;
-                switch (colorBoosterType)
-                {
-                    case ColorBoosterType.Horizontal:
-                        await _horizontalBoosterTask.Activate(gridCell);
-                        break;
-                    case ColorBoosterType.Vertical:
-                        await _verticalBoosterTask.Activate(gridCell);
-                        break;
-                    case ColorBoosterType.Wrapped:
-                        await _wrappedBoosterTask.Activate(gridCell);
-                        break;
-                }
-            }
+                if (booster.IsIgnored)
+                    return;
 
-            else if(blockItem.ItemType == ItemType.ColorBomb)
-            {
-                await _colorfulBoosterTask.Activate();
+                booster.IsIgnored = true;
+                if (blockItem is ISetColorBooster colorBooster)
+                {
+                    ColorBoosterType colorBoosterType = colorBooster.ColorBoosterType;
+                    switch (colorBoosterType)
+                    {
+                        case ColorBoosterType.Horizontal:
+                            await _horizontalBoosterTask.Activate(gridCell);
+                            break;
+                        case ColorBoosterType.Vertical:
+                            await _verticalBoosterTask.Activate(gridCell);
+                            break;
+                        case ColorBoosterType.Wrapped:
+                            await _wrappedBoosterTask.Activate(gridCell);
+                            break;
+                    }
+                }
+
+                else if (blockItem.ItemType == ItemType.ColorBomb)
+                {
+                    await _colorfulBoosterTask.Activate();
+                }
             }
         }
 

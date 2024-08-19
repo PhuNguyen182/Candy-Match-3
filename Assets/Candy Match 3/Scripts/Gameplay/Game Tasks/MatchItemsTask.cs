@@ -5,6 +5,7 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -126,6 +127,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 await UniTask.WhenAll(matchTasks);
+                //await UniTask.DelayFrame(Match3Constants.ItemReleaseFrameDelay, PlayerLoopTiming.Update, _token);
                 BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
                 _checkGridTask.CheckRange(checkMatchBounds);
             }

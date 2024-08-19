@@ -12,7 +12,6 @@ using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Common.CustomData;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Utils;
-using GlobalScripts.Extensions;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -82,31 +81,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public async UniTask BreakRange(Vector3Int checkPosition, int range = 1)
-        {
-            BoundsInt activeRange = checkPosition.GetBounds2D(range);
-            using (var listPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
-            {
-                using var boundsList = ListPool<Vector3Int>.Get(out List<Vector3Int> checkBoundsPositions);
-                {
-                    foreach (Vector3Int position in activeRange.Iterator2D())
-                    {
-                        checkBoundsPositions.Add(position);
-                        breakTasks.Add(BreakItem(position));
-                    }
-
-                    checkBoundsPositions.Add(activeRange.min + new Vector3Int(-1, -1));
-                    checkBoundsPositions.Add(activeRange.max);
-
-                    await UniTask.WhenAll(breakTasks);
-                    await UniTask.DelayFrame(9, PlayerLoopTiming.Update, _token);
-
-                    BoundsInt checkBounds = BoundsExtension.Encapsulate(checkBoundsPositions);
-                    _checkGridTask.CheckRange(checkBounds);
-                }
-            }
-        }
-
         public async UniTask<bool> Break(IGridCell gridCell)
         {
             if (gridCell == null)
@@ -152,6 +126,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (blockItem is IBooster booster)
                 {
                     await booster.Activate(); // use activate booster task later
+                    await _activateBoosterTask.ActivateBooster(gridCell);
                     ReleaseGridCell(gridCell);
                 }
 

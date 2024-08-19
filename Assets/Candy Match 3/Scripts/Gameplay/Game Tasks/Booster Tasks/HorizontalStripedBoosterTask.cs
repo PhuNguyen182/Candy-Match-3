@@ -32,6 +32,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             {
                 attackPositions.AddRange(activeBounds.GetRow(position));
 
+                int count = attackPositions.Count;
+                Vector3Int min = attackPositions[0] + new Vector3Int(0, -1);
+                Vector3Int max = attackPositions[count - 1] + new Vector3Int(0, 1);
+
                 using var brealListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
                 using var encapsulateListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> encapsulatePositions);
 
@@ -45,6 +49,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(breakTasks);
+                encapsulatePositions.Add(min);
+                encapsulatePositions.Add(max);
+
                 BoundsInt attackedRange = BoundsExtension.Encapsulate(encapsulatePositions);
                 _checkGridTask.CheckRange(attackedRange);
             }
