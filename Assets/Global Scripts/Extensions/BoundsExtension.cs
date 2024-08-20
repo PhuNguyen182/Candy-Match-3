@@ -9,6 +9,11 @@ namespace GlobalScripts.Extensions
 {
     public static class BoundsExtension
     {
+        public static BoundsInt GetBounds2D(this Vector3Int position, Vector3Int size)
+        {
+            return new BoundsInt(position - size / 2, size);
+        }
+
         public static BoundsInt GetBounds2D(this Vector3Int position, int range = 0)
         {
             return new BoundsInt(position + new Vector3Int(-1, -1) * range, new(2 * range + 1, 2 * range + 1));

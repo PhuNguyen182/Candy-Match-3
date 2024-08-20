@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
+using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 
@@ -14,7 +14,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly GridCellManager _gridCellManager;
         private readonly MatchItemsTask _matchItemsTask;
 
-        private ActivateBoosterTask _activateBoosterTask;
+        private ComboBoosterHandleTask _comboBoosterHandleTask;
 
         public SwapItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask)
         {
@@ -36,50 +36,77 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!fromCell.HasItem || !toCell.HasItem)
                 return;
 
+            if (!fromCell.IsMoveable || !toCell.IsMoveable)
+                return;
+
             IBlockItem fromItem = fromCell.BlockItem;
             IBlockItem toItem = toCell.BlockItem;
 
-            if (!fromCell.IsMoveable || !toItem.IsMoveable)
+            if (fromItem is not IItemAnimation fromAnimation || toItem is not IItemAnimation toAnimation)
                 return;
 
-            fromCell.LockStates = LockStates.Swapping;
-            toCell.LockStates = LockStates.Swapping;
+            if (_comboBoosterHandleTask.IsComboBooster(fromCell, toCell))
+            {
+                if(_comboBoosterHandleTask.IsColorBoosters(fromCell, toCell))
+                {
+                    await fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
+                    await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
+                }
 
-            if (fromItem is IItemAnimation fromAnimation && toItem is IItemAnimation toAnimation)
+                else
+                {
+                    UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
+                    UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
+                    await UniTask.WhenAll(fromMoveTask, toMoveTask);
+
+                    fromCell.SetBlockItem(toItem);
+                    toItem.SetWorldPosition(fromCell.WorldPosition);
+                    toCell.SetBlockItem(fromItem);
+                    fromItem.SetWorldPosition(toCell.WorldPosition);
+
+                    fromCell.LockStates = LockStates.None;
+                    toCell.LockStates = LockStates.None;
+                    await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
+                }
+            }
+
+            else if (_comboBoosterHandleTask.IsSwapToColorful(fromCell, toCell))
             {
                 UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
                 UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
                 await UniTask.WhenAll(fromMoveTask, toMoveTask);
+
+                fromCell.SetBlockItem(toItem);
+                toItem.SetWorldPosition(fromCell.WorldPosition);
+                toCell.SetBlockItem(fromItem);
+                fromItem.SetWorldPosition(toCell.WorldPosition);
+
+                fromCell.LockStates = LockStates.None;
+                toCell.LockStates = LockStates.None;
+                await _comboBoosterHandleTask.CombineColorItemWithColorItem(fromCell, toCell);
             }
 
-            fromCell.LockStates = LockStates.None;
-            toCell.LockStates = LockStates.None;
-
-            fromCell.SetBlockItem(toItem);
-            toItem.SetWorldPosition(fromCell.WorldPosition);
-            toCell.SetBlockItem(fromItem);
-            fromItem.SetWorldPosition(toCell.WorldPosition);
-
-            if (isSwapBack)
+            else
             {
-                if (fromItem is IBooster booster1)
+                fromCell.LockStates = LockStates.Swapping;
+                toCell.LockStates = LockStates.Swapping;
+
+                UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
+                UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
+                await UniTask.WhenAll(fromMoveTask, toMoveTask);
+
+                fromCell.SetBlockItem(toItem);
+                toItem.SetWorldPosition(fromCell.WorldPosition);
+                toCell.SetBlockItem(fromItem);
+                fromItem.SetWorldPosition(toCell.WorldPosition);
+
+                fromCell.LockStates = LockStates.None;
+                toCell.LockStates = LockStates.None;
+
+                if (isSwapBack)
                 {
-                    if(toItem.CandyColor != CandyColor.None)
-                        await _activateBoosterTask.ActivateBoosterOnSwap(toCell, toItem.CandyColor);
-                    else
-                        await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
-                }
-                
-                else if(toItem is IBooster booster2)
-                {
-                    if (fromItem.CandyColor != CandyColor.None)
-                        await _activateBoosterTask.ActivateBoosterOnSwap(fromCell, fromItem.CandyColor);
-                    else
-                        await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
-                }
-                
-                else
                     CheckMatchOnSwap(fromCell, toCell).Forget();
+                }
             }
         }
 
@@ -102,9 +129,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
         }
 
-        public void SetActivateBoosterTask(ActivateBoosterTask activateBoosterTask)
+        public void SetComboBoosterHandler(ComboBoosterHandleTask comboBoosterHandleTask)
         {
-            _activateBoosterTask = activateBoosterTask; ;
+            _comboBoosterHandleTask = comboBoosterHandleTask;
         }
     }
 }

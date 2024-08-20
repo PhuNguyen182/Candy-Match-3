@@ -62,7 +62,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     await booster.Activate();
                     await _activateBoosterTask.ActivateBooster(gridCell);
-                    ReleaseGridCell(gridCell);
                     gridCell.LockStates = LockStates.None;
                     return;
                 }
@@ -72,7 +71,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     if (breakable.Break())
                     {
                         await blockItem.ItemBlast();
-                        await _activateBoosterTask.ActivateBooster(gridCell);
                         ReleaseGridCell(gridCell);
                     }
                 }
@@ -97,6 +95,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 await booster.Activate(); // use activate booster task later
                 await _activateBoosterTask.ActivateBooster(gridCell);
                 ReleaseGridCell(gridCell);
+                gridCell.LockStates = LockStates.None;
                 return true;
             }
 
@@ -104,7 +103,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (breakable.Break())
                 {
-                    await blockItem.ItemBlast();
+                    blockItem.ItemBlast().Forget();
                     ReleaseGridCell(gridCell);
 
                     _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);

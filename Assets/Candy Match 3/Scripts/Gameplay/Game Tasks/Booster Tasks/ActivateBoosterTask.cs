@@ -11,13 +11,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
     public class ActivateBoosterTask : IDisposable
     {
+        private readonly BreakGridTask _breakGridTask;
         private readonly ColorfulBoosterTask _colorfulBoosterTask;
         private readonly HorizontalStripedBoosterTask _horizontalBoosterTask;
         private readonly VerticalStripedBoosterTask _verticalBoosterTask;
         private readonly WrappedBoosterTask _wrappedBoosterTask;
 
+        public ColorfulBoosterTask ColorfulBoosterTask => _colorfulBoosterTask;
+
         public ActivateBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
+            _breakGridTask = breakGridTask;
             _colorfulBoosterTask = new(gridCellManager, breakGridTask);
             _horizontalBoosterTask = new(gridCellManager, breakGridTask);
             _verticalBoosterTask = new(gridCellManager, breakGridTask);
@@ -33,9 +37,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             IBlockItem blockItem = boosterGridCell.BlockItem;
 
-            if (blockItem.ItemType == ItemType.ColorBomb)
+            if (blockItem is IBooster booster)
             {
-                await _colorfulBoosterTask.ActivateWithColor(color);
+                await booster.Activate();
+                if (blockItem.ItemType == ItemType.ColorBomb)
+                {
+                    await _colorfulBoosterTask.ActivateWithColor(color);
+                }
+
+                _breakGridTask.ReleaseGridCell(boosterGridCell);
             }
         }
 

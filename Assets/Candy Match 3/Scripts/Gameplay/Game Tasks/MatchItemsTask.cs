@@ -127,7 +127,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 await UniTask.WhenAll(matchTasks);
-                //await UniTask.DelayFrame(Match3Constants.ItemReleaseFrameDelay, PlayerLoopTiming.Update, _token);
                 BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
                 _checkGridTask.CheckRange(checkMatchBounds);
             }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,10 +16,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
+
         public ColorfulBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
+
+            _cts = new();
+            _token = _cts.Token;
         }
 
         public async UniTask ActivateWithColor(CandyColor candyColor)
@@ -34,6 +41,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
                     }
 
+                    await UniTask.DelayFrame(6, PlayerLoopTiming.Update, _token);
                     await UniTask.WhenAll(breakTasks);
                 }
             }
@@ -52,12 +60,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
                     }
 
+                    await UniTask.DelayFrame(6, PlayerLoopTiming.Update, _token);
                     await UniTask.WhenAll(breakTasks);
                 }
             }
         }
 
-        private List<Vector3Int> FindPositionWithColor(CandyColor color)
+        public List<Vector3Int> FindPositionWithColor(CandyColor color)
         {
             List<Vector3Int> colorPositions = new();
 
@@ -86,7 +95,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
         }
 
-        private List<Vector3Int> FindMostFrequentColor()
+        public List<Vector3Int> FindMostFrequentColor()
         {
             using (var hashedItemPool = DictionaryPool<CandyColor, List<Vector3Int>>.Get(out var itemCollection))
             {
@@ -139,7 +148,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void Dispose()
         {
-
+            _cts.Dispose();
         }
     }
 }

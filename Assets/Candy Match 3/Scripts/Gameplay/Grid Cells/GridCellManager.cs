@@ -34,6 +34,11 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             return _boardActiveBounds;
         }
 
+        public IEnumerable<Vector3Int> GetAllPositions()
+        {
+            return _kpv.Keys;
+        }
+
         public IGridCell Get(Vector3Int position)
         {
             return _kpv.TryGetValue(position, out IGridCell gridCell) ? gridCell : null;

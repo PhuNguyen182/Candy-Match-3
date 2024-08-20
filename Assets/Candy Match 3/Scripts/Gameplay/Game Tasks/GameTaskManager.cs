@@ -7,6 +7,7 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
+using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
@@ -22,6 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly SwapItemTask _swapItemTask;
         private readonly SpawnItemTask _spawnItemTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
+        private readonly ComboBoosterHandleTask _comboBoosterHandleTask;
 
         private IDisposable _disposable;
 
@@ -33,19 +35,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _gridCellManager = gridCellManager;
             _matchItemsTask = matchItemsTask;
 
+            _breakGridTask = breakGridTask;
             _swapItemTask = new(_gridCellManager, _matchItemsTask);
             _inputProcessor = new(boardInput, _gridCellManager, _swapItemTask);
             _inputProcessor.AddTo(ref builder);
 
-            _breakGridTask = breakGridTask;
             _moveItemTask = new(_gridCellManager, _breakGridTask);
             _moveItemTask.AddTo(ref builder);
 
             _activateBoosterTask = new(_gridCellManager, _breakGridTask);
             _activateBoosterTask.AddTo(ref builder);
 
+            _comboBoosterHandleTask = new(_gridCellManager, _breakGridTask, itemManager, _activateBoosterTask);
+            _comboBoosterHandleTask.AddTo(ref builder);
+
             _breakGridTask.SetActivateBoosterTask(_activateBoosterTask);
-            _swapItemTask.SetActivateBoosterTask(_activateBoosterTask);
+            _swapItemTask.SetComboBoosterHandler(_comboBoosterHandleTask);
 
             _spawnItemTask = spawnItemTask;
             _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
@@ -67,6 +72,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _matchItemsTask.SetCheckGridTask(_checkGridTask);
             _spawnItemTask.SetCheckGridTask(_checkGridTask);
             _activateBoosterTask.SetCheckGridTask(_checkGridTask);
+            _comboBoosterHandleTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

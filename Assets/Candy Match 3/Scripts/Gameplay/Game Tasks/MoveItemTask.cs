@@ -46,7 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             int checkColumnIndex = 0;
 
             // Temporary move straight down only, move diagonally will fix later
-            while (checkColumnIndex < 1)
+            while (currentGrid.IsMoveable && checkColumnIndex < 1)
             {
                 IGridCell toGridCell;
                 Vector3Int moveDirection = Vector3Int.zero;

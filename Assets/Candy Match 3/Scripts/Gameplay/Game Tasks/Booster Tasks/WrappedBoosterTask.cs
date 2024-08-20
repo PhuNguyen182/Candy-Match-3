@@ -7,7 +7,6 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
-using Sirenix.Utilities;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
