@@ -28,10 +28,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _token = _cts.Token;
         }
 
-        public async UniTask ActivateWithColor(CandyColor candyColor)
+        public async UniTask ActivateWithColor(IGridCell boosterCell, CandyColor candyColor)
         {
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
+                _breakGridTask.ReleaseGridCell(boosterCell);
                 colorPositions = FindPositionWithColor(candyColor);
 
                 using (var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
@@ -47,8 +48,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
         }
 
-        public async UniTask Activate()
+        public async UniTask Activate(Vector3Int checkPosition)
         {
+            IGridCell gridCell = _gridCellManager.Get(checkPosition);
             using(var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 colorPositions = FindMostFrequentColor();
@@ -64,6 +66,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     await UniTask.WhenAll(breakTasks);
                 }
             }
+
+            _breakGridTask.ReleaseGridCell(gridCell);
         }
 
         public List<Vector3Int> FindPositionWithColor(CandyColor color)

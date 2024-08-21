@@ -88,13 +88,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             if(blockItem1.ItemType == ItemType.ColorBomb)
             {
                 CandyColor candyColor = blockItem2.CandyColor;
-                await _activateBoosterTask.ColorfulBoosterTask.ActivateWithColor(candyColor);
+                await _activateBoosterTask.ColorfulBoosterTask.ActivateWithColor(gridCell1, candyColor);
             }
 
             else if(blockItem2.ItemType == ItemType.ColorBomb)
             {
                 CandyColor candyColor = blockItem1.CandyColor;
-                await _activateBoosterTask.ColorfulBoosterTask.ActivateWithColor(candyColor);
+                await _activateBoosterTask.ColorfulBoosterTask.ActivateWithColor(gridCell2, candyColor);
             }
         }
 

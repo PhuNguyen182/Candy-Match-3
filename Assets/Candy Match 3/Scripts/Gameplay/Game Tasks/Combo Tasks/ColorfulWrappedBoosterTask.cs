@@ -82,6 +82,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     IGridCell gridCell = _gridCellManager.Get(positions[i]);
                     await _activateBoosterTask.ActivateBooster(gridCell);
                 }
+
+                _breakGridTask.ReleaseGridCell(gridCell1);
+                _breakGridTask.ReleaseGridCell(gridCell2);
             }
         }
 

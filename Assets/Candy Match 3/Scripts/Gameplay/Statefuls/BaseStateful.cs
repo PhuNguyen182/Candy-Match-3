@@ -8,7 +8,11 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 {
     public abstract class BaseStateful : IGridStateful, ISetHealthPoint, IBreakable
     {
+        public IGridCellView GridCellView { get; set; }
+
         public abstract int MaxHealthPoint { get; }
+
+        public abstract StatefulLayer StatefulLayer { get; }
 
         public abstract StatefulGroupType GroupType { get; }
 

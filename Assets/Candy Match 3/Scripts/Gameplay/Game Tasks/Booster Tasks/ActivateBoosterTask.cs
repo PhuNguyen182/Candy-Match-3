@@ -28,27 +28,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _wrappedBoosterTask = new(gridCellManager, breakGridTask);
         }
 
-        public async UniTask ActivateBoosterOnSwap(IGridCell boosterGridCell, CandyColor color)
-        {
-            Vector3Int position = boosterGridCell.GridPosition;
-
-            if (!boosterGridCell.HasItem)
-                return;
-
-            IBlockItem blockItem = boosterGridCell.BlockItem;
-
-            if (blockItem is IBooster booster)
-            {
-                await booster.Activate();
-                if (blockItem.ItemType == ItemType.ColorBomb)
-                {
-                    await _colorfulBoosterTask.ActivateWithColor(color);
-                }
-
-                _breakGridTask.ReleaseGridCell(boosterGridCell);
-            }
-        }
-
         public async UniTask ActivateBooster(IGridCell gridCell)
         {
             Vector3Int position = gridCell.GridPosition;
@@ -82,7 +61,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 else if (blockItem.ItemType == ItemType.ColorBomb)
                 {
-                    await _colorfulBoosterTask.Activate();
+                    await _colorfulBoosterTask.Activate(position);
                 }
             }
         }

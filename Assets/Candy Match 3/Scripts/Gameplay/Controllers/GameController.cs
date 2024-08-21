@@ -28,6 +28,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private ItemDatabase itemDatabase;
         [SerializeField] private TileDatabase tileDatabase;
         [SerializeField] private MiscCollection miscCollection;
+        [SerializeField] private StatefulSpriteDatabase statefulSpriteDatabase;
 
         [Header("Containers")]
         [SerializeField] private Transform gridContainer;
@@ -38,8 +39,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private GridCellView gridCellViewPrefab;
         [SerializeField] private BoardInput boardInput;
 
-        private ItemFactory _itemFactory;
         private ItemManager _itemManager;
+        private ItemFactory _itemFactory;
+        private StatefulFactory _statefulFactory;
         private MetaItemManager _metaItemManager;
         private GridCellManager _gridCellManager;
         private FillBoardTask _fillBoardTask;
@@ -80,6 +82,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _metaItemManager = new();
             _itemFactory = new(itemDatabase, itemContainer);
+            _statefulFactory = new(_gridCellManager, statefulSpriteDatabase);
             _itemManager = new(_gridCellManager, _metaItemManager, _itemFactory);
 
             _fillBoardTask = new(_gridCellManager, boardTilemap, tileDatabase, _itemManager);
@@ -152,6 +155,14 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             for (int i = 0; i < levelModel.CollectibleItemPositions.Count; i++)
             {
                 _itemManager.Add(levelModel.CollectibleItemPositions[i]);
+            }
+
+            for (int i = 0; i < levelModel.StatefulBlockPositions.Count; i++)
+            {
+                var stateful = levelModel.StatefulBlockPositions[i];
+                IGridStateful gridStateful = _statefulFactory.Produce(stateful);
+                IGridCell gridCell = _gridCellManager.Get(stateful.Position);
+                gridCell.SetGridStateful(gridStateful);
             }
 
             for (int i = 0; i < levelModel.SpawnerBlockPositions.Count; i++)

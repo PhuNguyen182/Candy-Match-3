@@ -11,7 +11,11 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
         private int _maxHealthPoint;
         private bool _canContainItem;
 
+        private Sprite[] _states;
+
         public override int MaxHealthPoint => _maxHealthPoint;
+
+        public override StatefulLayer StatefulLayer => StatefulLayer.Bottom;
 
         public override StatefulGroupType GroupType => StatefulGroupType.Syrup;
 
@@ -21,17 +25,22 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override bool IsAvailable => true;
 
+        public SyrupState(Sprite[] states)
+        {
+            _states = states;
+        }
+
         public override bool Break()
         {
             _healthPoint = _healthPoint - 1;
 
             if (_healthPoint > 0)
             {
-                // Do logic thing here
-                Release();
+                GridCellView.UpdateStateView(_states[_healthPoint - 1], StatefulLayer);
                 return false;
             }
 
+            Release();
             return true;
         }
 
@@ -40,11 +49,15 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
             _maxHealthPoint = healthPoint;
             _healthPoint = healthPoint;
             _canContainItem = false;
+
+            GridCellView.UpdateStateView(_states[_healthPoint - 1], StatefulLayer);
         }
 
         public override void Release()
         {
             _canContainItem = true;
+            GridCellView.UpdateStateView(null, StatefulLayer);
+
         }
     }
 }
