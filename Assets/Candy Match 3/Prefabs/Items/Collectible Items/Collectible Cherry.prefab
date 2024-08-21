@@ -137,6 +137,7 @@ MonoBehaviour:
   itemId: 0
   itemType: 27
   candyColor: 0
+  targetType: 28
   itemGraphics: {fileID: 2456649845628900080}
   itemAnimation: {fileID: 4015053891642020334}
 --- !u!114 &2456649845628900080
@@ -214,7 +215,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  swapDuration: 0.3
   bounceDuration: 0.3
   moveEase: 1
   bounceEase: 6

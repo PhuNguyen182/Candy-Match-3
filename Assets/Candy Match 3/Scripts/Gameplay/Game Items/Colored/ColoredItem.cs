@@ -55,6 +55,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
                 _ => null
             };
 
+            targetType = candyColor switch
+            {
+                CandyColor.Blue => TargetEnum.Blue,
+                CandyColor.Green => TargetEnum.Green,
+                CandyColor.Orange => TargetEnum.Orange,
+                CandyColor.Purple => TargetEnum.Purple,
+                CandyColor.Red => TargetEnum.Red,
+                CandyColor.Yellow => TargetEnum.Yellow,
+                _ => TargetEnum.None
+            };
+
             itemGraphics.SetItemSprite(colorSprite);
         }
 

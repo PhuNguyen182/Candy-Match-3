@@ -8,7 +8,6 @@ using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
-using CandyMatch3.Scripts.Common.Constants;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -92,9 +91,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public void CheckCross(Vector3Int position)
+        public void CheckCross(Vector3Int position, bool checkSelf = true)
         {
-            _checkPositions.Add(position);
+            if(checkSelf)
+                _checkPositions.Add(position);
+            
             _checkPositions.Add(position + Vector3Int.left);
             _checkPositions.Add(position + Vector3Int.right);
             _checkPositions.Add(position + Vector3Int.down);
@@ -120,9 +121,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void Dispose()
         {
             _cts.Dispose();
+            _disposable.Dispose();
+
             _positionsToCheck.Clear();
             _checkPositions.Clear();
-            _disposable.Dispose();
         }
     }
 }

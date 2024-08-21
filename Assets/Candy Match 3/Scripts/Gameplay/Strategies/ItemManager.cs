@@ -102,6 +102,26 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             return itemType;
         }
 
+        public ItemType GetItemTypeFromColorAndBoosterType(CandyColor color, ColorBoosterType boosterType)
+        {
+            ItemType itemType = ItemType.None;
+
+            switch (boosterType)
+            {
+                case ColorBoosterType.Horizontal:
+                    itemType = GetHorizontal(color);
+                    break;
+                case ColorBoosterType.Vertical:
+                    itemType = GetVertical(color);
+                    break;
+                case ColorBoosterType.Wrapped:
+                    itemType = GetWrapped(color);
+                    break;
+            }
+
+            return itemType;
+        }
+
         public (ItemType, ColorBoosterType) GetBoosterTypeFromMatch(MatchType matchType, CandyColor candyColor)
         {
             if (matchType == MatchType.Match5)
@@ -119,5 +139,54 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             ItemType booster = _itemFactory.FindColorBooster(boosterColor, candyColor);
             return (booster, boosterColor);
         }
+
+        private ItemType GetWrapped(CandyColor candyColor)
+        {
+            ItemType itemType = candyColor switch
+            {
+                CandyColor.Blue => ItemType.BlueWrapped,
+                CandyColor.Green => ItemType.GreenWrapped,
+                CandyColor.Orange => ItemType.OrangeWrapped,
+                CandyColor.Purple => ItemType.PurpleWrapped,
+                CandyColor.Red => ItemType.RedWrapped,
+                CandyColor.Yellow => ItemType.YellowWrapped,
+                _ => ItemType.None
+            };
+
+            return itemType;
+        }
+
+        private ItemType GetHorizontal(CandyColor candyColor)
+        {
+            ItemType itemType = candyColor switch
+            {
+                CandyColor.Blue => ItemType.BlueHorizontal,
+                CandyColor.Green => ItemType.GreenHorizontal,
+                CandyColor.Orange => ItemType.OrangeHorizontal,
+                CandyColor.Purple => ItemType.PurpleHorizontal,
+                CandyColor.Red => ItemType.RedHorizontal,
+                CandyColor.Yellow => ItemType.YellowHorizontal,
+                _ => ItemType.None
+            };
+
+            return itemType;
+        }
+
+        private ItemType GetVertical(CandyColor candyColor)
+        {
+            ItemType itemType = candyColor switch
+            {
+                CandyColor.Blue => ItemType.BlueVertical,
+                CandyColor.Green => ItemType.GreenVertical,
+                CandyColor.Orange => ItemType.OrangeVertical,
+                CandyColor.Purple => ItemType.PurpleVertical,
+                CandyColor.Red => ItemType.RedVertical,
+                CandyColor.Yellow => ItemType.YellowVertical,
+                _ => ItemType.None
+            };
+
+            return itemType;
+        }
+
     }
 }

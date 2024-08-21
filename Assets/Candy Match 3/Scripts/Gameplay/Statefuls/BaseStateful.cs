@@ -6,9 +6,13 @@ using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Statefuls
 {
-    public abstract class BaseStateful : IGridStateful, ISetHealthPoint, IBreakable
+    public abstract class BaseStateful : IGridStateful, ISetHealthPoint
     {
+        public IGridCellView GridCellView { get; set; }
+
         public abstract int MaxHealthPoint { get; }
+
+        public abstract StatefulLayer StatefulLayer { get; }
 
         public abstract StatefulGroupType GroupType { get; }
 
@@ -16,9 +20,9 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public abstract bool CanContainItem { get; }
 
-        public abstract void SetHealthPoint(int healthPoint);
+        public abstract bool IsAvailable { get; }
 
-        public abstract bool Break();
+        public abstract void SetHealthPoint(int healthPoint);
 
         public abstract void Release();
     }

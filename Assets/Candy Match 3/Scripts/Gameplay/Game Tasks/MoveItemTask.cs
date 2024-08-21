@@ -45,7 +45,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             int outputMoveStep = 0;
             int checkColumnIndex = 0;
 
-            while (checkColumnIndex < 3)
+            // Temporary move straight down only, move diagonally will fix later
+            while (checkColumnIndex < 1)
             {
                 IGridCell toGridCell;
                 Vector3Int moveDirection = Vector3Int.zero;
@@ -54,9 +55,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 moveDirection = checkColumnIndex switch
                 {
                     0 => new(0, -1),
-                    1 => new(-1, -1),
-                    2 => new(1, -1),
-                    _ => new(0, 0)
+                    //1 => new(-1, -1),
+                    //2 => new(1, -1),
+                    _ => new(0, -1)
                 };
 
                 if (checkColumnIndex != 0)
@@ -74,11 +75,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 toGridCell = targetCell;
 
-                if (checkColumnIndex != 0 && !CheckLine(toGridCell.GridPosition, checkDirection))
-                {
-                    checkColumnIndex = checkColumnIndex + 1;
-                    continue;
-                }
+                //if (checkColumnIndex != 0 && !CheckLine(toGridCell.GridPosition, checkDirection))
+                //{
+                //    checkColumnIndex = checkColumnIndex + 1;
+                //    continue;
+                //}
 
                 checkColumnIndex = 0;
                 toGridCell.SetBlockItem(blockItem, false);
@@ -94,7 +95,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _checkGridTask.CheckAroundPosition(startPosition, 1);
                 await AnimateFallingItem(blockItem, toGridCell, moveStepCount);
 
-                toGridCell.IsMoving = false;
                 startPosition = toPosition;
                 currentGrid = toGridCell;
             }
@@ -114,12 +114,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else
             {
-                if (outputMoveStep == 0)
-                {
-                    _checkGridTask.CheckAroundPosition(startPosition, 1);
-                    return;
-                }
-
+                //await UniTask.DelayFrame(Match3Constants.ItemReleaseFrameDelay, PlayerLoopTiming.Update, _token);
                 _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
                 _checkGridTask.CheckAroundPosition(startPosition, 1);
             }

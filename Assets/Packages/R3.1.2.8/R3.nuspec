@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>R3</id>
-    <version>1.1.15</version>
+    <version>1.2.8</version>
     <authors>Cysharp</authors>
     <license type="expression">MIT</license>
     <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
@@ -11,7 +11,7 @@
     <description>The evolution of dotnet/reactive and UniRx.</description>
     <copyright>© Cysharp, Inc.</copyright>
     <tags>rx</tags>
-    <repository type="git" url="https://github.com/Cysharp/R3" commit="db5f3f4ae0605550bcf488fb6723f6c15c478501" />
+    <repository type="git" url="https://github.com/Cysharp/R3" commit="f541ccad93391302d3a7ed8a399074f24939a47c" />
     <dependencies>
       <group targetFramework="net6.0">
         <dependency id="Microsoft.Bcl.TimeProvider" version="8.0.0" exclude="Build,Analyzers" />

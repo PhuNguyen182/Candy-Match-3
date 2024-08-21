@@ -148,7 +148,7 @@ namespace CandyMatch3.Scripts.Common.Factories
 
         private BaseItem ProduceCollectibleItem(BlockItemData blockItemData)
         {
-            BaseItem itemPrefab = _itemDatabase.GetItemByType(blockItemData.ItemType);
+            BaseItem itemPrefab = _itemDatabase.GetCollectibleItemByType(blockItemData.ItemType);
 
             if(itemPrefab != null)
             {
@@ -185,7 +185,7 @@ namespace CandyMatch3.Scripts.Common.Factories
 
         private BaseItem ProduceUnreakableItem(BlockItemData blockItemData)
         {
-            BaseItem itemPrefab = _itemDatabase.GetItemByType(blockItemData.ItemType);
+            BaseItem itemPrefab = _itemDatabase.UnbreakableItem;
 
             if (itemPrefab != null)
             {
