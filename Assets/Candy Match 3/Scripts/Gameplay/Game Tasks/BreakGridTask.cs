@@ -70,7 +70,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     if (breakable.Break())
                     {
-                        await blockItem.ItemBlast();
+                        blockItem.ItemBlast().Forget();
                         ReleaseGridCell(gridCell);
                     }
                 }

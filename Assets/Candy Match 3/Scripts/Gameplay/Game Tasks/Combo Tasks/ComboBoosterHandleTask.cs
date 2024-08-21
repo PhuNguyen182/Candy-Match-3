@@ -47,12 +47,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _doubleWrappedBoosterTask = new(_gridCellManager, _breakGridTask);
             _doubleWrappedBoosterTask.AddTo(ref builder);
 
-            _colorfulStripedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask
-                                              , _activateBoosterTask.ColorfulBoosterTask);
+            _colorfulStripedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask, _activateBoosterTask);
             _colorfulStripedBoosterTask.AddTo(ref builder);
 
-            _colorfulWrappedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask
-                                              , _activateBoosterTask.ColorfulBoosterTask);
+            _colorfulWrappedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask, _activateBoosterTask);
             _colorfulWrappedBoosterTask.AddTo(ref builder);
 
             _doubleColorfulBoosterTask = new(_gridCellManager, _breakGridTask);

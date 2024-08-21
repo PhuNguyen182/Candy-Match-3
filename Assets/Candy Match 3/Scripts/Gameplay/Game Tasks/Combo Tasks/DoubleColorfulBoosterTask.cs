@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using Cysharp.Threading.Tasks;
-using GlobalScripts.Extensions;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 {
@@ -26,6 +25,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
         {
+            BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
+
             using(var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 positions.AddRange(_gridCellManager.GetAllPositions());
@@ -40,6 +41,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     if (!gridCell.HasItem)
                         continue;
 
+                    if (gridCell.GridPosition == gridCell1.GridPosition || gridCell.GridPosition == gridCell2.GridPosition)
+                        continue;
+
                     var gridCellType = GetCellPositionType(positions[i]);
                     
                     if (gridCellType == GridPositionType.Odd)
@@ -48,9 +52,27 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     else if (gridCellType == GridPositionType.Even)
                         evenPositions.Add(positions[i]);
                 }
-            }
 
-            await UniTask.CompletedTask;
+                using var oddBreakListPool = ListPool<UniTask>.Get(out List<UniTask> oddBreakTasks);
+                using var evenBreakListPool = ListPool<UniTask>.Get(out List<UniTask> evenBreakTasks);
+
+                for (int i = 0; i < oddPositions.Count; i++)
+                {
+                    oddBreakTasks.Add(_breakGridTask.BreakItem(oddPositions[i]));
+                }
+
+                await UniTask.WhenAll(oddBreakTasks);
+
+                for (int i = 0; i < evenPositions.Count; i++)
+                {
+                    evenBreakTasks.Add(_breakGridTask.BreakItem(evenPositions[i]));
+                }
+
+                await UniTask.WhenAll(evenBreakTasks);
+                _breakGridTask.ReleaseGridCell(gridCell1);
+                _breakGridTask.ReleaseGridCell(gridCell2);
+                _checkGridTask.CheckRange(activeBounds);
+            }
         }
 
         private GridPositionType GetCellPositionType(Vector3Int position)

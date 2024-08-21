@@ -21,13 +21,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
         private readonly ColorfulBoosterTask _colorfulBoosterTask;
+        private readonly ActivateBoosterTask _activateBoosterTask;
 
-        public ColorfulStripedBoosterTask(ItemManager itemManager, GridCellManager gridCellManager, BreakGridTask breakGridTask, ColorfulBoosterTask colorfulBoosterTask)
+        public ColorfulStripedBoosterTask(ItemManager itemManager, GridCellManager gridCellManager, BreakGridTask breakGridTask, ActivateBoosterTask activateBoosterTask)
         {
             _itemManager = itemManager;
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
-            _colorfulBoosterTask = colorfulBoosterTask;
+            _activateBoosterTask = activateBoosterTask;
+            _colorfulBoosterTask = _activateBoosterTask.ColorfulBoosterTask;
         }
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
@@ -76,9 +78,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                         }
                     });
                 }
-            }
 
-            await UniTask.CompletedTask;
+                for (int i = 0; i < positions.Count; i++)
+                {
+                    IGridCell gridCell = _gridCellManager.Get(positions[i]);
+                    await _activateBoosterTask.ActivateBooster(gridCell);
+                }
+            }
         }
 
         public void Dispose()
