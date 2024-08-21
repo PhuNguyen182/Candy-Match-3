@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Enums;
 
@@ -53,6 +54,8 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
             _isAvailable = true;
 
             GridCellView.UpdateStateView(null, StatefulLayer);
+            Vector3 position = GridCellView.WorldPosition;
+            EffectManager.Instance.SpawnStatefulEffect(GroupType, position);
         }
     }
 }

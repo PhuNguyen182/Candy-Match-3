@@ -138,7 +138,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
                     gridCell.LockStates = LockStates.None;
                 }
-
             }
         }
 
@@ -148,6 +147,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 gridCell.LockStates = LockStates.Replacing;
                 IBlockItem blockItem = gridCell.BlockItem;
+
+                if (gridCell.GridStateful is IBreakable stateBreakable)
+                {
+                    Vector3Int position = gridCell.GridPosition;
+                    bool isLockedState = gridCell.GridStateful.IsLocked;
+
+                    if (stateBreakable.Break())
+                    {
+                        gridCell.SetGridStateful(new AvailableState());
+                    }
+
+                    if (isLockedState)
+                        return;
+                }
 
                 if (blockItem is IBooster booster)
                 {
@@ -168,6 +181,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 (ItemType itemType, ColorBoosterType boosterType) = _itemManager.GetBoosterTypeFromMatch(matchType, candyColor);
                 byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
+                int state = NumericUtils.BytesToInt(boosterProperty);
 
                 _itemManager.Add(new BlockItemPosition
                 {
@@ -178,7 +192,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         HealthPoint = 1,
                         ItemType = itemType,
                         ItemColor = candyColor,
-                        PrimaryState = NumericUtils.BytesToInt(boosterProperty)
+                        PrimaryState = state
                     }
                 });
 
@@ -191,14 +205,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell.GridStateful is IBreakable stateBreakable)
             {
                 Vector3Int position = gridCell.GridPosition;
-                bool isLocked = gridCell.GridStateful.IsLocked;
+                bool isLockedState = gridCell.GridStateful.IsLocked;
 
                 if (stateBreakable.Break())
                 {
                     gridCell.SetGridStateful(new AvailableState());
                 }
 
-                if (isLocked)
+                if (isLockedState)
                     return;
             }
 
