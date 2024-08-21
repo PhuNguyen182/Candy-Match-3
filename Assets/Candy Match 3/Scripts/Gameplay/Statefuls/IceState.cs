@@ -1,18 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Effects;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Statefuls
 {
-    public class IceState : BaseStateful
+    public class IceState : BaseStateful, IBreakable
     {
         private int _healthPoint;
         private int _maxHealthPoint;
+        
         private bool _isLocked;
+        private bool _isAvailable;
         private bool _canContainItem;
 
+        private Sprite _state;
+
         public override int MaxHealthPoint => _maxHealthPoint;
+
+        public override StatefulLayer StatefulLayer => StatefulLayer.Top;
 
         public override StatefulGroupType GroupType => StatefulGroupType.Ice;
 
@@ -20,16 +28,16 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override bool CanContainItem => _canContainItem;
 
-        public override bool Break()
+        public override bool IsAvailable => _isAvailable;
+
+        public IceState(Sprite state)
         {
-            _healthPoint = _healthPoint - 1;
+            _state = state;
+        }
 
-            if (_healthPoint > 0)
-            {
-                // Do logic thing here
-                return false;
-            }
-
+        public bool Break()
+        {
+            Release();
             return true;
         }
 
@@ -37,15 +45,22 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
         {
             _isLocked = true;
             _canContainItem = false;
+            _isAvailable = false;
             
             _maxHealthPoint = healthPoint;
             _healthPoint = healthPoint;
+            GridCellView.UpdateStateView(_state, StatefulLayer);
         }
 
         public override void Release()
         {
             _isLocked = false;
             _canContainItem = true;
+            _isAvailable = true;
+
+            GridCellView.UpdateStateView(null, StatefulLayer);
+            Vector3 position = GridCellView.WorldPosition;
+            EffectManager.Instance.SpawnStatefulEffect(GroupType, position);
         }
     }
 }

@@ -177,7 +177,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7117194704955111167}
-  - component: {fileID: 1568847840798296466}
+  - component: {fileID: 6902376775005798299}
   - component: {fileID: 6427079796887392978}
   - component: {fileID: 6069539781926400522}
   - component: {fileID: 6187872535067072444}
@@ -206,7 +206,7 @@ Transform:
   - {fileID: 8454560502976890278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1568847840798296466
+--- !u!114 &6902376775005798299
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -215,12 +215,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 5628999218794800045}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d52f563ee9bcfb4abcb7b1b86e8f44f, type: 3}
+  m_Script: {fileID: 11500000, guid: d13c344fc1be7954d980fa445c648aa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemId: 0
   itemType: 33
   candyColor: 0
+  targetType: 0
   itemGraphics: {fileID: 6427079796887392978}
   itemAnimation: {fileID: 6187872535067072444}
 --- !u!114 &6427079796887392978

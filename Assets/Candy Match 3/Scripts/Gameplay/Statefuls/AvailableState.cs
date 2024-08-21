@@ -11,14 +11,13 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override StatefulGroupType GroupType => StatefulGroupType.Available;
 
+        public override StatefulLayer StatefulLayer => StatefulLayer.Middle;
+
         public override bool IsLocked => false;
 
         public override bool CanContainItem => true;
 
-        public override bool Break()
-        {
-            return false;
-        }
+        public override bool IsAvailable => true;
 
         public override void Release()
         {

@@ -15,6 +15,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 
         public ItemType ItemType { get; }
         public CandyColor CandyColor { get; }
+        public TargetEnum TargetType { get; }
 
         public Vector3 WorldPosition { get; }
         public Vector3Int GridPosition { get; set; }

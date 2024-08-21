@@ -8,6 +8,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
     public class UnmoveableAndBreakableItem : BaseItem, ISetHealthPoint, IAdjcentBreakable, IItemAnimation
     {
+        [SerializeField] private Sprite[] itemHealthStates;
         [SerializeField] private ItemAnimation itemAnimation;
 
         private int _healthPoint;
@@ -25,6 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
         {
             base.ResetItem();
             _healthPoint = _maxHealthPoint;
+            SetItemSpriteViaHealthPoint();
         }
 
         public override void InitMessages()
@@ -53,7 +55,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
             if (_healthPoint > 0)
             {
-                // Do logic thing here
+                // Do logic and effect things here
+                SetItemSpriteViaHealthPoint();
                 return false;
             }
 
@@ -83,6 +86,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
             return itemAnimation.SwapTo(position, duration, isMoveFirst);
+        }
+
+        private void SetItemSpriteViaHealthPoint()
+        {
+            Sprite sprite = itemHealthStates[_healthPoint - 1];
+            itemGraphics.SetItemSprite(sprite);
         }
     }
 }

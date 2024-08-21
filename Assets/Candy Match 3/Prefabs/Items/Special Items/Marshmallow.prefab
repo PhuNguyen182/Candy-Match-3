@@ -303,7 +303,12 @@ MonoBehaviour:
   itemId: 0
   itemType: 30
   candyColor: 0
+  targetType: 27
   itemGraphics: {fileID: 1335353725640981331}
+  itemHealthStates:
+  - {fileID: 21300000, guid: 11e8dae1392bf8b4b98961c2b4e74258, type: 3}
+  - {fileID: 21300000, guid: 2e7e91b6ad122b240b5b7a6d783eaa41, type: 3}
+  itemAnimation: {fileID: 0}
 --- !u!114 &1335353725640981331
 MonoBehaviour:
   m_ObjectHideFlags: 0

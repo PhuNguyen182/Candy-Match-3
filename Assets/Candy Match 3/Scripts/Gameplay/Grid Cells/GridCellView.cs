@@ -2,6 +2,7 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
@@ -14,10 +15,15 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 {
     public class GridCellView : MonoBehaviour, IGridCellView
     {
-        [SerializeField] private SpriteRenderer groundCell;
         [SerializeField] private Vector3Int gridPosition;
 
+        [Header("Sprite Views")]
+        [SerializeField] private SpriteRenderer groundCell;
+        [SerializeField] private SpriteRenderer bottomState;
+        [SerializeField] private SpriteRenderer topState;
+
         public Vector3Int GridPosition => gridPosition;
+        public Vector3 WorldPosition => transform.position;
 
         private CancellationToken _destroyToken;
 
@@ -40,6 +46,15 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public void SetWorldPosition(Vector3 position)
         {
             transform.position = position;
+        }
+
+        public void UpdateStateView(Sprite state, StatefulLayer layer)
+        {
+            if (layer == StatefulLayer.Bottom)
+                bottomState.sprite = state;
+
+            else if (layer == StatefulLayer.Top)
+                topState.sprite = state;
         }
 
 #if UNITY_EDITOR
