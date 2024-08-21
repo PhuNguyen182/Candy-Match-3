@@ -19,11 +19,6 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override bool IsAvailable => true;
 
-        public override bool Break()
-        {
-            return false;
-        }
-
         public override void Release()
         {
             

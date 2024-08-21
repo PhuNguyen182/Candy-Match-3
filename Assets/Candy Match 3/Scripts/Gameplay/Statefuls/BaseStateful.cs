@@ -6,7 +6,7 @@ using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Statefuls
 {
-    public abstract class BaseStateful : IGridStateful, ISetHealthPoint, IBreakable
+    public abstract class BaseStateful : IGridStateful, ISetHealthPoint
     {
         public IGridCellView GridCellView { get; set; }
 
@@ -23,8 +23,6 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
         public abstract bool IsAvailable { get; }
 
         public abstract void SetHealthPoint(int healthPoint);
-
-        public abstract bool Break();
 
         public abstract void Release();
     }

@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Statefuls
 {
-    public class HoneyState : BaseStateful
+    public class HoneyState : BaseStateful, IBreakable
     {
         private int _healthPoint;
         private int _maxHealthPoint;
-        private bool _canContainItem;
+
+        private bool _isAvailable;
 
         private Sprite _state;
 
@@ -21,16 +23,16 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override bool IsLocked => false;
 
-        public override bool CanContainItem => _canContainItem;
+        public override bool CanContainItem => true;
 
-        public override bool IsAvailable => true;
+        public override bool IsAvailable => _isAvailable;
 
         public HoneyState(Sprite state)
         {
             _state = state;
         }
 
-        public override bool Break()
+        public bool Break()
         {
             Release();
             return true;
@@ -38,18 +40,19 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override void SetHealthPoint(int healthPoint)
         {
+            _isAvailable = false;
             _maxHealthPoint = healthPoint;
             _healthPoint = healthPoint;
-            _canContainItem = false;
-
+            
             GridCellView.UpdateStateView(_state, StatefulLayer);
         }
 
         public override void Release()
         {
             // When clear state, emit a message to score the target
-            _canContainItem = true;
-            GridCellView.UpdateStateView(_state, StatefulLayer);
+            _isAvailable = true;
+
+            GridCellView.UpdateStateView(null, StatefulLayer);
         }
     }
 }
