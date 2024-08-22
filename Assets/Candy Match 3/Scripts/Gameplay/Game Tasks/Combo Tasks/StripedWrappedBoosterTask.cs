@@ -8,6 +8,8 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
+using CandyMatch3.Scripts.Gameplay.Effects;
+using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 {
@@ -67,6 +69,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     breakTasks.Add(_breakGridTask.BreakItem(columnListPositions[i]));
                 }
 
+                PlayEffect(checkPosition);
                 await UniTask.WhenAll(breakTasks);
                 await UniTask.DelayFrame(6, PlayerLoopTiming.Update, _token);
 
@@ -87,6 +90,41 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 _checkGridTask.CheckRange(horizontalCheckBounds);
                 _checkGridTask.CheckRange(verticalCheckBounds);
+            }
+        }
+
+        private void PlayEffect(Vector3Int checkPosition)
+        {
+            Vector3 position = _gridCellManager.Get(checkPosition).WorldPosition;
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Horizontal, position);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Vertical, position);
+            
+            IGridCell horizontalGrid1 = _gridCellManager.Get(checkPosition + new Vector3Int(-1, 0));
+            if(horizontalGrid1 != null)
+            {
+                Vector3 blastPosition = horizontalGrid1.WorldPosition;
+                EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Vertical, blastPosition);
+            }
+
+            IGridCell horizontalGrid2 = _gridCellManager.Get(checkPosition + new Vector3Int(1, 0));
+            if (horizontalGrid2 != null)
+            {
+                Vector3 blastPosition = horizontalGrid2.WorldPosition;
+                EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Vertical, blastPosition);
+            }
+
+            IGridCell verticalGrid1 = _gridCellManager.Get(checkPosition + new Vector3Int(0, -1));
+            if (verticalGrid1 != null)
+            {
+                Vector3 blastPosition = verticalGrid1.WorldPosition;
+                EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Horizontal, blastPosition);
+            }
+
+            IGridCell verticalGrid2 = _gridCellManager.Get(checkPosition + new Vector3Int(0, 1));
+            if (verticalGrid2 != null)
+            {
+                Vector3 blastPosition = verticalGrid2.WorldPosition;
+                EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Horizontal, blastPosition);
             }
         }
 

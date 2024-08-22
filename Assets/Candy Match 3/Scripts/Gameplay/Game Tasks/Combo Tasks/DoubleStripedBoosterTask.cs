@@ -4,8 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
 
@@ -34,6 +36,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _breakGridTask.ReleaseGridCell(gridCell1);
             _breakGridTask.ReleaseGridCell(gridCell2);
 
+            Vector3 blastPosition = gridCell2.WorldPosition;
             Vector3Int checkPosition = gridCell2.GridPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
 
@@ -61,6 +64,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     breakTasks.Add(_breakGridTask.BreakItem(columnListPositions[i]));
                 }
 
+                PlayEffect(blastPosition);
                 await UniTask.WhenAll(breakTasks);
                 await UniTask.DelayFrame(6, PlayerLoopTiming.Update, _token);
 
@@ -82,6 +86,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 _checkGridTask.CheckRange(horizontalCheckBounds);
                 _checkGridTask.CheckRange(verticalCheckBounds);
             }
+        }
+
+        private void PlayEffect(Vector3 position)
+        {
+            Vector3 horizontal = new(0, position.y);
+            Vector3 vertical = new(position.x, 0);
+
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Horizontal, horizontal);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Vertical, vertical);
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

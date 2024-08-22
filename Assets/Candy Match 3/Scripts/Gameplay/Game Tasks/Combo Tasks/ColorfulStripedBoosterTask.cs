@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private readonly ColorfulBoosterTask _colorfulBoosterTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
+
         public ColorfulStripedBoosterTask(ItemManager itemManager, GridCellManager gridCellManager, BreakGridTask breakGridTask, ActivateBoosterTask activateBoosterTask)
         {
             _itemManager = itemManager;
@@ -30,6 +34,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _breakGridTask = breakGridTask;
             _activateBoosterTask = activateBoosterTask;
             _colorfulBoosterTask = _activateBoosterTask.ColorfulBoosterTask;
+
+            _cts = new();
+            _token = _cts.Token;
         }
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
@@ -77,7 +84,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                             PrimaryState = NumericUtils.BytesToInt(boosterProperty)
                         }
                     });
+
+                    if (gridCell.BlockItem is IItemEffect effect)
+                        effect.PlayReplaceEffect();
                 }
+
+                await UniTask.DelayFrame(15, PlayerLoopTiming.Update, _token);
 
                 for (int i = 0; i < positions.Count; i++)
                 {
@@ -92,7 +104,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public void Dispose()
         {
-
+            _cts.Dispose();
         }
     }
 }
