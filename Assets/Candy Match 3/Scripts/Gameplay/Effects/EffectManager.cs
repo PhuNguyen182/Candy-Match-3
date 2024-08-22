@@ -109,6 +109,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
 
         private void PreloadEffects()
         {
+            SimplePool.PoolPreLoad(effectDatabase.SoundEffect.gameObject, 20, EffectContainer.Transform);
             SimplePool.PoolPreLoad(effectDatabase.BlueMatchEffect, 15, EffectContainer.Transform);
             SimplePool.PoolPreLoad(effectDatabase.GreenMatchEffect, 15, EffectContainer.Transform);
             SimplePool.PoolPreLoad(effectDatabase.OrangeMatchEffect, 15, EffectContainer.Transform);

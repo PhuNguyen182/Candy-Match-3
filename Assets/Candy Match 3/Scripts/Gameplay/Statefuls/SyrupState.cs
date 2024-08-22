@@ -4,6 +4,7 @@ using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Enums;
+using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.Statefuls
 {
@@ -38,6 +39,9 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
             if (_healthPoint > 0)
             {
+                Vector3 position = GridCellView.WorldPosition;
+                EffectManager.Instance.SpawnStatefulEffect(GroupType, position);
+                EffectManager.Instance.PlaySoundEffect(SoundEffectType.Syrup);
                 GridCellView.UpdateStateView(_states[_healthPoint - 1], StatefulLayer);
                 return false;
             }
@@ -61,8 +65,9 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
             GridCellView.UpdateStateView(null, StatefulLayer);
             Vector3 position = GridCellView.WorldPosition;
-            EffectManager.Instance.SpawnStatefulEffect(GroupType, position);
 
+            EffectManager.Instance.SpawnStatefulEffect(GroupType, position);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.Syrup);
         }
     }
 }

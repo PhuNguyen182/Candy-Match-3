@@ -177,6 +177,7 @@ MonoBehaviour:
   audioMixer: {fileID: 24100000, guid: b3e7a9064bdd66445bc35ef3bea31674, type: 2}
   musicSource: {fileID: 5319673330074447551}
   sfxSource: {fileID: 6833917109913662526}
+  effectDatabase: {fileID: 11400000, guid: 05db13d91da92a1498b14b0d55577ebc, type: 2}
 --- !u!1 &6433042252606230343
 GameObject:
   m_ObjectHideFlags: 0

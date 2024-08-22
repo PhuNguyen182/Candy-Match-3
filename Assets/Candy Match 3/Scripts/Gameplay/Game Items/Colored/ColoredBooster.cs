@@ -104,7 +104,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
                 _ => Vector3.zero
             };
 
+            SoundEffectType soundEffect = colorBoosterType == ColorBoosterType.Wrapped ? SoundEffectType.CandyWrap
+                                                                                       : SoundEffectType.LineVerticalHorizontal;
             EffectManager.Instance.SpawnBoosterEffect(itemType, colorBoosterType, position);
+            EffectManager.Instance.PlaySoundEffect(soundEffect);
         }
 
         public override void ReleaseItem()
@@ -172,15 +175,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayStartEffect()
         {
             EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAward);
         }
 
         public void PlayMatchEffect()
         {
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
         }
 
         public void PlayBreakEffect(int healthPoint)
         {
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
         }
 
