@@ -20,6 +20,7 @@ namespace CandyMatch3.Scripts.Common.Databases
         [SerializeField] public GameObject YellowMatchEffect;
 
         [Header("Special Item Effects")]
+        [SerializeField] public GameObject BiscuitBreakEffect;
         [SerializeField] public GameObject ChocolateBreakEffect;
         [SerializeField] public GameObject MarshmallowBreakEffect;
         [SerializeField] public GameObject CollectibleEffect;
