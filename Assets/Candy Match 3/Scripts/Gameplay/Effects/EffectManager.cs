@@ -52,7 +52,8 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 _ => null
             };
 
-            SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
+            if(effect != null)
+                SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
         public void SpawnSpecialEffect(ItemType itemType, Vector3 position)
@@ -66,7 +67,8 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 _ => null
             };
 
-            SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
+            if(effect != null)
+                SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
         public void SpawnBoosterEffect(ItemType itemType, ColorBoosterType boosterType, Vector3 position)
@@ -87,7 +89,8 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 };
             }
 
-            SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
+            if(effect != null)
+                SimplePool.Spawn(effect, EffectContainer.Transform, position, effect.transform.rotation);
         }
 
         public void SpawnStatefulEffect(StatefulGroupType statefulType, Vector3 position)
@@ -100,7 +103,8 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 _ => null
             };
 
-            SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
+            if(effect != null)
+                SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
         private void PreloadEffects()

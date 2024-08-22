@@ -86,6 +86,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     if (breakable.Break())
                     {
                         blockItem.ItemBlast().Forget();
+
+                        if (blockItem is IItemEffect effect)
+                            effect.PlayMatchEffect();
+
                         ReleaseGridCell(gridCell);
                     }
                 }
@@ -133,6 +137,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (breakable.Break())
                 {
                     blockItem.ItemBlast().Forget();
+
+                    if (blockItem is IItemEffect effect)
+                        effect.PlayMatchEffect();
+
                     ReleaseGridCell(gridCell);
 
                     _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
@@ -174,7 +182,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     if (breakable.Break())
                     {
                         //await blockItem.ItemBlast();
-                        await _activateBoosterTask.ActivateBooster(gridCell);
                         ReleaseGridCell(gridCell);
                     }
                 }
@@ -195,6 +202,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         PrimaryState = state
                     }
                 });
+
+                if (gridCell.BlockItem is IItemEffect effect)
+                    effect.PlayStartEffect();
 
                 gridCell.LockStates = LockStates.None;
             }
@@ -231,6 +241,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (breakable.Break())
                 {
                     await blockItem.ItemBlast();
+
+                    if (blockItem is IItemEffect effect)
+                        effect.PlayMatchEffect();
+
                     ReleaseGridCell(gridCell);
                 }
             }
@@ -265,6 +279,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     if (breakable.Break())
                     {
                         await blockItem.ItemBlast();
+
+                        if (blockItem is IItemEffect effect)
+                            effect.PlayMatchEffect();
+
                         ReleaseGridCell(gridCell);
                     }
                 }

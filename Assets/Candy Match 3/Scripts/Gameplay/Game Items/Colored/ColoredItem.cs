@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable
+    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
@@ -97,6 +98,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
             return itemAnimation.SwapTo(position, duration, isMoveFirst);
+        }
+
+        public void PlayStartEffect()
+        {
+            
+        }
+
+        public void PlayMatchEffect()
+        {
+            EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
+        }
+
+        public void PlayBreakEffect(int healthPoint)
+        {
+            EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
+        }
+
+        public void PlayReplaceEffect()
+        {
+            
         }
     }
 }

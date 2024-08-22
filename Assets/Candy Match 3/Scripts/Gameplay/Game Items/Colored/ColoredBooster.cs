@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.Effects;
+using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, ISetColorBooster, IBooster, IItemAnimation
+    public class ColoredBooster : BaseItem, ISetColor, ISetColorBooster, IBooster, IItemAnimation, IItemEffect
     {
         [SerializeField] private ColorBoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
@@ -87,11 +88,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public async UniTask Activate()
         {
             await UniTask.Delay(TimeSpan.FromSeconds(Match3Constants.ItemReleaseDelay), cancellationToken: destroyCancellationToken);
+            Explode();
         }
 
         public void Explode()
         {
-            
+            float x = WorldPosition.x;
+            float y = WorldPosition.y;
+
+            Vector3 position = colorBoosterType switch
+            {
+                ColorBoosterType.Horizontal => new(0, y),
+                ColorBoosterType.Vertical => new(x, 0),
+                ColorBoosterType.Wrapped => new(x, y),
+                _ => Vector3.zero
+            };
+
+            EffectManager.Instance.SpawnBoosterEffect(itemType, colorBoosterType, position);
         }
 
         public override void ReleaseItem()
@@ -154,6 +167,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
                 _ => TargetEnum.None
             };
+        }
+
+        public void PlayStartEffect()
+        {
+            EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
+        }
+
+        public void PlayMatchEffect()
+        {
+            EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
+        }
+
+        public void PlayBreakEffect(int healthPoint)
+        {
+            EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
+        }
+
+        public void PlayReplaceEffect()
+        {
+            
         }
     }
 }
