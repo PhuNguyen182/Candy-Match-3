@@ -3,7 +3,6 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -240,10 +239,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (breakable.Break())
                 {
-                    await blockItem.ItemBlast();
-
                     if (blockItem is IItemEffect effect)
                         effect.PlayMatchEffect();
+
+                    await blockItem.ItemBlast();
 
                     ReleaseGridCell(gridCell);
                 }

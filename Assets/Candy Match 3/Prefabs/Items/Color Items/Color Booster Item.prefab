@@ -53,6 +53,7 @@ MonoBehaviour:
   itemId: 0
   itemType: 0
   candyColor: 0
+  targetType: 0
   itemGraphics: {fileID: 8241515987592640655}
   colorBoosterType: 0
   itemAnimation: {fileID: 1493207833021039645}
@@ -77,6 +78,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a26952b3ae29f4712a0614529789e32a, type: 3}
   - {fileID: 21300000, guid: 825a46eb00f47417eaf0f3c6c2bfdcf4, type: 3}
   - {fileID: 21300000, guid: 9eb0a4869109d4b8fa7c335e92157dfd, type: 3}
+  colorfulEffect: {fileID: 4146185832953641398, guid: 9309c3eef4ddd7842a76988dd34fa610, type: 3}
 --- !u!114 &8241515987592640655
 MonoBehaviour:
   m_ObjectHideFlags: 0

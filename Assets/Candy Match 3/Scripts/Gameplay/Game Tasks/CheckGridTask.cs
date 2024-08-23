@@ -42,7 +42,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             DisposableBuilder builder = Disposable.CreateBuilder();
             
-            Observable.EveryUpdate(UnityFrameProvider.FixedUpdate)
+            Observable.EveryUpdate(UnityFrameProvider.Update)
                       .Subscribe(_ => Update()).AddTo(ref builder);
             
             _disposable = builder.Build();

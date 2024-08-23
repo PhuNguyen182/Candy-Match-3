@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 
@@ -19,10 +20,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public ColorfulBoosterTask ColorfulBoosterTask => _colorfulBoosterTask;
 
-        public ActivateBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
+        public ActivateBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase)
         {
             _breakGridTask = breakGridTask;
-            _colorfulBoosterTask = new(gridCellManager, breakGridTask);
+            _colorfulBoosterTask = new(gridCellManager, breakGridTask, effectDatabase.ColorfulFireray);
             _horizontalBoosterTask = new(gridCellManager, breakGridTask);
             _verticalBoosterTask = new(gridCellManager, breakGridTask);
             _wrappedBoosterTask = new(gridCellManager, breakGridTask);

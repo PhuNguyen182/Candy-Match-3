@@ -27,6 +27,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [Header("Databases")]
         [SerializeField] private ItemDatabase itemDatabase;
         [SerializeField] private TileDatabase tileDatabase;
+        [SerializeField] private EffectDatabase effectDatabase;
         [SerializeField] private MiscCollection miscCollection;
         [SerializeField] private StatefulSpriteDatabase statefulSpriteDatabase;
 
@@ -97,7 +98,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _spawnItemTask = new(_gridCellManager, _matchItemsTask, _itemManager);
             _spawnItemTask.AddTo(ref builder);
 
-            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask, _matchItemsTask, _metaItemManager, _breakGridTask);
+            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
+                                   , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);

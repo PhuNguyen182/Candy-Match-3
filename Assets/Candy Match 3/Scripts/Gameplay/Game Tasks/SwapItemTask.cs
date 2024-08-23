@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
@@ -122,6 +123,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     fromCell.LockStates = LockStates.None;
                     toCell.LockStates = LockStates.None;
                     await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
+                    EffectManager.Instance.PlaySoundEffect(SoundEffectType.Error);
                 }
             }
 

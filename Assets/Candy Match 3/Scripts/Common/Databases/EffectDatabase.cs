@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using GlobalScripts.Effects;
 
 namespace CandyMatch3.Scripts.Common.Databases
@@ -26,6 +27,7 @@ namespace CandyMatch3.Scripts.Common.Databases
         [SerializeField] public GameObject CollectibleEffect;
 
         [Header("Booster Effects")]
+        [SerializeField] public ColorfulFireray ColorfulFireray;
         [SerializeField] public GameObject SpawnBoosterEffect;
         [SerializeField] public GameObject ColorfulEffect;
         [SerializeField] public GameObject StripedHorizontal;

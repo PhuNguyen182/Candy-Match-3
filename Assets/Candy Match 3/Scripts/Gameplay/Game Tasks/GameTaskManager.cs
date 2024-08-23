@@ -8,6 +8,7 @@ using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
+using CandyMatch3.Scripts.Common.Databases;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
@@ -28,7 +29,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private IDisposable _disposable;
 
         public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask
-            , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask)
+            , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -43,7 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _moveItemTask = new(_gridCellManager, _breakGridTask);
             _moveItemTask.AddTo(ref builder);
 
-            _activateBoosterTask = new(_gridCellManager, _breakGridTask);
+            _activateBoosterTask = new(_gridCellManager, _breakGridTask, effectDatabase);
             _activateBoosterTask.AddTo(ref builder);
 
             _comboBoosterHandleTask = new(_gridCellManager, _breakGridTask, itemManager, _activateBoosterTask);

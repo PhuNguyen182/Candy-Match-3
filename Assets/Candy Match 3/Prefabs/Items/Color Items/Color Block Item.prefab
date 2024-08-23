@@ -337,6 +337,7 @@ MonoBehaviour:
   itemId: 0
   itemType: 0
   candyColor: 0
+  targetType: 0
   itemGraphics: {fileID: 1494473538025020321}
   itemAnimation: {fileID: 1504375786986051077}
   candyColors:
@@ -346,6 +347,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: bcc2f2d61e16f452c89590375064ccab, type: 3}
   - {fileID: 21300000, guid: 577bd8aba295c44d7b180b72d8f50956, type: 3}
   - {fileID: 21300000, guid: 36ed891685b1247669d1e215ea0330b2, type: 3}
+  colorfulEffect: {fileID: 4146185832953641398, guid: 9309c3eef4ddd7842a76988dd34fa610, type: 3}
 --- !u!114 &1494473538025020321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,7 +423,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  swapDuration: 0.3
+  bounceDuration: 0.3
   moveEase: 1
+  bounceEase: 6
   fadeDuration: 0.3
   fadeEase: 4

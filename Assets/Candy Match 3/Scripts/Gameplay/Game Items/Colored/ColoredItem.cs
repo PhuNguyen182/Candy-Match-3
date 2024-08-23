@@ -8,12 +8,17 @@ using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect
+    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect, IColorfulEffect
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
         [Header("Colored Sprites")]
         [SerializeField] private Sprite[] candyColors;
+
+        [Header("Effects")]
+        [SerializeField] private GameObject colorfulEffect;
+
+        private GameObject _colorfulEffect;
 
         public override bool CanBeReplace => true;
 
@@ -39,6 +44,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void ReleaseItem()
         {
+            if (_colorfulEffect != null)
+            {
+                _colorfulEffect.transform.SetParent(EffectContainer.Transform);
+                SimplePool.Despawn(_colorfulEffect);
+            }
+
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -120,6 +131,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayReplaceEffect()
         {
             
+        }
+
+        public void PlayColorfulEffect()
+        {
+            _colorfulEffect = SimplePool.Spawn(colorfulEffect, transform, transform.position, Quaternion.identity);
         }
     }
 }

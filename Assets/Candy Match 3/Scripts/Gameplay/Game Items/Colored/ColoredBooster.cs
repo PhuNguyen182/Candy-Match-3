@@ -10,7 +10,7 @@ using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, ISetColorBooster, IBooster, IItemAnimation, IItemEffect
+    public class ColoredBooster : BaseItem, ISetColor, ISetColorBooster, IBooster, IItemAnimation, IItemEffect, IColorfulEffect
     {
         [SerializeField] private ColorBoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
@@ -20,7 +20,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private Sprite[] horizontalSprites;
         [SerializeField] private Sprite[] verticalSprites;
 
+        [Header("Effects")]
+        [SerializeField] private GameObject colorfulEffect;
+
         private bool _isMatchable;
+        private GameObject _colorfulEffect;
 
         public override bool IsMatchable => _isMatchable;
 
@@ -87,8 +91,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public async UniTask Activate()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(Match3Constants.ItemReleaseDelay), cancellationToken: destroyCancellationToken);
             Explode();
+            await UniTask.CompletedTask;
         }
 
         public void Explode()
@@ -112,6 +116,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void ReleaseItem()
         {
+            if (_colorfulEffect != null)
+            {
+                _colorfulEffect.transform.SetParent(EffectContainer.Transform);
+                SimplePool.Despawn(_colorfulEffect);
+            }
+
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -194,6 +204,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAward);
+        }
+
+        public void PlayColorfulEffect()
+        {
+            _colorfulEffect = SimplePool.Spawn(colorfulEffect, transform, transform.position, Quaternion.identity);
         }
     }
 }
