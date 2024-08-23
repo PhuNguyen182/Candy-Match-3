@@ -46,8 +46,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             if (_colorfulEffect != null)
             {
-                _colorfulEffect.transform.SetParent(EffectContainer.Transform);
                 SimplePool.Despawn(_colorfulEffect);
+                _colorfulEffect.transform.SetParent(EffectContainer.Transform);
             }
 
             SimplePool.Despawn(this.gameObject);

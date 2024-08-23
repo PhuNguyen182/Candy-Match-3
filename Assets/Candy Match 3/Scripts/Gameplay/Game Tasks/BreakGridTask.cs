@@ -124,7 +124,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (blockItem is IBooster booster)
             {
-                await booster.Activate(); // use activate booster task later
+                await booster.Activate();
                 await _activateBoosterTask.ActivateBooster(gridCell);
                 ReleaseGridCell(gridCell);
                 gridCell.LockStates = LockStates.None;
@@ -171,7 +171,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (blockItem is IBooster booster)
                 {
-                    await booster.Activate(); // use activate booster task later
+                    await booster.Activate();
                     await _activateBoosterTask.ActivateBooster(gridCell);
                     ReleaseGridCell(gridCell);
                 }
@@ -230,7 +230,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (blockItem is IBooster booster)
             {
-                await booster.Activate(); // Do logic active booster later
+                await booster.Activate();
                 await _activateBoosterTask.ActivateBooster(gridCell);
                 ReleaseGridCell(gridCell);
             }

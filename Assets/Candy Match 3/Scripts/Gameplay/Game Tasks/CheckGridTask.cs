@@ -27,6 +27,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private IDisposable _disposable;
 
+        public bool IsActive { get; set; }
+
         public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask, MatchItemsTask matchItemsTask)
         {
             _moveItemTask = moveItemTask;
@@ -46,10 +48,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                       .Subscribe(_ => Update()).AddTo(ref builder);
             
             _disposable = builder.Build();
+            IsActive = true;
         }
 
         private void Update()
         {
+            if (!IsActive)
+                return;
+
             if (_checkPositions.Count > 0)
             {
                 _positionsToCheck.Clear();

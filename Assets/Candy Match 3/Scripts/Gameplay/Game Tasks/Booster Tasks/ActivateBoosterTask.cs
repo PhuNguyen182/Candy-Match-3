@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Databases;
-using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
@@ -17,6 +17,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly HorizontalStripedBoosterTask _horizontalBoosterTask;
         private readonly VerticalStripedBoosterTask _verticalBoosterTask;
         private readonly WrappedBoosterTask _wrappedBoosterTask;
+
+        private CheckGridTask _checkGridTask;
 
         public ColorfulBoosterTask ColorfulBoosterTask => _colorfulBoosterTask;
 
@@ -43,6 +45,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     return;
 
                 booster.IsIgnored = true;
+
                 if (blockItem is ISetColorBooster colorBooster)
                 {
                     ColorBoosterType colorBoosterType = colorBooster.ColorBoosterType;
@@ -69,9 +72,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
-            _horizontalBoosterTask.SetCheckGridTask(checkGridTask);
-            _verticalBoosterTask.SetCheckGridTask(checkGridTask);
-            _wrappedBoosterTask.SetCheckGridTask(checkGridTask);
+            _checkGridTask = checkGridTask;
+            _colorfulBoosterTask.SetCheckGridTask(_checkGridTask);
+            _horizontalBoosterTask.SetCheckGridTask(_checkGridTask);
+            _verticalBoosterTask.SetCheckGridTask(_checkGridTask);
+            _wrappedBoosterTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

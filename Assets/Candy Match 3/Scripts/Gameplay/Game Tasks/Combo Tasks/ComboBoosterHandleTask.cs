@@ -26,6 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private readonly ColorfulWrappedBoosterTask _colorfulWrappedBoosterTask;
         private readonly DoubleColorfulBoosterTask _doubleColorfulBoosterTask;
 
+        private CheckGridTask _checkGridTask;
         private IDisposable _disposable;
 
         public ComboBoosterHandleTask(GridCellManager gridCellManager, BreakGridTask breakGridTask
@@ -61,6 +62,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public async UniTask HandleComboBooster(IGridCell gridCell1, IGridCell gridCell2)
         {
+            _checkGridTask.IsActive = false;
             if (IsDoubleStripedCombo(gridCell1, gridCell2))
                 await _doubleStripedBoosterTask.Activate(gridCell1, gridCell2);
 
@@ -78,6 +80,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             else if (IsDoubleColorfulCombo(gridCell1, gridCell2))
                 await _doubleColorfulBoosterTask.Activate(gridCell1, gridCell2);
+            
+            _checkGridTask.IsActive = true;
         }
 
         public async UniTask CombineColorItemWithColorItem(IGridCell gridCell1, IGridCell gridCell2)
@@ -208,10 +212,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
-            _doubleStripedBoosterTask.SetCheckGridTask(checkGridTask);
-            _stripedWrappedBoosterTask.SetCheckGridTask(checkGridTask);
-            _doubleWrappedBoosterTask.SetCheckGridTask(checkGridTask);
-            _doubleColorfulBoosterTask.SetCheckGridTask(checkGridTask);
+            _checkGridTask = checkGridTask;
+            _doubleStripedBoosterTask.SetCheckGridTask(_checkGridTask);
+            _stripedWrappedBoosterTask.SetCheckGridTask(_checkGridTask);
+            _doubleWrappedBoosterTask.SetCheckGridTask(_checkGridTask);
+            _doubleColorfulBoosterTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

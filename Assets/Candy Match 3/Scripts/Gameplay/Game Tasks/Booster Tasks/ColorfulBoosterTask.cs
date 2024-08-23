@@ -20,6 +20,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
+        private CheckGridTask _checkGridTask;
+        private HashSet<CandyColor> _checkedCandyColors;
 
         public ColorfulBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ColorfulFireray colorfulFireray)
         {
@@ -29,6 +31,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             _cts = new();
             _token = _cts.Token;
+            _checkedCandyColors = new();
         }
 
         public async UniTask ActivateWithColor(IGridCell boosterCell, CandyColor candyColor)
@@ -38,7 +41,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 IBooster booster = default;
                 Vector3 startPosition = boosterCell.WorldPosition;
                 colorPositions = FindPositionWithColor(candyColor);
-
+                
+                _checkGridTask.IsActive = false;
                 if (boosterCell.BlockItem is IBooster colorBooster)
                 {
                     booster = colorBooster;
@@ -66,17 +70,30 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(breakTasks);
+                _checkedCandyColors.Remove(candyColor);
+
+                if (_checkedCandyColors.Count <= 0)
+                    _checkGridTask.IsActive = true;
             }
         }
 
         public async UniTask Activate(Vector3Int checkPosition)
         {
+            CandyColor checkColor = CandyColor.None;
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
+
+            _checkGridTask.IsActive = false;
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 IBooster booster = default;
                 Vector3 startPosition = gridCell.WorldPosition;
                 colorPositions = FindMostFrequentColor();
+
+                if(colorPositions.Count > 0)
+                {
+                    IGridCell colorCell = _gridCellManager.Get(colorPositions[0]);
+                    checkColor = colorCell.CandyColor;
+                }
 
                 if (gridCell.BlockItem is IBooster colorBooster)
                 {
@@ -105,11 +122,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(breakTasks);
+                _checkedCandyColors.Remove(checkColor);
+
+                if(_checkedCandyColors.Count <= 0)
+                    _checkGridTask.IsActive = true;
             }
         }
 
         public List<Vector3Int> FindPositionWithColor(CandyColor color)
         {
+            _checkedCandyColors.Add(color);
             List<Vector3Int> colorPositions = new();
 
             using(var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
@@ -156,6 +178,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         if (gridCell.CandyColor == CandyColor.None)
                             continue;
 
+                        // Prevent duplicate color detection
+                        if (_checkedCandyColors.Contains(gridCell.CandyColor))
+                            continue;
+
                         if (itemCollection.ContainsKey(gridCell.BlockItem.CandyColor))
                         {
                             List<Vector3Int> colorPositions = itemCollection[gridCell.BlockItem.CandyColor];
@@ -173,6 +199,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                     int maxCount = -1;
                     List<Vector3Int> foundPositions = new();
+                    CandyColor checkColor = CandyColor.None;
 
                     foreach (var foundItems in itemCollection)
                     {
@@ -180,8 +207,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         {
                             maxCount = foundItems.Value.Count;
                             foundPositions = foundItems.Value;
+                            checkColor = foundItems.Key;
                         }
                     }
+
+                    if (checkColor != CandyColor.None)
+                        _checkedCandyColors.Add(checkColor);
 
                     return foundPositions;
                 }
@@ -196,9 +227,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             await fireray.Fire(targetGridCell, position, delay);
         }
 
+        public void SetCheckGridTask(CheckGridTask checkGridTask)
+        {
+            _checkGridTask = checkGridTask;
+        }
+
         public void Dispose()
         {
             _cts.Dispose();
+            _checkedCandyColors.Clear();
         }
     }
 }

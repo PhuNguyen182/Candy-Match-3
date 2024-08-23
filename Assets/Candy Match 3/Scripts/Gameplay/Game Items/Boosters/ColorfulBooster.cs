@@ -24,14 +24,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
         {
             if (_effect != null)
             {
-                _effect.transform.SetParent(EffectContainer.Transform);
                 SimplePool.Despawn(_effect);
+                _effect.transform.SetParent(EffectContainer.Transform);
             }
         }
 
         public override void ReleaseItem()
         {
-            Explode();
             SimplePool.Despawn(this.gameObject);
         }
     }
