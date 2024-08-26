@@ -18,8 +18,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly VerticalStripedBoosterTask _verticalBoosterTask;
         private readonly WrappedBoosterTask _wrappedBoosterTask;
 
-        private CheckGridTask _checkGridTask;
-
         public ColorfulBoosterTask ColorfulBoosterTask => _colorfulBoosterTask;
 
         public ActivateBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase)
@@ -41,10 +39,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             IBlockItem blockItem = gridCell.BlockItem;
             if (blockItem is IBooster booster)
             {
-                if (booster.IsIgnored)
+                if (booster.IsActivated)
                     return;
 
-                booster.IsIgnored = true;
+                booster.IsActivated = true;
 
                 if (blockItem is ISetColorBooster colorBooster)
                 {
@@ -72,11 +70,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
-            _checkGridTask = checkGridTask;
-            _colorfulBoosterTask.SetCheckGridTask(_checkGridTask);
-            _horizontalBoosterTask.SetCheckGridTask(_checkGridTask);
-            _verticalBoosterTask.SetCheckGridTask(_checkGridTask);
-            _wrappedBoosterTask.SetCheckGridTask(_checkGridTask);
+            _colorfulBoosterTask.SetCheckGridTask(checkGridTask);
+            _horizontalBoosterTask.SetCheckGridTask(checkGridTask);
+            _verticalBoosterTask.SetCheckGridTask(checkGridTask);
+            _wrappedBoosterTask.SetCheckGridTask(checkGridTask);
         }
 
         public void Dispose()

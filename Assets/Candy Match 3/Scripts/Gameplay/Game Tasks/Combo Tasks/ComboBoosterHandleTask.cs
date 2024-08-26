@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
@@ -30,7 +31,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private IDisposable _disposable;
 
         public ComboBoosterHandleTask(GridCellManager gridCellManager, BreakGridTask breakGridTask
-            , ItemManager itemManager, ActivateBoosterTask activateBoosterTask)
+            , ItemManager itemManager, ActivateBoosterTask activateBoosterTask, EffectDatabase effectDatabase)
         {
             _itemManager = itemManager;
             _gridCellManager = gridCellManager;
@@ -48,13 +49,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _doubleWrappedBoosterTask = new(_gridCellManager, _breakGridTask);
             _doubleWrappedBoosterTask.AddTo(ref builder);
 
-            _colorfulStripedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask, _activateBoosterTask);
+            _colorfulStripedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask
+                , _activateBoosterTask, effectDatabase.ColorfulFireray);
             _colorfulStripedBoosterTask.AddTo(ref builder);
 
-            _colorfulWrappedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask, _activateBoosterTask);
+            _colorfulWrappedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask
+                , _activateBoosterTask, effectDatabase.ColorfulFireray);
             _colorfulWrappedBoosterTask.AddTo(ref builder);
 
-            _doubleColorfulBoosterTask = new(_gridCellManager, _breakGridTask);
+            _doubleColorfulBoosterTask = new(_gridCellManager, _breakGridTask, effectDatabase.ColorfulFireray);
             _doubleColorfulBoosterTask.AddTo(ref builder);
 
             _disposable = builder.Build();

@@ -70,7 +70,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(breakTasks);
-                _checkedCandyColors.Remove(candyColor);
+                RemoveColor(candyColor);
 
                 if (_checkedCandyColors.Count <= 0)
                     _checkGridTask.IsActive = true;
@@ -122,7 +122,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(breakTasks);
-                _checkedCandyColors.Remove(checkColor);
+                RemoveColor(checkColor);
 
                 if(_checkedCandyColors.Count <= 0)
                     _checkGridTask.IsActive = true;
@@ -225,6 +225,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                        , Vector3.zero, Quaternion.identity);
             await fireray.Fire(targetGridCell, position, delay);
+        }
+
+        public void RemoveColor(CandyColor candyColor)
+        {
+            _checkedCandyColors.Remove(candyColor);
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

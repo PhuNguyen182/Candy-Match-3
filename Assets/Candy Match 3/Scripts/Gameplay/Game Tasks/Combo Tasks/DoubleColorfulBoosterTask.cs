@@ -6,21 +6,24 @@ using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 {
     public class DoubleColorfulBoosterTask : IDisposable
     {
+        private readonly ColorfulFireray _colorfulFireray;
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
 
         private CheckGridTask _checkGridTask;
 
-        public DoubleColorfulBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
+        public DoubleColorfulBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ColorfulFireray colorfulFireray)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
+            _colorfulFireray = colorfulFireray;
         }
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)

@@ -130,7 +130,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public void PlayReplaceEffect()
         {
-            
+            EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
         }
 
         public void PlayColorfulEffect()

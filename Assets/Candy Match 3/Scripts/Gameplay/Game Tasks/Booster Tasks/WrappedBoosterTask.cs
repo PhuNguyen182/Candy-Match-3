@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.GridCells;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
 
@@ -25,7 +26,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public async UniTask Activate(IGridCell gridCell)
         {
+            gridCell.LockStates = LockStates.Breaking;
             Vector3Int position = gridCell.GridPosition;
+            _breakGridTask.ReleaseGridCell(gridCell);
 
             using (var attactListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
             {
@@ -53,6 +56,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 encapsulatePositions.Add(max);
 
                 BoundsInt attackedRange = BoundsExtension.Encapsulate(encapsulatePositions);
+                gridCell.LockStates = LockStates.None;
                 _checkGridTask.CheckRange(attackedRange);
             }
         }

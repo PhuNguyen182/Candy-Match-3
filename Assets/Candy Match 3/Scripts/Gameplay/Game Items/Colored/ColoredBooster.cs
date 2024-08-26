@@ -32,7 +32,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override bool CanBeReplace => false;
 
-        public bool IsIgnored { get; set; }
+        public bool IsActivated { get; set; }
 
         public ColorBoosterType ColorBoosterType => colorBoosterType;
 
@@ -40,7 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             base.ResetItem();
             SetMatchable(true);
-            IsIgnored = false;
+            IsActivated = false;
         }
 
         public override void SetMatchable(bool isMatchable)
