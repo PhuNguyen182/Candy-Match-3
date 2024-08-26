@@ -28,9 +28,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
         {
+            Vector3 oddStartPosition = Vector3.zero;
+            Vector3 evenStartPosition = Vector3.zero;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
 
-            using(var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
+            var gridType = GetCellPositionType(gridCell1.GridPosition);
+            if(gridType == GridPositionType.Odd)
+            {
+                oddStartPosition = gridCell1.WorldPosition;
+                evenStartPosition = gridCell2.WorldPosition;
+            }
+
+            else
+            {
+                oddStartPosition = gridCell2.WorldPosition;
+                evenStartPosition = gridCell1.WorldPosition;
+            }
+
+            using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 positions.AddRange(_gridCellManager.GetAllPositions());
 
@@ -61,16 +76,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 for (int i = 0; i < oddPositions.Count; i++)
                 {
-                    oddBreakTasks.Add(_breakGridTask.BreakItem(oddPositions[i]));
+                    oddBreakTasks.Add(Fireray(oddPositions[i], oddStartPosition, i * 0.02f));
                 }
-
-                await UniTask.WhenAll(oddBreakTasks);
 
                 for (int i = 0; i < evenPositions.Count; i++)
                 {
-                    evenBreakTasks.Add(_breakGridTask.BreakItem(evenPositions[i]));
+                    evenBreakTasks.Add(Fireray(evenPositions[i], evenStartPosition, i * 0.02f));
                 }
 
+                await UniTask.WhenAll(oddBreakTasks);
                 await UniTask.WhenAll(evenBreakTasks);
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);
@@ -89,6 +103,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 gridPosition = GridPositionType.Odd;
 
             return gridPosition;
+        }
+
+        private async UniTask Fireray(Vector3Int targetPosition, Vector3 position, float delay)
+        {
+            IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
+            ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
+                                                       , Vector3.zero, Quaternion.identity);
+            await fireray.Fire(targetGridCell, position, delay);
+            await _breakGridTask.BreakItem(targetPosition);
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
