@@ -72,7 +72,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 Vector3 startPosition = boosterCell.WorldPosition;
                 for (int i = 0; i < positions.Count; i++)
                 {
-                    fireTasks.Add(Fireray(positions[i], startPosition, i * 0.02f));
+                    fireTasks.Add(Fireray(positions[i], startPosition, i * 0.02f, colorPosition, candyColor));
                 }
 
                 await UniTask.WhenAll(fireTasks);
@@ -82,62 +82,63 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 booster.Explode();
                 _breakGridTask.ReleaseGridCell(boosterCell);
 
-                for (int i = 0; i < positions.Count; i++)
-                {
-                    float rand = Random.value;
-                    ColorBoosterType boosterType = rand >= 0.5f ? ColorBoosterType.Horizontal
-                                                                : ColorBoosterType.Vertical;
-                    ItemType itemType = _itemManager.GetItemTypeFromColorAndBoosterType(candyColor, boosterType);
-                    byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
-
-                    if (colorPosition == positions[i])
-                        continue;
-
-                    IGridCell gridCell = _gridCellManager.Get(positions[i]);
-                    if (gridCell.BlockItem is IBreakable breakable)
-                    {
-                        if (breakable.Break())
-                            _breakGridTask.ReleaseGridCell(gridCell);
-                    }
-
-                    int state = NumericUtils.BytesToInt(boosterProperty);
-                    _itemManager.Add(new BlockItemPosition
-                    {
-                        Position = positions[i],
-                        ItemData = new BlockItemData
-                        {
-                            ID = 0,
-                            HealthPoint = 1,
-                            ItemType = itemType,
-                            ItemColor = candyColor,
-                            PrimaryState = state
-                        }
-                    });
-
-                    if (gridCell.BlockItem is IItemEffect effect)
-                        effect.PlayReplaceEffect();
-                }
-
-                await UniTask.DelayFrame(15, PlayerLoopTiming.Update, _token);
-
+                using var boosterTaskPool = ListPool<UniTask>.Get(out List<UniTask> boosterTasks);
                 for (int i = 0; i < positions.Count; i++)
                 {
                     IGridCell gridCell = _gridCellManager.Get(positions[i]);
-                    await _activateBoosterTask.ActivateBooster(gridCell);
+                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(gridCell));
                 }
 
+                await UniTask.WhenAll(boosterTasks);
                 _colorfulBoosterTask.RemoveColor(candyColor);
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);
             }
         }
 
-        private async UniTask Fireray(Vector3Int targetPosition, Vector3 position, float delay)
+        private async UniTask Fireray(Vector3Int targetPosition, Vector3 position, float delay, Vector3Int colorPosition, CandyColor candyColor)
         {
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                        , Vector3.zero, Quaternion.identity);
             await fireray.Fire(targetGridCell, position, delay);
+            AddBooster(targetPosition, colorPosition, candyColor);
+        }
+
+        private void AddBooster(Vector3Int checkPosition, Vector3Int colorPosition, CandyColor candyColor)
+        {
+            float rand = Random.value;
+            ColorBoosterType boosterType = rand >= 0.5f ? ColorBoosterType.Horizontal
+                                                        : ColorBoosterType.Vertical;
+            ItemType itemType = _itemManager.GetItemTypeFromColorAndBoosterType(candyColor, boosterType);
+            byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
+
+            if (colorPosition == checkPosition)
+                return;
+
+            IGridCell gridCell = _gridCellManager.Get(checkPosition);
+            if (gridCell.BlockItem is IBreakable breakable)
+            {
+                if (breakable.Break())
+                    _breakGridTask.ReleaseGridCell(gridCell);
+            }
+
+            int state = NumericUtils.BytesToInt(boosterProperty);
+            _itemManager.Add(new BlockItemPosition
+            {
+                Position = checkPosition,
+                ItemData = new BlockItemData
+                {
+                    ID = 0,
+                    HealthPoint = 1,
+                    ItemType = itemType,
+                    ItemColor = candyColor,
+                    PrimaryState = state
+                }
+            });
+
+            if (gridCell.BlockItem is IItemEffect effect)
+                effect.PlayReplaceEffect();
         }
 
         public void Dispose()

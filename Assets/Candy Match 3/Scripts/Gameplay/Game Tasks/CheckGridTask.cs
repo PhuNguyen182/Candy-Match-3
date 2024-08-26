@@ -4,8 +4,8 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
 using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
 
@@ -91,6 +91,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void CheckMatchAtPosition(Vector3Int position)
         {
+            if (!IsActive)
+                return;
+
             if(_matchItemsTask.CheckMatchAt(position))
             {
                 _matchItemsTask.Match(position).Forget();

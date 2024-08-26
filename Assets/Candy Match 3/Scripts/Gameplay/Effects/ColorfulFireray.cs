@@ -30,7 +30,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                            .OnComplete(() => OnRayfireComplete(targetCell)).SetDelay(delay)
                            .AwaitForComplete(TweenCancelBehaviour.KillWithCompleteCallback, _token);
 
-            await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: _token);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.05f), cancellationToken: _token);
             SimplePool.Despawn(this.gameObject);
         }
 

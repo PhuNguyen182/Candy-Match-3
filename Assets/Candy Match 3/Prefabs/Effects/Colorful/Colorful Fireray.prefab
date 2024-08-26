@@ -155,7 +155,7 @@ MonoBehaviour:
   EndPosition: {x: 0, y: 0, z: 0}
   Generations: 6
   Duration: 0.015
-  ChaosFactor: 0.075
+  ChaosFactor: 0.1
   ManualMode: 0
   Rows: 6
   Columns: 1
