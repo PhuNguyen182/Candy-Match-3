@@ -7,9 +7,7 @@ using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
-using CandyMatch3.Scripts.Gameplay.Effects;
 using Cysharp.Threading.Tasks;
-using GlobalScripts.Audios;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -116,7 +114,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else
             {
-                //await UniTask.DelayFrame(Match3Constants.ItemReleaseFrameDelay, PlayerLoopTiming.Update, _token);
                 _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
                 _checkGridTask.CheckAroundPosition(startPosition, 1);
             }

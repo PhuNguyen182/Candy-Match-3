@@ -50,7 +50,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
-                using var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
@@ -58,18 +57,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(fireTasks);
-                float delay = colorPositions.Count * 0.02f + 0.25f;
-                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: _token);
 
                 booster.Explode();
                 _breakGridTask.ReleaseGridCell(boosterCell);
-
-                for (int i = 0; i < colorPositions.Count; i++)
-                {
-                    breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
-                }
-
-                await UniTask.WhenAll(breakTasks);
                 RemoveColor(candyColor);
 
                 if (_checkedCandyColors.Count <= 0)
@@ -102,26 +92,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
-                using var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
-
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
                     fireTasks.Add(Fireray(colorPositions[i], startPosition, i * 0.02f));
                 }
 
                 await UniTask.WhenAll(fireTasks);
-                float delay = colorPositions.Count * 0.02f + 0.25f;
-                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: _token);
 
                 booster.Explode();
                 _breakGridTask.ReleaseGridCell(gridCell);
-
-                for (int i = 0; i < colorPositions.Count; i++)
-                {
-                    breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
-                }
-
-                await UniTask.WhenAll(breakTasks);
                 RemoveColor(checkColor);
 
                 if(_checkedCandyColors.Count <= 0)
@@ -225,6 +204,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                        , Vector3.zero, Quaternion.identity);
             await fireray.Fire(targetGridCell, position, delay);
+            await _breakGridTask.Break(targetPosition);
         }
 
         public void RemoveColor(CandyColor candyColor)

@@ -74,7 +74,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (blockItem is IBooster booster)
                 {
-                    await booster.Activate();
                     await _activateBoosterTask.ActivateBooster(gridCell);
                     gridCell.LockStates = LockStates.None;
                     return;
@@ -95,7 +94,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 gridCell.LockStates = LockStates.None;
             }
-
         }
 
         public async UniTask Break(IGridCell gridCell)
@@ -124,7 +122,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (blockItem is IBooster booster)
             {
-                await booster.Activate();
                 await _activateBoosterTask.ActivateBooster(gridCell);
                 ReleaseGridCell(gridCell);
                 gridCell.LockStates = LockStates.None;
@@ -141,37 +138,35 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         effect.PlayMatchEffect();
 
                     ReleaseGridCell(gridCell);
-
-                    _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
                     gridCell.LockStates = LockStates.None;
+                    _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
                 }
             }
         }
 
         public async UniTask SpawnBooster(IGridCell gridCell, MatchType matchType, CandyColor candyColor)
         {
-            if (gridCell.HasItem)
+            gridCell.LockStates = LockStates.Replacing;
+            IBlockItem blockItem = gridCell.BlockItem;
+
+            if (gridCell.GridStateful is IBreakable stateBreakable)
             {
-                gridCell.LockStates = LockStates.Replacing;
-                IBlockItem blockItem = gridCell.BlockItem;
+                bool isLockedState = gridCell.GridStateful.IsLocked;
 
-                if (gridCell.GridStateful is IBreakable stateBreakable)
+                if (stateBreakable.Break())
                 {
-                    Vector3Int position = gridCell.GridPosition;
-                    bool isLockedState = gridCell.GridStateful.IsLocked;
-
-                    if (stateBreakable.Break())
-                    {
-                        gridCell.SetGridStateful(new AvailableState());
-                    }
-
-                    if (isLockedState)
-                        return;
+                    gridCell.SetGridStateful(new AvailableState());
                 }
 
+                if (isLockedState)
+                    return;
+            }
+
+
+            if (gridCell.HasItem)
+            {
                 if (blockItem is IBooster booster)
                 {
-                    await booster.Activate();
                     await _activateBoosterTask.ActivateBooster(gridCell);
                     ReleaseGridCell(gridCell);
                 }
@@ -184,29 +179,29 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         ReleaseGridCell(gridCell);
                     }
                 }
-
-                (ItemType itemType, ColorBoosterType boosterType) = _itemManager.GetBoosterTypeFromMatch(matchType, candyColor);
-                byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
-                int state = NumericUtils.BytesToInt(boosterProperty);
-
-                _itemManager.Add(new BlockItemPosition
-                {
-                    Position = gridCell.GridPosition,
-                    ItemData = new BlockItemData
-                    {
-                        ID = 0,
-                        HealthPoint = 1,
-                        ItemType = itemType,
-                        ItemColor = candyColor,
-                        PrimaryState = state
-                    }
-                });
-
-                if (gridCell.BlockItem is IItemEffect effect)
-                    effect.PlayStartEffect();
-
-                gridCell.LockStates = LockStates.None;
             }
+
+            (ItemType itemType, ColorBoosterType boosterType) = _itemManager.GetBoosterTypeFromMatch(matchType, candyColor);
+            byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
+            int state = NumericUtils.BytesToInt(boosterProperty);
+
+            _itemManager.Add(new BlockItemPosition
+            {
+                Position = gridCell.GridPosition,
+                ItemData = new BlockItemData
+                {
+                    ID = 0,
+                    HealthPoint = 1,
+                    ItemType = itemType,
+                    ItemColor = candyColor,
+                    PrimaryState = state
+                }
+            });
+
+            if (gridCell.BlockItem is IItemEffect effect)
+                effect.PlayStartEffect();
+
+            gridCell.LockStates = LockStates.None;
         }
 
         public async UniTask BreakMatchItem(IGridCell gridCell, int matchCount)
@@ -230,19 +225,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (blockItem is IBooster booster)
             {
-                await booster.Activate();
+                if (booster.IsNewCreated)
+                {
+                    gridCell.LockStates = LockStates.None;
+                    return;
+                }
+
                 await _activateBoosterTask.ActivateBooster(gridCell);
-                ReleaseGridCell(gridCell);
+                //ReleaseGridCell(gridCell);
+                gridCell.LockStates = LockStates.None;
+                return;
             }
 
             if (blockItem is IBreakable breakable)
             {
                 if (breakable.Break())
                 {
+                    await blockItem.ItemBlast();
+
                     if (blockItem is IItemEffect effect)
                         effect.PlayMatchEffect();
-
-                    await blockItem.ItemBlast();
 
                     ReleaseGridCell(gridCell);
                 }
@@ -256,22 +258,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell == null || !gridCell.HasItem)
                 return;
 
-            if (!gridCell.IsAvailable)
+            Vector3Int position = gridCell.GridPosition;
+            if (gridCell.GridStateful is IAdjcentBreakable stateBreakable)
             {
-                if(gridCell.GridStateful is IAdjcentBreakable stateBreakable)
+                if (stateBreakable.Break())
                 {
-                    if (stateBreakable.Break())
-                    {
-                        Vector3Int position = gridCell.GridPosition;
-                        _checkGridTask.CheckMatchAtPosition(position);
-                        _checkGridTask.CheckAroundPosition(position, 1);
-                        return;
-                    }
+                    _checkGridTask.CheckMatchAtPosition(position);
+                    gridCell.SetGridStateful(new AvailableState());
                 }
+
+                _checkGridTask.CheckAroundPosition(position, 1);
+                return;
             }
 
             else
             {
+                gridCell.LockStates = LockStates.Breaking;
                 IBlockItem blockItem = gridCell.BlockItem;
                 if (blockItem is IAdjcentBreakable breakable)
                 {
@@ -285,6 +287,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         ReleaseGridCell(gridCell);
                     }
                 }
+
+                gridCell.LockStates = LockStates.None;
             }
         }
 

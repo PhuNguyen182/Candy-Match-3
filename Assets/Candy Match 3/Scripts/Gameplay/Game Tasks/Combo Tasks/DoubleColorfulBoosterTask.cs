@@ -28,12 +28,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
         {
-            Vector3 oddStartPosition = Vector3.zero;
-            Vector3 evenStartPosition = Vector3.zero;
+            Vector3 oddStartPosition, evenStartPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
+            GridPositionType gridCellType = GetCellPositionType(gridCell1.GridPosition);
 
-            var gridType = GetCellPositionType(gridCell1.GridPosition);
-            if(gridType == GridPositionType.Odd)
+            if(gridCellType == GridPositionType.Odd)
             {
                 oddStartPosition = gridCell1.WorldPosition;
                 evenStartPosition = gridCell2.WorldPosition;
@@ -62,7 +61,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     if (gridCell.GridPosition == gridCell1.GridPosition || gridCell.GridPosition == gridCell2.GridPosition)
                         continue;
 
-                    var gridCellType = GetCellPositionType(positions[i]);
+                    gridCellType = GetCellPositionType(positions[i]);
                     
                     if (gridCellType == GridPositionType.Odd)
                         oddPositions.Add(positions[i]);
@@ -86,8 +85,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 await UniTask.WhenAll(oddBreakTasks);
                 await UniTask.WhenAll(evenBreakTasks);
+
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);
+
                 _checkGridTask.CheckRange(activeBounds);
             }
         }

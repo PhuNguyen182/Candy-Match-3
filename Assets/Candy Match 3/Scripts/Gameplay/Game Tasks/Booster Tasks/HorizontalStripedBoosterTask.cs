@@ -26,7 +26,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public async UniTask Activate(IGridCell gridCell)
         {
-            gridCell.LockStates = LockStates.Breaking;
             Vector3Int position = gridCell.GridPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
             _breakGridTask.ReleaseGridCell(gridCell);
@@ -56,7 +55,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 encapsulatePositions.Add(max);
 
                 BoundsInt attackedRange = BoundsExtension.Encapsulate(encapsulatePositions);
-                gridCell.LockStates = LockStates.None;
                 _checkGridTask.CheckRange(attackedRange);
             }
         }

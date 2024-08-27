@@ -35,14 +35,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             
             if (!gridCell.HasItem)
                 return;
-            
+
+            gridCell.LockStates = LockStates.Breaking;
             IBlockItem blockItem = gridCell.BlockItem;
+
             if (blockItem is IBooster booster)
             {
                 if (booster.IsActivated)
                     return;
 
                 booster.IsActivated = true;
+                await booster.Activate();
 
                 if (blockItem is ISetColorBooster colorBooster)
                 {
@@ -66,6 +69,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     await _colorfulBoosterTask.Activate(position);
                 }
             }
+
+            gridCell.LockStates = LockStates.None;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

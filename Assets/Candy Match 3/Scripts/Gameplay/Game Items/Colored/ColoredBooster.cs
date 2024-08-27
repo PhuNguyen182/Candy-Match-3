@@ -30,13 +30,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public bool IsActivated { get; set; }
 
+        public bool IsNewCreated { get; set; }
+
         public ColorBoosterType ColorBoosterType => colorBoosterType;
 
         public override void ResetItem()
         {
             base.ResetItem();
             SetMatchable(true);
-            IsActivated = false;
+            OnItemReset().Forget();
         }
 
         public override void SetMatchable(bool isMatchable)
@@ -194,6 +196,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAward);
+        }
+
+        private async UniTask OnItemReset()
+        {
+            IsActivated = false;
+            IsNewCreated = true;
+
+            await UniTask.NextFrame(destroyToken);
+            IsNewCreated = false;
         }
     }
 }

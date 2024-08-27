@@ -12,6 +12,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 
         public bool IsActivated { get; set; }
 
+        public bool IsNewCreated { get; set; }
+
         public override bool CanBeReplace => false;
 
         public override bool IsMatchable => false;
