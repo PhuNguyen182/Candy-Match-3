@@ -45,8 +45,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             int outputMoveStep = 0;
             int checkColumnIndex = 0;
 
-            // Temporary move straight down only, move diagonally will fix later
-            while (checkColumnIndex < 1)
+            while (checkColumnIndex < 3)
             {
                 IGridCell toGridCell;
                 Vector3Int moveDirection = Vector3Int.zero;
@@ -55,8 +54,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 moveDirection = checkColumnIndex switch
                 {
                     0 => new(0, -1),
-                    //1 => new(-1, -1),
-                    //2 => new(1, -1),
+                    1 => new(-1, -1),
+                    2 => new(1, -1),
                     _ => new(0, -1)
                 };
 
@@ -75,11 +74,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 toGridCell = targetCell;
 
-                //if (checkColumnIndex != 0 && !CheckLine(toGridCell.GridPosition, checkDirection))
-                //{
-                //    checkColumnIndex = checkColumnIndex + 1;
-                //    continue;
-                //}
+                if (checkColumnIndex != 0 && !CheckLine(toGridCell.GridPosition, checkDirection))
+                {
+                    checkColumnIndex = checkColumnIndex + 1;
+                    continue;
+                }
 
                 checkColumnIndex = 0;
                 toGridCell.SetBlockItem(blockItem, false);

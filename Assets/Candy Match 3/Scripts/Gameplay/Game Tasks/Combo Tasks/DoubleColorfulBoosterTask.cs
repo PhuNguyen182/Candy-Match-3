@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
         public DoubleColorfulBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ColorfulFireray colorfulFireray)
@@ -24,6 +27,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
             _colorfulFireray = colorfulFireray;
+
+            _cts = new();
+            _token = _cts.Token;
         }
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
@@ -95,6 +101,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);
 
+                await UniTask.NextFrame(_token);
                 _checkGridTask.CheckRange(activeBounds);
             }
         }
@@ -128,7 +135,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public void Dispose()
         {
-
+            _cts.Dispose();
         }
     }
 }
