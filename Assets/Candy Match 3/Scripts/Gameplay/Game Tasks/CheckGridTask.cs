@@ -18,7 +18,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly MatchItemsTask _matchItemsTask;
         private readonly SpawnItemTask _spawnItemTask;
 
-        private bool _anyItemMove;
         private List<Vector3Int> _positionsToCheck;
         private HashSet<Vector3Int> _checkPositions;
 
@@ -28,6 +27,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private IDisposable _disposable;
 
         public bool IsActive { get; set; }
+        public bool AnyItemMove { get; private set; }
 
         public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask, MatchItemsTask matchItemsTask)
         {
@@ -54,7 +54,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private void Update()
         {
             if (!IsActive)
+            {
+                AnyItemMove = false;
                 return;
+            }
 
             if (_checkPositions.Count > 0)
             {
@@ -62,7 +65,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _positionsToCheck.AddRange(_checkPositions);
                 _checkPositions.Clear();
 
-                _anyItemMove = false;
+                AnyItemMove = false;
                 for (int i = 0; i < _positionsToCheck.Count; i++)
                 {
                     IGridCell checkCell = _gridCellManager.Get(_positionsToCheck[i]);
@@ -74,7 +77,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     if (_moveItemTask.CheckMoveable(checkCell))
                     {
-                        _anyItemMove = true;
+                        AnyItemMove = true;
                         _moveItemTask.MoveItem(checkCell).Forget();
                     }
                 }

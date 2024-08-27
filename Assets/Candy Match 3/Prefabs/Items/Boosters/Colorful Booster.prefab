@@ -224,7 +224,7 @@ MonoBehaviour:
   targetType: 0
   itemGraphics: {fileID: 6427079796887392978}
   itemAnimation: {fileID: 6187872535067072444}
-  colorfulEffect: {fileID: 7356571860480388264, guid: 6827d5eed8e335d408938b5d875d7e0f, type: 3}
+  colorfulEffect: {fileID: 1582325896820010, guid: 12fcde19099ed46baac08392ce7e4eed, type: 3}
 --- !u!114 &6427079796887392978
 MonoBehaviour:
   m_ObjectHideFlags: 0

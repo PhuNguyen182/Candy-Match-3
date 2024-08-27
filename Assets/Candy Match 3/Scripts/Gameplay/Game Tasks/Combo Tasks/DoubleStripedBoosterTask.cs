@@ -66,7 +66,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 PlayEffect(blastPosition);
                 await UniTask.WhenAll(breakTasks);
-                await UniTask.DelayFrame(6, PlayerLoopTiming.Update, _token);
 
                 int horizontalCount = rowListPositions.Count;
                 Vector3Int minHorizontal = rowListPositions[0] + new Vector3Int(0, -1);
@@ -83,6 +82,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 BoundsInt horizontalCheckBounds = BoundsExtension.Encapsulate(rowListPositions);
                 BoundsInt verticalCheckBounds = BoundsExtension.Encapsulate(columnListPositions);
 
+                await UniTask.DelayFrame(18, PlayerLoopTiming.Update, _token);
                 _checkGridTask.CheckRange(horizontalCheckBounds);
                 _checkGridTask.CheckRange(verticalCheckBounds);
             }

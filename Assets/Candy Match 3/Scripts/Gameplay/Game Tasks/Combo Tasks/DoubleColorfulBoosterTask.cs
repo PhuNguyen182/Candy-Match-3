@@ -86,6 +86,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 await UniTask.WhenAll(oddBreakTasks);
                 await UniTask.WhenAll(evenBreakTasks);
 
+                if(gridCell1.BlockItem is IBooster booster1 && gridCell2.BlockItem is IBooster booster2)
+                {
+                    booster1.Explode();
+                    booster2.Explode();
+                }
+
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);
 

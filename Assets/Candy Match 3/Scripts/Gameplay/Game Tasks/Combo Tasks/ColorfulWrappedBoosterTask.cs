@@ -75,7 +75,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 }
 
                 await UniTask.WhenAll(fireTasks);
-                float delay = positions.Count * 0.02f + 0.25f;
+                float delay = positions.Count * 0.02f;
                 await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: _token);
 
                 booster.Explode();
@@ -85,7 +85,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 for (int i = 0; i < positions.Count; i++)
                 {
                     IGridCell gridCell = _gridCellManager.Get(positions[i]);
-                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(gridCell));
+                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(gridCell, false, false));
                 }
 
                 await UniTask.WhenAll(boosterTasks);
@@ -113,12 +113,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 return;
 
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
-
-            if (gridCell.BlockItem is IBreakable breakable)
-            {
-                if (breakable.Break())
-                    _breakGridTask.ReleaseGridCell(gridCell);
-            }
+            _breakGridTask.ReleaseGridCell(gridCell);
 
             int state = NumericUtils.BytesToInt(boosterProperty);
             _itemManager.Add(new BlockItemPosition

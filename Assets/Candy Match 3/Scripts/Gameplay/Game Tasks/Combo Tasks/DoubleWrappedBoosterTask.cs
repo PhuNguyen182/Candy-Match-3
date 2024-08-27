@@ -58,8 +58,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 positions.Add(min);
                 positions.Add(max);
 
-                await UniTask.DelayFrame(6, PlayerLoopTiming.Update, _token);
                 BoundsInt checkRange = BoundsExtension.Encapsulate(positions);
+                await UniTask.DelayFrame(18, PlayerLoopTiming.Update, _token);
                 _checkGridTask.CheckRange(checkRange);
             }
         }

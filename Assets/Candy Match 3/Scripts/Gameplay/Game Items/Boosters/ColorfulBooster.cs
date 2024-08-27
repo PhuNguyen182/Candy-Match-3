@@ -14,19 +14,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 
         public override async UniTask Activate()
         {
-            //if(colorfulEffect != null)
-            //    _effect = SimplePool.Spawn(colorfulEffect, transform, transform.position, Quaternion.identity);
-            
             await UniTask.CompletedTask;
         }
 
         public override void Explode()
         {
-            //if (_effect != null)
-            //{
-            //    SimplePool.Despawn(_effect);
-            //    _effect.transform.SetParent(EffectContainer.Transform);
-            //}
+            SimplePool.Spawn(colorfulEffect, EffectContainer.Transform, WorldPosition, Quaternion.identity);
         }
 
         public override void ReleaseItem()

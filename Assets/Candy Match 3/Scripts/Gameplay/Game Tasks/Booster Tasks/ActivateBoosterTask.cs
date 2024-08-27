@@ -29,7 +29,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _wrappedBoosterTask = new(gridCellManager, breakGridTask);
         }
 
-        public async UniTask ActivateBooster(IGridCell gridCell)
+        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool isMatching)
         {
             Vector3Int position = gridCell.GridPosition;
             
@@ -53,13 +53,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     switch (colorBoosterType)
                     {
                         case ColorBoosterType.Horizontal:
-                            await _horizontalBoosterTask.Activate(gridCell);
+                            await _horizontalBoosterTask.Activate(gridCell, useDelay, isMatching);
                             break;
                         case ColorBoosterType.Vertical:
-                            await _verticalBoosterTask.Activate(gridCell);
+                            await _verticalBoosterTask.Activate(gridCell, useDelay, isMatching);
                             break;
                         case ColorBoosterType.Wrapped:
-                            await _wrappedBoosterTask.Activate(gridCell);
+                            await _wrappedBoosterTask.Activate(gridCell, useDelay, isMatching);
                             break;
                     }
                 }

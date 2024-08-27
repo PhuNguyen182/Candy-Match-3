@@ -1,9 +1,9 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using Cysharp.Threading.Tasks;
@@ -16,15 +16,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
         public VerticalStripedBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
+
+            _cts = new();
+            _token = _cts.Token;
         }
 
-        public async UniTask Activate(IGridCell gridCell)
+        public async UniTask Activate(IGridCell gridCell, bool useDelay, bool isMatching)
         {
             Vector3Int position = gridCell.GridPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
@@ -55,7 +60,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 encapsulatePositions.Add(max);
 
                 BoundsInt attackedRange = BoundsExtension.Encapsulate(encapsulatePositions);
-                _checkGridTask.CheckRange(attackedRange);
+
+                if(useDelay)
+                    await UniTask.DelayFrame(6, PlayerLoopTiming.FixedUpdate, _token);
+                
+                if(!isMatching)
+                    _checkGridTask.CheckRange(attackedRange);
             }
         }
 
@@ -66,7 +76,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void Dispose()
         {
-
+            _cts.Dispose();
         }
     }
 }

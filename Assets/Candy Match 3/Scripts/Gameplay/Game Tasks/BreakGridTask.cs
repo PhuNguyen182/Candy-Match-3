@@ -74,7 +74,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (blockItem is IBooster booster)
                 {
-                    await _activateBoosterTask.ActivateBooster(gridCell);
+                    await _activateBoosterTask.ActivateBooster(gridCell, true, false);
                     gridCell.LockStates = LockStates.None;
                     return;
                 }
@@ -122,7 +122,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (blockItem is IBooster booster)
             {
-                await _activateBoosterTask.ActivateBooster(gridCell);
+                await _activateBoosterTask.ActivateBooster(gridCell, true, false);
                 ReleaseGridCell(gridCell);
                 gridCell.LockStates = LockStates.None;
                 return;
@@ -162,16 +162,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
             }
 
-
             if (gridCell.HasItem)
             {
                 if (blockItem is IBooster booster)
                 {
-                    await _activateBoosterTask.ActivateBooster(gridCell);
+                    await _activateBoosterTask.ActivateBooster(gridCell, true, true);
                     ReleaseGridCell(gridCell);
                 }
 
-                if (blockItem is IBreakable breakable)
+                else if (blockItem is IBreakable breakable)
                 {
                     if (breakable.Break())
                     {
@@ -231,7 +230,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
                 }
 
-                await _activateBoosterTask.ActivateBooster(gridCell);
+                await _activateBoosterTask.ActivateBooster(gridCell, true, true);
                 //ReleaseGridCell(gridCell);
                 gridCell.LockStates = LockStates.None;
                 return;
@@ -263,7 +262,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (stateBreakable.Break())
                 {
-                    _checkGridTask.CheckMatchAtPosition(position);
                     gridCell.SetGridStateful(new AvailableState());
                 }
 
