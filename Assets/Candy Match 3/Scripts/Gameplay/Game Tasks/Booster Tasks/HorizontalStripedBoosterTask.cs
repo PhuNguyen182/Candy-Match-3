@@ -29,7 +29,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _token = _cts.Token;
         }
 
-        public async UniTask Activate(IGridCell gridCell, bool useDelay, bool isMatching)
+        public async UniTask Activate(IGridCell gridCell, bool useDelay, bool dontUseChecking)
         {
             Vector3Int position = gridCell.GridPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
@@ -64,7 +64,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 if(useDelay)
                     await UniTask.DelayFrame(6, PlayerLoopTiming.FixedUpdate, _token);
                 
-                if(!isMatching)
+                if(!dontUseChecking)
                     _checkGridTask.CheckRange(attackedRange);
             }
         }

@@ -1,3 +1,4 @@
+using R3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,18 +19,31 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly VerticalStripedBoosterTask _verticalBoosterTask;
         private readonly WrappedBoosterTask _wrappedBoosterTask;
 
+        private IDisposable _disposable;
+
         public ColorfulBoosterTask ColorfulBoosterTask => _colorfulBoosterTask;
 
         public ActivateBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase)
         {
             _breakGridTask = breakGridTask;
+            DisposableBuilder builder = Disposable.CreateBuilder();
+
             _colorfulBoosterTask = new(gridCellManager, breakGridTask, effectDatabase.ColorfulFireray);
+            _colorfulBoosterTask.AddTo(ref builder);
+            
             _horizontalBoosterTask = new(gridCellManager, breakGridTask);
+            _horizontalBoosterTask.AddTo(ref builder);
+            
             _verticalBoosterTask = new(gridCellManager, breakGridTask);
+            _verticalBoosterTask.AddTo(ref builder);
+
             _wrappedBoosterTask = new(gridCellManager, breakGridTask);
+            _wrappedBoosterTask.AddTo(ref builder);
+            
+            _disposable = builder.Build();
         }
 
-        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool isMatching)
+        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool dontUseChecking)
         {
             Vector3Int position = gridCell.GridPosition;
             
@@ -53,13 +67,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     switch (colorBoosterType)
                     {
                         case ColorBoosterType.Horizontal:
-                            await _horizontalBoosterTask.Activate(gridCell, useDelay, isMatching);
+                            await _horizontalBoosterTask.Activate(gridCell, useDelay, dontUseChecking);
                             break;
                         case ColorBoosterType.Vertical:
-                            await _verticalBoosterTask.Activate(gridCell, useDelay, isMatching);
+                            await _verticalBoosterTask.Activate(gridCell, useDelay, dontUseChecking);
                             break;
                         case ColorBoosterType.Wrapped:
-                            await _wrappedBoosterTask.Activate(gridCell, useDelay, isMatching);
+                            await _wrappedBoosterTask.Activate(gridCell, useDelay, dontUseChecking);
                             break;
                     }
                 }
@@ -83,7 +97,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void Dispose()
         {
-            
+            _disposable.Dispose();
         }
     }
 }

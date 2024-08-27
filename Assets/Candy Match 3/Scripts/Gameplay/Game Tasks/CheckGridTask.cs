@@ -21,6 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _positionsToCheck;
         private HashSet<Vector3Int> _checkPositions;
 
+        private bool _anyChange = false;
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
@@ -44,7 +45,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             DisposableBuilder builder = Disposable.CreateBuilder();
             
-            Observable.EveryUpdate(UnityFrameProvider.Update)
+            Observable.EveryUpdate(UnityFrameProvider.FixedUpdate)
                       .Subscribe(_ => Update()).AddTo(ref builder);
             
             _disposable = builder.Build();
@@ -59,8 +60,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return;
             }
 
+            _anyChange = false;
             if (_checkPositions.Count > 0)
             {
+                _anyChange = true;
                 _positionsToCheck.Clear();
                 _positionsToCheck.AddRange(_checkPositions);
                 _checkPositions.Clear();
