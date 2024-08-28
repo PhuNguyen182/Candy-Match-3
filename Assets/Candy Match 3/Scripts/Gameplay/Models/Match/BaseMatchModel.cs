@@ -1,3 +1,4 @@
+using R3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
         protected int[] checkAngles = new[] { 0, -90, 180, 90 };
 
+        protected IDisposable disposable;
         protected abstract int requiredItemCount { get; }
         protected abstract List<SequencePattern> sequencePattern { get; }
 
@@ -22,6 +24,18 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         public BaseMatchModel(GridCellManager gridCellManager)
         {
             this.gridCellManager = gridCellManager;
+        }
+
+        protected void OnConstuctor()
+        {
+            DisposableBuilder builder = Disposable.CreateBuilder();
+
+            for (int i = 0; i < sequencePattern.Count; i++)
+            {
+                sequencePattern[i].AddTo(ref builder);
+            }
+
+            disposable = builder.Build();
         }
 
         protected MatchResult GetMatchResult(Vector3Int gridPosition)
@@ -123,6 +137,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
         public void Dispose()
         {
+            disposable.Dispose();
             sequencePattern.Clear();
         }
     }

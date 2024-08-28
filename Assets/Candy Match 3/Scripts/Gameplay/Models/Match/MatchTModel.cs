@@ -24,6 +24,8 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 List<Vector3Int> sequence = GetRotatePositions(sequencePattern[0].Pattern, checkAngles[i]);
                 sequencePattern.Add(new(sequence));
             }
+
+            OnConstuctor();
         }
     }
 }

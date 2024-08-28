@@ -23,17 +23,21 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             DisposableBuilder builder = Disposable.CreateBuilder();
 
             _match3Model = new(gridCellManager);
-            _match4HorizontalModel = new(gridCellManager);
-            _match4VerticalModel = new(gridCellManager);
-            _match5Model = new(gridCellManager);
-            _matchLModel = new(gridCellManager);
-            _matchTModel = new(gridCellManager);
-            
             _match3Model.AddTo(ref builder);
+
+            _match4HorizontalModel = new(gridCellManager);
             _match4HorizontalModel.AddTo(ref builder);
+            
+            _match4VerticalModel = new(gridCellManager);
             _match4VerticalModel.AddTo(ref builder);
+            
+            _match5Model = new(gridCellManager);
             _match5Model.AddTo(ref builder);
+            
+            _matchLModel = new(gridCellManager);
             _matchLModel.AddTo(ref builder);
+            
+            _matchTModel = new(gridCellManager);
             _matchTModel.AddTo(ref builder);
 
             _disposable = builder.Build();

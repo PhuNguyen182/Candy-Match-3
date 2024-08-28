@@ -24,6 +24,8 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
             sequencePattern.Add(new(sequence1));
             sequencePattern.Add(new(sequence2));
+
+            OnConstuctor();
         }
 
         protected override List<SequencePattern> sequencePattern { get; }
