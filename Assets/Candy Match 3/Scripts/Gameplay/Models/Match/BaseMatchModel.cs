@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Models.Match
@@ -14,7 +14,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
         protected int[] checkAngles = new[] { 0, -90, 180, 90 };
 
-        protected abstract int minMatchCount { get; }
+        protected abstract int requiredItemCount { get; }
         protected abstract List<SequencePattern> sequencePattern { get; }
 
         public abstract MatchType MatchType { get; }
@@ -31,7 +31,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             for (int i = 0; i < sequencePattern.Count; i++)
             {
                 matchSequence = GetMatchCellsFromSequence(gridPosition, sequencePattern[i], out CandyColor matchColor);
-                if (matchSequence.Count >= minMatchCount)
+                if (matchSequence.Count >= requiredItemCount)
                 {
                     return new MatchResult
                     {
@@ -49,7 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         public bool CheckMatch(Vector3Int gridPosition, out MatchResult matchResult)
         {
             MatchResult result = GetMatchResult(gridPosition);
-            bool isMatchable = result.MatchSequence.Count >= minMatchCount;
+            bool isMatchable = result.MatchSequence.Count >= requiredItemCount;
 
             if (isMatchable)
                 result.MatchSequence.Add(gridPosition);
@@ -111,7 +111,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 if (gridCell.IsMoving)
                     break;
 
-                if (gridCell.CandyColor != candyColor)
+                if (gridCell.CandyColor != candyColor && gridCells.Count < requiredItemCount)
                     break;
 
                 gridCells.Add(gridCell.GridPosition);
