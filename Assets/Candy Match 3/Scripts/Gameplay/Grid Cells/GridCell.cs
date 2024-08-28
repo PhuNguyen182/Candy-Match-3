@@ -72,6 +72,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             if (_blockItem != null)
             {
                 _blockItem.GridPosition = GridPosition;
+
                 if (isSnapped)
                     blockItem.SetWorldPosition(WorldPosition);
             }
