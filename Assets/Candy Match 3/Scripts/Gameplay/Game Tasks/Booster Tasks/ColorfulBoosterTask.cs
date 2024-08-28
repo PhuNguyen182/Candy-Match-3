@@ -43,7 +43,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 Vector3 startPosition = boosterCell.WorldPosition;
                 colorPositions = FindPositionWithColor(candyColor);
                 
-                _checkGridTask.IsActive = false;
+                _checkGridTask.CanCheck = false;
                 if (boosterCell.BlockItem is IBooster colorBooster)
                 {
                     booster = colorBooster;
@@ -70,7 +70,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 RemoveColor(candyColor);
 
                 if (_checkedCandyColors.Count <= 0)
-                    _checkGridTask.IsActive = true;
+                    _checkGridTask.CanCheck = true;
             }
         }
 
@@ -79,7 +79,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             CandyColor checkColor = CandyColor.None;
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
 
-            _checkGridTask.IsActive = false;
+            _checkGridTask.CanCheck = false;
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 IBooster booster = default;
@@ -118,7 +118,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 RemoveColor(checkColor);
 
                 if(_checkedCandyColors.Count <= 0)
-                    _checkGridTask.IsActive = true;
+                    _checkGridTask.CanCheck = true;
             }
         }
 

@@ -3,10 +3,10 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.Gameplay.GridCells;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
-using GlobalScripts.UpdateHandlerPattern;
 using GlobalScripts.Extensions;
+using GlobalScripts.UpdateHandlerPattern;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.GridCells;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
@@ -25,8 +25,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
-        public bool IsActive { get; set; }
+        public bool CanCheck { get; set; }
         public bool AnyItemMove { get; private set; }
+        public bool IsActive { get; set; }
 
         public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask, MatchItemsTask matchItemsTask)
         {
@@ -40,6 +41,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _cts = new();
             _token = _cts.Token;
+            
+            CanCheck = true;
             IsActive = true;
 
             UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
@@ -47,7 +50,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void OnFixedUpdate()
         {
-            if (!IsActive)
+            if (!CanCheck)
             {
                 _anyChange = false;
                 AnyItemMove = false;
@@ -91,7 +94,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void CheckMatchAtPosition(Vector3Int position)
         {
-            if (!IsActive)
+            if (!CanCheck)
                 return;
 
             if(_matchItemsTask.CheckMatchAt(position))

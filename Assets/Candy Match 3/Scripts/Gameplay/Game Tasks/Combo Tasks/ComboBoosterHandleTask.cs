@@ -65,7 +65,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public async UniTask HandleComboBooster(IGridCell gridCell1, IGridCell gridCell2)
         {
-            _checkGridTask.IsActive = false;
+            _checkGridTask.CanCheck = false;
             if (IsDoubleStripedCombo(gridCell1, gridCell2))
                 await _doubleStripedBoosterTask.Activate(gridCell1, gridCell2);
 
@@ -84,7 +84,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             else if (IsDoubleColorfulCombo(gridCell1, gridCell2))
                 await _doubleColorfulBoosterTask.Activate(gridCell1, gridCell2);
             
-            _checkGridTask.IsActive = true;
+            _checkGridTask.CanCheck = true;
         }
 
         public async UniTask CombineColorItemWithColorItem(IGridCell gridCell1, IGridCell gridCell2)

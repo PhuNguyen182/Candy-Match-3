@@ -19,6 +19,9 @@ namespace GlobalScripts.UpdateHandlerPattern
 
         private void Update()
         {
+            if (_updateHandlers.Count <= 0)
+                return;
+
             foreach (IUpdateHandler updateHandler in _updateHandlers)
             {
                 if(updateHandler.IsActive)
@@ -28,9 +31,13 @@ namespace GlobalScripts.UpdateHandlerPattern
 
         private void FixedUpdate()
         {
+            if (_fixedUpdateHandlers.Count <= 0)
+                return;
+
             foreach (IFixedUpdateHandler fixedUpdateHandler in _fixedUpdateHandlers)
             {
-                fixedUpdateHandler.OnFixedUpdate();
+                if (fixedUpdateHandler.IsActive)
+                    fixedUpdateHandler.OnFixedUpdate();
             }
         }
 
@@ -66,9 +73,9 @@ namespace GlobalScripts.UpdateHandlerPattern
 
         private void OnDestroy()
         {
-            _updateHandlers?.Clear();
-            _fixedUpdateHandlers?.Clear();
-            _lateUpdateHandlers?.Clear();
+            _updateHandlers.Clear();
+            _fixedUpdateHandlers.Clear();
+            _lateUpdateHandlers.Clear();
         }
     }
 }
