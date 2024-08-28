@@ -71,7 +71,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private void Setup()
         {
             _destroyToken = this.GetCancellationTokenOnDestroy();
+#if !UNITY_EDITOR
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+#endif
         }
 
         private void Initialize()
