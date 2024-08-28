@@ -1,4 +1,3 @@
-using R3;
 using System;
 using System.Threading;
 using System.Collections;
@@ -6,12 +5,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using GlobalScripts.UpdateHandlerPattern;
 using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
-    public class CheckGridTask : IDisposable
+    public class CheckGridTask : IDisposable, IFixedUpdateHandler
     {
         private readonly GridCellManager _gridCellManager;
         private readonly MoveItemTask _moveItemTask;
@@ -25,8 +25,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
-        private IDisposable _disposable;
-
         public bool IsActive { get; set; }
         public bool AnyItemMove { get; private set; }
 
@@ -37,22 +35,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _spawnItemTask = spawnItemTask;
             _matchItemsTask = matchItemsTask;
 
-            _positionsToCheck = new();
             _checkPositions = new();
+            _positionsToCheck = new();
 
             _cts = new();
             _token = _cts.Token;
-
-            DisposableBuilder builder = Disposable.CreateBuilder();
-            
-            Observable.EveryUpdate(UnityFrameProvider.FixedUpdate)
-                      .Subscribe(_ => Update()).AddTo(ref builder);
-            
-            _disposable = builder.Build();
             IsActive = true;
+
+            UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
-        private void Update()
+        public void OnFixedUpdate()
         {
             if (!IsActive)
             {
@@ -137,10 +130,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void Dispose()
         {
             _cts.Dispose();
-            _disposable.Dispose();
-
             _positionsToCheck.Clear();
             _checkPositions.Clear();
+
+            UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }
 }

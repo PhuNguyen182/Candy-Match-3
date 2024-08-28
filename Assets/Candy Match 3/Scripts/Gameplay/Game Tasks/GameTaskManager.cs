@@ -15,14 +15,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
     public class GameTaskManager : IDisposable
     {
-        private readonly MatchItemsTask _matchItemsTask;
-        private readonly InputProcessTask _inputProcessor;
-        private readonly GridCellManager _gridCellManager;
-        private readonly BreakGridTask _breakGridTask;
-        private readonly CheckGridTask _checkGridTask;
         private readonly MoveItemTask _moveItemTask;
         private readonly SwapItemTask _swapItemTask;
         private readonly SpawnItemTask _spawnItemTask;
+        private readonly BreakGridTask _breakGridTask;
+        private readonly CheckGridTask _checkGridTask;
+        private readonly MatchItemsTask _matchItemsTask;
+        private readonly InputProcessTask _inputProcessor;
+        private readonly GridCellManager _gridCellManager;
+        private readonly ExplodeItemTask _explodeItemTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
         private readonly ComboBoosterHandleTask _comboBoosterHandleTask;
 
@@ -35,6 +36,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _gridCellManager = gridCellManager;
             _matchItemsTask = matchItemsTask;
+
+            _explodeItemTask = new(_gridCellManager);
+            _explodeItemTask.AddTo(ref builder);
 
             _breakGridTask = breakGridTask;
             _swapItemTask = new(_gridCellManager, _matchItemsTask);

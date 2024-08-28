@@ -4,6 +4,7 @@ namespace CandyMatch3.Scripts.Common.Constants
     {
         public const int ItemReleaseFrameDelay = 9;
         public const float ItemReleaseDelay = 0.25f;
+        public const float ExplodeAmplitude = 1f;
 
         public const float BaseItemMoveSpeed = 12f;
         public const float FallenAccelaration = 1.8f;

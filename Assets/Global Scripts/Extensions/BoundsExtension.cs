@@ -138,7 +138,7 @@ namespace GlobalScripts.Extensions
             }
         }
 
-        public static IEnumerator<Vector3Int> GetBorder2D(this BoundsInt bounds)
+        public static IEnumerable<Vector3Int> GetBorder2D(this BoundsInt bounds)
         {
             for (int x = bounds.xMin; x < bounds.xMax; x++)
             {
