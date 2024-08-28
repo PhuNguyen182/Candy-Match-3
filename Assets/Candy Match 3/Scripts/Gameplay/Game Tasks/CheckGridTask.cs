@@ -56,6 +56,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if (!IsActive)
             {
+                _anyChange = false;
                 AnyItemMove = false;
                 return;
             }

@@ -21,7 +21,8 @@ namespace GlobalScripts.UpdateHandlerPattern
         {
             foreach (IUpdateHandler updateHandler in _updateHandlers)
             {
-                updateHandler.OnUpdate(Time.deltaTime);
+                if(updateHandler.IsActive)
+                    updateHandler.OnUpdate(Time.deltaTime);
             }
         }
 
@@ -35,50 +36,32 @@ namespace GlobalScripts.UpdateHandlerPattern
 
         public void AddUpdateBehaviour(IUpdateHandler handler)
         {
-            if (!_updateHandlers.Contains(handler))
-            {
-                _updateHandlers.Add(handler);
-            }
+            _updateHandlers.Add(handler);
         }
 
         public void AddFixedUpdateBehaviour(IFixedUpdateHandler handler)
         {
-            if (!_fixedUpdateHandlers.Contains(handler))
-            {
-                _fixedUpdateHandlers.Add(handler);
-            }
+            _fixedUpdateHandlers.Add(handler);
         }
 
         public void AddLateUpdateBehaviour(ILateUpdateHandler handler)
         {
-            if (!_lateUpdateHandlers.Contains(handler))
-            {
-                _lateUpdateHandlers.Add(handler);
-            }
+            _lateUpdateHandlers.Add(handler);
         }
 
         public void RemoveUpdateBehaviour(IUpdateHandler handler)
         {
-            if (_updateHandlers.Contains(handler))
-            {
-                _updateHandlers.Remove(handler);
-            }
+            _updateHandlers.Remove(handler);
         }
 
         public void RemoveFixedUpdateBehaviour(IFixedUpdateHandler handler)
         {
-            if (_fixedUpdateHandlers.Contains(handler))
-            {
-                _fixedUpdateHandlers.Remove(handler);
-            }
+            _fixedUpdateHandlers.Remove(handler);
         }
 
         public void RemoveLateUpdateBehaviour(ILateUpdateHandler handler)
         {
-            if (_lateUpdateHandlers.Contains(handler))
-            {
-                _lateUpdateHandlers.Remove(handler);
-            }
+            _lateUpdateHandlers.Remove(handler);
         }
 
         private void OnDestroy()

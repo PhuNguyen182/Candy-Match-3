@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.Databases;
 using GlobalScripts.Effects;
 
 namespace CandyMatch3.Scripts.Gameplay.Effects
@@ -123,6 +123,8 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             SimplePool.PoolPreLoad(effectDatabase.StripedHorizontal, 10, EffectContainer.Transform);
             SimplePool.PoolPreLoad(effectDatabase.StripedVertical, 10, EffectContainer.Transform);
             SimplePool.PoolPreLoad(effectDatabase.WrappedEffect, 10, EffectContainer.Transform);
+
+            SimplePool.PoolPreLoad(effectDatabase.ColorfulFireray.gameObject, 10, EffectContainer.Transform);
         }
     }
 }

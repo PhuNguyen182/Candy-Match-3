@@ -7,6 +7,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using GlobalScripts.UpdateHandlerPattern;
 
 namespace DigitalRuby.LightningBolt
 {
@@ -40,7 +41,7 @@ namespace DigitalRuby.LightningBolt
     /// Allows creation of simple lightning bolts
     /// </summary>
     [RequireComponent(typeof(LineRenderer))]
-    public class LightningBoltScript : MonoBehaviour
+    public class LightningBoltScript : MonoBehaviour, IUpdateHandler
     {
         [Tooltip("The game object where the lightning will emit from. If null, StartPosition is used.")]
         public GameObject StartObject;
@@ -99,6 +100,8 @@ namespace DigitalRuby.LightningBolt
         private int animationPingPongDirection = 1;
         private bool orthographic;
         private float timeAwait;
+
+        public bool IsActive { get; set; }
 
         private void GetPerpendicularVector(ref Vector3 directionNormalized, out Vector3 side)
         {
@@ -267,11 +270,6 @@ namespace DigitalRuby.LightningBolt
         private void UpdateLineRenderer()
         {
             int segmentCount = (segments.Count - startIndex) + 1;
-            if (lineRenderer == null)
-            {
-                lineRenderer = GetComponent<LineRenderer>();
-                UpdateFromMaterialChange();
-            }
             lineRenderer.positionCount = segmentCount;
 
             if (segmentCount < 1)
@@ -298,18 +296,19 @@ namespace DigitalRuby.LightningBolt
             orthographic = (mainCamera != null && mainCamera.orthographic);
             lineRenderer = GetComponent<LineRenderer>();
             colorTintHash = Shader.PropertyToID("_TintColor");
+            UpdateHandlerManager.Instance.AddUpdateBehaviour(this);
         }
 
         private void OnEnable()
         {
+            IsActive = true;
             lineRenderer.positionCount = 0;
             UpdateFromMaterialChange();
             currentMaterial = lineRenderer.material;
         }
 
-        private void Update()
+        public void OnUpdate(float deltaTime)
         {
-            //orthographic = (Camera.main != null && Camera.main.orthographic);
             if (timer <= 0.0f)
             {
                 if (ManualMode)
@@ -317,12 +316,14 @@ namespace DigitalRuby.LightningBolt
                     timer = Duration;
                     lineRenderer.positionCount = 0;
                 }
+
                 else
                 {
                     Trigger();
                 }
             }
-            timer -= Time.deltaTime;
+
+            timer -= deltaTime;
         }
 
         public void ChangeColor(Color color)
@@ -378,6 +379,19 @@ namespace DigitalRuby.LightningBolt
         private void OnDisable()
         {
             timeAwait = 0;
+            IsActive = false;
         }
+
+        private void OnDestroy()
+        {
+            UpdateHandlerManager.Instance.RemoveUpdateBehaviour(this);
+        }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            lineRenderer ??= GetComponent<LineRenderer>();
+        }
+#endif
     }
 }
