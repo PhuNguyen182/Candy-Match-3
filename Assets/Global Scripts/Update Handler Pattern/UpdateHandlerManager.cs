@@ -6,16 +6,9 @@ namespace GlobalScripts.UpdateHandlerPattern
 {
     public class UpdateHandlerManager : Singleton<UpdateHandlerManager>
     {
-        private HashSet<IUpdateHandler> _updateHandlers;
-        private HashSet<IFixedUpdateHandler> _fixedUpdateHandlers;
-        private HashSet<ILateUpdateHandler> _lateUpdateHandlers;
-
-        protected override void OnAwake()
-        {
-            _updateHandlers = new();
-            _fixedUpdateHandlers = new();
-            _lateUpdateHandlers = new();
-        }
+        private HashSet<IUpdateHandler> _updateHandlers = new();
+        private HashSet<IFixedUpdateHandler> _fixedUpdateHandlers = new();
+        private HashSet<ILateUpdateHandler> _lateUpdateHandlers = new();
 
         private void Update()
         {

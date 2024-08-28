@@ -48,10 +48,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _moveItemTask = new(_gridCellManager, _breakGridTask);
             _moveItemTask.AddTo(ref builder);
 
-            _activateBoosterTask = new(_gridCellManager, _breakGridTask, effectDatabase);
+            _activateBoosterTask = new(_gridCellManager, _breakGridTask, effectDatabase, _explodeItemTask);
             _activateBoosterTask.AddTo(ref builder);
 
-            _comboBoosterHandleTask = new(_gridCellManager, _breakGridTask, itemManager, _activateBoosterTask, effectDatabase);
+            _comboBoosterHandleTask = new(_gridCellManager, _breakGridTask, itemManager
+                                , _activateBoosterTask, effectDatabase, _explodeItemTask);
             _comboBoosterHandleTask.AddTo(ref builder);
 
             _breakGridTask.SetActivateBoosterTask(_activateBoosterTask);

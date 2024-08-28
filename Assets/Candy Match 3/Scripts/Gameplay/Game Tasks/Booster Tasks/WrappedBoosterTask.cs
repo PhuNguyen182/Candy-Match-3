@@ -14,15 +14,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
     public class WrappedBoosterTask : IDisposable
     {
         private readonly GridCellManager _gridCellManager;
+        private readonly ExplodeItemTask _explodeItemTask;
         private readonly BreakGridTask _breakGridTask;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
-        public WrappedBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
+        public WrappedBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ExplodeItemTask explodeItemTask)
         {
             _gridCellManager = gridCellManager;
+            _explodeItemTask = explodeItemTask;
             _breakGridTask = breakGridTask;
 
             _cts = new();

@@ -23,7 +23,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public ColorfulBoosterTask ColorfulBoosterTask => _colorfulBoosterTask;
 
-        public ActivateBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase)
+        public ActivateBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask
+            , EffectDatabase effectDatabase, ExplodeItemTask explodeItemTask)
         {
             _breakGridTask = breakGridTask;
             DisposableBuilder builder = Disposable.CreateBuilder();
@@ -37,7 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _verticalBoosterTask = new(gridCellManager, breakGridTask);
             _verticalBoosterTask.AddTo(ref builder);
 
-            _wrappedBoosterTask = new(gridCellManager, breakGridTask);
+            _wrappedBoosterTask = new(gridCellManager, breakGridTask, explodeItemTask);
             _wrappedBoosterTask.AddTo(ref builder);
             
             _disposable = builder.Build();

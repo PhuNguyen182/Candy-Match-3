@@ -30,8 +30,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private CheckGridTask _checkGridTask;
         private IDisposable _disposable;
 
-        public ComboBoosterHandleTask(GridCellManager gridCellManager, BreakGridTask breakGridTask
-            , ItemManager itemManager, ActivateBoosterTask activateBoosterTask, EffectDatabase effectDatabase)
+        public ComboBoosterHandleTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ItemManager itemManager
+            , ActivateBoosterTask activateBoosterTask, EffectDatabase effectDatabase, ExplodeItemTask explodeItemTask)
         {
             _itemManager = itemManager;
             _gridCellManager = gridCellManager;
@@ -46,7 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _stripedWrappedBoosterTask = new(_gridCellManager, _breakGridTask);
             _stripedWrappedBoosterTask.AddTo(ref builder);
 
-            _doubleWrappedBoosterTask = new(_gridCellManager, _breakGridTask);
+            _doubleWrappedBoosterTask = new(_gridCellManager, _breakGridTask, explodeItemTask);
             _doubleWrappedBoosterTask.AddTo(ref builder);
 
             _colorfulStripedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask

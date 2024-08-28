@@ -75,12 +75,10 @@ LineRenderer:
   m_SortingLayerID: 257535643
   m_SortingLayer: 9
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 1}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.2
+    widthMultiplier: 0.35
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -154,8 +152,8 @@ MonoBehaviour:
   EndObject: {fileID: 0}
   EndPosition: {x: 0, y: 0, z: 0}
   Generations: 2
-  Duration: 0.015
-  ChaosFactor: 0.15
+  Duration: 0.013
+  ChaosFactor: 0.13
   ManualMode: 0
   Rows: 6
   Columns: 1
