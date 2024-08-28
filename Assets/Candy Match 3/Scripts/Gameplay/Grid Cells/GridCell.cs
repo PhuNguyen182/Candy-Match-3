@@ -9,6 +9,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
     public class GridCell : IGridCell
     {
         private int _gridId;
+        private bool _isMoving;
         private Vector3 _worldPosition;
 
         private IBlockItem _blockItem;
@@ -24,10 +25,21 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public bool CanSetItem => _gridStateful.CanContainItem && !_gridStateful.IsLocked && !HasItem;
         public bool CanContainItem => _gridStateful.CanContainItem;
 
-        public bool IsMoving { get; set; }
         public bool IsSpawner { get; set; }
         public bool CanPassThrough { get; set; }
         public bool IsCollectible { get; set; }
+
+        public bool IsMoving
+        {
+            get => _isMoving;
+            set
+            {
+                _isMoving = value;
+                
+                if(HasItem)
+                    _blockItem.IsMoving = _isMoving;
+            }
+        }
 
         public ItemType ItemType => _blockItem.ItemType;
         public CandyColor CandyColor => HasItem ? _blockItem.CandyColor : CandyColor.None;

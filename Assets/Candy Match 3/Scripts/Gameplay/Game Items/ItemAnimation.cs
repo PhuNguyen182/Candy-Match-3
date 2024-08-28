@@ -88,7 +88,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             else
                 itemAnimator.ResetTrigger(ItemAnimationHashKeys.MatchHash);
             
-            return UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _destroyToken);
+            return UniTask.Delay(TimeSpan.FromSeconds(0.167f), cancellationToken: _destroyToken);
         }
 
         public void BounceTap()

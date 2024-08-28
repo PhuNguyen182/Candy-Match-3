@@ -19,6 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         protected CancellationToken destroyToken;
 
         public int ItemID => itemId;
+        public bool IsMoving { get; set; }
 
         public abstract bool CanBeReplace { get; }
 

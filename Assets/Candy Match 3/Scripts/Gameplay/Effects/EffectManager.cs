@@ -124,7 +124,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             SimplePool.PoolPreLoad(effectDatabase.StripedVertical, 10, EffectContainer.Transform);
             SimplePool.PoolPreLoad(effectDatabase.WrappedEffect, 10, EffectContainer.Transform);
 
-            SimplePool.PoolPreLoad(effectDatabase.ColorfulFireray.gameObject, 10, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.ColorfulFireray.gameObject, 81, EffectContainer.Transform);
         }
     }
 }
