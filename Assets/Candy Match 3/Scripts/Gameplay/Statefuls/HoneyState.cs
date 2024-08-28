@@ -44,8 +44,6 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
             _isAvailable = false;
             _maxHealthPoint = healthPoint;
             _healthPoint = healthPoint;
-            
-            GridCellView.UpdateStateView(_state, StatefulLayer);
         }
 
         public override void Release()
@@ -58,6 +56,17 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.Honey);
             EffectManager.Instance.SpawnStatefulEffect(GroupType, position);
+        }
+
+        public override void ResetState()
+        {
+            InitMessages();
+            GridCellView.UpdateStateView(_state, StatefulLayer);
+        }
+
+        public override void InitMessages()
+        {
+            
         }
     }
 }

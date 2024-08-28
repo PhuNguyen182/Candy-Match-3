@@ -4,7 +4,6 @@ using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Enums;
-using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.Statefuls
 {
@@ -55,8 +54,6 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
             _isAvailable = false;
             _maxHealthPoint = healthPoint;
             _healthPoint = healthPoint;
-
-            GridCellView.UpdateStateView(_states[_healthPoint - 1], StatefulLayer);
         }
 
         public override void Release()
@@ -68,6 +65,17 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
             EffectManager.Instance.SpawnStatefulEffect(GroupType, position);
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.Syrup);
+        }
+
+        public override void ResetState()
+        {
+            InitMessages();            
+            GridCellView.UpdateStateView(_states[_healthPoint - 1], StatefulLayer);
+        }
+
+        public override void InitMessages()
+        {
+            
         }
     }
 }

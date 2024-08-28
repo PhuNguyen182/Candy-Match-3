@@ -35,6 +35,7 @@ public class StatefulFactory : BaseFactory<StatefulBlockPosition, BaseStateful>
 
         stateful.GridCellView = gridCell.GridCellView;
         stateful.SetHealthPoint(param.ItemData.HealthPoint);
+        stateful.ResetState();
         return stateful;
     }
 }
