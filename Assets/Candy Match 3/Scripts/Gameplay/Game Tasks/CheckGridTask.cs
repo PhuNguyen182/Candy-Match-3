@@ -58,14 +58,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
 
             _anyChange = false;
+            AnyItemMove = false;
+
             if (_checkPositions.Count > 0)
             {
                 _anyChange = true;
                 _positionsToCheck.Clear();
                 _positionsToCheck.AddRange(_checkPositions);
                 _checkPositions.Clear();
+                AnyItemMove = true;
 
-                AnyItemMove = false;
                 for (int i = 0; i < _positionsToCheck.Count; i++)
                 {
                     IGridCell checkCell = _gridCellManager.Get(_positionsToCheck[i]);
@@ -77,10 +79,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     if (_moveItemTask.CheckMoveable(checkCell))
                     {
-                        AnyItemMove = true;
                         _moveItemTask.MoveItem(checkCell).Forget();
                     }
                 }
+
             }
         }
 
