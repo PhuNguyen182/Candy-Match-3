@@ -144,7 +144,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public async UniTask SpawnBooster(IGridCell gridCell, MatchType matchType, CandyColor candyColor)
+        public async UniTask AddBooster(IGridCell gridCell, MatchType matchType, CandyColor candyColor)
         {
             gridCell.LockStates = LockStates.Replacing;
             IBlockItem blockItem = gridCell.BlockItem;
@@ -174,7 +174,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     if (breakable.Break())
                     {
-                        //await blockItem.ItemBlast();
                         ReleaseGridCell(gridCell);
                     }
                 }
@@ -231,7 +230,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 await _activateBoosterTask.ActivateBooster(gridCell, true, true);
-                //ReleaseGridCell(gridCell);
                 gridCell.LockStates = LockStates.None;
                 return;
             }

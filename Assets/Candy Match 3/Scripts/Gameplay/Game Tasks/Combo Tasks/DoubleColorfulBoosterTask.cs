@@ -81,12 +81,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 for (int i = 0; i < oddPositions.Count; i++)
                 {
-                    oddBreakTasks.Add(Fireray(oddPositions[i], oddStartPosition, i * 0.02f));
+                    oddBreakTasks.Add(FireItemCatchRay(oddPositions[i], oddStartPosition, i * 0.02f));
                 }
 
                 for (int i = 0; i < evenPositions.Count; i++)
                 {
-                    evenBreakTasks.Add(Fireray(evenPositions[i], evenStartPosition, i * 0.02f));
+                    evenBreakTasks.Add(FireItemCatchRay(evenPositions[i], evenStartPosition, i * 0.02f));
                 }
 
                 await UniTask.WhenAll(oddBreakTasks);
@@ -119,7 +119,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             return gridPosition;
         }
 
-        private async UniTask Fireray(Vector3Int targetPosition, Vector3 position, float delay)
+        private async UniTask FireItemCatchRay(Vector3Int targetPosition, Vector3 position, float delay)
         {
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform

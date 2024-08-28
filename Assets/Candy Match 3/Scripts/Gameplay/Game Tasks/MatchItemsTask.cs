@@ -102,7 +102,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         return;
 
                     if (matchType != MatchType.Match3 && gridCell.GridPosition == matchResult.Position)
-                        matchTasks.Add(_breakGridTask.SpawnBooster(gridCell, matchType, candyColor));
+                        matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor));
 
                     else
                         matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count));

@@ -72,7 +72,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 Vector3 startPosition = boosterCell.WorldPosition;
                 for (int i = 0; i < positions.Count; i++)
                 {
-                    fireTasks.Add(Fireray(positions[i], startPosition, i * 0.02f, colorPosition, candyColor));
+                    fireTasks.Add(FireItemCatchRay(positions[i], startPosition, i * 0.02f, colorPosition, candyColor));
                 }
 
                 await UniTask.WhenAll(fireTasks);
@@ -96,7 +96,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             }
         }
 
-        private async UniTask Fireray(Vector3Int targetPosition, Vector3 position, float delay, Vector3Int colorPosition, CandyColor candyColor)
+        private async UniTask FireItemCatchRay(Vector3Int targetPosition, Vector3 position, float delay, Vector3Int colorPosition, CandyColor candyColor)
         {
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
