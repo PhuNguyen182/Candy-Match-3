@@ -94,14 +94,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public void CheckMatchAtPosition(Vector3Int position)
+        public async UniTask CheckMatchAtPosition(Vector3Int position)
         {
             if (!CanCheck)
                 return;
 
             if(_matchItemsTask.CheckMatchAt(position))
             {
-                _matchItemsTask.Match(position).Forget();
+                //await UniTask.DelayFrame(18, PlayerLoopTiming.FixedUpdate, _token);
+                await _matchItemsTask.Match(position);
             }
         }
 

@@ -59,7 +59,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (stateBreakable.Break())
                 {
-                    _checkGridTask.CheckMatchAtPosition(position);
+                    await _checkGridTask.CheckMatchAtPosition(position);
                     gridCell.SetGridStateful(new AvailableState());
                 }
 
@@ -83,7 +83,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     if (breakable.Break())
                     {
-                        blockItem.ItemBlast().Forget();
+                        //blockItem.ItemBlast().Forget();
 
                         if (blockItem is IItemEffect effect)
                             effect.PlayMatchEffect();
@@ -106,7 +106,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 Vector3Int position = gridCell.GridPosition;
                 if (stateBreakable.Break())
                 {
-                    _checkGridTask.CheckMatchAtPosition(position);
+                    await _checkGridTask.CheckMatchAtPosition(position);
                     gridCell.SetGridStateful(new AvailableState());
                 }
 
@@ -222,13 +222,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (blockItem is IBooster booster)
             {
-                if (booster.IsNewCreated)
-                {
-                    gridCell.LockStates = LockStates.None;
-                    return;
-                }
+                //if (booster.IsNewCreated)
+                //{
+                //    gridCell.LockStates = LockStates.None;
+                //    return;
+                //}
 
-                await _activateBoosterTask.ActivateBooster(gridCell, true, true);
+                //await _activateBoosterTask.ActivateBooster(gridCell, true, true);
+                ReleaseGridCell(gridCell);
                 gridCell.LockStates = LockStates.None;
                 return;
             }

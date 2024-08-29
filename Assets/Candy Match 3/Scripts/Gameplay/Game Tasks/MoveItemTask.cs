@@ -111,7 +111,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else
             {
-                _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
+                await _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
                 _checkGridTask.CheckAroundPosition(startPosition, 1);
             }
         }

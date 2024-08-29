@@ -1,5 +1,6 @@
 using R3;
 using System;
+using System.Text;
 using System.Linq;
 using System.Threading;
 using System.Collections;
@@ -76,7 +77,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             bool isMatch = IsMatchable(position, out matchResult);
 
             if (isMatch)
+            {
+                await UniTask.NextFrame(_token);
                 await ProcessMatch(matchResult);
+            }
 
             return isMatch;
         }
@@ -131,8 +135,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 await UniTask.WhenAll(matchTasks);
+                //await UniTask.DelayFrame(30, PlayerLoopTiming.FixedUpdate, _token);
                 BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
                 _checkGridTask.CheckRange(checkMatchBounds);
+                PrintMatch(matchResult);
             }
         }
 
@@ -151,6 +157,46 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;
+        }
+
+        private void PrintMatch(MatchResult match)
+        {
+#if UNITY_EDITOR
+            StringBuilder builder = new();
+            string color = GetColor(match.CandyColor);
+
+            builder.Append($"<b>Match:</b> {match.MatchSequence.Count}.   ");
+            builder.Append($"<b>Type:</b> {match.MatchType}.    ");
+            builder.Append($"<b>Color:</b> <color={color}><b>{match.CandyColor}</b></color>.    ");
+            builder.Append($"<b>Pivot:</b> {match.Position}.    ");
+            builder.Append($"<b>Positions:</b> ");
+            builder.Append("{ ");
+
+            for (int i = 0; i < match.MatchSequence.Count; i++)
+                builder.Append($"<b>{i + 1}:</b> {match.MatchSequence[i]}; ");
+
+            builder.Append(" }");
+            Debug.Log(builder.ToString());
+            builder.Clear();
+#endif
+        }
+
+        private string GetColor(CandyColor candyColor)
+        {
+            string colorCode = "";
+
+            colorCode = candyColor switch
+            {
+                CandyColor.Red => "#F73540",
+                CandyColor.Green => "#47D112",
+                CandyColor.Orange => "#FA8500",
+                CandyColor.Purple => "#CE2AEF",
+                CandyColor.Yellow => "#F8D42A",
+                CandyColor.Blue => "#23AAFB",
+                _ => "#000000"
+            };
+
+            return colorCode;
         }
 
         public void Dispose()

@@ -76,7 +76,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 await animation.MoveTo(spawnPosition, duration);
             }
 
-            //_checkGridTask.CheckMatchAtPosition(gridCell.GridPosition);
+            await _checkGridTask.CheckMatchAtPosition(gridCell.GridPosition);
         }
 
         public bool CheckSpawnable(IGridCell gridCell)
@@ -108,6 +108,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 spawnRule.Value.Dispose();
             }
 
+            _spawnerPoints.Clear();
             _spawnRules.Clear();
         }
     }

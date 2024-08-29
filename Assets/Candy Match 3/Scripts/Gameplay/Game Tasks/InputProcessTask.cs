@@ -144,9 +144,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (!gridCell.IsLocked)
                     animation.BounceOnTap();
-
-                Debug.Log(gridCell.BlockItem.GetName());
             }
+
+            PrintName(gridCell);
+        }
+
+        private void PrintName(IGridCell gridCell)
+        {
+#if UNITY_EDITOR
+            Debug.Log(gridCell.BlockItem.GetName());
+#endif
         }
 
         public void Dispose()

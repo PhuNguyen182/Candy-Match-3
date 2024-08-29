@@ -119,7 +119,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 if (!gridCell.HasItem)
                     break;
 
-                if (gridCell.IsMoving)
+                if (gridCell.IsMoving || gridCell.IsLocked)
                     break;
 
                 if (!gridCell.BlockItem.IsMatchable)

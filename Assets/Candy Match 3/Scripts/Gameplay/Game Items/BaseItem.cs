@@ -85,7 +85,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public string GetName()
         {
-            return $"Name: {gameObject.name}, position: {WorldPosition}, is active: {isActiveAndEnabled}, type: {itemType}";
+            string colorCode = GetColor();
+            string activeCode = isActiveAndEnabled ? "#ffffff" : "#000000";
+            return $"Name: <b><color=#ffffff>{gameObject.name}</color></b>" +
+                $", --- Grid Position: <color=#ffffff>{GridPosition}</color>" +
+                $", --- World Position: <color=#ffffff>{WorldPosition}</color>" +
+                $". --- Is Active: <b><color={activeCode}>{isActiveAndEnabled}</color></b>" +
+                $", --- Type: <b><color={colorCode}>{itemType}</color></b>";
         }
 
         public void SetItemType(ItemType itemType)
@@ -101,6 +107,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public void SetItemID(int itemId)
         {
             this.itemId = itemId;
+        }
+
+        private string GetColor()
+        {
+            string colorCode = "";
+
+            colorCode = candyColor switch
+            {
+                CandyColor.Red => "#F73540",
+                CandyColor.Green => "#47D112",
+                CandyColor.Orange => "#FA8500",
+                CandyColor.Purple => "#CE2AEF",
+                CandyColor.Yellow => "#F8D42A",
+                CandyColor.Blue => "#23AAFB",
+                _ => "#000000"
+            };
+
+            return colorCode;
         }
 
         private void OnDisable()
