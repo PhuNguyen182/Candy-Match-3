@@ -44,7 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _disposable = builder.Build();
         }
 
-        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool dontUseChecking)
+        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck)
         {
             Vector3Int position = gridCell.GridPosition;
             
@@ -68,13 +68,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     switch (colorBoosterType)
                     {
                         case ColorBoosterType.Horizontal:
-                            await _horizontalBoosterTask.Activate(gridCell, useDelay, dontUseChecking);
+                            await _horizontalBoosterTask.Activate(gridCell, useDelay, doNotCheck);
                             break;
                         case ColorBoosterType.Vertical:
-                            await _verticalBoosterTask.Activate(gridCell, useDelay, dontUseChecking);
+                            await _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck);
                             break;
                         case ColorBoosterType.Wrapped:
-                            await _wrappedBoosterTask.Activate(gridCell, useDelay, dontUseChecking);
+                            await _wrappedBoosterTask.Activate(gridCell, useDelay, doNotCheck);
                             break;
                     }
                 }

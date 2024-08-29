@@ -67,6 +67,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     fromCell.LockStates = LockStates.None;
                     toCell.LockStates = LockStates.None;
+
                     await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
                 }
             }
@@ -84,7 +85,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 fromCell.LockStates = LockStates.None;
                 toCell.LockStates = LockStates.None;
-                await _comboBoosterHandleTask.CombineColorItemWithColorItem(fromCell, toCell);
+
+                await _comboBoosterHandleTask.CombineColorfulItemWithColorItem(fromCell, toCell);
             }
 
             else

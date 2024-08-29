@@ -87,7 +87,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _checkGridTask.CanCheck = true;
         }
 
-        public async UniTask CombineColorItemWithColorItem(IGridCell gridCell1, IGridCell gridCell2)
+        public async UniTask CombineColorfulItemWithColorItem(IGridCell gridCell1, IGridCell gridCell2)
         {
             IBlockItem blockItem1 = gridCell1.BlockItem;
             IBlockItem blockItem2 = gridCell2.BlockItem;
