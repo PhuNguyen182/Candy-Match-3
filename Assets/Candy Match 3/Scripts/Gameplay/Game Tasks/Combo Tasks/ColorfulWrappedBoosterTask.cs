@@ -76,7 +76,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 await UniTask.WhenAll(fireTasks);
                 float delay = positions.Count * 0.02f;
-                await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: _token);
+
+                TimeSpan duration = TimeSpan.FromSeconds(delay);
+                await UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _token);
 
                 booster.Explode();
                 _breakGridTask.ReleaseGridCell(boosterCell);
