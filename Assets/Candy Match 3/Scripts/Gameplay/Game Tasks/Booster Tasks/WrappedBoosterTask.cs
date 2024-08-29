@@ -64,7 +64,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 BoundsInt attackedRange = BoundsExtension.Encapsulate(encapsulatePositions);
 
                 if(useDelay)
-                    await UniTask.DelayFrame(6, PlayerLoopTiming.FixedUpdate, _token);
+                    await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
 
                 if(!dontUseChecking)
                     _checkGridTask.CheckRange(attackedRange);

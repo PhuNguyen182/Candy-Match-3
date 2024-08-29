@@ -87,7 +87,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 BoundsInt horizontalCheckBounds = BoundsExtension.Encapsulate(rowListPositions);
                 BoundsInt verticalCheckBounds = BoundsExtension.Encapsulate(columnListPositions);
 
-                await UniTask.DelayFrame(18, PlayerLoopTiming.Update, _token);
+                await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 _checkGridTask.CheckRange(horizontalCheckBounds);
                 _checkGridTask.CheckRange(verticalCheckBounds);
             }

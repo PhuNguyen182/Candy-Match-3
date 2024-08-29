@@ -83,6 +83,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private async UniTask ProcessMatch(MatchResult matchResult)
         {
+            bool hasBooster = false;
             MatchType matchType = matchResult.MatchType;
             CandyColor candyColor = matchResult.CandyColor;
 
@@ -101,6 +102,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     if (gridCell.LockStates == LockStates.Matching)
                         return;
 
+                    if (gridCell.BlockItem is IColorBooster)
+                        hasBooster = true;
+
                     if (matchType != MatchType.Match3 && gridCell.GridPosition == matchResult.Position)
                         matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor));
 
@@ -114,8 +118,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 int count = boundPositions.Count;
                 boundPositions.Sort(_vector3IntComparer);
                 
-                Vector3Int min = boundPositions[0] + new Vector3Int(-1, -1);
-                Vector3Int max = boundPositions[count - 1] + new Vector3Int(1, 1);
+                Vector3Int min = !hasBooster ? boundPositions[0] + new Vector3Int(-1, -1) : boundPositions[0] + new Vector3Int(-2, -2);
+                Vector3Int max = !hasBooster ? boundPositions[count - 1] + new Vector3Int(1, 1) : boundPositions[count - 1] + new Vector3Int(2, 2);
                 
                 boundPositions.Add(min);
                 boundPositions.Add(max);
