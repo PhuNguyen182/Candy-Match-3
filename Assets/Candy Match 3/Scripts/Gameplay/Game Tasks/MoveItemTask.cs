@@ -100,8 +100,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             currentGrid.IsMoving = false;
             currentGrid.LockStates = LockStates.None;
-
-            blockItem.SetWorldPosition(currentGrid.WorldPosition);
             AnimateItemJumpDown(blockItem, outputMoveStep);
 
             if (blockItem is ICollectible collectible)
@@ -132,6 +130,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if(blockItem is IItemAnimation animation)
             {
                 _boardHeight = _gridCellManager.BoardHeight;
+
                 if(stepCount > 0)
                     animation.JumpDown(1.0f * stepCount / _boardHeight);
             }

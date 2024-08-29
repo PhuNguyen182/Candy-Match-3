@@ -125,8 +125,13 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 if (gridCell.IsMoving)
                     break;
 
-                if (gridCell.CandyColor != candyColor && gridCells.Count < requiredItemCount)
-                    break;
+                if (gridCell.CandyColor != candyColor)
+                {
+                    if (gridCells.Count < requiredItemCount)
+                        break;
+
+                    else continue;
+                }
 
                 gridCells.Add(gridCell.GridPosition);
             }
