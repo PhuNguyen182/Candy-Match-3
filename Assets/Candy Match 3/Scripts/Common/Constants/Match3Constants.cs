@@ -1,6 +1,6 @@
 namespace CandyMatch3.Scripts.Common.Constants
 {
-    public class Match3Constants
+    public struct Match3Constants
     {
         public const int ItemReleaseFrameDelay = 9;
         public const float ItemReleaseDelay = 0.25f;
