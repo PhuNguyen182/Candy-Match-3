@@ -13,6 +13,7 @@ namespace GlobalScripts.Audios
         [SerializeField] private AudioMixer audioMixer;
         [SerializeField] private AudioSource musicSource;
         [SerializeField] private AudioSource sfxSource;
+        [SerializeField] private AudioSource itemSource;
         [SerializeField] private SoundEffectDatabase effectDatabase;
 
         public static event Action<float> OnMasterChange;
@@ -79,12 +80,29 @@ namespace GlobalScripts.Audios
             musicSource.Play();
         }
 
+        public void PlayItemSound(SoundEffectType soundEffect, float volumeScale = 1, bool loop = false)
+        {
+            AudioClip sound = effectDatabase.SoundEffectCollection[soundEffect];
+
+            if (sound != null)
+                PlayItemSound(sound, volumeScale, loop);
+        }
+
         public void PlaySoundEffect(SoundEffectType soundEffect, float volumeScale = 1, bool loop = false)
         {
             AudioClip sound = effectDatabase.SoundEffectCollection[soundEffect];
 
             if (sound != null)
                 PlaySoundEffect(sound, volumeScale, loop);
+        }
+
+        public void PlayItemSound(AudioClip soundClip, float volumeScale = 1, bool loop = false)
+        {
+            if (soundClip == null || sfxSource == null)
+                return;
+
+            itemSource.loop = loop;
+            itemSource.PlayOneShot(soundClip, volumeScale);
         }
 
         public void PlaySoundEffect(AudioClip soundClip, float volumeScale = 1, bool loop = false)
