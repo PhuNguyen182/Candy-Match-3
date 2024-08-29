@@ -10,7 +10,7 @@ using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, ISetColorBooster, IBooster, IItemAnimation, IItemEffect
+    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect
     {
         [SerializeField] private ColorBoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;

@@ -1,4 +1,5 @@
 using R3;
+using System;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
@@ -204,6 +205,12 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         public Vector3Int ConvertWorldToGrid(Vector3 position)
         {
             return boardTilemap.WorldToCell(position);
+        }
+
+        private void OnDestroy()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -167,7 +167,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         private bool IsStripedBooster(IBlockItem blockItem)
         {
-            if (blockItem is ISetColorBooster colorBooster)
+            if (blockItem is IColorBooster colorBooster)
                 return colorBooster.ColorBoosterType == ColorBoosterType.Horizontal
                     || colorBooster.ColorBoosterType == ColorBoosterType.Vertical;
 
@@ -176,7 +176,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         private bool IsWrappedBooster(IBlockItem blockItem)
         {
-            if (blockItem is ISetColorBooster colorBooster)
+            if (blockItem is IColorBooster colorBooster)
                 return colorBooster.ColorBoosterType == ColorBoosterType.Wrapped;
 
             return false;
@@ -198,7 +198,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             IBlockItem blockItem1 = gridCell1.BlockItem;
             IBlockItem blockItem2 = gridCell2.BlockItem;
 
-            if (blockItem1 is ISetColorBooster && blockItem2 is ISetColorBooster)
+            if (blockItem1 is IColorBooster && blockItem2 is IColorBooster)
                 return true;
 
             return false;

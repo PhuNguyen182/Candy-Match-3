@@ -62,7 +62,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 booster.IsActivated = true;
                 await booster.Activate();
 
-                if (blockItem is ISetColorBooster colorBooster)
+                if (blockItem is IColorBooster colorBooster)
                 {
                     ColorBoosterType colorBoosterType = colorBooster.ColorBoosterType;
                     switch (colorBoosterType)

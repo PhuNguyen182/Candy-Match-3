@@ -16,7 +16,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         {
             sequencePattern = new()
             {
-                new(new() { new(-2, 0), new(-1, 0), new(1, 0), new(2, 0), new(0, 1), new(0, 2) }),
+                new(new() { new(-2, 0), new(-1, 0), new(1, 0), new(2, 0) }),
                 new(new() { new(1, 0), new(2, 0), new(3, 0), new(4, 0) }), // use for falling check
             };
 
