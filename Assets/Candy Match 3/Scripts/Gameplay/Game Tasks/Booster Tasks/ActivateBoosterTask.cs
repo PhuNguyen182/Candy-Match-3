@@ -74,7 +74,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                             await _verticalBoosterTask.Activate(gridCell, useDelay, dontUseChecking);
                             break;
                         case ColorBoosterType.Wrapped:
-                            await _wrappedBoosterTask.Activate(gridCell, useDelay, dontUseChecking);
+                            await _wrappedBoosterTask.Activate(gridCell, useDelay, false);
                             break;
                     }
                 }
