@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -5,31 +6,31 @@ using UnityEngine.Events;
 [RequireComponent(typeof(Canvas))]
 public class CanvasHelper : MonoBehaviour
 {
-    private static List<CanvasHelper> helpers = new List<CanvasHelper>();
-
-    public static UnityEvent OnResolutionOrOrientationChanged = new UnityEvent();
-
-    private static bool screenChangeVarsInitialized = false;
-    private static ScreenOrientation lastOrientation = ScreenOrientation.LandscapeLeft;
-    private static Vector2 lastResolution = Vector2.zero;
-    private static Rect lastSafeArea = Rect.zero;
-
     [SerializeField] private Canvas canvas;
     [SerializeField] private RectTransform safeAreaTransform;
 
+    private List<CanvasHelper> _helpers = new();
+    private ScreenOrientation _lastOrientation;
+    private bool _screenChangeVarsInitialized = false;
+    
+    private Rect _lastSafeArea = Rect.zero;
+    private Vector2 _lastResolution = Vector2.zero;
+
+    public static UnityEvent OnResolutionOrOrientationChanged = new UnityEvent();
+
     private void Awake()
     {
-        if (!helpers.Contains(this))
-            helpers.Add(this);
+        if (!_helpers.Contains(this))
+            _helpers.Add(this);
 
-        if (!screenChangeVarsInitialized)
+        if (!_screenChangeVarsInitialized)
         {
-            lastOrientation = Screen.orientation;
-            lastResolution.x = Screen.width;
-            lastResolution.y = Screen.height;
-            lastSafeArea = Screen.safeArea;
+            _lastOrientation = Screen.orientation;
+            _lastResolution.x = Screen.width;
+            _lastResolution.y = Screen.height;
+            _lastSafeArea = Screen.safeArea;
 
-            screenChangeVarsInitialized = true;
+            _screenChangeVarsInitialized = true;
         }
 
         ApplySafeArea();
@@ -42,16 +43,16 @@ public class CanvasHelper : MonoBehaviour
 
     private void ApplyScreenChanged()
     {
-        if (helpers[0] != this)
+        if (_helpers[0] != this)
             return;
 
-        if (Application.isMobilePlatform && Screen.orientation != lastOrientation)
+        if (Application.isMobilePlatform && Screen.orientation != _lastOrientation)
             OrientationChanged();
 
-        if (Screen.safeArea != lastSafeArea)
+        if (Screen.safeArea != _lastSafeArea)
             SafeAreaChanged();
 
-        if (Screen.width != lastResolution.x || Screen.height != lastResolution.y)
+        if (Screen.width != _lastResolution.x || Screen.height != _lastResolution.y)
             ResolutionChanged();
     }
 
@@ -60,10 +61,11 @@ public class CanvasHelper : MonoBehaviour
         if (safeAreaTransform == null)
             return;
 
-        var safeArea = Screen.safeArea;
+        Rect safeArea = Screen.safeArea;
 
-        var anchorMin = safeArea.position;
-        var anchorMax = safeArea.position + safeArea.size;
+        Vector2 anchorMin = safeArea.position;
+        Vector2 anchorMax = safeArea.position + safeArea.size;
+
         anchorMin.x /= canvas.pixelRect.width;
         anchorMin.y /= canvas.pixelRect.height;
         anchorMax.x /= canvas.pixelRect.width;
@@ -73,36 +75,43 @@ public class CanvasHelper : MonoBehaviour
         safeAreaTransform.anchorMax = anchorMax;
     }
 
-    private static void OrientationChanged()
+    private void OrientationChanged()
     {
-        lastOrientation = Screen.orientation;
-        lastResolution.x = Screen.width;
-        lastResolution.y = Screen.height;
+        _lastOrientation = Screen.orientation;
+        _lastResolution.x = Screen.width;
+        _lastResolution.y = Screen.height;
 
         OnResolutionOrOrientationChanged.Invoke();
     }
 
-    private static void ResolutionChanged()
+    private void ResolutionChanged()
     {
-        lastResolution.x = Screen.width;
-        lastResolution.y = Screen.height;
+        _lastResolution.x = Screen.width;
+        _lastResolution.y = Screen.height;
 
         OnResolutionOrOrientationChanged.Invoke();
     }
 
-    private static void SafeAreaChanged()
+    private void SafeAreaChanged()
     {
-        lastSafeArea = Screen.safeArea;
+        _lastSafeArea = Screen.safeArea;
 
-        for (int i = 0; i < helpers.Count; i++)
+        for (int i = 0; i < _helpers.Count; i++)
         {
-            helpers[i].ApplySafeArea();
+            _helpers[i].ApplySafeArea();
         }
     }
 
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        canvas ??= GetComponent<Canvas>();
+    }
+#endif
+
     private void OnDestroy()
     {
-        if (helpers != null && helpers.Contains(this))
-            helpers.Remove(this);
+        if (_helpers != null && _helpers.Contains(this))
+            _helpers.Remove(this);
     }
 }

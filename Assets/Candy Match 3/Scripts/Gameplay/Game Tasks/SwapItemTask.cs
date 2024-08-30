@@ -116,6 +116,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private async UniTask CheckMatchOnSwap(IGridCell fromCell, IGridCell toCell)
         {
             bool isMatchedTo = _matchItemsTask.CheckMatchInSwap(toCell.GridPosition);
+
             if (!isMatchedTo)
             {
                 bool isMatchedFrom = _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
