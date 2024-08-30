@@ -108,7 +108,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (isSwapBack)
                 {
-                    CheckMatchOnSwap(fromCell, toCell).Forget();
+                    await CheckMatchOnSwap(fromCell, toCell);
                 }
             }
         }

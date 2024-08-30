@@ -53,6 +53,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private GameTaskManager _gameTaskManager;
 
         private CancellationToken _destroyToken;
+        private bool _check;
 
         private void Awake()
         {
@@ -68,6 +69,17 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 GenerateLevel(levelModel);
             }
         }
+
+#if UNITY_EDITOR
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                Time.timeScale = !_check ? 0.1f : 1;
+                _check = !_check;
+            }
+        }
+#endif
 
         private void Setup()
         {
@@ -95,10 +107,10 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _breakGridTask = new(_gridCellManager, _metaItemManager, _itemManager);
             _breakGridTask.AddTo(ref builder);
 
-            _matchItemsTask = new(_gridCellManager, _breakGridTask);
+            _matchItemsTask = new(_gridCellManager, _breakGridTask, _itemManager);
             _matchItemsTask.AddTo(ref builder);
 
-            _spawnItemTask = new(_gridCellManager, _matchItemsTask, _itemManager);
+            _spawnItemTask = new(_gridCellManager, _itemManager);
             _spawnItemTask.AddTo(ref builder);
 
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask

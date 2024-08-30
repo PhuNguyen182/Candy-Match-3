@@ -17,17 +17,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly ItemManager _itemManager;
         private readonly GridCellManager _gridCellManager;
-        private readonly MatchItemsTask _matchItemsTask;
 
+        private MoveItemTask _moveItemTask;
         private CheckGridTask _checkGridTask;
         private Dictionary<Vector3Int, int> _spawnerPoints;
         private Dictionary<int, WeightedSpawnRule> _spawnRules;
 
-        public SpawnItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask, ItemManager itemManager)
+        public SpawnItemTask(GridCellManager gridCellManager, ItemManager itemManager)
         {
             _spawnerPoints = new();
             _gridCellManager = gridCellManager;
-            _matchItemsTask = matchItemsTask;
             _itemManager = itemManager;
         }
 
@@ -76,7 +75,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 await animation.MoveTo(spawnPosition, duration);
             }
 
-            await _checkGridTask.CheckMatchAtPosition(gridCell.GridPosition);
+            await _moveItemTask.MoveItem(gridCell);
         }
 
         public bool CheckSpawnable(IGridCell gridCell)
@@ -94,6 +93,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return false;
 
             return true;
+        }
+
+        public void SetMoveItemTask(MoveItemTask moveItemTask)
+        {
+            _moveItemTask = moveItemTask;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

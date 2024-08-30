@@ -98,21 +98,21 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 currentGrid = toGridCell;
             }
 
-            currentGrid.IsMoving = false;
-            currentGrid.LockStates = LockStates.None;
             AnimateItemJumpDown(blockItem, outputMoveStep);
+            currentGrid.LockStates = LockStates.None;
+            currentGrid.IsMoving = false;
 
             if (blockItem is ICollectible collectible)
             {
                 await collectible.Collect();
                 _breakGridTask.ReleaseGridCell(currentGrid);
-                _checkGridTask.CheckAroundPosition(startPosition, 1);
+                _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
             }
 
             else
             {
-                await _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
-                _checkGridTask.CheckAroundPosition(startPosition, 1);
+                //_checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
+                _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
             }
         }
 

@@ -59,6 +59,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _swapItemTask.SetComboBoosterHandler(_comboBoosterHandleTask);
 
             _spawnItemTask = spawnItemTask;
+            _spawnItemTask.SetMoveItemTask(_moveItemTask);
+
             _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 

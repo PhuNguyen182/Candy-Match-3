@@ -36,7 +36,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
 
         public void SpawnNewCreatedEffect(Vector3 position)
         {
-            SimplePool.Spawn(effectDatabase.SpawnBoosterEffect, EffectContainer.Transform, position, Quaternion.identity);
+            //SimplePool.Spawn(effectDatabase.SpawnBoosterEffect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
         public void SpawnColorEffect(CandyColor candyColor, Vector3 position)
@@ -52,8 +52,8 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 _ => null
             };
 
-            if(effect != null)
-                SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
+            //if(effect != null)
+            //    SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
         public void SpawnSpecialEffect(ItemType itemType, Vector3 position)
@@ -68,8 +68,8 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 _ => null
             };
 
-            if(effect != null)
-                SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
+            //if(effect != null)
+            //    SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
         public void SpawnBoosterEffect(ItemType itemType, ColorBoosterType boosterType, Vector3 position)
@@ -90,8 +90,8 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 };
             }
 
-            if(effect != null)
-                SimplePool.Spawn(effect, EffectContainer.Transform, position, effect.transform.rotation);
+            //if(effect != null)
+            //    SimplePool.Spawn(effect, EffectContainer.Transform, position, effect.transform.rotation);
         }
 
         public void SpawnStatefulEffect(StatefulGroupType statefulType, Vector3 position)
@@ -104,8 +104,8 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 _ => null
             };
 
-            if(effect != null)
-                SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
+            //if(effect != null)
+            //    SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
         private void PreloadEffects()

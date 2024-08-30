@@ -21,7 +21,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _positionsToCheck;
         private HashSet<Vector3Int> _checkPositions;
 
-        private bool _anyChange = false;
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
@@ -52,21 +51,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if (!CanCheck)
             {
-                _anyChange = false;
-                AnyItemMove = false;
                 return;
             }
 
-            _anyChange = false;
-            AnyItemMove = false;
-
             if (_checkPositions.Count > 0)
             {
-                _anyChange = true;
                 _positionsToCheck.Clear();
                 _positionsToCheck.AddRange(_checkPositions);
                 _checkPositions.Clear();
-                AnyItemMove = true;
 
                 for (int i = 0; i < _positionsToCheck.Count; i++)
                 {
@@ -79,10 +71,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     if (_moveItemTask.CheckMoveable(checkCell))
                     {
+                        AnyItemMove = true;
                         _moveItemTask.MoveItem(checkCell).Forget();
                     }
                 }
-
             }
         }
 
@@ -94,15 +86,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public async UniTask CheckMatchAtPosition(Vector3Int position)
+        public void CheckMatchAtPosition(Vector3Int position)
         {
             if (!CanCheck)
                 return;
 
-            if(_matchItemsTask.CheckMatchAt(position))
+            if (_matchItemsTask.CheckMatchAt(position))
             {
-                //await UniTask.DelayFrame(18, PlayerLoopTiming.FixedUpdate, _token);
-                await _matchItemsTask.Match(position);
+                _matchItemsTask.Match(position).Forget();
             }
         }
 

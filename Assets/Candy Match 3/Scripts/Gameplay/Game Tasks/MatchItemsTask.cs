@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -32,10 +33,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
-        public MatchItemsTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
+        public MatchItemsTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ItemManager itemManager)
         {
             _gridCellManager = gridCellManager;
-            _matchRule = new(_gridCellManager);
+            _matchRule = new(_gridCellManager, itemManager);
             _breakGridTask = breakGridTask;
 
             _adjacentSteps = new()
@@ -78,7 +79,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (isMatch)
             {
-                await UniTask.NextFrame(_token);
                 await ProcessMatch(matchResult);
             }
 
@@ -103,9 +103,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     boundPositions.Add(position);
                     IGridCell gridCell = _gridCellManager.Get(position);
                     
-                    if (gridCell.LockStates == LockStates.Matching)
-                        return;
-
                     if (gridCell.BlockItem is IColorBooster)
                         hasBooster = true;
 
@@ -135,10 +132,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 await UniTask.WhenAll(matchTasks);
-                //await UniTask.DelayFrame(30, PlayerLoopTiming.FixedUpdate, _token);
                 BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
                 _checkGridTask.CheckRange(checkMatchBounds);
-                PrintMatch(matchResult);
+                //PrintMatch(matchResult);
             }
         }
 
