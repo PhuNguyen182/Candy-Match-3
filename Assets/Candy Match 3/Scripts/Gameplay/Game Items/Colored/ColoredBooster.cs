@@ -114,7 +114,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public bool Break()
         {
-            return true;
+            return !IsNewCreated;
         }
 
         public override void ReleaseItem()
@@ -208,7 +208,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             IsActivated = false;
             IsNewCreated = true;
 
-            await UniTask.NextFrame(destroyToken);
+            await UniTask.NextFrame(PlayerLoopTiming.FixedUpdate, destroyToken);
             IsNewCreated = false;
         }
     }

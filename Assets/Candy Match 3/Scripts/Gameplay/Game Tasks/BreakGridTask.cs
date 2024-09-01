@@ -74,6 +74,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (blockItem is IBooster booster)
                 {
+                    if (booster.IsNewCreated)
+                    {
+                        gridCell.LockStates = LockStates.None;
+                        return;
+                    }
+
                     await _activateBoosterTask.ActivateBooster(gridCell, true, false);
                     gridCell.LockStates = LockStates.None;
                     return;
