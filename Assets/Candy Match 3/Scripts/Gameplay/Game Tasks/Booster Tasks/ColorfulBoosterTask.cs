@@ -115,7 +115,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
                 }
 
-                booster.Explode();
+                booster?.Explode();
                 _breakGridTask.ReleaseGridCell(gridCell);
                 RemoveColor(checkColor);
 

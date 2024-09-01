@@ -10,6 +10,7 @@ using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Common.CustomData;
 using CandyMatch3.Scripts.Gameplay.Statefuls;
+using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Utils;
 
@@ -171,6 +172,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (blockItem is IBooster booster)
                 {
+                    if (booster.IsNewCreated)
+                    {
+                        gridCell.LockStates = LockStates.None;
+                        return;
+                    }
+
                     await _activateBoosterTask.ActivateBooster(gridCell, true, true);
                     ReleaseGridCell(gridCell);
                 }
@@ -204,7 +211,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell.BlockItem is IItemEffect effect)
                 effect.PlayStartEffect();
 
-            TimeSpan delay = TimeSpan.FromSeconds(0.166f);
+            TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
             await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
             gridCell.LockStates = LockStates.None;
         }

@@ -88,7 +88,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             else
                 itemAnimator.ResetTrigger(ItemAnimationHashKeys.MatchHash);
 
-            TimeSpan duration = TimeSpan.FromSeconds(0.166f);
+            TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
             return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
         }
 
@@ -117,6 +117,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private void OnDestroy()
         {
             _moveTween?.Kill();
+            _bounceMoveTween?.Kill();
             _swapTween?.Kill();
         }
     }
