@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 
 namespace CandyMatch3.Scripts.Gameplay.Models.Match
@@ -19,26 +18,26 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
         private IDisposable _disposable;
 
-        public MatchRule(GridCellManager gridCellManager, ItemManager itemManager)
+        public MatchRule(GridCellManager gridCellManager)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
-            _match3Model = new(gridCellManager, itemManager);
+            _match3Model = new(gridCellManager);
             _match3Model.AddTo(ref builder);
 
-            _match4HorizontalModel = new(gridCellManager, itemManager);
+            _match4HorizontalModel = new(gridCellManager);
             _match4HorizontalModel.AddTo(ref builder);
             
-            _match4VerticalModel = new(gridCellManager, itemManager);
+            _match4VerticalModel = new(gridCellManager);
             _match4VerticalModel.AddTo(ref builder);
             
-            _match5Model = new(gridCellManager, itemManager);
+            _match5Model = new(gridCellManager);
             _match5Model.AddTo(ref builder);
             
-            _matchLModel = new(gridCellManager, itemManager);
+            _matchLModel = new(gridCellManager);
             _matchLModel.AddTo(ref builder);
             
-            _matchTModel = new(gridCellManager, itemManager);
+            _matchTModel = new(gridCellManager);
             _matchTModel.AddTo(ref builder);
 
             _disposable = builder.Build();

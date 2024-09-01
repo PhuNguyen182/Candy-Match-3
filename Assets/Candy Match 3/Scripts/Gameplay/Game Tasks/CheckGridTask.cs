@@ -28,7 +28,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private CancellationTokenSource _cts;
 
         public bool CanCheck { get; set; }
-        public bool AnyItemMove { get; private set; }
         public bool IsActive { get; set; }
 
         public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask, MatchItemsTask matchItemsTask)
@@ -100,7 +99,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void CheckMatchAtPosition(Vector3Int position)
         {
-            _matchPositions.Add(position);
+            if (_matchItemsTask.CheckMatchAt(position))
+            {
+                _matchPositions.Add(position);
+            }
         }
 
         public void CheckCross(Vector3Int position, bool checkSelf = true)
@@ -133,6 +135,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private async UniTask CheckMatchPositions(HashSet<Vector3Int> matchPositions)
         {
             CanCheck = false;
+            await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
             using(var matchPositionPool = ListPool<Vector3Int>.Get(out List<Vector3Int> checkMatchPositions))
             {
                 checkMatchPositions.AddRange(matchPositions);

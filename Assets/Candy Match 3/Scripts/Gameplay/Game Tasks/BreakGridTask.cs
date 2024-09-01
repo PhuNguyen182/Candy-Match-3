@@ -89,7 +89,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     if (breakable.Break())
                     {
-                        //blockItem.ItemBlast().Forget();
+                        blockItem.ItemBlast().Forget();
 
                         if (blockItem is IItemEffect effect)
                             effect.PlayMatchEffect();

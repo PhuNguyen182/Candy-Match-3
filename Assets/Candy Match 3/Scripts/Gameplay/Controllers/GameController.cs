@@ -115,7 +115,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _breakGridTask = new(_gridCellManager, _metaItemManager, _itemManager);
             _breakGridTask.AddTo(ref builder);
 
-            _matchItemsTask = new(_gridCellManager, _breakGridTask, _itemManager);
+            _matchItemsTask = new(_gridCellManager, _breakGridTask);
             _matchItemsTask.AddTo(ref builder);
 
             _spawnItemTask = new(_gridCellManager, _itemManager);

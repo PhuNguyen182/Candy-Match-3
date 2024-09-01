@@ -5,14 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
     public abstract class BaseMatchModel : IDisposable
     {
-        protected readonly ItemManager itemManager;
         protected readonly GridCellManager gridCellManager;
 
         protected int[] checkAngles = new[] { 0, -90, 180, 90 };
@@ -23,10 +21,9 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
         public abstract MatchType MatchType { get; }
 
-        public BaseMatchModel(GridCellManager gridCellManager, ItemManager itemManager)
+        public BaseMatchModel(GridCellManager gridCellManager)
         {
             this.gridCellManager = gridCellManager;
-            this.itemManager = itemManager;
         }
 
         protected void OnConstuctor()

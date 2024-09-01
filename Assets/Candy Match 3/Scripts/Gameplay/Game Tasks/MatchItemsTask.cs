@@ -33,10 +33,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
-        public MatchItemsTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ItemManager itemManager)
+        public MatchItemsTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
-            _matchRule = new(_gridCellManager, itemManager);
+            _matchRule = new(_gridCellManager);
             _breakGridTask = breakGridTask;
 
             _adjacentSteps = new()

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GridCells;
-using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Models.Match
@@ -12,7 +11,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         protected override int requiredItemCount => 3;
         public override MatchType MatchType => MatchType.Match4Horizontal;
 
-        public Match4HorizontalModel(GridCellManager gridCellManager, ItemManager itemManager) : base(gridCellManager, itemManager)
+        public Match4HorizontalModel(GridCellManager gridCellManager) : base(gridCellManager)
         {
             sequencePattern = new()
             {
