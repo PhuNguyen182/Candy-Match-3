@@ -14,10 +14,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] private Animator itemAnimator;
         [SerializeField] private SpriteRenderer itemRenderer;
         [SerializeField] private AnimationCurve fallenCurve;
+        [SerializeField] private AnimationCurve movingCurve;
 
         [Header("Movement")]
         [SerializeField] private float bounceDuration = 0.3f;
-        [SerializeField] private Ease moveEase = Ease.OutQuad;
         [SerializeField] private Ease bounceEase = Ease.OutQuad;
 
         [Header("Fading")]
@@ -40,7 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public UniTask MoveTo(Vector3 toPosition, float duration)
         {
-            _moveTween ??= CreateMoveTween(toPosition, duration, moveEase);
+            _moveTween ??= CreateMoveTween(toPosition, duration);
             _moveTween.ChangeValues(transform.position, toPosition, duration);
             _moveTween.Play();
 
@@ -51,7 +51,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
             SwapItemLayer(isMoveFirst);
-            _moveTween ??= CreateMoveTween(position, duration, moveEase);
+            _moveTween ??= CreateMoveTween(position, duration);
             _moveTween.ChangeValues(transform.position, position, duration);
             _moveTween.Play();
             SwapItemLayer(false);
@@ -104,9 +104,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
                             .SetAutoKill(false);
         }
 
-        private Tweener CreateMoveTween(Vector3 toPosition, float duration, Ease ease)
+        private Tweener CreateMoveTween(Vector3 toPosition, float duration)
         {
-            return transform.DOMove(toPosition, duration).SetEase(ease).SetAutoKill(false);
+            return transform.DOMove(toPosition, duration).SetEase(movingCurve).SetAutoKill(false);
         }
 
         private void SwapItemLayer(bool isPrioritized)

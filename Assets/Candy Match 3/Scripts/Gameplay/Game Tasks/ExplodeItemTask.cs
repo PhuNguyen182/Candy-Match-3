@@ -31,7 +31,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             using(var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> boundsEdge))
             {
-                boundsEdge.AddRange(range.GetBorder2D());
+                boundsEdge.AddRange(range.Iterator2D());
                 IGridCell centerCell = _gridCellManager.Get(center);
                 Vector3 centerPosition = centerCell.WorldPosition;
 

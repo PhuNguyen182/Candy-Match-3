@@ -145,11 +145,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     for (int i = 0; i < checkMatchPositions.Count; i++)
                     {
                         Vector3Int position = checkMatchPositions[i];
+                        
                         if (_matchItemsTask.CheckMatchAt(position))
-                        {
                             matchTasks.Add(_matchItemsTask.Match(position));
-                            matchPositions.Remove(position);
-                        }
+                        
+                        matchPositions.Remove(position);
                     }
 
                     await UniTask.WhenAll(matchTasks);
