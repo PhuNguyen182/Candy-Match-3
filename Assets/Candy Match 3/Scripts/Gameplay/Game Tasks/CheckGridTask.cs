@@ -93,10 +93,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!CanCheck)
                 return;
 
-            _matchPositions.Add(position);
+            //_matchPositions.Add(position);
             if (_matchItemsTask.CheckMatchAt(position))
             {
-                _matchItemsTask.Match(position).Forget();
+                //_matchItemsTask.Match(position).Forget();
             }
         }
 

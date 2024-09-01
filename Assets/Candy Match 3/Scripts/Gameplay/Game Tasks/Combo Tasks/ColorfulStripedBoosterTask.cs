@@ -136,7 +136,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             });
 
             if (gridCell.BlockItem is IItemEffect effect)
-                effect.PlayReplaceEffect();
+                effect.PlayStartEffect();
         }
 
         public void Dispose()

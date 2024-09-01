@@ -37,6 +37,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public async UniTask ActivateWithColor(IGridCell boosterCell, CandyColor candyColor)
         {
+            await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 IBooster booster = default;
@@ -80,6 +81,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
 
             _checkGridTask.CanCheck = false;
+            await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 IBooster booster = default;

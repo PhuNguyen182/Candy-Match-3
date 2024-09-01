@@ -76,7 +76,6 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
                 BlockItem.ReleaseItem();
 
             SetBlockItem(null);
-            IsMatching = false;
         }
 
         public void SetGridID(int gridId)
@@ -86,6 +85,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
         public void SetBlockItem(IBlockItem blockItem, bool isSnapped = true)
         {
+            IsMatching = false;
             _blockItem = blockItem;
             
             if (_blockItem != null)
