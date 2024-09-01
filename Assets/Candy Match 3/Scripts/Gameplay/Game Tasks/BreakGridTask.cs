@@ -145,7 +145,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask AddBooster(IGridCell gridCell, MatchType matchType, CandyColor candyColor)
         {
-            gridCell.LockStates = LockStates.Replacing;
+            gridCell.LockStates = LockStates.Matching;
             IBlockItem blockItem = gridCell.BlockItem;
 
             if (gridCell.GridStateful is IBreakable stateBreakable)
@@ -257,7 +257,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell == null || !gridCell.HasItem)
                 return;
 
-            Vector3Int position = gridCell.GridPosition;
             if (gridCell.GridStateful is IAdjcentBreakable stateBreakable)
             {
                 if (stateBreakable.Break())
@@ -265,29 +264,28 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     gridCell.SetGridStateful(new AvailableState());
                 }
 
+                Vector3Int position = gridCell.GridPosition;
                 _checkGridTask.CheckAroundPosition(position, 1);
                 return;
             }
 
-            else
+            gridCell.LockStates = LockStates.Breaking;
+            IBlockItem blockItem = gridCell.BlockItem;
+
+            if (blockItem is IAdjcentBreakable breakable)
             {
-                gridCell.LockStates = LockStates.Breaking;
-                IBlockItem blockItem = gridCell.BlockItem;
-                if (blockItem is IAdjcentBreakable breakable)
+                if (breakable.Break())
                 {
-                    if (breakable.Break())
-                    {
-                        await blockItem.ItemBlast();
+                    await blockItem.ItemBlast();
 
-                        if (blockItem is IItemEffect effect)
-                            effect.PlayMatchEffect();
+                    if (blockItem is IItemEffect effect)
+                        effect.PlayMatchEffect();
 
-                        ReleaseGridCell(gridCell);
-                    }
+                    ReleaseGridCell(gridCell);
                 }
-
-                gridCell.LockStates = LockStates.None;
             }
+
+            gridCell.LockStates = LockStates.None;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

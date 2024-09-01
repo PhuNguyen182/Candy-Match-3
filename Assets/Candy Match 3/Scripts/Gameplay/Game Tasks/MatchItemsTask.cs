@@ -91,58 +91,71 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             MatchType matchType = matchResult.MatchType;
             CandyColor candyColor = matchResult.CandyColor;
 
-            using (PooledObject<List<UniTask>> matchListPool = ListPool<UniTask>.Get(out List<UniTask> matchTasks))
+            using (var matchListPool = ListPool<UniTask>.Get(out List<UniTask> matchTasks))
             {
-                using var boundListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions);
-                using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
-
-                for (int i = 0; i < matchResult.MatchSequence.Count; i++)
+                using (var boundListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
                 {
-                    Vector3Int position = matchResult.MatchSequence[i];
-                    
-                    boundPositions.Add(position);
-                    IGridCell gridCell = _gridCellManager.Get(position);
-                    
-                    if (gridCell.BlockItem is IColorBooster)
-                        hasBooster = true;
+                    using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
 
-                    if (matchType != MatchType.Match3 && gridCell.GridPosition == matchResult.Position)
-                        matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor));
+                    for (int i = 0; i < matchResult.MatchSequence.Count; i++)
+                    {
+                        Vector3Int position = matchResult.MatchSequence[i];
 
-                    else
-                        matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count));
+                        boundPositions.Add(position);
+                        IGridCell gridCell = _gridCellManager.Get(position);
+                        IBlockItem blockItem = gridCell.BlockItem;
+                        gridCell.IsMatching = true;
 
-                    for (int j = 0; j < _adjacentSteps.Count; j++)
-                        adjacentPositions.Add(position + _adjacentSteps[j]);
+                        if (blockItem is IColorBooster)
+                            hasBooster = true;
+
+                        if (matchType != MatchType.Match3 && gridCell.GridPosition == matchResult.Position)
+                            matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor));
+
+                        else
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count));
+
+                        for (int j = 0; j < _adjacentSteps.Count; j++)
+                            adjacentPositions.Add(position + _adjacentSteps[j]);
+                    }
+
+                    foreach (Vector3Int adjacentPosition in adjacentPositions)
+                    {
+                        IGridCell gridCell = _gridCellManager.Get(adjacentPosition);
+                        matchTasks.Add(_breakGridTask.BreakAdjacent(gridCell));
+                    }
+
+                    int count = boundPositions.Count;
+                    boundPositions.Sort(_vector3IntComparer);
+
+                    Vector3Int min = !hasBooster ? boundPositions[0] + new Vector3Int(-1, -1) : boundPositions[0] + new Vector3Int(-2, -2);
+                    Vector3Int max = !hasBooster ? boundPositions[count - 1] + new Vector3Int(1, 1) : boundPositions[count - 1] + new Vector3Int(2, 2);
+
+                    boundPositions.Add(min);
+                    boundPositions.Add(max);
+
+                    await UniTask.WhenAll(matchTasks);
+                    BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
+                    _checkGridTask.CheckRange(checkMatchBounds);
+                    //PrintMatch(matchResult);
                 }
-
-                int count = boundPositions.Count;
-                boundPositions.Sort(_vector3IntComparer);
-                
-                Vector3Int min = !hasBooster ? boundPositions[0] + new Vector3Int(-1, -1) : boundPositions[0] + new Vector3Int(-2, -2);
-                Vector3Int max = !hasBooster ? boundPositions[count - 1] + new Vector3Int(1, 1) : boundPositions[count - 1] + new Vector3Int(2, 2);
-                
-                boundPositions.Add(min);
-                boundPositions.Add(max);
-
-                foreach (Vector3Int adjacentPosition in adjacentPositions)
-                {
-                    IGridCell gridCell = _gridCellManager.Get(adjacentPosition);
-                    matchTasks.Add(_breakGridTask.BreakAdjacent(gridCell));
-                }
-
-                await UniTask.WhenAll(matchTasks);
-                BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
-                _checkGridTask.CheckRange(checkMatchBounds);
-                //PrintMatch(matchResult);
             }
         }
 
         public bool CheckMatchAt(Vector3Int checkPosition)
         {
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
-            return gridCell.HasItem && gridCell.BlockItem.IsMatchable 
-                    && !gridCell.IsLocked && !gridCell.IsMoving;
+            
+            if (!gridCell.HasItem)
+                return false;
+
+            if (!gridCell.BlockItem.IsMatchable || gridCell.IsMatching)
+                return false;
+
+            if (gridCell.IsLocked || gridCell.IsMoving)
+                return false;
+
+            return true;
         }
 
         public bool IsMatchable(Vector3Int position, out MatchResult matchResult)

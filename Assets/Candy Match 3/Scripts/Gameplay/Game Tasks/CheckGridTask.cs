@@ -3,6 +3,7 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using GlobalScripts.Extensions;
 using GlobalScripts.UpdateHandlerPattern;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -20,6 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private List<Vector3Int> _positionsToCheck;
         private HashSet<Vector3Int> _checkPositions;
+        private HashSet<Vector3Int> _matchPositions;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
@@ -37,6 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _checkPositions = new();
             _positionsToCheck = new();
+            _matchPositions = new();
 
             _cts = new();
             _token = _cts.Token;
@@ -71,7 +74,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     if (_moveItemTask.CheckMoveable(checkCell))
                     {
-                        AnyItemMove = true;
                         _moveItemTask.MoveItem(checkCell).Forget();
                     }
                 }
@@ -91,6 +93,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!CanCheck)
                 return;
 
+            _matchPositions.Add(position);
             if (_matchItemsTask.CheckMatchAt(position))
             {
                 _matchItemsTask.Match(position).Forget();
@@ -124,11 +127,32 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkPositions.Add(position + direction);
         }
 
+        private async UniTask CheckMatchPositions()
+        {
+            using(var matchPositionPool = ListPool<Vector3Int>.Get(out List<Vector3Int> checkMatchPositions))
+            {
+                checkMatchPositions.AddRange(_matchPositions);
+                _matchPositions.Clear();
+
+                using (var matchTaskPool = ListPool<UniTask>.Get(out List<UniTask> matchTasks))
+                {
+                    for (int i = 0; i < checkMatchPositions.Count; i++)
+                    {
+                        Vector3Int position = checkMatchPositions[i];
+                        matchTasks.Add(_matchItemsTask.Match(position));
+                    }
+
+                    await UniTask.WhenAll(matchTasks);
+                }
+            }
+        }
+
         public void Dispose()
         {
             _cts.Dispose();
             _positionsToCheck.Clear();
             _checkPositions.Clear();
+            _matchPositions.Clear();
 
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }

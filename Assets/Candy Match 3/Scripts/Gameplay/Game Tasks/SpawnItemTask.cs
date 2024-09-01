@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Models.SpawnRules;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -65,7 +66,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             
             Vector3 upWorldPosition = _gridCellManager.ConvertGridToWorldFunction(upGridPosition);
             Vector3 spawnPosition = _gridCellManager.ConvertGridToWorldFunction(position);
-            
+
+            gridCell.LockStates = LockStates.Moving;
             blockItem.SetWorldPosition(upWorldPosition);
             gridCell.SetBlockItem(blockItem, false);
 

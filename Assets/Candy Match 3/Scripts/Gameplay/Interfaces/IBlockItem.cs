@@ -11,7 +11,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public int ItemID { get; }
         public bool IsMoveable { get; }
         public bool IsMatchable { get; }
-        public bool CanBeReplace { get; }
+        public bool CanBeReplace { get; }        
         public bool IsMoving { get; set; }
 
         public ItemType ItemType { get; }

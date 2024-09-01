@@ -123,7 +123,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 if (!gridCell.HasItem || gridCell.IsMoving || gridCell.IsLocked)
                     break;
                 
-                if (!gridCell.BlockItem.IsMatchable)
+                if (!gridCell.BlockItem.IsMatchable || gridCell.IsMatching)
                     break;
 
                 if (gridCell.BlockItem.CandyColor != candyColor)
