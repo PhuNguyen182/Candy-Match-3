@@ -20,6 +20,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly SpawnItemTask _spawnItemTask;
 
         private List<Vector3Int> _positionsToCheck;
+        private List<Vector3Int> _positionsToMatch;
         private HashSet<Vector3Int> _checkPositions;
         private HashSet<Vector3Int> _matchPositions;
 
@@ -39,6 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _checkPositions = new();
             _positionsToCheck = new();
+            _positionsToMatch = new();
             _matchPositions = new();
 
             _cts = new();
@@ -78,6 +80,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     }
                 }
             }
+
+            else
+            {
+                if (_matchPositions.Count > 0)
+                {
+                    CheckMatchPositions(_matchPositions).Forget();
+                }
+            }
         }
 
         private void AddRangeToCheck(BoundsInt bounds)
@@ -90,14 +100,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void CheckMatchAtPosition(Vector3Int position)
         {
-            if (!CanCheck)
-                return;
-
-            //_matchPositions.Add(position);
-            if (_matchItemsTask.CheckMatchAt(position))
-            {
-                //_matchItemsTask.Match(position).Forget();
-            }
+            _matchPositions.Add(position);
         }
 
         public void CheckCross(Vector3Int position, bool checkSelf = true)
@@ -127,24 +130,30 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkPositions.Add(position + direction);
         }
 
-        private async UniTask CheckMatchPositions()
+        private async UniTask CheckMatchPositions(HashSet<Vector3Int> matchPositions)
         {
+            CanCheck = false;
             using(var matchPositionPool = ListPool<Vector3Int>.Get(out List<Vector3Int> checkMatchPositions))
             {
-                checkMatchPositions.AddRange(_matchPositions);
-                _matchPositions.Clear();
+                checkMatchPositions.AddRange(matchPositions);
 
                 using (var matchTaskPool = ListPool<UniTask>.Get(out List<UniTask> matchTasks))
                 {
                     for (int i = 0; i < checkMatchPositions.Count; i++)
                     {
                         Vector3Int position = checkMatchPositions[i];
-                        matchTasks.Add(_matchItemsTask.Match(position));
+                        if (_matchItemsTask.CheckMatchAt(position))
+                        {
+                            matchTasks.Add(_matchItemsTask.Match(position));
+                            matchPositions.Remove(position);
+                        }
                     }
 
                     await UniTask.WhenAll(matchTasks);
                 }
             }
+
+            CanCheck = true;
         }
 
         public void Dispose()

@@ -113,8 +113,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else
             {
-                await UniTask.DelayFrame(12, PlayerLoopTiming.FixedUpdate, _token);
-
                 if (outputMoveStep > 0)
                 {
                     _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);

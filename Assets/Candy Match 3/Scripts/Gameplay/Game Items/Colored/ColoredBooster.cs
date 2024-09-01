@@ -10,7 +10,7 @@ using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect
+    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IBreakable
     {
         [SerializeField] private ColorBoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
@@ -110,6 +110,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
                                                                                        : SoundEffectType.LineVerticalHorizontal;
             EffectManager.Instance.SpawnBoosterEffect(itemType, colorBoosterType, position);
             EffectManager.Instance.PlaySoundEffect(soundEffect);
+        }
+
+        public bool Break()
+        {
+            return true;
         }
 
         public override void ReleaseItem()

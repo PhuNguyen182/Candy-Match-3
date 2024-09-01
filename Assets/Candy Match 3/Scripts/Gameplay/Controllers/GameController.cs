@@ -52,8 +52,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private SpawnItemTask _spawnItemTask;        
         private GameTaskManager _gameTaskManager;
 
+        private int _check = 0;
         private CancellationToken _destroyToken;
-        private bool _check;
 
         private void Awake()
         {
@@ -75,8 +75,16 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         {
             if (Input.GetKeyDown(KeyCode.S))
             {
-                Time.timeScale = !_check ? 0.1f : 1;
-                _check = !_check;
+                _check = _check + 1;
+
+                if (_check % 4 == 0)
+                    Time.timeScale = 1;
+                else if (_check % 4 == 1)
+                    Time.timeScale = 0.1f;
+                else if (_check % 4 == 2)
+                    Time.timeScale = 0.05f;
+                else
+                    Time.timeScale = 0.02f;
             }
         }
 #endif
