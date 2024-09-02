@@ -118,6 +118,7 @@ SpriteAtlas:
     - bcc2f2d61e16f452c89590375064ccab: 21300000
     - 80948cf67d16d493fa0f3d485bee6a79: 21300000
     - 2fcf9237047ee4e5883cd10bd442dcf6: 21300000
+    - 5af39767af9c5584595c49281aa07305: 21300000
     - e4be4967d9fae4369b06d15a310511d7: 21300000
     - 03bd79a73969b4948acc7c0806012796: 21300000
     - 536d87b7441144d4d8801f365f130a97: 21300000
@@ -219,6 +220,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: bcc2f2d61e16f452c89590375064ccab, type: 3}
   - {fileID: 21300000, guid: 80948cf67d16d493fa0f3d485bee6a79, type: 3}
   - {fileID: 21300000, guid: 2fcf9237047ee4e5883cd10bd442dcf6, type: 3}
+  - {fileID: 21300000, guid: 5af39767af9c5584595c49281aa07305, type: 3}
   - {fileID: 21300000, guid: e4be4967d9fae4369b06d15a310511d7, type: 3}
   - {fileID: 21300000, guid: 03bd79a73969b4948acc7c0806012796, type: 3}
   - {fileID: 21300000, guid: 536d87b7441144d4d8801f365f130a97, type: 3}
@@ -319,6 +321,7 @@ SpriteAtlas:
   - PurpleItem
   - RedItemParticles
   - UpperArmLeft
+  - BiscuitParticles
   - SyrupParticles
   - Syrup2
   - PurpleItemHorizontal

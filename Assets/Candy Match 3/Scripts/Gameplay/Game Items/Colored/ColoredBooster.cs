@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.Effects;
+using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, ISetColorBooster, IBooster, IItemAnimation
+    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IBreakable
     {
         [SerializeField] private ColorBoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
@@ -27,7 +28,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override bool CanBeReplace => false;
 
-        public bool IsIgnored { get; set; }
+        public bool IsActivated { get; set; }
+
+        public bool IsNewCreated { get; set; }
 
         public ColorBoosterType ColorBoosterType => colorBoosterType;
 
@@ -35,7 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             base.ResetItem();
             SetMatchable(true);
-            IsIgnored = false;
+            OnItemReset();
         }
 
         public override void SetMatchable(bool isMatchable)
@@ -86,12 +89,32 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public async UniTask Activate()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(Match3Constants.ItemReleaseDelay), cancellationToken: destroyCancellationToken);
+            Explode();
+            await UniTask.CompletedTask;
         }
 
         public void Explode()
         {
-            
+            float x = WorldPosition.x;
+            float y = WorldPosition.y;
+
+            Vector3 position = colorBoosterType switch
+            {
+                ColorBoosterType.Horizontal => new(0, y),
+                ColorBoosterType.Vertical => new(x, 0),
+                ColorBoosterType.Wrapped => new(x, y),
+                _ => Vector3.zero
+            };
+
+            SoundEffectType soundEffect = colorBoosterType == ColorBoosterType.Wrapped ? SoundEffectType.CandyWrap
+                                                                                       : SoundEffectType.LineVerticalHorizontal;
+            EffectManager.Instance.SpawnBoosterEffect(itemType, colorBoosterType, position);
+            EffectManager.Instance.PlaySoundEffect(soundEffect);
+        }
+
+        public bool Break()
+        {
+            return !IsNewCreated;
         }
 
         public override void ReleaseItem()
@@ -154,6 +177,35 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
                 _ => TargetEnum.None
             };
+        }
+
+        public void PlayStartEffect()
+        {
+            EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAward);
+        }
+
+        public void PlayMatchEffect()
+        {
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
+            EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
+        }
+
+        public void PlayBreakEffect(int healthPoint)
+        {
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
+            EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
+        }
+
+        public void PlayReplaceEffect()
+        {
+            EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAward);
+        }
+
+        private void OnItemReset()
+        {
+            IsActivated = false;
         }
     }
 }

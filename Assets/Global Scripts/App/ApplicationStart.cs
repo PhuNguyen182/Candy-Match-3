@@ -17,6 +17,7 @@ namespace GlobalScripts.App
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void OnAfterSceneLoad()
         {
+            Setup();
             RegisterServicesAfterSceneLoad();
         }
 
@@ -43,6 +44,13 @@ namespace GlobalScripts.App
             T instance = Object.Instantiate(service);
             Object.DontDestroyOnLoad(instance);
             return service;
+        }
+
+        private static void Setup()
+        {
+#if !UNITY_EDITOR
+            Application.targetFrameRate = 60;
+#endif
         }
     }
 }

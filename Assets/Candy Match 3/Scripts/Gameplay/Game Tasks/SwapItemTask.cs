@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
@@ -66,6 +67,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     fromCell.LockStates = LockStates.None;
                     toCell.LockStates = LockStates.None;
+
                     await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
                 }
             }
@@ -83,7 +85,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 fromCell.LockStates = LockStates.None;
                 toCell.LockStates = LockStates.None;
-                await _comboBoosterHandleTask.CombineColorItemWithColorItem(fromCell, toCell);
+
+                await _comboBoosterHandleTask.CombineColorfulItemWithColorItem(fromCell, toCell);
             }
 
             else
@@ -105,7 +108,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (isSwapBack)
                 {
-                    CheckMatchOnSwap(fromCell, toCell).Forget();
+                    await CheckMatchOnSwap(fromCell, toCell);
                 }
             }
         }
@@ -113,6 +116,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private async UniTask CheckMatchOnSwap(IGridCell fromCell, IGridCell toCell)
         {
             bool isMatchedTo = _matchItemsTask.CheckMatchInSwap(toCell.GridPosition);
+
             if (!isMatchedTo)
             {
                 bool isMatchedFrom = _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
@@ -122,6 +126,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     fromCell.LockStates = LockStates.None;
                     toCell.LockStates = LockStates.None;
                     await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
+                    EffectManager.Instance.PlaySoundEffect(SoundEffectType.Error);
                 }
             }
 

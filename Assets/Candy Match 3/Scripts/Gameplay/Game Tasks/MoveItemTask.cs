@@ -37,7 +37,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public async UniTask MoveItem(IGridCell moveGridCell)
         {
             IGridCell currentGrid = moveGridCell;
-            
             Vector3Int startPosition = currentGrid.GridPosition;
             IBlockItem blockItem = currentGrid.BlockItem;
 
@@ -45,8 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             int outputMoveStep = 0;
             int checkColumnIndex = 0;
 
-            // Temporary move straight down only, move diagonally will fix later
-            while (checkColumnIndex < 1)
+            while (checkColumnIndex < 3)
             {
                 IGridCell toGridCell;
                 Vector3Int moveDirection = Vector3Int.zero;
@@ -55,8 +53,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 moveDirection = checkColumnIndex switch
                 {
                     0 => new(0, -1),
-                    //1 => new(-1, -1),
-                    //2 => new(1, -1),
+                    1 => new(-1, -1),
+                    2 => new(1, -1),
                     _ => new(0, -1)
                 };
 
@@ -75,19 +73,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 toGridCell = targetCell;
 
-                //if (checkColumnIndex != 0 && !CheckLine(toGridCell.GridPosition, checkDirection))
-                //{
-                //    checkColumnIndex = checkColumnIndex + 1;
-                //    continue;
-                //}
+                if (checkColumnIndex != 0 && !CheckLine(toGridCell.GridPosition, checkDirection))
+                {
+                    checkColumnIndex = checkColumnIndex + 1;
+                    continue;
+                }
 
                 checkColumnIndex = 0;
+                currentGrid.SetBlockItem(null);
                 toGridCell.SetBlockItem(blockItem, false);
-                
+
                 toGridCell.IsMoving = true;
                 currentGrid.LockStates = LockStates.None;
                 toGridCell.LockStates = LockStates.Moving;
-                currentGrid.SetBlockItem(null);
 
                 moveStepCount = moveStepCount + 1;
                 ExportMoveStep(moveStepCount, out outputMoveStep);
@@ -99,24 +97,29 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 currentGrid = toGridCell;
             }
 
-            currentGrid.IsMoving = false;
+            if (!currentGrid.IsMatching)
+                AnimateItemJumpDown(blockItem, outputMoveStep);
+                
             currentGrid.LockStates = LockStates.None;
-
-            blockItem.SetWorldPosition(currentGrid.WorldPosition);
-            AnimateItemJumpDown(blockItem, outputMoveStep);
+            currentGrid.IsMoving = false;
 
             if (blockItem is ICollectible collectible)
             {
                 await collectible.Collect();
                 _breakGridTask.ReleaseGridCell(currentGrid);
-                _checkGridTask.CheckAroundPosition(startPosition, 1);
+                _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
             }
 
             else
             {
-                //await UniTask.DelayFrame(Match3Constants.ItemReleaseFrameDelay, PlayerLoopTiming.Update, _token);
-                _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
-                _checkGridTask.CheckAroundPosition(startPosition, 1);
+                if (outputMoveStep > 0)
+                {
+                    _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
+                    _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
+                }
+
+                else
+                    _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
             }
         }
 
@@ -125,7 +128,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (blockItem is IItemAnimation animation)
             {
                 float moveSpeed = Match3Constants.BaseItemMoveSpeed + Match3Constants.FallenAccelaration * stepCount;
-                await animation.MoveTo(targetCell.WorldPosition, 1/ moveSpeed);
+                await animation.MoveTo(targetCell.WorldPosition, 1f / moveSpeed);
             }
         }
 
@@ -133,9 +136,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if(blockItem is IItemAnimation animation)
             {
-                _boardHeight = _gridCellManager.BoardHeight;
                 if(stepCount > 0)
+                {
+                    _boardHeight = _gridCellManager.BoardHeight;
                     animation.JumpDown(1.0f * stepCount / _boardHeight);
+                }
             }
         }
 
@@ -183,7 +188,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!gridCell.CanContainItem)
                 return false;
 
-            if (gridCell.LockStates != LockStates.None)
+            if (gridCell.IsLocked)
                 return false;
 
             return gridCell.CanSetItem;
@@ -194,13 +199,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell == null)
                 return false;
 
-            if (gridCell.LockStates != LockStates.None)
+            if (gridCell.IsLocked)
                 return false;
 
             if (!gridCell.HasItem)
                 return false;
 
-            if (!gridCell.IsMoveable)
+            if (!gridCell.IsMoveable || gridCell.IsMoving)
                 return false;
 
             IGridCell downCell = _gridCellManager.Get(gridCell.GridPosition + Vector3Int.down);

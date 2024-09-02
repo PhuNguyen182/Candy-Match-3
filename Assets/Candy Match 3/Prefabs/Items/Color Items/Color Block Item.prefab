@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2097094939699403011
 Transform:
@@ -99,7 +99,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &524681656406542197
 Transform:
@@ -183,7 +183,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2236629591831843060
 Transform:
@@ -266,7 +266,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &52362868050232997
 Transform:
@@ -302,7 +302,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4070749026246884481
 Transform:
@@ -337,6 +337,7 @@ MonoBehaviour:
   itemId: 0
   itemType: 0
   candyColor: 0
+  targetType: 0
   itemGraphics: {fileID: 1494473538025020321}
   itemAnimation: {fileID: 1504375786986051077}
   candyColors:
@@ -346,6 +347,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: bcc2f2d61e16f452c89590375064ccab, type: 3}
   - {fileID: 21300000, guid: 577bd8aba295c44d7b180b72d8f50956, type: 3}
   - {fileID: 21300000, guid: 36ed891685b1247669d1e215ea0330b2, type: 3}
+  colorfulEffect: {fileID: 4146185832953641398, guid: 9309c3eef4ddd7842a76988dd34fa610, type: 3}
 --- !u!114 &1494473538025020321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,7 +423,32 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  swapDuration: 0.3
+  movingCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.618123
+      outSlope: 1.618123
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.618
+      value: 1
+      inSlope: 1.618123
+      outSlope: 1.618123
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  bounceDuration: 0.3
   moveEase: 1
+  bounceEase: 6
   fadeDuration: 0.3
   fadeEase: 4

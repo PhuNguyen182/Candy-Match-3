@@ -19,14 +19,12 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override bool IsAvailable => false;
 
-        public override void Release()
-        {
-            
-        }
+        public override void Release() { }
 
-        public override void SetHealthPoint(int healthPoint)
-        {
-            
-        }
+        public override void InitMessages() { }
+
+        public override void ResetState() { }
+
+        public override void SetHealthPoint(int healthPoint) { }
     }
 }

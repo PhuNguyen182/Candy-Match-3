@@ -7,6 +7,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 {
     public class ColorfulBooster : BaseBoosterItem
     {
+        [Header("Effects")]
+        [SerializeField] private GameObject colorfulEffect;
+
+        private GameObject _effect;
+
         public override async UniTask Activate()
         {
             await UniTask.CompletedTask;
@@ -14,7 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 
         public override void Explode()
         {
-            
+            SimplePool.Spawn(colorfulEffect, EffectContainer.Transform, WorldPosition, Quaternion.identity);
         }
 
         public override void ReleaseItem()

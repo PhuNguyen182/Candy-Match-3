@@ -8,7 +8,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
     public class MatchTModel : BaseMatchModel
     {
-        protected override int minMatchCount => 4;
+        protected override int requiredItemCount => 4;
         public override MatchType MatchType => MatchType.MatchT;
         protected override List<SequencePattern> sequencePattern { get; }
 
@@ -24,6 +24,8 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 List<Vector3Int> sequence = GetRotatePositions(sequencePattern[0].Pattern, checkAngles[i]);
                 sequencePattern.Add(new(sequence));
             }
+
+            OnConstuctor();
         }
     }
 }

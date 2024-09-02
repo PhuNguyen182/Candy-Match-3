@@ -189,7 +189,7 @@ public static class SimplePool
     /// Spawns a copy of the specified prefab (instantiating one if required).
     /// NOTE: Remember that Awake() or Start() will only run on the very first
     /// spawn and that member variables won't get reset.  OnEnable will run
-    /// after spawning -- but remember that toggling IsActive will also
+    /// after spawning -- but remember that toggling CanCheck will also
     /// call that function.
     /// </summary>
 

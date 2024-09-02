@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Models.SpawnRules;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -17,17 +18,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly ItemManager _itemManager;
         private readonly GridCellManager _gridCellManager;
-        private readonly MatchItemsTask _matchItemsTask;
 
+        private MoveItemTask _moveItemTask;
         private CheckGridTask _checkGridTask;
         private Dictionary<Vector3Int, int> _spawnerPoints;
         private Dictionary<int, WeightedSpawnRule> _spawnRules;
 
-        public SpawnItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask, ItemManager itemManager)
+        public SpawnItemTask(GridCellManager gridCellManager, ItemManager itemManager)
         {
             _spawnerPoints = new();
             _gridCellManager = gridCellManager;
-            _matchItemsTask = matchItemsTask;
             _itemManager = itemManager;
         }
 
@@ -66,7 +66,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             
             Vector3 upWorldPosition = _gridCellManager.ConvertGridToWorldFunction(upGridPosition);
             Vector3 spawnPosition = _gridCellManager.ConvertGridToWorldFunction(position);
-            
+
+            gridCell.LockStates = LockStates.Moving;
             blockItem.SetWorldPosition(upWorldPosition);
             gridCell.SetBlockItem(blockItem, false);
 
@@ -76,7 +77,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 await animation.MoveTo(spawnPosition, duration);
             }
 
-            _checkGridTask.CheckMatchAtPosition(gridCell.GridPosition);
+            await _moveItemTask.MoveItem(gridCell);
         }
 
         public bool CheckSpawnable(IGridCell gridCell)
@@ -87,13 +88,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!gridCell.CanContainItem)
                 return false;
 
-            if (gridCell.HasItem)
+            if (gridCell.HasItem || gridCell.IsMatching || gridCell.IsMoving)
                 return false;
 
             if (!gridCell.IsSpawner)
                 return false;
 
             return true;
+        }
+
+        public void SetMoveItemTask(MoveItemTask moveItemTask)
+        {
+            _moveItemTask = moveItemTask;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
@@ -108,6 +114,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 spawnRule.Value.Dispose();
             }
 
+            _spawnerPoints.Clear();
             _spawnRules.Clear();
         }
     }

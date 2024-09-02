@@ -25,5 +25,9 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
         public abstract void SetHealthPoint(int healthPoint);
 
         public abstract void Release();
+
+        public abstract void InitMessages();
+
+        public abstract void ResetState();
     }
 }

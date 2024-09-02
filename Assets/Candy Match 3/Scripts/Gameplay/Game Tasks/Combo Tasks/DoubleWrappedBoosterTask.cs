@@ -5,15 +5,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.GridCells;
-using Cysharp.Threading.Tasks;
-using GlobalScripts.Extensions;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using GlobalScripts.Extensions;
+using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 {
     public class DoubleWrappedBoosterTask : IDisposable
     {
         private readonly GridCellManager _gridCellManager;
+        private readonly ExplodeItemTask _explodeItemTask;
         private readonly BreakGridTask _breakGridTask;
 
         private CancellationToken _token;
@@ -21,9 +22,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         private CheckGridTask _checkGridTask;
 
-        public DoubleWrappedBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
+        public DoubleWrappedBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ExplodeItemTask explodeItemTask)
         {
             _gridCellManager = gridCellManager;
+            _explodeItemTask = explodeItemTask;
             _breakGridTask = breakGridTask;
 
             _cts = new();
@@ -58,8 +60,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 positions.Add(min);
                 positions.Add(max);
 
-                await UniTask.DelayFrame(6, PlayerLoopTiming.Update, _token);
                 BoundsInt checkRange = BoundsExtension.Encapsulate(positions);
+                await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 _checkGridTask.CheckRange(checkRange);
             }
         }

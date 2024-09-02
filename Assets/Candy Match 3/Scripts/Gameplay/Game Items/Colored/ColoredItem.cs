@@ -2,17 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable
+    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect, IColorfulEffect
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
         [Header("Colored Sprites")]
         [SerializeField] private Sprite[] candyColors;
+
+        [Header("Effects")]
+        [SerializeField] private GameObject colorfulEffect;
+
+        private GameObject _colorfulEffect;
 
         public override bool CanBeReplace => true;
 
@@ -38,6 +44,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void ReleaseItem()
         {
+            if (_colorfulEffect != null)
+            {
+                SimplePool.Despawn(_colorfulEffect);
+                _colorfulEffect.transform.SetParent(EffectContainer.Transform);
+            }
+
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -97,6 +109,33 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
             return itemAnimation.SwapTo(position, duration, isMoveFirst);
+        }
+
+        public void PlayStartEffect()
+        {
+            
+        }
+
+        public void PlayMatchEffect()
+        {
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
+            EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
+        }
+
+        public void PlayBreakEffect(int healthPoint)
+        {
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
+            EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
+        }
+
+        public void PlayReplaceEffect()
+        {
+            EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
+        }
+
+        public void PlayColorfulEffect()
+        {
+            _colorfulEffect = SimplePool.Spawn(colorfulEffect, transform, transform.position, Quaternion.identity);
         }
     }
 }

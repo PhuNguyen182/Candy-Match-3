@@ -16,7 +16,7 @@ namespace CandyMatch3.Scripts.Common.Databases
 
         public void Initialize()
         {
-            SoundEffectCollection = soundEffectDatas.ToDictionary(key => key.SoundEffectType, value => value.SoundEffectClip);
+            SoundEffectCollection ??= soundEffectDatas.ToDictionary(key => key.SoundEffectType, value => value.SoundEffectClip);
         }
     }
 }
