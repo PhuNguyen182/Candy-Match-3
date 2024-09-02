@@ -227,6 +227,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask BreakMatchItem(IGridCell gridCell, int matchCount)
         {
+            BoundsInt attackRange = new();
             if (gridCell.GridStateful is IBreakable stateBreakable)
             {
                 Vector3Int position = gridCell.GridPosition;
@@ -252,9 +253,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
                 }
 
-                await _activateBoosterTask.ActivateBooster(gridCell, true, false);
+                await _activateBoosterTask.ActivateBooster(gridCell, true, true);
+                attackRange = _activateBoosterTask.GetAttackedBounds(booster);
                 ReleaseGridCell(gridCell);
+                
+                TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
+                await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
+                
                 gridCell.LockStates = LockStates.None;
+                _checkGridTask.CheckRange(attackRange);
                 return;
             }
 
