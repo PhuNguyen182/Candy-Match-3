@@ -42,8 +42,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private BoardInput boardInput;
 
         private ItemManager _itemManager;
-        private ItemFactory _itemFactory;
-        private StatefulFactory _statefulFactory;
+        private FactoryManager _factoryManager;
         private MetaItemManager _metaItemManager;
         private GridCellManager _gridCellManager;
         private FillBoardTask _fillBoardTask;
@@ -105,9 +104,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gridCellManager.AddTo(ref builder);
 
             _metaItemManager = new();
-            _itemFactory = new(itemDatabase, itemContainer);
-            _statefulFactory = new(_gridCellManager, statefulSpriteDatabase);
-            _itemManager = new(_gridCellManager, _metaItemManager, _itemFactory);
+            _factoryManager = new(_gridCellManager, statefulSpriteDatabase, itemDatabase, itemContainer);
+            _itemManager = new(_gridCellManager, _metaItemManager, _factoryManager.ItemFactory);
 
             _fillBoardTask = new(_gridCellManager, boardTilemap, tileDatabase, _itemManager);
             _fillBoardTask.AddTo(ref builder);
@@ -185,7 +183,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             for (int i = 0; i < levelModel.StatefulBlockPositions.Count; i++)
             {
                 var stateful = levelModel.StatefulBlockPositions[i];
-                IGridStateful gridStateful = _statefulFactory.Produce(stateful);
+                IGridStateful gridStateful = _factoryManager.ProduceStateful(stateful);
                 IGridCell gridCell = _gridCellManager.Get(stateful.Position);
                 gridCell.SetGridStateful(gridStateful);
             }

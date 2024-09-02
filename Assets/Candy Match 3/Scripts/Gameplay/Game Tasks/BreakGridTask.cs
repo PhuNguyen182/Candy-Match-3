@@ -53,6 +53,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public async UniTask BreakItem(Vector3Int position)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
+
             if (gridCell == null)
                 return;
 
@@ -138,7 +139,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (breakable.Break())
                 {
-                    blockItem.ItemBlast().Forget();
+                    await blockItem.ItemBlast();
 
                     if (blockItem is IItemEffect effect)
                         effect.PlayMatchEffect();
@@ -178,7 +179,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         return;
                     }
 
-                    await _activateBoosterTask.ActivateBooster(gridCell, true, true);
+                    await _activateBoosterTask.ActivateBooster(gridCell, true, false);
                     ReleaseGridCell(gridCell);
                 }
 
@@ -243,7 +244,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
                 }
 
-                await _activateBoosterTask.ActivateBooster(gridCell, true, true);
+                await _activateBoosterTask.ActivateBooster(gridCell, true, false);
                 ReleaseGridCell(gridCell);
                 gridCell.LockStates = LockStates.None;
                 return;

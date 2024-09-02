@@ -27,19 +27,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _token = _cts.Token;
         }
 
-        public async UniTask Blast(Vector3Int center, BoundsInt range)
+        public async UniTask Blast(Vector3Int pivot, BoundsInt range)
         {
-            using(var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> boundsEdge))
+            using(ListPool<Vector3Int>.Get(out List<Vector3Int> boundsEdge))
             {
                 boundsEdge.AddRange(range.Iterator2D());
-                IGridCell centerCell = _gridCellManager.Get(center);
+                IGridCell centerCell = _gridCellManager.Get(pivot);
                 Vector3 centerPosition = centerCell.WorldPosition;
 
                 IGridCell gridCell = null;
-                using (var explodeListPool = ListPool<UniTask>.Get(out List<UniTask> explodeTasks))
+                using (ListPool<UniTask>.Get(out List<UniTask> explodeTasks))
                 {
                     for (int i = 0; i < boundsEdge.Count; i++)
                     {
+                        if (boundsEdge[i] == pivot)
+                            continue;
+
                         gridCell = _gridCellManager.Get(boundsEdge[i]);
 
                         if (gridCell == null)
@@ -48,12 +51,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         if (!gridCell.HasItem)
                             continue;
 
-                        Vector3 direction = (gridCell.WorldPosition - centerPosition).normalized;
-
                         if (gridCell.BlockItem is IItemAnimation animation)
                         {
-                            direction = direction * Match3Constants.ExplodeAmplitude;
-                            explodeTasks.Add(animation.BounceInDirection(direction));
+                            Vector3 blockPosition = gridCell.WorldPosition;
+                            Vector3 direction = (gridCell.WorldPosition - centerPosition).normalized;
+
+                            float distance = GetDistance(pivot, gridCell.GridPosition);
+                            float bounce = Match3Constants.ExplodeAmplitude * Mathf.Log(distance, Match3Constants.ExplosionPower);
+                            explodeTasks.Add(animation.BounceInDirection(blockPosition + direction * bounce));
                         }
                     }
 
@@ -61,6 +66,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     await UniTask.NextFrame(_token);
                 }
             }
+        }
+
+        private float GetDistance(Vector3Int center, Vector3Int toPosition)
+        {
+            Vector3Int offset = toPosition - center;
+            float distance = offset.magnitude;
+            return distance;
         }
 
         public void Dispose()

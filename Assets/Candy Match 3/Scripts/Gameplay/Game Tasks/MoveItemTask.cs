@@ -37,8 +37,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public async UniTask MoveItem(IGridCell moveGridCell)
         {
             IGridCell currentGrid = moveGridCell;
-            IGridCell previousGrid = currentGrid;
-
             Vector3Int startPosition = currentGrid.GridPosition;
             IBlockItem blockItem = currentGrid.BlockItem;
 
@@ -82,12 +80,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 checkColumnIndex = 0;
+                currentGrid.SetBlockItem(null);
                 toGridCell.SetBlockItem(blockItem, false);
 
                 toGridCell.IsMoving = true;
                 currentGrid.LockStates = LockStates.None;
                 toGridCell.LockStates = LockStates.Moving;
-                currentGrid.SetBlockItem(null);
 
                 moveStepCount = moveStepCount + 1;
                 ExportMoveStep(moveStepCount, out outputMoveStep);
@@ -95,7 +93,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _checkGridTask.CheckAroundPosition(startPosition, 1);
                 await AnimateFallingItem(blockItem, toGridCell, moveStepCount);
 
-                previousGrid = currentGrid;
                 startPosition = toPosition;
                 currentGrid = toGridCell;
             }

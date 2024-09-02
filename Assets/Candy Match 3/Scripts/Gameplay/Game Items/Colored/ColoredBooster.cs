@@ -38,7 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             base.ResetItem();
             SetMatchable(true);
-            OnItemReset().Forget();
+            OnItemReset();
         }
 
         public override void SetMatchable(bool isMatchable)
@@ -203,13 +203,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAward);
         }
 
-        private async UniTask OnItemReset()
+        private void OnItemReset()
         {
             IsActivated = false;
-            IsNewCreated = true;
-
-            await UniTask.NextFrame(PlayerLoopTiming.FixedUpdate, destroyToken);
-            IsNewCreated = false;
         }
     }
 }

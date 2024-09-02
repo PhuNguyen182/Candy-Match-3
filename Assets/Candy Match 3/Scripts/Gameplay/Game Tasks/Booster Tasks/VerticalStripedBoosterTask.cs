@@ -4,8 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
 
@@ -38,10 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             using (var attactListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
             {
                 attackPositions.AddRange(activeBounds.GetColumn(position));
-
                 int count = attackPositions.Count;
-                Vector3Int min = attackPositions[0] + new Vector3Int(-1, 0);
-                Vector3Int max = attackPositions[count - 1] + new Vector3Int(1, 0);
 
                 using var brealListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
                 using var encapsulateListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> encapsulatePositions);
@@ -52,26 +50,41 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         continue;
 
                     encapsulatePositions.Add(attackPositions[i]);
-                    breakTasks.Add(_breakGridTask.BreakItem(attackPositions[i]));
+                    breakTasks.Add(BreakItem(attackPositions[i]));
                 }
 
                 await UniTask.WhenAll(breakTasks);
+                
+                Vector3Int min = attackPositions[0] + new Vector3Int(-1, 0);
+                Vector3Int max = attackPositions[count - 1] + new Vector3Int(1, 0);
+
                 encapsulatePositions.Add(min);
                 encapsulatePositions.Add(max);
 
-                BoundsInt attackedRange = BoundsExtension.Encapsulate(encapsulatePositions);
-
                 if(useDelay)
-                    await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
-                
-                if(!doNotCheck)
+                    await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
+
+                if (!doNotCheck)
+                {
+                    BoundsInt attackedRange = BoundsExtension.Encapsulate(encapsulatePositions);
                     _checkGridTask.CheckRange(attackedRange);
+                }
             }
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;
+        }
+
+        private async UniTask BreakItem(Vector3Int position)
+        {
+            IGridCell gridCell = _gridCellManager.Get(position);
+
+            if (gridCell == null || gridCell.IsLocked)
+                return;
+
+            await _breakGridTask.BreakItem(position);
         }
 
         public void Dispose()

@@ -10,6 +10,7 @@ using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using CandyMatch3.Scripts.Common.Constants;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -48,6 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 if (boosterCell.BlockItem is IBooster colorBooster)
                 {
                     booster = colorBooster;
+                    booster.IsActivated = true;
                     await booster.Activate();
                 }
 
@@ -97,6 +99,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 if (gridCell.BlockItem is IBooster colorBooster)
                 {
                     booster = colorBooster;
+                    booster.IsActivated = true;
                     await booster.Activate();
                 }
 
@@ -109,6 +112,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(fireTasks);
+                await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
