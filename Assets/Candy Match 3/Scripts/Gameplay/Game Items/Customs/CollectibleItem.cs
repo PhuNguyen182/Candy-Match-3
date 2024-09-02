@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Gameplay.Effects;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
@@ -28,6 +29,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public UniTask Collect()
         {
+            EffectManager.Instance.SpawnSpecialEffect(itemType, WorldPosition);
             return UniTask.CompletedTask;
         }
 

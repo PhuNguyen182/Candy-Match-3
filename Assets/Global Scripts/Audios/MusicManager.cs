@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using CandyMatch3.Scripts.Common.Databases;
+using CandyMatch3.Scripts.Common.Enums;
 
 namespace GlobalScripts.Audios
 {
@@ -11,6 +13,8 @@ namespace GlobalScripts.Audios
         [SerializeField] private AudioMixer audioMixer;
         [SerializeField] private AudioSource musicSource;
         [SerializeField] private AudioSource sfxSource;
+        [SerializeField] private AudioSource itemSource;
+        [SerializeField] private SoundEffectDatabase effectDatabase;
 
         public static event Action<float> OnMasterChange;
         public static event Action<float> OnMusicChange;
@@ -76,13 +80,30 @@ namespace GlobalScripts.Audios
             musicSource.Play();
         }
 
-        //public void PlaySoundEffect(SoundEffectEnum soundEffect, float volumeScale = 1, bool loop = false)
-        //{
-        //    SoundEffect sound = soundEffects.GetSoundEffect(soundEffect);
+        public void PlayItemSound(SoundEffectType soundEffect, float volumeScale = 1, bool loop = false)
+        {
+            AudioClip sound = effectDatabase.SoundEffectCollection[soundEffect];
 
-        //    if (sound != null)
-        //        PlaySoundEffect(sound.EffectClip, volumeScale, loop);
-        //}
+            if (sound != null)
+                PlayItemSound(sound, volumeScale, loop);
+        }
+
+        public void PlaySoundEffect(SoundEffectType soundEffect, float volumeScale = 1, bool loop = false)
+        {
+            AudioClip sound = effectDatabase.SoundEffectCollection[soundEffect];
+
+            if (sound != null)
+                PlaySoundEffect(sound, volumeScale, loop);
+        }
+
+        public void PlayItemSound(AudioClip soundClip, float volumeScale = 1, bool loop = false)
+        {
+            if (soundClip == null || sfxSource == null)
+                return;
+
+            itemSource.loop = loop;
+            itemSource.PlayOneShot(soundClip, volumeScale);
+        }
 
         public void PlaySoundEffect(AudioClip soundClip, float volumeScale = 1, bool loop = false)
         {

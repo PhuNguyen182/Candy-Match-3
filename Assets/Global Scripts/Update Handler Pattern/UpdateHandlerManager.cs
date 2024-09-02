@@ -6,86 +6,69 @@ namespace GlobalScripts.UpdateHandlerPattern
 {
     public class UpdateHandlerManager : Singleton<UpdateHandlerManager>
     {
-        private HashSet<IUpdateHandler> _updateHandlers;
-        private HashSet<IFixedUpdateHandler> _fixedUpdateHandlers;
-        private HashSet<ILateUpdateHandler> _lateUpdateHandlers;
-
-        protected override void OnAwake()
-        {
-            _updateHandlers = new();
-            _fixedUpdateHandlers = new();
-            _lateUpdateHandlers = new();
-        }
+        private HashSet<IUpdateHandler> _updateHandlers = new();
+        private HashSet<IFixedUpdateHandler> _fixedUpdateHandlers = new();
+        private HashSet<ILateUpdateHandler> _lateUpdateHandlers = new();
 
         private void Update()
         {
+            if (_updateHandlers.Count <= 0)
+                return;
+
             foreach (IUpdateHandler updateHandler in _updateHandlers)
             {
-                updateHandler.OnUpdate(Time.deltaTime);
+                if(updateHandler.IsActive)
+                    updateHandler.OnUpdate(Time.deltaTime);
             }
         }
 
         private void FixedUpdate()
         {
+            if (_fixedUpdateHandlers.Count <= 0)
+                return;
+
             foreach (IFixedUpdateHandler fixedUpdateHandler in _fixedUpdateHandlers)
             {
-                fixedUpdateHandler.OnFixedUpdate();
+                if (fixedUpdateHandler.IsActive)
+                    fixedUpdateHandler.OnFixedUpdate();
             }
         }
 
         public void AddUpdateBehaviour(IUpdateHandler handler)
         {
-            if (!_updateHandlers.Contains(handler))
-            {
-                _updateHandlers.Add(handler);
-            }
+            _updateHandlers.Add(handler);
         }
 
         public void AddFixedUpdateBehaviour(IFixedUpdateHandler handler)
         {
-            if (!_fixedUpdateHandlers.Contains(handler))
-            {
-                _fixedUpdateHandlers.Add(handler);
-            }
+            _fixedUpdateHandlers.Add(handler);
         }
 
         public void AddLateUpdateBehaviour(ILateUpdateHandler handler)
         {
-            if (!_lateUpdateHandlers.Contains(handler))
-            {
-                _lateUpdateHandlers.Add(handler);
-            }
+            _lateUpdateHandlers.Add(handler);
         }
 
         public void RemoveUpdateBehaviour(IUpdateHandler handler)
         {
-            if (_updateHandlers.Contains(handler))
-            {
-                _updateHandlers.Remove(handler);
-            }
+            _updateHandlers.Remove(handler);
         }
 
         public void RemoveFixedUpdateBehaviour(IFixedUpdateHandler handler)
         {
-            if (_fixedUpdateHandlers.Contains(handler))
-            {
-                _fixedUpdateHandlers.Remove(handler);
-            }
+            _fixedUpdateHandlers.Remove(handler);
         }
 
         public void RemoveLateUpdateBehaviour(ILateUpdateHandler handler)
         {
-            if (_lateUpdateHandlers.Contains(handler))
-            {
-                _lateUpdateHandlers.Remove(handler);
-            }
+            _lateUpdateHandlers.Remove(handler);
         }
 
         private void OnDestroy()
         {
-            _updateHandlers?.Clear();
-            _fixedUpdateHandlers?.Clear();
-            _lateUpdateHandlers?.Clear();
+            _updateHandlers.Clear();
+            _fixedUpdateHandlers.Clear();
+            _lateUpdateHandlers.Clear();
         }
     }
 }

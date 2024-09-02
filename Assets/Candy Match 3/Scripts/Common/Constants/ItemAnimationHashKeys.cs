@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CandyMatch3.Scripts.Common.Constants
 {
-    public class ItemAnimationHashKeys
+    public struct ItemAnimationHashKeys
     {
         public static readonly int BounceHash = Animator.StringToHash("Bounce");
         public static readonly int JumpDownHash = Animator.StringToHash("JumpDown");

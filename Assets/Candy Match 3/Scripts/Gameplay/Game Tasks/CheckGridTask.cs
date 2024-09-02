@@ -1,31 +1,35 @@
-using R3;
 using System;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
+using GlobalScripts.Extensions;
+using GlobalScripts.UpdateHandlerPattern;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
-using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
-    public class CheckGridTask : IDisposable
+    public class CheckGridTask : IDisposable, IFixedUpdateHandler
     {
         private readonly GridCellManager _gridCellManager;
         private readonly MoveItemTask _moveItemTask;
         private readonly MatchItemsTask _matchItemsTask;
         private readonly SpawnItemTask _spawnItemTask;
 
-        private bool _anyItemMove;
         private List<Vector3Int> _positionsToCheck;
+        private List<Vector3Int> _positionsToMatch;
         private HashSet<Vector3Int> _checkPositions;
+        private HashSet<Vector3Int> _matchPositions;
 
+        private bool _checkMatch = false;
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
-        private IDisposable _disposable;
+        public bool CanCheck { get; set; }
+        public bool IsActive { get; set; }
 
         public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask, MatchItemsTask matchItemsTask)
         {
@@ -34,29 +38,33 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _spawnItemTask = spawnItemTask;
             _matchItemsTask = matchItemsTask;
 
-            _positionsToCheck = new();
             _checkPositions = new();
+            _positionsToCheck = new();
+            _positionsToMatch = new();
+            _matchPositions = new();
 
             _cts = new();
             _token = _cts.Token;
+            
+            CanCheck = true;
+            IsActive = true;
 
-            DisposableBuilder builder = Disposable.CreateBuilder();
-            
-            Observable.EveryUpdate(UnityFrameProvider.FixedUpdate)
-                      .Subscribe(_ => Update()).AddTo(ref builder);
-            
-            _disposable = builder.Build();
+            UpdateHandlerManager.Instance.AddFixedUpdateBehaviour(this);
         }
 
-        private void Update()
+        public void OnFixedUpdate()
         {
+            if (!CanCheck)
+            {
+                return;
+            }
+
             if (_checkPositions.Count > 0)
             {
                 _positionsToCheck.Clear();
                 _positionsToCheck.AddRange(_checkPositions);
                 _checkPositions.Clear();
 
-                _anyItemMove = false;
                 for (int i = 0; i < _positionsToCheck.Count; i++)
                 {
                     IGridCell checkCell = _gridCellManager.Get(_positionsToCheck[i]);
@@ -68,9 +76,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     if (_moveItemTask.CheckMoveable(checkCell))
                     {
-                        _anyItemMove = true;
                         _moveItemTask.MoveItem(checkCell).Forget();
                     }
+                }
+            }
+
+            else
+            {
+                if (_matchPositions.Count > 0 && !_checkMatch)
+                {
+                    CheckMatchPositions(_matchPositions).Forget();
                 }
             }
         }
@@ -85,9 +100,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void CheckMatchAtPosition(Vector3Int position)
         {
-            if(_matchItemsTask.CheckMatchAt(position))
+            if (_matchItemsTask.CheckMatchAt(position))
             {
-                _matchItemsTask.Match(position).Forget();
+                _matchPositions.Add(position);
             }
         }
 
@@ -118,13 +133,44 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkPositions.Add(position + direction);
         }
 
+        private async UniTask CheckMatchPositions(HashSet<Vector3Int> matchPositions)
+        {
+            CanCheck = false;
+            _checkMatch = true;
+
+            await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
+            using(var matchPositionPool = ListPool<Vector3Int>.Get(out List<Vector3Int> checkMatchPositions))
+            {
+                checkMatchPositions.AddRange(matchPositions);
+
+                using (var matchTaskPool = ListPool<UniTask>.Get(out List<UniTask> matchTasks))
+                {
+                    for (int i = 0; i < checkMatchPositions.Count; i++)
+                    {
+                        Vector3Int position = checkMatchPositions[i];
+                        
+                        if (_matchItemsTask.CheckMatchAt(position))
+                            matchTasks.Add(_matchItemsTask.Match(position));
+                        
+                        matchPositions.Remove(position);
+                    }
+
+                    await UniTask.WhenAll(matchTasks);
+                }
+            }
+
+            CanCheck = true;
+            _checkMatch = false;
+        }
+
         public void Dispose()
         {
             _cts.Dispose();
-            _disposable.Dispose();
-
             _positionsToCheck.Clear();
             _checkPositions.Clear();
+            _matchPositions.Clear();
+
+            UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }
     }
 }

@@ -1,4 +1,5 @@
 using R3;
+using System;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +28,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [Header("Databases")]
         [SerializeField] private ItemDatabase itemDatabase;
         [SerializeField] private TileDatabase tileDatabase;
+        [SerializeField] private EffectDatabase effectDatabase;
         [SerializeField] private MiscCollection miscCollection;
         [SerializeField] private StatefulSpriteDatabase statefulSpriteDatabase;
 
@@ -40,8 +42,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private BoardInput boardInput;
 
         private ItemManager _itemManager;
-        private ItemFactory _itemFactory;
-        private StatefulFactory _statefulFactory;
+        private FactoryManager _factoryManager;
         private MetaItemManager _metaItemManager;
         private GridCellManager _gridCellManager;
         private FillBoardTask _fillBoardTask;
@@ -50,6 +51,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private SpawnItemTask _spawnItemTask;        
         private GameTaskManager _gameTaskManager;
 
+        private int _check = 0;
         private CancellationToken _destroyToken;
 
         private void Awake()
@@ -67,10 +69,31 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             }
         }
 
+#if UNITY_EDITOR
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                _check = _check + 1;
+
+                if (_check % 4 == 0)
+                    Time.timeScale = 1;
+                else if (_check % 4 == 1)
+                    Time.timeScale = 0.1f;
+                else if (_check % 4 == 2)
+                    Time.timeScale = 0.05f;
+                else
+                    Time.timeScale = 0.02f;
+            }
+        }
+#endif
+
         private void Setup()
         {
             _destroyToken = this.GetCancellationTokenOnDestroy();
+#if !UNITY_EDITOR
             Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+#endif
         }
 
         private void Initialize()
@@ -81,9 +104,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gridCellManager.AddTo(ref builder);
 
             _metaItemManager = new();
-            _itemFactory = new(itemDatabase, itemContainer);
-            _statefulFactory = new(_gridCellManager, statefulSpriteDatabase);
-            _itemManager = new(_gridCellManager, _metaItemManager, _itemFactory);
+            _factoryManager = new(_gridCellManager, statefulSpriteDatabase, itemDatabase, itemContainer);
+            _itemManager = new(_gridCellManager, _metaItemManager, _factoryManager.ItemFactory);
 
             _fillBoardTask = new(_gridCellManager, boardTilemap, tileDatabase, _itemManager);
             _fillBoardTask.AddTo(ref builder);
@@ -94,10 +116,11 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _matchItemsTask = new(_gridCellManager, _breakGridTask);
             _matchItemsTask.AddTo(ref builder);
 
-            _spawnItemTask = new(_gridCellManager, _matchItemsTask, _itemManager);
+            _spawnItemTask = new(_gridCellManager, _itemManager);
             _spawnItemTask.AddTo(ref builder);
 
-            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask, _matchItemsTask, _metaItemManager, _breakGridTask);
+            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
+                                   , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);
@@ -160,7 +183,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             for (int i = 0; i < levelModel.StatefulBlockPositions.Count; i++)
             {
                 var stateful = levelModel.StatefulBlockPositions[i];
-                IGridStateful gridStateful = _statefulFactory.Produce(stateful);
+                IGridStateful gridStateful = _factoryManager.ProduceStateful(stateful);
                 IGridCell gridCell = _gridCellManager.Get(stateful.Position);
                 gridCell.SetGridStateful(gridStateful);
             }
@@ -200,6 +223,12 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         public Vector3Int ConvertWorldToGrid(Vector3 position)
         {
             return boardTilemap.WorldToCell(position);
+        }
+
+        private void OnDestroy()
+        {
+            GC.Collect();
+            GC.SuppressFinalize(this);
         }
     }
 }

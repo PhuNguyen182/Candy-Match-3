@@ -1,5 +1,8 @@
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
+
 #if UNITASK_ADDRESSABLE_SUPPORT
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceLocations;
@@ -8,10 +11,19 @@ using Cysharp.Threading.Tasks;
 
 namespace GlobalScripts.Utils
 {
-#if UNITASK_ADDRESSABLE_SUPPORT
     public static class AddressablesUtils
     {
-        public static async UniTask<bool> DownloadContent(string key, bool autoRelease = true)
+#if UNITASK_ADDRESSABLE_SUPPORT
+        public static async UniTask LoadSceneViaAddressable(string key, LoadSceneMode loadMode = LoadSceneMode.Single
+            , bool activateOnLoad = true, int priority = 100)
+        {
+            bool isKeyValid = await IsKeyValid(key);
+
+            if (isKeyValid)
+                await Addressables.LoadSceneAsync(key, loadMode, activateOnLoad, priority);
+        }
+
+        public static async UniTask<bool> DownloadContent(string key, bool autoRelease = true, CancellationToken cancellationToken = default)
         {
             bool isKeyValid = await IsKeyValid(key);
             
@@ -21,7 +33,8 @@ namespace GlobalScripts.Utils
 
                 if (isDownloadable)
                 {
-                    await Addressables.DownloadDependenciesAsync(key, autoRelease);
+                    await Addressables.DownloadDependenciesAsync(key, autoRelease)
+                                      .WithCancellation(cancellationToken);
                     return true;
                 }
             }
@@ -29,7 +42,7 @@ namespace GlobalScripts.Utils
             return false;
         }
 
-        public static async UniTask<bool> DownloadContent(List<string> key, bool autoRelease = true)
+        public static async UniTask<bool> DownloadContent(List<string> key, bool autoRelease = true, CancellationToken cancellationToken = default)
         {
             bool isKeyValid = await IsKeyValid(key);
 
@@ -39,7 +52,8 @@ namespace GlobalScripts.Utils
 
                 if (isDownloadable)
                 {
-                    await Addressables.DownloadDependenciesAsync(key, autoRelease);
+                    await Addressables.DownloadDependenciesAsync(key, autoRelease)
+                                      .WithCancellation(cancellationToken);
                     return true;
                 }
             }
@@ -60,7 +74,7 @@ namespace GlobalScripts.Utils
             return false;
         }
 
-        public static async UniTask<bool> DeleteContent(List<string> key, bool autoRelease = true)
+        public static async UniTask<bool> DeleteContent(List<string> key)
         {
             bool isKeyValid = await IsKeyValid(key);
 
@@ -96,6 +110,6 @@ namespace GlobalScripts.Utils
             IList<IResourceLocation> locations = await Addressables.LoadResourceLocationsAsync(key);
             return locations.Count > 0;
         }
-    }
 #endif
+    }
 }

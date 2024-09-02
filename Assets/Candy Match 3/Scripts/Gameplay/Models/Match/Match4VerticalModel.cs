@@ -8,7 +8,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
     public class Match4VerticalModel : BaseMatchModel
     {
-        protected override int minMatchCount => 3;
+        protected override int requiredItemCount => 3;
         public override MatchType MatchType => MatchType.Match4Vertical;
 
         public Match4VerticalModel(GridCellManager gridCellManager) : base(gridCellManager)
@@ -24,6 +24,8 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
             sequencePattern.Add(new(sequence1));
             sequencePattern.Add(new(sequence2));
+
+            OnConstuctor();
         }
 
         protected override List<SequencePattern> sequencePattern { get; }

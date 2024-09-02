@@ -4,10 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Gameplay.Effects;
+using CandyMatch3.Scripts.Common.Constants;
 using GlobalScripts.Extensions;
+using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 {
@@ -34,6 +37,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _breakGridTask.ReleaseGridCell(gridCell1);
             _breakGridTask.ReleaseGridCell(gridCell2);
 
+            Vector3 blastPosition = gridCell2.WorldPosition;
             Vector3Int checkPosition = gridCell2.GridPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
 
@@ -61,27 +65,38 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     breakTasks.Add(_breakGridTask.BreakItem(columnListPositions[i]));
                 }
 
+                PlayEffect(blastPosition);
                 await UniTask.WhenAll(breakTasks);
-                await UniTask.DelayFrame(6, PlayerLoopTiming.Update, _token);
 
                 int horizontalCount = rowListPositions.Count;
+                int verticalCount = columnListPositions.Count;
+
                 Vector3Int minHorizontal = rowListPositions[0] + new Vector3Int(0, -1);
+                Vector3Int minVertical = columnListPositions[0] + new Vector3Int(-1, 0);
                 Vector3Int maxHorizontal = rowListPositions[horizontalCount - 1] + new Vector3Int(0, 1);
+                Vector3Int maxVertical = columnListPositions[horizontalCount - 1] + new Vector3Int(1, 0);
+
                 rowListPositions.Add(minHorizontal);
                 rowListPositions.Add(maxHorizontal);
-
-                int verticalCount = columnListPositions.Count;
-                Vector3Int minVertical = columnListPositions[0] + new Vector3Int(-1, 0);
-                Vector3Int maxVertical = columnListPositions[horizontalCount - 1] + new Vector3Int(1, 0);
                 columnListPositions.Add(minVertical);
                 columnListPositions.Add(maxVertical);
 
                 BoundsInt horizontalCheckBounds = BoundsExtension.Encapsulate(rowListPositions);
                 BoundsInt verticalCheckBounds = BoundsExtension.Encapsulate(columnListPositions);
 
+                await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
                 _checkGridTask.CheckRange(horizontalCheckBounds);
                 _checkGridTask.CheckRange(verticalCheckBounds);
             }
+        }
+
+        private void PlayEffect(Vector3 position)
+        {
+            Vector3 horizontal = new(0, position.y);
+            Vector3 vertical = new(position.x, 0);
+
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Horizontal, horizontal);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Vertical, vertical);
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

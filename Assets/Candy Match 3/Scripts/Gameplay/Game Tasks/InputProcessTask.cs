@@ -114,17 +114,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private Vector3Int GetSwapDirection(Vector3 direction)
         {
-            if (IsCloseToDirection(new Vector2(0, 1), direction))
-                return new(0, 1);
+            if (IsCloseToDirection(Vector2.up, direction))
+                return Vector3Int.up;
             
-            else if (IsCloseToDirection(new Vector2(-1, 0), direction))
-                return new(-1, 0);
+            else if (IsCloseToDirection(Vector2.left, direction))
+                return Vector3Int.left;
             
-            else if (IsCloseToDirection(new Vector2(0, -1), direction))
-                return new(0, -1);
+            else if (IsCloseToDirection(Vector2.down, direction))
+                return Vector3Int.down;
             
-            else if (IsCloseToDirection(new Vector2(1, 0), direction))
-                return new(1, 0);
+            else if (IsCloseToDirection(Vector2.right, direction))
+                return Vector3Int.right;
 
             return Vector3Int.zero;
         }
@@ -142,9 +142,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (gridCell.BlockItem is IItemAnimation animation)
             {
-                animation.BounceOnTap();
-                Debug.Log(gridCell.BlockItem.GetName());
+                if (!gridCell.IsLocked)
+                    animation.BounceOnTap();
             }
+
+            PrintName(gridCell);
+        }
+
+        private void PrintName(IGridCell gridCell)
+        {
+#if UNITY_EDITOR
+            Debug.Log(gridCell.BlockItem.GetName());
+#endif
         }
 
         public void Dispose()

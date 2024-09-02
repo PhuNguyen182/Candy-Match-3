@@ -202,7 +202,7 @@ namespace CandyMatch3.Scripts.Common.Factories
 
         private void PoolPreload()
         {
-            SimplePool.PoolPreLoad(_itemDatabase.ColoredItem.gameObject, 100, _itemContainer);
+            SimplePool.PoolPreLoad(_itemDatabase.ColoredItem.gameObject, 81, _itemContainer);
             SimplePool.PoolPreLoad(_itemDatabase.ColoredBooster.gameObject, 25, _itemContainer);
         }
     }

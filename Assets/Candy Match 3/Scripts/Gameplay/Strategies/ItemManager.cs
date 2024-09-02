@@ -22,10 +22,15 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             _itemFactory = itemFactory;
         }
 
+        public IBlockItem Get(Vector3Int position)
+        {
+            return _metaItemManager.Get(position);
+        }
+
         public IBlockItem Create(BlockItemPosition itemData)
         {
             IBlockItem item = _itemFactory.Produce(itemData.ItemData);
-            return item;
+            return _metaItemManager.Add(itemData.Position, item);
         }
 
         public IBlockItem Add(BlockItemPosition itemData)
@@ -187,6 +192,5 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
 
             return itemType;
         }
-
     }
 }

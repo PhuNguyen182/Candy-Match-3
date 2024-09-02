@@ -11,6 +11,8 @@ namespace GlobalScripts.Pool
 
         private float _timer = 0;
 
+        public bool IsActive { get; set; }
+
         private void Awake()
         {
             UpdateHandlerManager.Instance.AddUpdateBehaviour(this);
@@ -19,6 +21,7 @@ namespace GlobalScripts.Pool
         private void OnEnable()
         {
             _timer = 0;
+            IsActive = true;
         }
 
         public void OnUpdate(float deltaTime)
@@ -34,6 +37,11 @@ namespace GlobalScripts.Pool
         public void SetDuration(float duration)
         {
             this.duration = duration;
+        }
+
+        private void OnDisable()
+        {
+            IsActive = false;
         }
 
         private void OnDestroy()

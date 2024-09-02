@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
@@ -26,10 +27,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private readonly ColorfulWrappedBoosterTask _colorfulWrappedBoosterTask;
         private readonly DoubleColorfulBoosterTask _doubleColorfulBoosterTask;
 
+        private CheckGridTask _checkGridTask;
         private IDisposable _disposable;
 
-        public ComboBoosterHandleTask(GridCellManager gridCellManager, BreakGridTask breakGridTask
-            , ItemManager itemManager, ActivateBoosterTask activateBoosterTask)
+        public ComboBoosterHandleTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ItemManager itemManager
+            , ActivateBoosterTask activateBoosterTask, EffectDatabase effectDatabase, ExplodeItemTask explodeItemTask)
         {
             _itemManager = itemManager;
             _gridCellManager = gridCellManager;
@@ -44,16 +46,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _stripedWrappedBoosterTask = new(_gridCellManager, _breakGridTask);
             _stripedWrappedBoosterTask.AddTo(ref builder);
 
-            _doubleWrappedBoosterTask = new(_gridCellManager, _breakGridTask);
+            _doubleWrappedBoosterTask = new(_gridCellManager, _breakGridTask, explodeItemTask);
             _doubleWrappedBoosterTask.AddTo(ref builder);
 
-            _colorfulStripedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask, _activateBoosterTask);
+            _colorfulStripedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask
+                , _activateBoosterTask, effectDatabase.ColorfulFireray);
             _colorfulStripedBoosterTask.AddTo(ref builder);
 
-            _colorfulWrappedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask, _activateBoosterTask);
+            _colorfulWrappedBoosterTask = new(_itemManager, _gridCellManager, _breakGridTask
+                , _activateBoosterTask, effectDatabase.ColorfulFireray);
             _colorfulWrappedBoosterTask.AddTo(ref builder);
 
-            _doubleColorfulBoosterTask = new(_gridCellManager, _breakGridTask);
+            _doubleColorfulBoosterTask = new(_gridCellManager, _breakGridTask, effectDatabase.ColorfulFireray);
             _doubleColorfulBoosterTask.AddTo(ref builder);
 
             _disposable = builder.Build();
@@ -61,6 +65,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public async UniTask HandleComboBooster(IGridCell gridCell1, IGridCell gridCell2)
         {
+            _checkGridTask.CanCheck = false;
             if (IsDoubleStripedCombo(gridCell1, gridCell2))
                 await _doubleStripedBoosterTask.Activate(gridCell1, gridCell2);
 
@@ -78,9 +83,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             else if (IsDoubleColorfulCombo(gridCell1, gridCell2))
                 await _doubleColorfulBoosterTask.Activate(gridCell1, gridCell2);
+            
+            _checkGridTask.CanCheck = true;
         }
 
-        public async UniTask CombineColorItemWithColorItem(IGridCell gridCell1, IGridCell gridCell2)
+        public async UniTask CombineColorfulItemWithColorItem(IGridCell gridCell1, IGridCell gridCell2)
         {
             IBlockItem blockItem1 = gridCell1.BlockItem;
             IBlockItem blockItem2 = gridCell2.BlockItem;
@@ -160,7 +167,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         private bool IsStripedBooster(IBlockItem blockItem)
         {
-            if (blockItem is ISetColorBooster colorBooster)
+            if (blockItem is IColorBooster colorBooster)
                 return colorBooster.ColorBoosterType == ColorBoosterType.Horizontal
                     || colorBooster.ColorBoosterType == ColorBoosterType.Vertical;
 
@@ -169,7 +176,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         private bool IsWrappedBooster(IBlockItem blockItem)
         {
-            if (blockItem is ISetColorBooster colorBooster)
+            if (blockItem is IColorBooster colorBooster)
                 return colorBooster.ColorBoosterType == ColorBoosterType.Wrapped;
 
             return false;
@@ -191,7 +198,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             IBlockItem blockItem1 = gridCell1.BlockItem;
             IBlockItem blockItem2 = gridCell2.BlockItem;
 
-            if (blockItem1 is ISetColorBooster && blockItem2 is ISetColorBooster)
+            if (blockItem1 is IColorBooster && blockItem2 is IColorBooster)
                 return true;
 
             return false;
@@ -208,10 +215,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
-            _doubleStripedBoosterTask.SetCheckGridTask(checkGridTask);
-            _stripedWrappedBoosterTask.SetCheckGridTask(checkGridTask);
-            _doubleWrappedBoosterTask.SetCheckGridTask(checkGridTask);
-            _doubleColorfulBoosterTask.SetCheckGridTask(checkGridTask);
+            _checkGridTask = checkGridTask;
+            _doubleStripedBoosterTask.SetCheckGridTask(_checkGridTask);
+            _stripedWrappedBoosterTask.SetCheckGridTask(_checkGridTask);
+            _doubleWrappedBoosterTask.SetCheckGridTask(_checkGridTask);
+            _doubleColorfulBoosterTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

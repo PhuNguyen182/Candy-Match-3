@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
-    public class MoveableAndBreakableItem : BaseItem, ISetHealthPoint, IAdjcentBreakable, IItemAnimation
+    public class MoveableAndBreakableItem : BaseItem, ISetHealthPoint, IAdjcentBreakable, IItemAnimation, IItemEffect
     {
         [SerializeField] private Sprite[] itemHealthStates;
         [SerializeField] private ItemAnimation itemAnimation;
@@ -92,6 +93,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
         {
             Sprite sprite = itemHealthStates[_healthPoint - 1];
             itemGraphics.SetItemSprite(sprite);
+        }
+
+        public void PlayStartEffect()
+        {
+            
+        }
+
+        public void PlayMatchEffect()
+        {
+            
+        }
+
+        public void PlayBreakEffect(int healthPoint)
+        {
+            EffectManager.Instance.SpawnSpecialEffect(itemType, WorldPosition);
+        }
+
+        public void PlayReplaceEffect()
+        {
+            
         }
     }
 }

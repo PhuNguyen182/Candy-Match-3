@@ -8,7 +8,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
     public class Match5Model : BaseMatchModel
     {
-        protected override int minMatchCount => 4;
+        protected override int requiredItemCount => 4;
         public override MatchType MatchType => MatchType.Match5;
         protected override List<SequencePattern> sequencePattern { get; }
 
@@ -16,7 +16,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         {
             sequencePattern = new()
             {
-                new(new() { new(-2, 0), new(-1, 0), new(1, 0), new(2, 0), new(0, 1), new(0, 2) }),
+                new(new() { new(-2, 0), new(-1, 0), new(1, 0), new(2, 0) }),
                 new(new() { new(1, 0), new(2, 0), new(3, 0), new(4, 0) }), // use for falling check
             };
 
@@ -28,6 +28,8 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 sequencePattern.Add(new(sequence1));
                 sequencePattern.Add(new(sequence2));
             }
+
+            OnConstuctor();
         }
     }
 }

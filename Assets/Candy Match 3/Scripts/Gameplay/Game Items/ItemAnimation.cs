@@ -14,10 +14,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] private Animator itemAnimator;
         [SerializeField] private SpriteRenderer itemRenderer;
         [SerializeField] private AnimationCurve fallenCurve;
+        [SerializeField] private AnimationCurve movingCurve;
 
         [Header("Movement")]
         [SerializeField] private float bounceDuration = 0.3f;
-        [SerializeField] private Ease moveEase = Ease.OutQuad;
         [SerializeField] private Ease bounceEase = Ease.OutQuad;
 
         [Header("Fading")]
@@ -40,24 +40,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public UniTask MoveTo(Vector3 toPosition, float duration)
         {
-            _moveTween ??= CreateMoveTween(toPosition, duration, moveEase);
+            _moveTween ??= CreateMoveTween(toPosition, duration);
             _moveTween.ChangeValues(transform.position, toPosition, duration);
             _moveTween.Play();
 
             TimeSpan totalDuration = TimeSpan.FromSeconds(_moveTween.Duration());
-            return UniTask.Delay(totalDuration , cancellationToken: _destroyToken);
+            return UniTask.Delay(totalDuration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
         }
 
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
             SwapItemLayer(isMoveFirst);
-            _moveTween ??= CreateMoveTween(position, duration, moveEase);
+            _moveTween ??= CreateMoveTween(position, duration);
             _moveTween.ChangeValues(transform.position, position, duration);
             _moveTween.Play();
             SwapItemLayer(false);
 
             TimeSpan totalDuration = TimeSpan.FromSeconds(_moveTween.Duration());
-            return UniTask.Delay(totalDuration, cancellationToken: _destroyToken);
+            return UniTask.Delay(totalDuration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
         }
 
         public UniTask BounceMove(Vector3 position)
@@ -69,8 +69,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             _bounceMoveTween.Rewind();
             _bounceMoveTween.Play();
 
-            float duration = _bounceMoveTween.Duration();
-            return UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken: _destroyToken);
+            TimeSpan duration = TimeSpan.FromSeconds(_bounceMoveTween.Duration());
+            return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
         }
 
         public void JumpDown(float amptitude)
@@ -87,8 +87,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
                 itemAnimator.SetTrigger(ItemAnimationHashKeys.MatchHash);
             else
                 itemAnimator.ResetTrigger(ItemAnimationHashKeys.MatchHash);
-            
-            return UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _destroyToken);
+
+            TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
+            return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
         }
 
         public void BounceTap()
@@ -103,9 +104,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
                             .SetAutoKill(false);
         }
 
-        private Tweener CreateMoveTween(Vector3 toPosition, float duration, Ease ease)
+        private Tweener CreateMoveTween(Vector3 toPosition, float duration)
         {
-            return transform.DOMove(toPosition, duration).SetEase(ease).SetAutoKill(false);
+            return transform.DOMove(toPosition, duration).SetEase(movingCurve).SetAutoKill(false);
         }
 
         private void SwapItemLayer(bool isPrioritized)
@@ -116,6 +117,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private void OnDestroy()
         {
             _moveTween?.Kill();
+            _bounceMoveTween?.Kill();
             _swapTween?.Kill();
         }
     }

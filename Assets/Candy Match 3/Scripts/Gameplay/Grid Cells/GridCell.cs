@@ -1,3 +1,4 @@
+using R3;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,29 +10,56 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
     public class GridCell : IGridCell
     {
         private int _gridId;
+        private bool _isMoving;
         private Vector3 _worldPosition;
 
         private IBlockItem _blockItem;
+        private LockStates _lockStates;
         private IGridStateful _gridStateful;
         private IGridCellView _gridCellView;
+
+        public GridCell()
+        {
+            CheckLockProperty = new();
+        }
 
         public int GridID => _gridId;
         public bool HasItem => _blockItem != null;
         public bool CanMove => !_gridStateful.IsLocked;
         public bool IsLocked => LockStates != LockStates.None;
         public bool IsAvailable => _gridStateful != null && _gridStateful.IsAvailable;
-        public bool IsMoveable => HasItem ? (!IsLocked && !_gridStateful.IsLocked && _blockItem.IsMoveable) : true;
+        public bool IsMoveable => HasItem ? (!IsLocked && !_gridStateful.IsLocked && _blockItem.IsMoveable) : false;
         public bool CanSetItem => _gridStateful.CanContainItem && !_gridStateful.IsLocked && !HasItem;
         public bool CanContainItem => _gridStateful.CanContainItem;
 
-        public bool IsMoving { get; set; }
         public bool IsSpawner { get; set; }
         public bool CanPassThrough { get; set; }
+        public bool IsMatching { get; set; }
         public bool IsCollectible { get; set; }
+
+        public bool IsMoving
+        {
+            get => _isMoving;
+            set
+            {
+                _isMoving = value;
+                
+                if(HasItem)
+                    _blockItem.IsMoving = _isMoving;
+            }
+        }
 
         public ItemType ItemType => _blockItem.ItemType;
         public CandyColor CandyColor => HasItem ? _blockItem.CandyColor : CandyColor.None;
-        public LockStates LockStates { get; set; }
+        public LockStates LockStates
+        {
+            get => _lockStates;
+            set
+            {
+                _lockStates = value;
+                CheckLockProperty.Value = _lockStates != LockStates.None;
+            }
+        }
 
         public Vector3 WorldPosition => _worldPosition;
         public Vector3Int GridPosition { get; set; }
@@ -39,6 +67,8 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public IGridStateful GridStateful => _gridStateful;
         public IGridCellView GridCellView => _gridCellView;
         public IBlockItem BlockItem => _blockItem;
+
+        public ReactiveProperty<bool> CheckLockProperty { get; }
 
         public void ReleaseGrid()
         {
@@ -55,11 +85,13 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
         public void SetBlockItem(IBlockItem blockItem, bool isSnapped = true)
         {
+            IsMatching = false;
             _blockItem = blockItem;
             
             if (_blockItem != null)
             {
                 _blockItem.GridPosition = GridPosition;
+
                 if (isSnapped)
                     blockItem.SetWorldPosition(WorldPosition);
             }
