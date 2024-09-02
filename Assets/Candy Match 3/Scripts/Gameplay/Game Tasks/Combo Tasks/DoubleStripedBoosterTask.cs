@@ -8,6 +8,7 @@ using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Effects;
+using CandyMatch3.Scripts.Common.Constants;
 using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
 
@@ -68,21 +69,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 await UniTask.WhenAll(breakTasks);
 
                 int horizontalCount = rowListPositions.Count;
+                int verticalCount = columnListPositions.Count;
+
                 Vector3Int minHorizontal = rowListPositions[0] + new Vector3Int(0, -1);
+                Vector3Int minVertical = columnListPositions[0] + new Vector3Int(-1, 0);
                 Vector3Int maxHorizontal = rowListPositions[horizontalCount - 1] + new Vector3Int(0, 1);
+                Vector3Int maxVertical = columnListPositions[horizontalCount - 1] + new Vector3Int(1, 0);
+
                 rowListPositions.Add(minHorizontal);
                 rowListPositions.Add(maxHorizontal);
-
-                int verticalCount = columnListPositions.Count;
-                Vector3Int minVertical = columnListPositions[0] + new Vector3Int(-1, 0);
-                Vector3Int maxVertical = columnListPositions[horizontalCount - 1] + new Vector3Int(1, 0);
                 columnListPositions.Add(minVertical);
                 columnListPositions.Add(maxVertical);
 
                 BoundsInt horizontalCheckBounds = BoundsExtension.Encapsulate(rowListPositions);
                 BoundsInt verticalCheckBounds = BoundsExtension.Encapsulate(columnListPositions);
 
-                await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
+                await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
                 _checkGridTask.CheckRange(horizontalCheckBounds);
                 _checkGridTask.CheckRange(verticalCheckBounds);
             }

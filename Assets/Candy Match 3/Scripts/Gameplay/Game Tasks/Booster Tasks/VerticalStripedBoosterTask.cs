@@ -21,6 +21,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
+        public BoundsInt AttackRange { get; private set; }
+
         public VerticalStripedBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
@@ -61,14 +63,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 encapsulatePositions.Add(min);
                 encapsulatePositions.Add(max);
 
-                if(useDelay)
+                AttackRange = BoundsExtension.Encapsulate(encapsulatePositions);
+
+                if (useDelay)
                     await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
 
                 if (!doNotCheck)
-                {
-                    BoundsInt attackedRange = BoundsExtension.Encapsulate(encapsulatePositions);
-                    _checkGridTask.CheckRange(attackedRange);
-                }
+                    _checkGridTask.CheckRange(AttackRange);
             }
         }
 

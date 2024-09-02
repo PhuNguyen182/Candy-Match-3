@@ -36,9 +36,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         {
             Vector3 oddStartPosition, evenStartPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
+            
+            IBooster swapBooster1 = default, swapBooster2 = default;
             GridPositionType gridCellType = GetCellPositionType(gridCell1.GridPosition);
 
-            if(gridCellType == GridPositionType.Odd)
+            if (gridCellType == GridPositionType.Odd)
             {
                 oddStartPosition = gridCell1.WorldPosition;
                 evenStartPosition = gridCell2.WorldPosition;
@@ -48,6 +50,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             {
                 oddStartPosition = gridCell2.WorldPosition;
                 evenStartPosition = gridCell1.WorldPosition;
+            }
+
+            if(gridCell1.BlockItem is IBooster booster1 && gridCell2.BlockItem is IBooster booster2)
+            {
+                booster1.IsActivated = true;
+                booster2.IsActivated = true;
+
+                (swapBooster1, swapBooster2) = (booster1, booster2);
             }
 
             using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
@@ -71,10 +81,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                         continue;
 
                     gridCellType = GetCellPositionType(positions[i]);
-                    
+
                     if (gridCellType == GridPositionType.Odd)
                         oddPositions.Add(positions[i]);
-                    
+
                     else if (gridCellType == GridPositionType.Even)
                         evenPositions.Add(positions[i]);
                 }
@@ -95,11 +105,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 await UniTask.WhenAll(oddBreakTasks);
                 await UniTask.WhenAll(evenBreakTasks);
 
-                if(gridCell1.BlockItem is IBooster booster1 && gridCell2.BlockItem is IBooster booster2)
-                {
-                    booster1.Explode();
-                    booster2.Explode();
-                }
+                swapBooster1?.Explode();
+                swapBooster2?.Explode();
 
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);

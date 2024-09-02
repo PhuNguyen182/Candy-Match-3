@@ -88,6 +88,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             gridCell.LockStates = LockStates.None;
         }
 
+        public BoundsInt GetAttackedBounds(IBooster booster)
+        {
+            BoundsInt bounds = new();
+            
+            if(booster is IColorBooster colorBooster)
+            {
+                bounds = colorBooster.ColorBoosterType switch
+                {
+                    ColorBoosterType.Horizontal => _horizontalBoosterTask.AttackRange,
+                    ColorBoosterType.Vertical => _verticalBoosterTask.AttackRange,
+                    ColorBoosterType.Wrapped => _wrappedBoosterTask.AttackRange,
+                    _ => new()
+                };
+            }
+
+            return bounds;
+        }
+
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _colorfulBoosterTask.SetCheckGridTask(checkGridTask);

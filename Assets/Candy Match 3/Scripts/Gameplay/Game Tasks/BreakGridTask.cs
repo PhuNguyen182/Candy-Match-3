@@ -153,6 +153,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask AddBooster(IGridCell gridCell, MatchType matchType, CandyColor candyColor)
         {
+            bool hasBooster = false;
+            BoundsInt attackRange = new();
             gridCell.LockStates = LockStates.Matching;
             IBlockItem blockItem = gridCell.BlockItem;
 
@@ -173,13 +175,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (blockItem is IBooster booster)
                 {
+                    hasBooster = true;
+
                     if (booster.IsNewCreated)
                     {
                         gridCell.LockStates = LockStates.None;
                         return;
                     }
 
-                    await _activateBoosterTask.ActivateBooster(gridCell, true, false);
+                    await _activateBoosterTask.ActivateBooster(gridCell, true, true);
+                    attackRange = _activateBoosterTask.GetAttackedBounds(booster);
                     ReleaseGridCell(gridCell);
                 }
 
@@ -192,7 +197,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
             }
 
-            (ItemType itemType, ColorBoosterType boosterType) = _itemManager.GetBoosterTypeFromMatch(matchType, candyColor);
+            var (itemType, boosterType) = _itemManager.GetBoosterTypeFromMatch(matchType, candyColor);
             byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
             int state = NumericUtils.BytesToInt(boosterProperty);
 
@@ -215,6 +220,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
             await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
             gridCell.LockStates = LockStates.None;
+
+            if (hasBooster)
+                _checkGridTask.CheckRange(attackRange);
         }
 
         public async UniTask BreakMatchItem(IGridCell gridCell, int matchCount)

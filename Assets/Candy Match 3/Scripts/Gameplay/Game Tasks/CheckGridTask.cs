@@ -24,6 +24,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private HashSet<Vector3Int> _checkPositions;
         private HashSet<Vector3Int> _matchPositions;
 
+        private bool _checkMatch = false;
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
@@ -82,7 +83,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else
             {
-                if (_matchPositions.Count > 0)
+                if (_matchPositions.Count > 0 && !_checkMatch)
                 {
                     CheckMatchPositions(_matchPositions).Forget();
                 }
@@ -135,6 +136,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private async UniTask CheckMatchPositions(HashSet<Vector3Int> matchPositions)
         {
             CanCheck = false;
+            _checkMatch = true;
+
             await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
             using(var matchPositionPool = ListPool<Vector3Int>.Get(out List<Vector3Int> checkMatchPositions))
             {
@@ -157,6 +160,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
 
             CanCheck = true;
+            _checkMatch = false;
         }
 
         public void Dispose()
