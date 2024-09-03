@@ -48,12 +48,12 @@ namespace CandyMatch3.Scripts.Common.Factories
             return blockItem;
         }
 
-        public ItemType FindColorBooster(ColorBoosterType colorBoosterType, CandyColor candyColor)
+        public ItemType FindColorBooster(BoosterType colorBoosterType, CandyColor candyColor)
         {
             for (int i = 0; i < _itemDatabase.ColorBoosterModels.Count; i++)
             {
                 CandyColor color = _itemDatabase.ColorBoosterModels[i].CandyColor;
-                ColorBoosterType boosterType = _itemDatabase.ColorBoosterModels[i].ColorBoosterType;
+                BoosterType boosterType = _itemDatabase.ColorBoosterModels[i].ColorBoosterType;
 
                 if (candyColor == color && colorBoosterType == boosterType)
                     return _itemDatabase.ColorBoosterModels[i].ItemType;
@@ -86,12 +86,12 @@ namespace CandyMatch3.Scripts.Common.Factories
         private BaseItem ProduceColorBoosterItem(BlockItemData blockItemData)
         {
             byte[] boosterProperties = NumericUtils.IntToBytes(blockItemData.PrimaryState);
-            ColorBoosterType colorBoosterType = (ColorBoosterType)boosterProperties[1];
+            BoosterType colorBoosterType = (BoosterType)boosterProperties[1];
 
             for (int i = 0; i < _itemDatabase.ColorBoosterModels.Count; i++)
             {
                 CandyColor candyColor = _itemDatabase.ColorBoosterModels[i].CandyColor;
-                ColorBoosterType colorBooster = _itemDatabase.ColorBoosterModels[i].ColorBoosterType;
+                BoosterType colorBooster = _itemDatabase.ColorBoosterModels[i].ColorBoosterType;
 
                 if (blockItemData.ItemColor == candyColor && colorBoosterType == colorBooster)
                 {
@@ -102,7 +102,7 @@ namespace CandyMatch3.Scripts.Common.Factories
                     coloredBooster.SetItemID(blockItemData.ID);
                     coloredBooster.SetItemType(blockItemData.ItemType);
                     coloredBooster.SetColor(blockItemData.ItemColor);
-                    coloredBooster.SetBoosterColor(colorBoosterType);
+                    coloredBooster.SetBoosterType(colorBoosterType);
                     coloredBooster.ResetItem();
                     return coloredBooster;
                 }

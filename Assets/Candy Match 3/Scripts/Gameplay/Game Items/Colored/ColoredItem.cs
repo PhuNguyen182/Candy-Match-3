@@ -8,7 +8,7 @@ using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect, IColorfulEffect
+    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect, IColorfulEffect, IItemSuggest
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
@@ -136,6 +136,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayColorfulEffect()
         {
             _colorfulEffect = SimplePool.Spawn(colorfulEffect, transform, transform.position, Quaternion.identity);
+        }
+
+        public UniTask Highlight(bool isActive)
+        {
+            return UniTask.CompletedTask;
         }
     }
 }

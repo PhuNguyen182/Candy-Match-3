@@ -110,8 +110,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private void AddBooster(Vector3Int checkPosition, Vector3Int colorPosition, CandyColor candyColor)
         {
             float rand = Random.value;
-            ColorBoosterType boosterType = rand >= 0.5f ? ColorBoosterType.Horizontal
-                                                        : ColorBoosterType.Vertical;
+            BoosterType boosterType = rand >= 0.5f ? BoosterType.Horizontal
+                                                        : BoosterType.Vertical;
             ItemType itemType = _itemManager.GetItemTypeFromColorAndBoosterType(candyColor, boosterType);
             byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
 

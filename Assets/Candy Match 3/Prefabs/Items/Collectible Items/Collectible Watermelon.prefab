@@ -211,8 +211,8 @@ GameObject:
   - component: {fileID: 9185622834660137370}
   - component: {fileID: 183398201263082849}
   - component: {fileID: 1074295951694253239}
-  - component: {fileID: 3911552257597649888}
   - component: {fileID: 6937057249914192535}
+  - component: {fileID: 3911552257597649888}
   m_Layer: 0
   m_Name: Collectible Watermelon
   m_TagString: Untagged
@@ -272,27 +272,6 @@ MonoBehaviour:
   bottomState: {fileID: 5584203102512340329}
   itemRenderer: {fileID: 1786424778959506459}
   topState: {fileID: 4380231470275271573}
---- !u!95 &3911552257597649888
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4676661831643342559}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &6937057249914192535
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,6 +338,27 @@ MonoBehaviour:
   bounceEase: 6
   fadeDuration: 0.3
   fadeEase: 4
+--- !u!95 &3911552257597649888
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4676661831643342559}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7106282455388291886
 GameObject:
   m_ObjectHideFlags: 0

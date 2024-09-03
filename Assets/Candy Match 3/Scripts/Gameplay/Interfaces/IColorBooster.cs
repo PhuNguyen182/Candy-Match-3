@@ -4,7 +4,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 {
     public interface IColorBooster : IBooster
     {
-        public ColorBoosterType ColorBoosterType { get; }
-        public void SetBoosterColor(ColorBoosterType colorBoosterType);
+        public BoosterType ColorBoosterType { get; }
+        public void SetBoosterType(BoosterType colorBoosterType);
     }
 }

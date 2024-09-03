@@ -168,8 +168,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private bool IsStripedBooster(IBlockItem blockItem)
         {
             if (blockItem is IColorBooster colorBooster)
-                return colorBooster.ColorBoosterType == ColorBoosterType.Horizontal
-                    || colorBooster.ColorBoosterType == ColorBoosterType.Vertical;
+                return colorBooster.ColorBoosterType == BoosterType.Horizontal
+                    || colorBooster.ColorBoosterType == BoosterType.Vertical;
 
             return false;
         }
@@ -177,7 +177,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private bool IsWrappedBooster(IBlockItem blockItem)
         {
             if (blockItem is IColorBooster colorBooster)
-                return colorBooster.ColorBoosterType == ColorBoosterType.Wrapped;
+                return colorBooster.ColorBoosterType == BoosterType.Wrapped;
 
             return false;
         }

@@ -64,16 +64,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 if (blockItem is IColorBooster colorBooster)
                 {
-                    ColorBoosterType colorBoosterType = colorBooster.ColorBoosterType;
+                    BoosterType colorBoosterType = colorBooster.ColorBoosterType;
                     switch (colorBoosterType)
                     {
-                        case ColorBoosterType.Horizontal:
+                        case BoosterType.Horizontal:
                             await _horizontalBoosterTask.Activate(gridCell, useDelay, doNotCheck);
                             break;
-                        case ColorBoosterType.Vertical:
+                        case BoosterType.Vertical:
                             await _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck);
                             break;
-                        case ColorBoosterType.Wrapped:
+                        case BoosterType.Wrapped:
                             await _wrappedBoosterTask.Activate(gridCell, useDelay, doNotCheck);
                             break;
                     }
@@ -96,9 +96,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             {
                 bounds = colorBooster.ColorBoosterType switch
                 {
-                    ColorBoosterType.Horizontal => _horizontalBoosterTask.AttackRange,
-                    ColorBoosterType.Vertical => _verticalBoosterTask.AttackRange,
-                    ColorBoosterType.Wrapped => _wrappedBoosterTask.AttackRange,
+                    BoosterType.Horizontal => _horizontalBoosterTask.AttackRange,
+                    BoosterType.Vertical => _verticalBoosterTask.AttackRange,
+                    BoosterType.Wrapped => _wrappedBoosterTask.AttackRange,
                     _ => new()
                 };
             }

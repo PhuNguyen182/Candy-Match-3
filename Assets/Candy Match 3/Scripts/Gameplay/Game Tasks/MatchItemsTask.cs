@@ -1,13 +1,12 @@
 using R3;
 using System;
 using System.Text;
-using System.Linq;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Constants;
-using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -15,7 +14,6 @@ using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
 using GlobalScripts.Comparers;
-using UnityEngine.Pool;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -162,46 +160,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;
-        }
-
-        private void PrintMatch(MatchResult match)
-        {
-#if UNITY_EDITOR
-            StringBuilder builder = new();
-            string color = GetColor(match.CandyColor);
-
-            builder.Append($"<b>Match:</b> {match.MatchSequence.Count}.   ");
-            builder.Append($"<b>Type:</b> {match.MatchType}.    ");
-            builder.Append($"<b>Color:</b> <color={color}><b>{match.CandyColor}</b></color>.    ");
-            builder.Append($"<b>Pivot:</b> {match.Position}.    ");
-            builder.Append($"<b>Positions:</b> ");
-            builder.Append("{ ");
-
-            for (int i = 0; i < match.MatchSequence.Count; i++)
-                builder.Append($"<b>{i + 1}:</b> {match.MatchSequence[i]}; ");
-
-            builder.Append(" }");
-            Debug.Log(builder.ToString());
-            builder.Clear();
-#endif
-        }
-
-        private string GetColor(CandyColor candyColor)
-        {
-            string colorCode = "";
-
-            colorCode = candyColor switch
-            {
-                CandyColor.Red => "#F73540",
-                CandyColor.Green => "#47D112",
-                CandyColor.Orange => "#FA8500",
-                CandyColor.Purple => "#CE2AEF",
-                CandyColor.Yellow => "#F8D42A",
-                CandyColor.Blue => "#23AAFB",
-                _ => "#000000"
-            };
-
-            return colorCode;
         }
 
         public void Dispose()

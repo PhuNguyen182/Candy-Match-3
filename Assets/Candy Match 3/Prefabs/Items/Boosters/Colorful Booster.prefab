@@ -179,8 +179,8 @@ GameObject:
   - component: {fileID: 7117194704955111167}
   - component: {fileID: 6902376775005798299}
   - component: {fileID: 6427079796887392978}
-  - component: {fileID: 6069539781926400522}
   - component: {fileID: 6187872535067072444}
+  - component: {fileID: 6069539781926400522}
   m_Layer: 0
   m_Name: Colorful Booster
   m_TagString: Untagged
@@ -241,27 +241,6 @@ MonoBehaviour:
   bottomState: {fileID: 1802872096212993171}
   itemRenderer: {fileID: 4265966605876753556}
   topState: {fileID: 8755113932694982669}
---- !u!95 &6069539781926400522
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5628999218794800045}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2c5342120a0980b4189642d42b246c24, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &6187872535067072444
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -328,6 +307,27 @@ MonoBehaviour:
   bounceEase: 6
   fadeDuration: 0.3
   fadeEase: 4
+--- !u!95 &6069539781926400522
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5628999218794800045}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2c5342120a0980b4189642d42b246c24, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5633761027109006939
 GameObject:
   m_ObjectHideFlags: 0

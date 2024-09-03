@@ -72,7 +72,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
-        public void SpawnBoosterEffect(ItemType itemType, ColorBoosterType boosterType, Vector3 position)
+        public void SpawnBoosterEffect(ItemType itemType, BoosterType boosterType, Vector3 position)
         {
             GameObject effect = null;
 
@@ -83,9 +83,9 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             {
                 effect = boosterType switch
                 {
-                    ColorBoosterType.Horizontal => effectDatabase.StripedHorizontal,
-                    ColorBoosterType.Vertical => effectDatabase.StripedVertical,
-                    ColorBoosterType.Wrapped => effectDatabase.WrappedEffect,
+                    BoosterType.Horizontal => effectDatabase.StripedHorizontal,
+                    BoosterType.Vertical => effectDatabase.StripedVertical,
+                    BoosterType.Wrapped => effectDatabase.WrappedEffect,
                     _ => null
                 };
             }

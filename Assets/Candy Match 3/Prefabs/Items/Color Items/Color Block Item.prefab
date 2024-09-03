@@ -295,8 +295,8 @@ GameObject:
   - component: {fileID: 4070749026246884481}
   - component: {fileID: 6507351951568524209}
   - component: {fileID: 1494473538025020321}
-  - component: {fileID: 7260267152778773488}
   - component: {fileID: 1504375786986051077}
+  - component: {fileID: 7260267152778773488}
   m_Layer: 0
   m_Name: Color Block Item
   m_TagString: Untagged
@@ -364,27 +364,6 @@ MonoBehaviour:
   bottomState: {fileID: 2129219163505960369}
   itemRenderer: {fileID: 7636792035534320754}
   topState: {fileID: 6734533124550265036}
---- !u!95 &7260267152778773488
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9203491314375734411}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2b69371575556e44fbe9c494a937890c, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &1504375786986051077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,7 +427,27 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   bounceDuration: 0.3
-  moveEase: 1
   bounceEase: 6
   fadeDuration: 0.3
   fadeEase: 4
+--- !u!95 &7260267152778773488
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9203491314375734411}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2b69371575556e44fbe9c494a937890c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

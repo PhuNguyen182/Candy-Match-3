@@ -127,6 +127,7 @@ GameObject:
   - component: {fileID: 3188378754113132431}
   - component: {fileID: 2065810958415226227}
   - component: {fileID: 5347523752585622243}
+  - component: {fileID: -5690249415797303212}
   m_Layer: 0
   m_Name: Chocolate
   m_TagString: Untagged
@@ -185,6 +186,27 @@ MonoBehaviour:
   bottomState: {fileID: 4685297606866592135}
   itemRenderer: {fileID: 5734765157479013065}
   topState: {fileID: 121032880063400614}
+--- !u!95 &-5690249415797303212
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3100707519279913723}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 46bb32c5d913e4c4e92c8a50d872fe6b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3601520479199966276
 GameObject:
   m_ObjectHideFlags: 0

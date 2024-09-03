@@ -85,6 +85,11 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 else
                     Time.timeScale = 0.02f;
             }
+
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                TestSuggest();
+            }
         }
 #endif
 
@@ -130,12 +135,10 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         {
             for (int i = 0; i < levelModel.BoardBlockPositions.Count; i++)
             {
-                GridCell gridCell;
-
                 Vector3Int gridPosition = levelModel.BoardBlockPositions[i].Position;
                 GridCellView gridCellView = Instantiate(gridCellViewPrefab, gridContainer);
-                
-                gridCell = new();
+
+                GridCell gridCell = new();
                 gridCell.GridPosition = gridPosition;
 
                 IGridStateful gridStateful = new AvailableState();
@@ -212,6 +215,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _fillBoardTask.BuildRandom(levelModel.RandomBlockItemPositions);
 
             _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
+            _gameTaskManager.BuildSuggest();
             _gameTaskManager.SetInputActive(true);
         }
 
@@ -223,6 +227,11 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         public Vector3Int ConvertWorldToGrid(Vector3 position)
         {
             return boardTilemap.WorldToCell(position);
+        }
+
+        private void TestSuggest()
+        {
+            _gameTaskManager.TestSuggest();
         }
 
         private void OnDestroy()

@@ -9,9 +9,9 @@ namespace CandyMatch3.Scripts.LevelDesign.CustomTiles.ItemTiles
     public class ColorBoosterTile : SingleItemTile
     {
         [SerializeField] private CandyColor candyColor;
-        [SerializeField] private ColorBoosterType colorBoosterType;
+        [SerializeField] private BoosterType colorBoosterType;
 
         public CandyColor CandyColor => candyColor;
-        public ColorBoosterType ColorBoosterType => colorBoosterType;
+        public BoosterType ColorBoosterType => colorBoosterType;
     }
 }

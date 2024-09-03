@@ -26,6 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly ExplodeItemTask _explodeItemTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
         private readonly ComboBoosterHandleTask _comboBoosterHandleTask;
+        private readonly SuggestMatchTask _suggestMatchTask;
 
         private IDisposable _disposable;
 
@@ -61,6 +62,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _spawnItemTask = spawnItemTask;
             _spawnItemTask.SetMoveItemTask(_moveItemTask);
 
+            _suggestMatchTask = new(_gridCellManager, _matchItemsTask);
             _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 
@@ -71,6 +73,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void SetInputActive(bool isActive)
         {
             _inputProcessor.IsActive = isActive;
+        }
+
+        public void BuildSuggest()
+        {
+            _suggestMatchTask.BuildLevelBoard();
+        }
+
+        public void TestSuggest()
+        {
+            _suggestMatchTask.DetectPossibleSwaps();
         }
 
         private void SetCheckGridTask()

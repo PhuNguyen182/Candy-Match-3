@@ -107,19 +107,19 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             return itemType;
         }
 
-        public ItemType GetItemTypeFromColorAndBoosterType(CandyColor color, ColorBoosterType boosterType)
+        public ItemType GetItemTypeFromColorAndBoosterType(CandyColor color, BoosterType boosterType)
         {
             ItemType itemType = ItemType.None;
 
             switch (boosterType)
             {
-                case ColorBoosterType.Horizontal:
+                case BoosterType.Horizontal:
                     itemType = GetHorizontal(color);
                     break;
-                case ColorBoosterType.Vertical:
+                case BoosterType.Vertical:
                     itemType = GetVertical(color);
                     break;
-                case ColorBoosterType.Wrapped:
+                case BoosterType.Wrapped:
                     itemType = GetWrapped(color);
                     break;
             }
@@ -127,18 +127,18 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             return itemType;
         }
 
-        public (ItemType, ColorBoosterType) GetBoosterTypeFromMatch(MatchType matchType, CandyColor candyColor)
+        public (ItemType, BoosterType) GetBoosterTypeFromMatch(MatchType matchType, CandyColor candyColor)
         {
             if (matchType == MatchType.Match5)
-                return (ItemType.ColorBomb, ColorBoosterType.None);
+                return (ItemType.ColorBomb, BoosterType.None);
 
-            ColorBoosterType boosterColor = matchType switch
+            BoosterType boosterColor = matchType switch
             {
-                MatchType.Match4Horizontal => ColorBoosterType.Vertical,
-                MatchType.Match4Vertical => ColorBoosterType.Horizontal,
-                MatchType.MatchL => ColorBoosterType.Wrapped,
-                MatchType.MatchT => ColorBoosterType.Wrapped,
-                _ => ColorBoosterType.None
+                MatchType.Match4Horizontal => BoosterType.Vertical,
+                MatchType.Match4Vertical => BoosterType.Horizontal,
+                MatchType.MatchL => BoosterType.Wrapped,
+                MatchType.MatchT => BoosterType.Wrapped,
+                _ => BoosterType.None
             };
 
             ItemType booster = _itemFactory.FindColorBooster(boosterColor, candyColor);

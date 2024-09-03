@@ -99,3 +99,4 @@ MonoBehaviour:
   CollectibleItems:
   - {fileID: 6097607378805445519, guid: c42cf0ce000c8f34080ed2b531590a6e, type: 3}
   - {fileID: 183398201263082849, guid: 62262b3e4c57a354d8c746ea43a330e8, type: 3}
+  UnbreakableItem: {fileID: 5690970334260997984, guid: a96b07524cb7cdb449f563109969c8bb, type: 3}

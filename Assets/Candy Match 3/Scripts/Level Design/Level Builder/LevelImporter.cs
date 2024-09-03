@@ -154,7 +154,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 
                 byte[] boosterState = NumericUtils.IntToBytes(primaryState);
                 CandyColor candyColor = (CandyColor)boosterState[0];
-                ColorBoosterType colorBoosterType = (ColorBoosterType)boosterState[1];
+                BoosterType colorBoosterType = (BoosterType)boosterState[1];
                 ColorBoosterTile colorBoosterTile = _tileDatabase.GetColorBoosterTile(id, candyColor, colorBoosterType);
                 tilemap.SetTile(blockItemPositions[i].Position, colorBoosterTile);
             }

@@ -4,15 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IBreakable
+    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IBreakable, IItemSuggest
     {
-        [SerializeField] private ColorBoosterType colorBoosterType;
+        [SerializeField] private BoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
 
         [Header("Colored Sprites")]
@@ -32,7 +31,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public bool IsNewCreated { get; set; }
 
-        public ColorBoosterType ColorBoosterType => colorBoosterType;
+        public BoosterType ColorBoosterType => colorBoosterType;
 
         public override void ResetItem()
         {
@@ -61,14 +60,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             this.candyColor = candyColor;
         }
 
-        public void SetBoosterColor(ColorBoosterType colorBoosterType)
+        public void SetBoosterType(BoosterType colorBoosterType)
         {
             this.colorBoosterType = colorBoosterType;
             Sprite[] colorSprites = colorBoosterType switch
             {
-                ColorBoosterType.Horizontal => horizontalSprites,
-                ColorBoosterType.Vertical => verticalSprites,
-                ColorBoosterType.Wrapped => wrappedSprites,
+                BoosterType.Horizontal => horizontalSprites,
+                BoosterType.Vertical => verticalSprites,
+                BoosterType.Wrapped => wrappedSprites,
                 _ => null
             };
 
@@ -100,13 +99,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
             Vector3 position = colorBoosterType switch
             {
-                ColorBoosterType.Horizontal => new(0, y),
-                ColorBoosterType.Vertical => new(x, 0),
-                ColorBoosterType.Wrapped => new(x, y),
+                BoosterType.Horizontal => new(0, y),
+                BoosterType.Vertical => new(x, 0),
+                BoosterType.Wrapped => new(x, y),
                 _ => Vector3.zero
             };
 
-            SoundEffectType soundEffect = colorBoosterType == ColorBoosterType.Wrapped ? SoundEffectType.CandyWrap
+            SoundEffectType soundEffect = colorBoosterType == BoosterType.Wrapped ? SoundEffectType.CandyWrap
                                                                                        : SoundEffectType.LineVerticalHorizontal;
             EffectManager.Instance.SpawnBoosterEffect(itemType, colorBoosterType, position);
             EffectManager.Instance.PlaySoundEffect(soundEffect);
@@ -206,6 +205,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         private void OnItemReset()
         {
             IsActivated = false;
+        }
+
+        public UniTask Highlight(bool isActive)
+        {
+            return UniTask.CompletedTask;
         }
     }
 }

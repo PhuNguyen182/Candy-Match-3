@@ -95,8 +95,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             Vector3 horizontal = new(0, position.y);
             Vector3 vertical = new(position.x, 0);
 
-            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Horizontal, horizontal);
-            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Vertical, vertical);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, BoosterType.Horizontal, horizontal);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, BoosterType.Vertical, vertical);
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
