@@ -12,6 +12,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
     public class ItemAnimation : MonoBehaviour
     {
         [SerializeField] private Animator itemAnimator;
+        [SerializeField] private ItemGraphics itemGraphics;
         [SerializeField] private SpriteRenderer itemRenderer;
         [SerializeField] private AnimationCurve fallenCurve;
         [SerializeField] private AnimationCurve movingCurve;
@@ -24,12 +25,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] private float fadeDuration = 0.3f;
         [SerializeField] private Ease fadeEase = Ease.InOutSine;
 
+        [Header("Hightlight")]
+        [SerializeField] private float highlightDuration = 1f;
+        [SerializeField] private AnimationCurve highlightEase;
+
         private int _originalSortingOrder;
 
         private Tweener _moveTween;
         private Tweener _bounceMoveTween;
         private Tweener _swapTween;
 
+        private Coroutine _highlightCoroutine;
         private CancellationToken _destroyToken;
 
         private void Awake()
@@ -97,6 +103,27 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemAnimator.SetTrigger(ItemAnimationHashKeys.BounceHash);
         }
 
+        public void ToggleSuggest(bool isActive)
+        {
+            if (isActive)
+            {
+                if (_highlightCoroutine != null)
+                    StopCoroutine(_highlightCoroutine);
+
+                _highlightCoroutine = StartCoroutine(Highlight());
+            }
+            
+            else
+            {
+                if (_highlightCoroutine != null)
+                    StopCoroutine(_highlightCoroutine);
+
+                itemGraphics.SetFloatRendererProperty(ItemShaderProperties.SuggestHighlight, 0);
+            }
+
+            itemAnimator.SetBool(ItemAnimationHashKeys.SuggestHash, isActive);
+        }
+
         private Tweener CreateMoveBounceTween(Vector3 position)
         {
             return transform.DOMove(position, bounceDuration)
@@ -109,16 +136,42 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             return transform.DOMove(toPosition, duration).SetEase(movingCurve).SetAutoKill(false);
         }
 
+        private IEnumerator Highlight()
+        {
+            float ratio = 0;
+            float elapsedTime = 0;
+
+            while (true)
+            {
+                elapsedTime += Time.deltaTime;
+                ratio = highlightEase.Evaluate(elapsedTime / highlightDuration);
+                itemGraphics.SetFloatRendererProperty(ItemShaderProperties.SuggestHighlight, ratio);
+
+                if (elapsedTime > highlightDuration)
+                    elapsedTime = 0;
+
+                yield return null;
+            }
+        }
+
         private void SwapItemLayer(bool isPrioritized)
         {
             itemRenderer.sortingOrder = isPrioritized ? _originalSortingOrder + 1 : _originalSortingOrder;
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            itemGraphics ??= GetComponent<ItemGraphics>();
+        }
+#endif
 
         private void OnDestroy()
         {
             _moveTween?.Kill();
             _bounceMoveTween?.Kill();
             _swapTween?.Kill();
+            ToggleSuggest(false);
         }
     }
 }

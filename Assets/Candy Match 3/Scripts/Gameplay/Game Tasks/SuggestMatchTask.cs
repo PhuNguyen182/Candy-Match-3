@@ -69,7 +69,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _detectCount = _detectCount + 1;
         }
 
-        public void DetectPossibleSwaps()
+        private void DetectPossibleSwaps()
         {
             if (_detectCount == 0)
             {

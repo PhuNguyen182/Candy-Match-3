@@ -209,6 +209,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public UniTask Highlight(bool isActive)
         {
+            itemAnimation.ToggleSuggest(isActive);
             return UniTask.CompletedTask;
         }
     }

@@ -12,5 +12,6 @@ namespace CandyMatch3.Scripts.Common.Constants
         public static readonly int MatchHash = Animator.StringToHash("Match");
         public static readonly int KillHash = Animator.StringToHash("Kill");
         public static readonly int StartHash = Animator.StringToHash("Start");
+        public static readonly int SuggestHash = Animator.StringToHash("IsSuggest");
     }
 }
