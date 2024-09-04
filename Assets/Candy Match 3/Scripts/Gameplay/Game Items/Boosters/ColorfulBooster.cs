@@ -23,10 +23,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
             SimplePool.Spawn(colorfulEffect, EffectContainer.Transform, WorldPosition, Quaternion.identity);
         }
 
-        public UniTask Highlight(bool isActive)
+        public void Highlight(bool isActive)
         {
             itemAnimation.ToggleSuggest(isActive);
-            return UniTask.CompletedTask;
         }
 
         public override void ReleaseItem()

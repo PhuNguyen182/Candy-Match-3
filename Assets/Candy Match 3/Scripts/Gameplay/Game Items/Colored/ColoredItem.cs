@@ -138,10 +138,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             _colorfulEffect = SimplePool.Spawn(colorfulEffect, transform, transform.position, Quaternion.identity);
         }
 
-        public UniTask Highlight(bool isActive)
+        public void Highlight(bool isActive)
         {
             itemAnimation.ToggleSuggest(isActive);
-            return UniTask.CompletedTask;
         }
     }
 }

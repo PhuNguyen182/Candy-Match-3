@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.Strategies.Suggests;
@@ -40,7 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _availableSuggests = new();
         }
 
-        public async UniTask ShowSuggest()
+        public void ShowSuggest()
         {
             DetectPossibleSwaps();
             int count = _availableSuggests.Count;
@@ -48,22 +47,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             AvailableSuggest detectedSuggest = _detectCount == 0
                                                ? _availableSuggests[count - 1]
                                                : _availableSuggests[randIndex];
-            
-            using(ListPool<UniTask>.Get(out List<UniTask> highLights))
+
+            for (int i = 0; i < detectedSuggest.Positions.Count; i++)
             {
-                for (int i = 0; i < detectedSuggest.Positions.Count; i++)
+                Vector3Int position = detectedSuggest.Positions[i];
+                IGridCell gridCell = _gridCellManager.Get(position);
+                IBlockItem blockItem = gridCell.BlockItem;
+
+                if (blockItem is IItemSuggest itemSuggest)
                 {
-                    Vector3Int position = detectedSuggest.Positions[i];
-                    IGridCell gridCell = _gridCellManager.Get(position);
-                    IBlockItem blockItem = gridCell.BlockItem;
-
-                    if(blockItem is IItemSuggest itemSuggest)
-                    {
-                        highLights.Add(itemSuggest.Highlight(true));
-                    }
+                    itemSuggest.Highlight(true);
                 }
-
-                await UniTask.WhenAll(highLights);
             }
 
             _detectCount = _detectCount + 1;

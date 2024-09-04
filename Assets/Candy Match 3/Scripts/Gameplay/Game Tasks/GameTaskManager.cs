@@ -82,7 +82,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void TestSuggest()
         {
-            _suggestMatchTask.ShowSuggest().Forget();
+            _suggestMatchTask.ShowSuggest();
         }
 
         private void SetCheckGridTask()
