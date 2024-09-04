@@ -7,12 +7,10 @@ using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.Strategies.Suggests;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Common.Enums;
-using Random = UnityEngine.Random;
-using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
-    public class SuggestMatchTask : IDisposable
+    public class DetectMoveTask : IDisposable
     {
         private readonly GridCellManager _gridCellManager;
         private readonly MatchItemsTask _matchItemsTask;
@@ -20,11 +18,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private List<Vector3Int> _swapDirections;
         private List<Vector3Int> _allGridPositions;
-        private List<AvailableSuggest> _availableSuggests;
+        private List<AvailableSuggest> _availableMoves;
 
-        private int _detectCount = 0;
-
-        public SuggestMatchTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask)
+        public DetectMoveTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask)
         {
             _gridCellManager = gridCellManager;
             _matchItemsTask = matchItemsTask;
@@ -36,118 +32,92 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             };
 
             _suggestComparer = new();
-            _availableSuggests = new();
+            _availableMoves = new();
         }
 
-        public void ShowSuggest()
+        public void DetectPossibleMoves()
         {
-            DetectPossibleSwaps();
-            int count = _availableSuggests.Count;
-            int randIndex = Random.Range(count / 2, count);
-            AvailableSuggest detectedSuggest = _detectCount == 0
-                                               ? _availableSuggests[count - 1]
-                                               : _availableSuggests[randIndex];
+            ClearResult();
 
-            for (int i = 0; i < detectedSuggest.Positions.Count; i++)
+            for (int i = 0; i < _allGridPositions.Count; i++)
             {
-                Vector3Int position = detectedSuggest.Positions[i];
-                IGridCell gridCell = _gridCellManager.Get(position);
-                IBlockItem blockItem = gridCell.BlockItem;
-
-                if (blockItem is IItemSuggest itemSuggest)
+                for (int j = 0; j < _swapDirections.Count; j++)
                 {
-                    itemSuggest.Highlight(true);
-                }
-            }
+                    Vector3Int fromPosition = _allGridPositions[i];
+                    Vector3Int toPosition = fromPosition + _swapDirections[j];
 
-            _detectCount = _detectCount + 1;
-        }
-
-        private void DetectPossibleSwaps()
-        {
-            if (_detectCount == 0)
-            {
-                ClearSuggests();
-                for (int i = 0; i < _allGridPositions.Count; i++)
-                {
-                    for (int j = 0; j < _swapDirections.Count; j++)
+                    if (IsSwappable(fromPosition, toPosition))
                     {
-                        Vector3Int fromPosition = _allGridPositions[i];
-                        Vector3Int toPosition = fromPosition + _swapDirections[j];
+                        IGridCell fromGridCell = _gridCellManager.Get(fromPosition);
+                        IGridCell toGridCell = _gridCellManager.Get(toPosition);
+                        PseudoSwapItems(fromGridCell, toGridCell);
 
-                        if (IsSwappable(fromPosition, toPosition))
+                        if (AreBoosters(fromGridCell, toGridCell))
                         {
-                            IGridCell fromGridCell = _gridCellManager.Get(fromPosition);
-                            IGridCell toGridCell = _gridCellManager.Get(toPosition);
-                            PseudoSwapItems(fromGridCell, toGridCell);
-
-                            if (AreBoosters(fromGridCell, toGridCell))
-                            {
-                                int score = GetComboBoosterScore(fromGridCell, toGridCell);
-                                List<Vector3Int> positions = new()
+                            int score = GetComboBoosterScore(fromGridCell, toGridCell);
+                            List<Vector3Int> positions = new()
                                 {
                                     fromPosition, toPosition
                                 };
 
-                                _availableSuggests.Add(new AvailableSuggest
-                                {
-                                    FromPosition = fromPosition,
-                                    ToPosition = toPosition,
-                                    Positions = positions,
-                                    Score = score
-                                });
+                            _availableMoves.Add(new AvailableSuggest
+                            {
+                                FromPosition = fromPosition,
+                                ToPosition = toPosition,
+                                Positions = positions,
+                                Score = score
+                            });
+                        }
+
+                        else
+                        {
+                            int fromScore = 0, toScore = 0;
+                            if (_matchItemsTask.IsMatchable(fromPosition, out MatchResult fromMatchResult))
+                                fromScore = GetMatchableSwapScore(fromMatchResult);
+
+                            if (_matchItemsTask.IsMatchable(toPosition, out MatchResult toMatchResult))
+                                toScore = GetMatchableSwapScore(toMatchResult);
+
+                            if (fromScore == 0 && toScore == 0)
+                            {
+                                PseudoSwapItems(fromGridCell, toGridCell);
+                                continue;
+                            }
+
+                            int score;
+                            List<Vector3Int> positions;
+
+                            if (fromScore >= toScore)
+                            {
+                                score = fromScore;
+                                positions = new(fromMatchResult.MatchSequence);
+                                int count = fromMatchResult.MatchSequence.Count;
+                                positions[count - 1] = toPosition;
                             }
 
                             else
                             {
-                                int fromScore = 0, toScore = 0;
-                                if (_matchItemsTask.IsMatchable(fromPosition, out MatchResult fromMatchResult))
-                                    fromScore = GetMatchableSwapScore(fromMatchResult);
-
-                                if (_matchItemsTask.IsMatchable(toPosition, out MatchResult toMatchResult))
-                                    toScore = GetMatchableSwapScore(toMatchResult);
-
-                                if (fromScore == 0 && toScore == 0)
-                                {
-                                    PseudoSwapItems(fromGridCell, toGridCell);
-                                    continue;
-                                }
-
-                                int score;
-                                List<Vector3Int> positions;
-
-                                if (fromScore >= toScore)
-                                {
-                                    score = fromScore;
-                                    positions = new(fromMatchResult.MatchSequence);
-                                    int count = fromMatchResult.MatchSequence.Count;
-                                    positions[count - 1] = toPosition; // to position
-                                }
-
-                                else
-                                {
-                                    score = toScore;
-                                    positions = new(toMatchResult.MatchSequence);
-                                    int count = toMatchResult.MatchSequence.Count;
-                                    positions[count - 1] = fromPosition; // from position
-                                }
-
-                                _availableSuggests.Add(new AvailableSuggest
-                                {
-                                    Score = score,
-                                    FromPosition = fromPosition,
-                                    ToPosition = toPosition,
-                                    Positions = positions
-                                });
-
-                                // Swap back
-                                PseudoSwapItems(fromGridCell, toGridCell);
+                                score = toScore;
+                                positions = new(toMatchResult.MatchSequence);
+                                int count = toMatchResult.MatchSequence.Count;
+                                positions[count - 1] = fromPosition;
                             }
+
+                            _availableMoves.Add(new AvailableSuggest
+                            {
+                                Score = score,
+                                FromPosition = fromPosition,
+                                ToPosition = toPosition,
+                                Positions = positions
+                            });
+
+                            // Swap back
+                            PseudoSwapItems(fromGridCell, toGridCell);
                         }
                     }
                 }
 
-                _availableSuggests.Sort(_suggestComparer);
+                _availableMoves.Sort(_suggestComparer);
             }
         }
 
@@ -262,6 +232,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return BoosterType.None;
         }
 
+        public List<AvailableSuggest> GetPossibleSwaps()
+        {
+            return _availableMoves;
+        }
+
         public void BuildLevelBoard()
         {
             _allGridPositions = new(_gridCellManager.GetAllPositions());
@@ -269,13 +244,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public bool HasPossibleMove()
         {
-            return _availableSuggests.Count > 0;
+            return _availableMoves.Count > 0;
         }
 
-        public void ClearSuggests()
+        public void ClearResult()
         {
-            _detectCount = 0;
-            _availableSuggests.Clear();
+            _availableMoves.Clear();
         }
 
         public void Dispose()

@@ -26,7 +26,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly ExplodeItemTask _explodeItemTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
         private readonly ComboBoosterHandleTask _comboBoosterHandleTask;
-        private readonly SuggestMatchTask _suggestMatchTask;
+        private readonly DetectMoveTask _detectMoveTask;
+        private readonly SuggestTask _suggestTask;
 
         private IDisposable _disposable;
 
@@ -62,7 +63,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _spawnItemTask = spawnItemTask;
             _spawnItemTask.SetMoveItemTask(_moveItemTask);
 
-            _suggestMatchTask = new(_gridCellManager, _matchItemsTask);
+            _detectMoveTask = new(_gridCellManager, _matchItemsTask);
+            _detectMoveTask.AddTo(ref builder);
+
+            _suggestTask = new(_gridCellManager, _detectMoveTask);
+            _suggestTask.AddTo(ref builder);
+
             _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 
@@ -77,12 +83,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void BuildSuggest()
         {
-            _suggestMatchTask.BuildLevelBoard();
+            _detectMoveTask.BuildLevelBoard();
         }
 
-        public void TestSuggest()
+        public void Suggest(bool isSuggest)
         {
-            _suggestMatchTask.ShowSuggest();
+            _suggestTask.Suggest(isSuggest);
         }
 
         private void SetCheckGridTask()

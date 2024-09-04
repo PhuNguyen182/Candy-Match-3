@@ -14,16 +14,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] private Animator itemAnimator;
         [SerializeField] private ItemGraphics itemGraphics;
         [SerializeField] private SpriteRenderer itemRenderer;
+
+        [Header("Movement Ease")]
         [SerializeField] private AnimationCurve fallenCurve;
         [SerializeField] private AnimationCurve movingCurve;
 
-        [Header("Movement")]
+        [Header("Bounce Movement")]
         [SerializeField] private float bounceDuration = 0.3f;
         [SerializeField] private Ease bounceEase = Ease.OutQuad;
-
-        [Header("Fading")]
-        [SerializeField] private float fadeDuration = 0.3f;
-        [SerializeField] private Ease fadeEase = Ease.InOutSine;
 
         [Header("Hightlight")]
         [SerializeField] private float highlightDuration = 1f;

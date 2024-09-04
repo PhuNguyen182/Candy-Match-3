@@ -88,7 +88,12 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             if (Input.GetKeyDown(KeyCode.D))
             {
-                TestSuggest();
+                Suggest(true);
+            }
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                Suggest(false);
             }
         }
 #endif
@@ -229,9 +234,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             return boardTilemap.WorldToCell(position);
         }
 
-        private void TestSuggest()
+        private void Suggest(bool isSuggest)
         {
-            _gameTaskManager.TestSuggest();
+            _gameTaskManager.Suggest(isSuggest);
         }
 
         private void OnDestroy()
