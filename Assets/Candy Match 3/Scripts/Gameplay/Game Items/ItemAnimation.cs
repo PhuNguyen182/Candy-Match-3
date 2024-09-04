@@ -55,11 +55,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
-            SwapItemLayer(isMoveFirst);
+            ChangeItemLayer(isMoveFirst);
             _moveTween ??= CreateMoveTween(position, duration);
             _moveTween.ChangeValues(transform.position, position, duration);
             _moveTween.Play();
-            SwapItemLayer(false);
+            ChangeItemLayer(false);
 
             TimeSpan totalDuration = TimeSpan.FromSeconds(_moveTween.Duration());
             return UniTask.Delay(totalDuration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
@@ -159,7 +159,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
                 StopCoroutine(_highlightCoroutine);
         }
 
-        private void SwapItemLayer(bool isPrioritized)
+        private void ChangeItemLayer(bool isPrioritized)
         {
             itemRenderer.sortingOrder = isPrioritized ? _originalSortingOrder + 1 : _originalSortingOrder;
         }
