@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.Strategies.Suggests;
@@ -48,71 +49,70 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     if (IsSwappable(fromPosition, toPosition))
                     {
-                        IGridCell fromGridCell = _gridCellManager.Get(fromPosition);
-                        IGridCell toGridCell = _gridCellManager.Get(toPosition);
-                        PseudoSwapItems(fromGridCell, toGridCell);
-
-                        if (AreBoosters(fromGridCell, toGridCell))
+                        int score = 0;
+                        using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
                         {
-                            int score = GetComboBoosterScore(fromGridCell, toGridCell);
-                            List<Vector3Int> positions = new()
+                            IGridCell fromGridCell = _gridCellManager.Get(fromPosition);
+                            IGridCell toGridCell = _gridCellManager.Get(toPosition);
+                            PseudoSwapItems(fromGridCell, toGridCell);
+
+                            if (AreBoosters(fromGridCell, toGridCell))
+                            {
+                                positions = new() { fromPosition, toPosition };
+                                score = GetComboBoosterScore(fromGridCell, toGridCell);
+
+                                _availableMoves.Add(new AvailableSuggest
                                 {
-                                    fromPosition, toPosition
-                                };
-
-                            _availableMoves.Add(new AvailableSuggest
-                            {
-                                FromPosition = fromPosition,
-                                ToPosition = toPosition,
-                                Positions = positions,
-                                Score = score
-                            });
-                        }
-
-                        else
-                        {
-                            int fromScore = 0, toScore = 0;
-                            if (_matchItemsTask.IsMatchable(fromPosition, out MatchResult fromMatchResult))
-                                fromScore = GetMatchableSwapScore(fromMatchResult);
-
-                            if (_matchItemsTask.IsMatchable(toPosition, out MatchResult toMatchResult))
-                                toScore = GetMatchableSwapScore(toMatchResult);
-
-                            if (fromScore == 0 && toScore == 0)
-                            {
-                                PseudoSwapItems(fromGridCell, toGridCell);
-                                continue;
-                            }
-
-                            int score;
-                            List<Vector3Int> positions;
-
-                            if (fromScore >= toScore)
-                            {
-                                score = fromScore;
-                                positions = new(fromMatchResult.MatchSequence);
-                                int count = fromMatchResult.MatchSequence.Count;
-                                positions[count - 1] = toPosition;
+                                    FromPosition = fromPosition,
+                                    ToPosition = toPosition,
+                                    Positions = positions,
+                                    Score = score
+                                });
                             }
 
                             else
                             {
-                                score = toScore;
-                                positions = new(toMatchResult.MatchSequence);
-                                int count = toMatchResult.MatchSequence.Count;
-                                positions[count - 1] = fromPosition;
+                                int fromScore = 0, toScore = 0;
+
+                                if (_matchItemsTask.IsMatchable(fromPosition, out MatchResult fromMatchResult))
+                                    fromScore = GetMatchableSwapScore(fromMatchResult);
+
+                                if (_matchItemsTask.IsMatchable(toPosition, out MatchResult toMatchResult))
+                                    toScore = GetMatchableSwapScore(toMatchResult);
+
+                                if (fromScore == 0 && toScore == 0)
+                                {
+                                    PseudoSwapItems(fromGridCell, toGridCell);
+                                    continue;
+                                }
+
+                                if (fromScore >= toScore)
+                                {
+                                    score = fromScore;
+                                    positions = new(fromMatchResult.MatchSequence);
+                                    int count = fromMatchResult.MatchSequence.Count;
+                                    positions[count - 1] = toPosition;
+                                }
+
+                                else
+                                {
+                                    score = toScore;
+                                    positions = new(toMatchResult.MatchSequence);
+                                    int count = toMatchResult.MatchSequence.Count;
+                                    positions[count - 1] = fromPosition;
+                                }
+
+                                _availableMoves.Add(new AvailableSuggest
+                                {
+                                    Score = score,
+                                    FromPosition = fromPosition,
+                                    ToPosition = toPosition,
+                                    Positions = positions
+                                });
+
+                                // Swap back
+                                PseudoSwapItems(fromGridCell, toGridCell);
                             }
-
-                            _availableMoves.Add(new AvailableSuggest
-                            {
-                                Score = score,
-                                FromPosition = fromPosition,
-                                ToPosition = toPosition,
-                                Positions = positions
-                            });
-
-                            // Swap back
-                            PseudoSwapItems(fromGridCell, toGridCell);
                         }
                     }
                 }
