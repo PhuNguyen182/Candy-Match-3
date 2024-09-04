@@ -27,6 +27,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] private float highlightDuration = 1f;
         [SerializeField] private AnimationCurve highlightEase;
 
+        private bool _hasBeenSuggested;
         private int _originalSortingOrder;
 
         private Tweener _moveTween;
@@ -103,23 +104,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public void ToggleSuggest(bool isActive)
         {
+            if (!_hasBeenSuggested && !isActive)
+                return;
+
+            _hasBeenSuggested = isActive;
+            itemAnimator.SetBool(ItemAnimationHashKeys.SuggestHash, isActive);
+
             if (isActive)
             {
-                if (_highlightCoroutine != null)
-                    StopCoroutine(_highlightCoroutine);
-
+                ClearSuggestEffect();
                 _highlightCoroutine = StartCoroutine(Highlight());
             }
             
             else
             {
-                if (_highlightCoroutine != null)
-                    StopCoroutine(_highlightCoroutine);
-
                 itemGraphics.SetFloatRendererProperty(ItemShaderProperties.SuggestHighlight, 0);
+                ClearSuggestEffect(); // Should be place here to prevent destroy null reference
             }
-
-            itemAnimator.SetBool(ItemAnimationHashKeys.SuggestHash, isActive);
         }
 
         private Tweener CreateMoveBounceTween(Vector3 position)
@@ -152,6 +153,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             }
         }
 
+        private void ClearSuggestEffect()
+        {
+            if (_highlightCoroutine != null)
+                StopCoroutine(_highlightCoroutine);
+        }
+
         private void SwapItemLayer(bool isPrioritized)
         {
             itemRenderer.sortingOrder = isPrioritized ? _originalSortingOrder + 1 : _originalSortingOrder;
@@ -166,10 +173,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private void OnDestroy()
         {
+            ToggleSuggest(false);
+
             _moveTween?.Kill();
             _bounceMoveTween?.Kill();
             _swapTween?.Kill();
-            ToggleSuggest(false);
         }
     }
 }

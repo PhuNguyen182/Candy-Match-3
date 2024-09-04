@@ -118,6 +118,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void ReleaseItem()
         {
+            itemAnimation.ToggleSuggest(false);
             SimplePool.Despawn(this.gameObject);
         }
 

@@ -50,6 +50,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
                 _colorfulEffect.transform.SetParent(EffectContainer.Transform);
             }
 
+            itemAnimation.ToggleSuggest(false);
             SimplePool.Despawn(this.gameObject);
         }
 

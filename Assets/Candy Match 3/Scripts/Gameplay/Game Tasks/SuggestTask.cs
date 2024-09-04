@@ -48,7 +48,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     int count = suggests.Count;
                     int index = _suggestCount == 0 ? count - 1 
-                                : Random.Range(count / 2, count - 1);
+                                : Random.Range(count * 2 / 3, count);
                     AvailableSuggest detectedSuggest = suggests[index];
                     
                     for (int i = 0; i < detectedSuggest.Positions.Count; i++)
