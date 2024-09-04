@@ -59,10 +59,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             _moveTween ??= CreateMoveTween(position, duration);
             _moveTween.ChangeValues(transform.position, position, duration);
             _moveTween.Play();
-            ChangeItemLayer(false);
 
             TimeSpan totalDuration = TimeSpan.FromSeconds(_moveTween.Duration());
-            return UniTask.Delay(totalDuration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+            return UniTask.Delay(totalDuration, false, PlayerLoopTiming.FixedUpdate, _destroyToken)
+                          .ContinueWith(() => ChangeItemLayer(false));
         }
 
         public UniTask BounceMove(Vector3 position)
