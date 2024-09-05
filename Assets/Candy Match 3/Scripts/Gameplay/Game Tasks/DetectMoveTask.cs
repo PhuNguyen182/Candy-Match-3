@@ -21,6 +21,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _allGridPositions;
         private List<AvailableSuggest> _availableMoves;
 
+        private const int ColorfulWithColorItemScore = 7;
+
         public DetectMoveTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask)
         {
             _gridCellManager = gridCellManager;
@@ -36,6 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _availableMoves = new();
         }
 
+        // To do: Set priority for common match whether the match contains boosters or not
         public void DetectPossibleMoves()
         {
             ClearResult();
@@ -60,6 +63,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                             {
                                 positions = new() { fromPosition, toPosition };
                                 score = GetComboBoosterScore(fromGridCell, toGridCell);
+
+                                _availableMoves.Add(new AvailableSuggest
+                                {
+                                    FromPosition = fromPosition,
+                                    ToPosition = toPosition,
+                                    Positions = positions,
+                                    Score = score
+                                });
+                            }
+
+                            else if(IsColorfulWithColorItem(fromGridCell, toGridCell))
+                            {
+                                score = ColorfulWithColorItemScore;
+                                positions = new() { fromPosition, toPosition };
 
                                 _availableMoves.Add(new AvailableSuggest
                                 {
@@ -162,32 +179,32 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             score = (boosterType1, boosterType2) switch
             {
                 // Striped + Striped
-                (BoosterType.Vertical, BoosterType.Vertical) => 5,
-                (BoosterType.Horizontal, BoosterType.Horizontal) => 5,
-                (BoosterType.Horizontal, BoosterType.Vertical) => 5,
-                (BoosterType.Vertical, BoosterType.Horizontal) => 5,
+                (BoosterType.Vertical, BoosterType.Vertical) => 9,
+                (BoosterType.Horizontal, BoosterType.Horizontal) => 9,
+                (BoosterType.Horizontal, BoosterType.Vertical) => 9,
+                (BoosterType.Vertical, BoosterType.Horizontal) => 9,
                 
                 // Wrapped + Wrapped
-                (BoosterType.Wrapped, BoosterType.Wrapped) => 6,
+                (BoosterType.Wrapped, BoosterType.Wrapped) => 10,
                 
                 // Wrapped + Striped
-                (BoosterType.Wrapped, BoosterType.Horizontal) => 7,
-                (BoosterType.Wrapped, BoosterType.Vertical) => 7,
-                (BoosterType.Horizontal, BoosterType.Wrapped) => 7,
-                (BoosterType.Vertical, BoosterType.Wrapped) => 7,
+                (BoosterType.Wrapped, BoosterType.Horizontal) => 11,
+                (BoosterType.Wrapped, BoosterType.Vertical) => 11,
+                (BoosterType.Horizontal, BoosterType.Wrapped) => 11,
+                (BoosterType.Vertical, BoosterType.Wrapped) => 11,
 
                 // Colorful + Striped
-                (BoosterType.Colorful, BoosterType.Horizontal) => 8,
-                (BoosterType.Colorful, BoosterType.Vertical) => 8,
-                (BoosterType.Horizontal, BoosterType.Colorful) => 8,
-                (BoosterType.Vertical, BoosterType.Colorful) => 8,
+                (BoosterType.Colorful, BoosterType.Horizontal) => 12,
+                (BoosterType.Colorful, BoosterType.Vertical) => 12,
+                (BoosterType.Horizontal, BoosterType.Colorful) => 12,
+                (BoosterType.Vertical, BoosterType.Colorful) => 12,
 
                 // Colorful + Wrapped
-                (BoosterType.Colorful, BoosterType.Wrapped) => 9,
-                (BoosterType.Wrapped, BoosterType.Colorful) => 9,
+                (BoosterType.Colorful, BoosterType.Wrapped) => 13,
+                (BoosterType.Wrapped, BoosterType.Colorful) => 13,
 
                 // Colorful = Colorful
-                (BoosterType.Colorful, BoosterType.Colorful) => 10,
+                (BoosterType.Colorful, BoosterType.Colorful) => 14,
                 _ => 0
             };
 
@@ -199,6 +216,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             int score = 0;
             int count = matchResult.Count;
             MatchType matchType = matchResult.MatchType;
+            bool hasBooster = matchResult.HasBooster;
 
             if (count == 3)
                 score = 1;
@@ -207,7 +225,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             else if (count >= 5)
                 score = matchType == MatchType.Match5 ? 4 : 3;
 
-            return score;
+            return score > 0 && hasBooster ? score + 2 : score;
         }
 
         private bool AreBoosters(IGridCell gridCell1, IGridCell gridCell2)
@@ -216,6 +234,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             BoosterType boosterType2 = GetBoosterType(gridCell2);
 
             return boosterType1 != BoosterType.None && boosterType2 != BoosterType.None;
+        }
+
+        private bool IsColorfulWithColorItem(IGridCell gridCell1, IGridCell gridCell2)
+        {
+            if (!gridCell1.BlockItem.IsMatchable && !gridCell2.BlockItem.IsMatchable)
+                return false;
+
+            return gridCell1.ItemType == ItemType.ColorBomb && gridCell1.ItemType != ItemType.ColorBomb
+                || gridCell1.ItemType != ItemType.ColorBomb && gridCell1.ItemType == ItemType.ColorBomb;
         }
 
         private BoosterType GetBoosterType(IGridCell gridCell)

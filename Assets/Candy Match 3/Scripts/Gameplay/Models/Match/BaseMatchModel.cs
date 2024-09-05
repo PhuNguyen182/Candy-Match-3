@@ -44,7 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
             for (int i = 0; i < sequencePattern.Count; i++)
             {
-                matchSequence = GetMatchCellsFromSequence(gridPosition, sequencePattern[i], out CandyColor matchColor);
+                matchSequence = GetMatchCellsFromSequence(gridPosition, sequencePattern[i], out CandyColor matchColor, out bool hasBooster);
                 if (matchSequence.Count >= requiredItemCount)
                 {
                     return new MatchResult
@@ -53,6 +53,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                         CandyColor = matchColor,
                         Position = gridPosition,
                         MatchSequence = matchSequence,
+                        HasBooster = hasBooster
                     };
                 }
             }
@@ -96,8 +97,9 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             return rotateMatchPositions;
         }
 
-        protected List<Vector3Int> GetMatchCellsFromSequence(Vector3Int position, SequencePattern sequence, out CandyColor matchColor)
+        protected List<Vector3Int> GetMatchCellsFromSequence(Vector3Int position, SequencePattern sequence, out CandyColor matchColor, out bool hasBooster)
         {
+            bool containBooster = false;
             List<Vector3Int> gridCells = new();
             
             IGridCell checkCell = gridCellManager.Get(position);
@@ -106,6 +108,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             if (candyColor == CandyColor.None)
             {
                 matchColor = candyColor;
+                hasBooster = false;
                 return gridCells;
             }
 
@@ -128,14 +131,50 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                     if (gridCells.Count < requiredItemCount)
                         break;
 
-                    else continue;
+                    else 
+                        continue;
                 }
+
+                if (IsBooster(gridCell.BlockItem))
+                    containBooster = true;
 
                 gridCells.Add(gridCell.GridPosition);
             }
 
+            hasBooster = containBooster;
             matchColor = candyColor;
             return gridCells;
+        }
+
+        private bool IsBooster(IBlockItem blockItem)
+        {
+            bool isBooster = blockItem.ItemType switch
+            {
+                ItemType.BlueHorizontal => true,
+                ItemType.GreenHorizontal => true,
+                ItemType.OrangeHorizontal => true,
+                ItemType.PurpleHorizontal => true,
+                ItemType.RedHorizontal => true,
+                ItemType.YellowHorizontal => true,
+                
+                ItemType.BlueVertical => true,
+                ItemType.GreenVertical => true,
+                ItemType.OrangeVertical => true,
+                ItemType.PurpleVertical => true,
+                ItemType.RedVertical => true,
+                ItemType.YellowVertical => true,
+                
+                ItemType.BlueWrapped => true,
+                ItemType.GreenWrapped => true,
+                ItemType.OrangeWrapped => true,
+                ItemType.PurpleWrapped => true,
+                ItemType.RedWrapped => true,
+                ItemType.YellowWrapped => true,
+                
+                _ => false
+            };
+
+            return isBooster;
         }
 
         public void Dispose()
