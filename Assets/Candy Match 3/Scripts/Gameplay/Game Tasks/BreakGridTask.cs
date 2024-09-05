@@ -91,7 +91,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     if (breakable.Break())
                     {
-                        blockItem.ItemBlast().Forget();
+                        await blockItem.ItemBlast();
 
                         if (blockItem is IItemEffect effect)
                             effect.PlayMatchEffect();
@@ -187,7 +187,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     await _activateBoosterTask.ActivateBooster(gridCell, true, true);
                     attackRange = _activateBoosterTask.GetAttackedBounds(booster);
-                    ReleaseGridCell(gridCell);
                 }
 
                 else if (blockItem is IBreakable breakable)
@@ -219,10 +218,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell.BlockItem is IItemEffect effect)
                 effect.PlayStartEffect();
 
-            TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
-            await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
-            gridCell.LockStates = LockStates.None;
+            //TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
+            //await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
+
             gridCell.IsMatching = false;
+            gridCell.LockStates = LockStates.None;
 
             if (hasBooster)
                 _checkGridTask.CheckRange(attackRange);
@@ -259,10 +259,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 await _activateBoosterTask.ActivateBooster(gridCell, true, true);
                 attackRange = _activateBoosterTask.GetAttackedBounds(booster);
-                ReleaseGridCell(gridCell);
                 
-                TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
-                await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
+                //TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
+                //await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
 
                 gridCell.IsMatching = false;
                 gridCell.LockStates = LockStates.None;

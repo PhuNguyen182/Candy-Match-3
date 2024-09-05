@@ -18,6 +18,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
             await UniTask.CompletedTask;
         }
 
+        public override void ResetItem()
+        {
+            base.ResetItem();
+            SetMatchable(true);
+            OnItemReset();
+        }
+
         public override void Explode()
         {
             SimplePool.Spawn(colorfulEffect, EffectContainer.Transform, WorldPosition, Quaternion.identity);
@@ -32,6 +39,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
         {
             itemAnimation.ToggleSuggest(false);
             SimplePool.Despawn(this.gameObject);
+        }
+
+        private void OnItemReset()
+        {
+            IsActivated = false;
         }
     }
 }
