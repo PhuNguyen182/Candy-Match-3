@@ -155,8 +155,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             bool hasBooster = false;
             BoundsInt attackRange = new();
-            gridCell.LockStates = LockStates.Matching;
-            IBlockItem blockItem = gridCell.BlockItem;
 
             if (gridCell.GridStateful is IBreakable stateBreakable)
             {
@@ -171,6 +169,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
             }
 
+            IBlockItem blockItem = gridCell.BlockItem;
+            gridCell.LockStates = LockStates.Matching;
+
             if (gridCell.HasItem)
             {
                 if (blockItem is IBooster booster)
@@ -179,6 +180,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     if (booster.IsNewCreated)
                     {
+                        gridCell.IsMatching = false;
                         gridCell.LockStates = LockStates.None;
                         return;
                     }
@@ -220,6 +222,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
             await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
             gridCell.LockStates = LockStates.None;
+            gridCell.IsMatching = false;
 
             if (hasBooster)
                 _checkGridTask.CheckRange(attackRange);
@@ -249,6 +252,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (booster.IsNewCreated)
                 {
+                    gridCell.IsMatching = false;
                     gridCell.LockStates = LockStates.None;
                     return;
                 }
@@ -259,7 +263,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 
                 TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
                 await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
-                
+
+                gridCell.IsMatching = false;
                 gridCell.LockStates = LockStates.None;
                 _checkGridTask.CheckRange(attackRange);
                 return;
@@ -278,6 +283,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
             }
 
+            gridCell.IsMatching = false;
             gridCell.LockStates = LockStates.None;
         }
 

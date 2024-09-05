@@ -266,7 +266,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void BuildLevelBoard()
         {
-            _allGridPositions = new(_gridCellManager.GetAllPositions());
+            _allGridPositions = new(_gridCellManager.GetActivePositions());
         }
 
         public bool HasPossibleMove()

@@ -26,6 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly ExplodeItemTask _explodeItemTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
         private readonly ComboBoosterHandleTask _comboBoosterHandleTask;
+        private readonly CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly DetectMoveTask _detectMoveTask;
         private readonly SuggestTask _suggestTask;
 
@@ -69,6 +70,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _suggestTask = new(_gridCellManager, _detectMoveTask);
             _suggestTask.AddTo(ref builder);
 
+            _checkGameBoardMovementTask = new(_gridCellManager);
+            _checkGameBoardMovementTask.AddTo(ref builder);
+
             _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 
@@ -81,6 +85,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _inputProcessor.IsActive = isActive;
         }
 
+        public void BuildBoardMovementCheck()
+        {
+            _checkGameBoardMovementTask.BuildCheckBoard();
+        }
+
         public void BuildSuggest()
         {
             _detectMoveTask.BuildLevelBoard();
@@ -89,6 +98,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void Suggest(bool isSuggest)
         {
             _suggestTask.Suggest(isSuggest);
+        }
+
+        public void TestLock()
+        {
+            if(_checkGameBoardMovementTask.LockProperty.CurrentValue)
+            Debug.Log(_checkGameBoardMovementTask.LockProperty.CurrentValue);
         }
 
         private void SetCheckGridTask()

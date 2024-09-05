@@ -95,6 +95,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             {
                 Suggest(false);
             }
+
+            //_gameTaskManager.TestLock();
         }
 #endif
 
@@ -221,6 +223,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
             _gameTaskManager.BuildSuggest();
+            _gameTaskManager.BuildBoardMovementCheck();
             _gameTaskManager.SetInputActive(true);
         }
 

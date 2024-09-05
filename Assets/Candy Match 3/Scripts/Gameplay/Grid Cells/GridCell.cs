@@ -57,7 +57,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             set
             {
                 _lockStates = value;
-                CheckLockProperty.Value = _lockStates != LockStates.None;
+                CheckLockProperty.Value = IsLocked;
             }
         }
 
