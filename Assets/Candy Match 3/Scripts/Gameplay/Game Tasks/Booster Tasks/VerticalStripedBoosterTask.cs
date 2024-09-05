@@ -82,7 +82,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             IGridCell gridCell = _gridCellManager.Get(position);
 
-            if (gridCell == null || gridCell.IsLocked)
+            if (gridCell == null)
                 return;
 
             await _breakGridTask.BreakItem(position);

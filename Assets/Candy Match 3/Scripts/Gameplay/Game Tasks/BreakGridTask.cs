@@ -69,7 +69,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return;
             }
 
-            if (gridCell.HasItem)
+            if (gridCell.HasItem && !gridCell.IsLocked)
             {
                 gridCell.LockStates = LockStates.Breaking;
                 IBlockItem blockItem = gridCell.BlockItem;
@@ -122,7 +122,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return;
             }
 
-            if (!gridCell.HasItem)
+            if (!gridCell.HasItem || gridCell.IsLocked)
                 return;
 
             gridCell.LockStates = LockStates.Breaking;
@@ -245,6 +245,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
             }
 
+            if (gridCell.IsLocked)
+                return;
+
             IBlockItem blockItem = gridCell.BlockItem;
             gridCell.LockStates = LockStates.Matching;
 
@@ -260,9 +263,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 await _activateBoosterTask.ActivateBooster(gridCell, true, true);
                 attackRange = _activateBoosterTask.GetAttackedBounds(booster);
                 
-                //TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
-                //await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
-
                 gridCell.IsMatching = false;
                 gridCell.LockStates = LockStates.None;
                 _checkGridTask.CheckRange(attackRange);
@@ -288,7 +288,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask BreakAdjacent(IGridCell gridCell)
         {
-            if (gridCell == null || !gridCell.HasItem)
+            if (gridCell == null || !gridCell.HasItem || gridCell.IsLocked)
                 return;
 
             if (gridCell.GridStateful is IAdjcentBreakable stateBreakable)
