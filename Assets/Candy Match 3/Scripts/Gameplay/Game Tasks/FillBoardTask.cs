@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,8 +15,6 @@ using CandyMatch3.Scripts.Gameplay.Interfaces;
 using GlobalScripts.Probabilities;
 using GlobalScripts.Extensions;
 using Random = UnityEngine.Random;
-using System.Linq;
-using Sirenix.Utilities;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -163,7 +162,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             using(var listPool = HashSetPool<CandyColor>.Get(out HashSet<CandyColor> candyColors))
             {
-                candyColors.AddRange(_candyColors);
+                candyColors.UnionWith(_candyColors);
 
                 IGridCell leftCell1 = _gridCellManager.Get(position + new Vector3Int(-1, 0));
                 IGridCell leftCell2 = _gridCellManager.Get(position + new Vector3Int(-2, 0));
