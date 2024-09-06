@@ -43,8 +43,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _explodeItemTask = new(_gridCellManager);
             _explodeItemTask.AddTo(ref builder);
 
+            _detectMoveTask = new(_gridCellManager, _matchItemsTask);
+            _detectMoveTask.AddTo(ref builder);
+
+            _suggestTask = new(_gridCellManager, _detectMoveTask);
+            _suggestTask.AddTo(ref builder);
+
             _breakGridTask = breakGridTask;
-            _swapItemTask = new(_gridCellManager, _matchItemsTask);
+            _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask);
             _inputProcessor = new(boardInput, _gridCellManager, _swapItemTask);
             _inputProcessor.AddTo(ref builder);
 
@@ -63,12 +69,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _spawnItemTask = spawnItemTask;
             _spawnItemTask.SetMoveItemTask(_moveItemTask);
-
-            _detectMoveTask = new(_gridCellManager, _matchItemsTask);
-            _detectMoveTask.AddTo(ref builder);
-
-            _suggestTask = new(_gridCellManager, _detectMoveTask);
-            _suggestTask.AddTo(ref builder);
 
             _checkGameBoardMovementTask = new(_gridCellManager);
             _checkGameBoardMovementTask.AddTo(ref builder);
@@ -98,12 +98,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void Suggest(bool isSuggest)
         {
             _suggestTask.Suggest(isSuggest);
-        }
-
-        public void TestLock()
-        {
-            if(_checkGameBoardMovementTask.LockProperty.CurrentValue)
-            Debug.Log(_checkGameBoardMovementTask.LockProperty.CurrentValue);
         }
 
         private void SetCheckGridTask()

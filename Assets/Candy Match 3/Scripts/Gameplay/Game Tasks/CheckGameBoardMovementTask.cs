@@ -14,14 +14,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly GridCellManager _gridCellManager;
 
-        private ReactiveProperty<bool> _defaultSeed;
         private ReactiveProperty<bool> _aggregateValue;
+        private Observer<ReactiveProperty<bool>> _lockObserver;
 
         private TimeSpan _gridLockThrottle;
         private IDisposable _reactivePropertyDisposable;
         private IDisposable _gridLockDisposable;
 
-        public ReactiveProperty<bool> LockProperty { get; private set; }
+        public Observable<ReactiveProperty<bool>> LockObservable { get; private set; }
 
         public CheckGameBoardMovementTask(GridCellManager gridCellManager)
         {
@@ -29,15 +29,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _gridLockThrottle = TimeSpan.FromSeconds(0.5f);
             DisposableBuilder builder = Disposable.CreateBuilder();
-            
-            _defaultSeed = new();
-            _defaultSeed.AddTo(ref builder);
 
             _aggregateValue = new();
             _aggregateValue.AddTo(ref builder);
-
-            LockProperty = new();
-            LockProperty.AddTo(ref builder);
 
             _reactivePropertyDisposable = builder.Build();
         }
@@ -64,14 +58,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                                                      return _aggregateValue;
                                                  }));
 
-                latestObservable.Subscribe(value =>
-                                {
-                                    LockProperty = value;
-                                    if (LockProperty.Value)
-                                        Debug.Log($"Locked");
-                                })
-                                .AddTo(ref builder);
+                var lockStates = latestObservable.Where(value => value.Value);
+                var unlockStates = latestObservable.Debounce(_gridLockThrottle)
+                                                   .Where(value => !value.Value);
 
+                LockObservable = Observable.Merge(lockStates, unlockStates);
+                LockObservable.Subscribe().AddTo(ref builder);
+                
                 _gridLockDisposable = builder.Build();
             }
         }

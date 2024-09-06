@@ -26,7 +26,6 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
 
         private async UniTask AutoPlay()
         {
-            await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: _token);
             levelBuilder.Export(0, false);
 
             LevelModel levelModel;
@@ -45,6 +44,7 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                 LevelModel = levelModel
             };
 
+            await UniTask.Delay(TimeSpan.FromSeconds(1), cancellationToken: _token);
             await SceneLoader.LoadScene(SceneConstants.Gameplay);
         }
     }

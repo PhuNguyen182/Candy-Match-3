@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemAnimator: {fileID: 7378486016232513816}
+  itemGraphics: {fileID: 2456649845628900080}
   itemRenderer: {fileID: 2779670235256699062}
   fallenCurve:
     serializedVersion: 2
@@ -220,8 +221,13 @@ MonoBehaviour:
     m_RotationOrder: 4
   bounceDuration: 0.3
   bounceEase: 6
-  fadeDuration: 0.3
-  fadeEase: 4
+  highlightDuration: 1
+  highlightEase:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!95 &7378486016232513816
 Animator:
   serializedVersion: 5
@@ -232,7 +238,7 @@ Animator:
   m_GameObject: {fileID: 1637562412150069543}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 458f4951da7b30b42ac3d68e165f49d8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

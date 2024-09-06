@@ -2434,6 +2434,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effectDatabase: {fileID: 11400000, guid: 0b1e618e965f9b34396ea41173c93348, type: 2}
   soundEffectDatabase: {fileID: 11400000, guid: 05db13d91da92a1498b14b0d55577ebc, type: 2}
+  targetObject: {fileID: 656819555650274338, guid: 6f9c4298b222729419219da55a47c671, type: 3}
 --- !u!4 &1105668869
 Transform:
   m_ObjectHideFlags: 0

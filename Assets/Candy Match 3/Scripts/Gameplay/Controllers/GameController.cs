@@ -53,6 +53,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
         private int _check = 0;
         private CancellationToken _destroyToken;
+        private bool isLock;
 
         private void Awake()
         {
@@ -96,7 +97,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 Suggest(false);
             }
 
-            //_gameTaskManager.TestLock();
+            //_gameTaskManager.TestLock(out isLock);
         }
 #endif
 

@@ -14,13 +14,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly GridCellManager _gridCellManager;
         private readonly MatchItemsTask _matchItemsTask;
+        private readonly SuggestTask _suggestTask;
 
         private ComboBoosterHandleTask _comboBoosterHandleTask;
 
-        public SwapItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask)
+        public SwapItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask, SuggestTask suggestTask)
         {
             _gridCellManager = gridCellManager;
             _matchItemsTask = matchItemsTask;
+            _suggestTask = suggestTask;
         }
 
         public async UniTask SwapItem(Vector3Int fromPosition, Vector3Int toPosition, bool isSwapBack)
@@ -28,6 +30,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (fromPosition == toPosition)
                 return;
 
+            _suggestTask.ClearSuggest();
             IGridCell fromCell = _gridCellManager.Get(fromPosition);
             IGridCell toCell = _gridCellManager.Get(toPosition);
 

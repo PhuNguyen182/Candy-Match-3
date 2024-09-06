@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Databases;
+using CandyMatch3.Scripts.Gameplay.Miscs;
 using GlobalScripts.Effects;
 
 namespace CandyMatch3.Scripts.Gameplay.Effects
@@ -11,6 +12,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
     {
         [SerializeField] private EffectDatabase effectDatabase;
         [SerializeField] private SoundEffectDatabase soundEffectDatabase;
+        [SerializeField] private TargetCompletedObject targetObject;
 
         public static EffectManager Instance { get; private set; }
 
@@ -32,6 +34,11 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                                                                , EffectContainer.Transform
                                                                , Vector3.zero, Quaternion.identity);
             itemSoundEffect.PlaySound(sound);
+        }
+
+        public void SpawnFlyCompletedTarget(Vector3 position)
+        {
+            SimplePool.Spawn(targetObject, EffectContainer.Transform, position, Quaternion.identity);
         }
 
         public void SpawnNewCreatedEffect(Vector3 position)

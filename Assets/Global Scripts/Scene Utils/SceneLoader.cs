@@ -12,8 +12,7 @@ namespace GlobalScripts.SceneUtils
     {
         public static async UniTask LoadScene(string sceneName, LoadSceneMode loadMode = LoadSceneMode.Single)
         {
-            AsyncOperation sceneOperator = SceneManager.LoadSceneAsync(sceneName, loadMode);
-            await sceneOperator;
+            await SceneManager.LoadSceneAsync(sceneName, loadMode);
         }
 
         public static async UniTask LoadScene(string sceneName, IProgress<float> progress, LoadSceneMode loadMode = LoadSceneMode.Single)
