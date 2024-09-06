@@ -61,6 +61,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 booster.IsActivated = true;
                 await booster.Activate();
+                await UniTask.NextFrame(PlayerLoopTiming.FixedUpdate);
 
                 if (blockItem is IColorBooster colorBooster)
                 {

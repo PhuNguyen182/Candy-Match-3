@@ -78,6 +78,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     if (booster.IsNewCreated)
                     {
+                        gridCell.IsMatching = false;
                         gridCell.LockStates = LockStates.None;
                         return;
                     }
@@ -130,6 +131,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (blockItem is IBooster booster)
             {
+                if (booster.IsNewCreated)
+                {
+                    gridCell.IsMatching = false;
+                    gridCell.LockStates = LockStates.None;
+                    return;
+                }
+
                 await _activateBoosterTask.ActivateBooster(gridCell, true, false);
                 gridCell.LockStates = LockStates.None;
                 return;
@@ -218,8 +226,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell.BlockItem is IItemEffect effect)
                 effect.PlayStartEffect();
 
-            //TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
-            //await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
+            TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
+            await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
 
             gridCell.IsMatching = false;
             gridCell.LockStates = LockStates.None;

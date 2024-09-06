@@ -6,10 +6,11 @@ using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Common.Constants;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IBreakable, IItemSuggest
+    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IItemSuggest
     {
         [SerializeField] private BoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
@@ -37,7 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             base.ResetItem();
             SetMatchable(true);
-            OnItemReset();
+            OnItemReset().Forget();
         }
 
         public override void SetMatchable(bool isMatchable)
@@ -203,9 +204,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAward);
         }
 
-        private void OnItemReset()
+        private async UniTask OnItemReset()
         {
+            IsNewCreated = true;
             IsActivated = false;
+            await UniTask.Delay(TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay), false, PlayerLoopTiming.FixedUpdate, destroyToken);
+            IsNewCreated = false;
         }
 
         public void Highlight(bool isActive)
