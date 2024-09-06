@@ -2,6 +2,7 @@ namespace CandyMatch3.Scripts.Common.Constants
 {
     public struct Match3Constants
     {
+        public const int MatchDelayFrame = 3;
         public const int BoosterDelayFrame = 3;
 
         public const float ExplosionPower = 0.1f;

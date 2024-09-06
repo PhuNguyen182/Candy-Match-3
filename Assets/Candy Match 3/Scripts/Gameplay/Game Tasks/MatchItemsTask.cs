@@ -92,6 +92,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 using (var boundListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
                 {
+                    using var boundsPool = HashSetPool<BoundsInt>.Get(out HashSet<BoundsInt> attackRanges);
                     using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
 
                     for (int i = 0; i < matchResult.MatchSequence.Count; i++)
@@ -102,13 +103,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         IGridCell gridCell = _gridCellManager.Get(position);
                         IBlockItem blockItem = gridCell.BlockItem;
                         gridCell.IsMatching = true;
+                        BoundsInt attackBounds = new();
 
                         if (matchType != MatchType.Match3 && gridCell.GridPosition == matchResult.Position)
-                            matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor));
+                            matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor, attackBounds));
 
                         else
-                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count));
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count, attackBounds));
 
+                        attackRanges.Add(attackBounds);
                         for (int j = 0; j < _adjacentSteps.Count; j++)
                             adjacentPositions.Add(position + _adjacentSteps[j]);
                     }
@@ -130,8 +133,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     await UniTask.WhenAll(matchTasks);
                     BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
-                    await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
+                    await UniTask.DelayFrame(Match3Constants.MatchDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
+                    
                     _checkGridTask.CheckRange(checkMatchBounds);
+                    foreach (BoundsInt range in attackRanges)
+                    {
+                        if(range.size != Vector3Int.zero)
+                            _checkGridTask.CheckRange(range);
+                    }
                 }
             }
         }

@@ -1,5 +1,6 @@
 using R3;
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly VerticalStripedBoosterTask _verticalBoosterTask;
         private readonly WrappedBoosterTask _wrappedBoosterTask;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
         private IDisposable _disposable;
 
         public ColorfulBoosterTask ColorfulBoosterTask => _colorfulBoosterTask;
@@ -42,6 +45,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _wrappedBoosterTask.AddTo(ref builder);
             
             _disposable = builder.Build();
+
+            _cts = new();
+            _token = _cts.Token;
         }
 
         public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck)
@@ -117,6 +123,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void Dispose()
         {
+            _cts.Dispose();
             _disposable.Dispose();
         }
     }
