@@ -159,7 +159,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public async UniTask AddBooster(IGridCell gridCell, MatchType matchType, CandyColor candyColor, BoundsInt attackBounds)
+        public async UniTask AddBooster(IGridCell gridCell, MatchType matchType, CandyColor candyColor, Action<BoundsInt> onActive = null)
         {
             if (gridCell.GridStateful is IBreakable stateBreakable)
             {
@@ -189,7 +189,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     }
 
                     await _activateBoosterTask.ActivateBooster(gridCell, true, true);
-                    attackBounds = _activateBoosterTask.GetAttackedBounds(booster);
+                    onActive?.Invoke(_activateBoosterTask.GetAttackedBounds(booster));
                 }
 
                 else if (blockItem is IBreakable breakable)
@@ -228,7 +228,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             gridCell.LockStates = LockStates.None;
         }
 
-        public async UniTask BreakMatchItem(IGridCell gridCell, int matchCount, BoundsInt attackBounds)
+        public async UniTask BreakMatchItem(IGridCell gridCell, int matchCount, Action<BoundsInt> onActive = null)
         {
             if (gridCell.GridStateful is IBreakable stateBreakable)
             {
@@ -260,7 +260,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 await _activateBoosterTask.ActivateBooster(gridCell, true, true);
-                attackBounds = _activateBoosterTask.GetAttackedBounds(booster);
+                onActive?.Invoke(_activateBoosterTask.GetAttackedBounds(booster));
                 
                 gridCell.IsMatching = false;
                 gridCell.LockStates = LockStates.None;

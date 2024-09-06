@@ -103,15 +103,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         IGridCell gridCell = _gridCellManager.Get(position);
                         IBlockItem blockItem = gridCell.BlockItem;
                         gridCell.IsMatching = true;
-                        BoundsInt attackBounds = new();
 
                         if (matchType != MatchType.Match3 && gridCell.GridPosition == matchResult.Position)
-                            matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor, attackBounds));
+                        {
+                            matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor, bounds =>
+                            {
+                                attackRanges.Add(bounds);
+                            }));
+                        }
 
                         else
-                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count, attackBounds));
+                        {
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count, bounds =>
+                            {
+                                attackRanges.Add(bounds);
+                            }));
+                        }
 
-                        attackRanges.Add(attackBounds);
                         for (int j = 0; j < _adjacentSteps.Count; j++)
                             adjacentPositions.Add(position + _adjacentSteps[j]);
                     }
