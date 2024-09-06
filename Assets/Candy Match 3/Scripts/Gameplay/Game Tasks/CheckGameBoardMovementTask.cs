@@ -21,6 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private IDisposable _reactivePropertyDisposable;
         private IDisposable _gridLockDisposable;
 
+        public ReactiveProperty<bool> CheckBoardLockProperty { get; private set; }
         public Observable<ReactiveProperty<bool>> LockObservable { get; private set; }
 
         public CheckGameBoardMovementTask(GridCellManager gridCellManager)
@@ -29,10 +30,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _gridLockThrottle = TimeSpan.FromSeconds(0.5f);
             DisposableBuilder builder = Disposable.CreateBuilder();
-
+            
             _aggregateValue = new();
             _aggregateValue.AddTo(ref builder);
 
+            CheckBoardLockProperty = new();
             _reactivePropertyDisposable = builder.Build();
         }
 
@@ -63,7 +65,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                                                    .Where(value => !value.Value);
 
                 LockObservable = Observable.Merge(lockStates, unlockStates);
-                LockObservable.Subscribe().AddTo(ref builder);
+                LockObservable.Subscribe(value => CheckBoardLockProperty.Value = value.Value)
+                              .AddTo(ref builder);
                 
                 _gridLockDisposable = builder.Build();
             }

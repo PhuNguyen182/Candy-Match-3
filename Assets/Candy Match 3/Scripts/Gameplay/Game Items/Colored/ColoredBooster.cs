@@ -208,7 +208,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             IsNewCreated = true;
             IsActivated = false;
-            await UniTask.Delay(TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay), false, PlayerLoopTiming.FixedUpdate, destroyToken);
+            TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
+            await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, destroyToken);
             IsNewCreated = false;
         }
 
