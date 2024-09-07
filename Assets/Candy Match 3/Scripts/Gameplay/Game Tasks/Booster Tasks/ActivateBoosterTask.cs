@@ -24,6 +24,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private CancellationTokenSource _cts;
         private IDisposable _disposable;
 
+        public int ActiveBoosterCount { get; private set; }
         public ColorfulBoosterTask ColorfulBoosterTask => _colorfulBoosterTask;
 
         public ActivateBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask
@@ -66,6 +67,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     return;
 
                 booster.IsActivated = true;
+                ActiveBoosterCount = ActiveBoosterCount + 1;
+
                 await booster.Activate();
                 await UniTask.NextFrame(PlayerLoopTiming.FixedUpdate);
 
@@ -93,6 +96,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
 
             gridCell.LockStates = LockStates.None;
+            ActiveBoosterCount = ActiveBoosterCount - 1;
         }
 
         public BoundsInt GetAttackedBounds(IBooster booster)

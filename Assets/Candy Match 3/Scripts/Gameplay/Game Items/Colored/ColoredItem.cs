@@ -4,7 +4,13 @@ using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.DataStructs;
+using CandyMatch3.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.Utils;
+using MessagePipe;
+using Unity.PlasticSCM.Editor.UI;
+using CandyMatch3.Scripts.Common.Constants;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
@@ -19,6 +25,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private GameObject colorfulEffect;
 
         private GameObject _colorfulEffect;
+        private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
+        private IPublisher<AsyncMessage<MoveTargetData>> _moveToTargetPublisher;
 
         public override bool CanBeReplace => true;
 
@@ -34,7 +42,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void InitMessages()
         {
-            
+            _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
+            _moveToTargetPublisher = GlobalMessagePipe.GetPublisher<AsyncMessage<MoveTargetData>>();
         }
 
         public override async UniTask ItemBlast()
@@ -51,7 +60,34 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             }
 
             itemAnimation.ToggleSuggest(false);
+            MoveToTargetAndRelease().Forget();
             SimplePool.Despawn(this.gameObject);
+        }
+
+        private async UniTask MoveToTargetAndRelease()
+        {
+            MoveTargetData data = new MoveTargetData { TargetType = targetType };
+            MoveTargetData target = await MessageBrokerUtils<MoveTargetData>
+                                          .SendAsyncMessage(_moveToTargetPublisher, data);
+            if (!target.IsCompleted)
+            {
+                var flyObject = EffectManager.Instance.SpawnFlyCompletedTarget(targetType, transform.position);
+                flyObject.transform.localScale = Vector3.one;
+                
+                float distance = Vector3.Distance(target.Destination, transform.position);
+                
+                float speed = Mathf.Lerp(Match3Constants.MoveToNearTargetSpeed,
+                                         Match3Constants.MoveToFarTargetSpeed,
+                                         distance / Match3Constants.MaxMoveDistance);
+
+                float duration = distance / speed;
+                UniTask moveTask = flyObject.MoveToTarget(target.Destination, duration);
+                _decreaseTargetPublisher.Publish(new DecreaseTargetMessage
+                {
+                    Task = moveTask,
+                    TargetType = targetType
+                });
+            }
         }
 
         public void SetColor(CandyColor candyColor)

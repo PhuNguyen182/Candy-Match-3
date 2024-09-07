@@ -5,8 +5,10 @@ using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
+using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -16,6 +18,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly MatchItemsTask _matchItemsTask;
         private readonly SuggestTask _suggestTask;
 
+        private readonly IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
         private ComboBoosterHandleTask _comboBoosterHandleTask;
 
         public SwapItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask, SuggestTask suggestTask)
@@ -23,6 +26,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _gridCellManager = gridCellManager;
             _matchItemsTask = matchItemsTask;
             _suggestTask = suggestTask;
+
+            _decreaseMovePublisher = GlobalMessagePipe.GetPublisher<DecreaseMoveMessage>();
         }
 
         public async UniTask SwapItem(Vector3Int fromPosition, Vector3Int toPosition, bool isSwapBack)
@@ -53,12 +58,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if(_comboBoosterHandleTask.IsColorBoosters(fromCell, toCell))
                 {
+                    DecreaseMove();
                     await fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
                     await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
                 }
 
                 else
                 {
+                    DecreaseMove();
                     UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
                     UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
                     await UniTask.WhenAll(fromMoveTask, toMoveTask);
@@ -77,6 +84,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else if (_comboBoosterHandleTask.IsSwapToColorful(fromCell, toCell))
             {
+                DecreaseMove();
                 UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
                 UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
                 await UniTask.WhenAll(fromMoveTask, toMoveTask);
@@ -131,10 +139,21 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
                     EffectManager.Instance.PlaySoundEffect(SoundEffectType.Error);
                 }
+
+                else
+                    DecreaseMove();
             }
 
             else
+            {
+                DecreaseMove();
                 _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
+            }
+        }
+
+        private void DecreaseMove()
+        {
+            _decreaseMovePublisher.Publish(new DecreaseMoveMessage { CanDecrease = true });
         }
 
         public void SetComboBoosterHandler(ComboBoosterHandleTask comboBoosterHandleTask)

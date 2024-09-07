@@ -13,6 +13,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
     public class EffectManager : MonoBehaviour
     {
         [SerializeField] private EffectDatabase effectDatabase;
+        [SerializeField] private TargetDatabase targetDatabase;
         [SerializeField] private SoundEffectDatabase soundEffectDatabase;
         [SerializeField] private TargetCompletedObject targetObject;
 
@@ -40,9 +41,13 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             itemSoundEffect.PlaySound(sound);
         }
 
-        public void SpawnFlyCompletedTarget(Vector3 position)
+        public TargetCompletedObject SpawnFlyCompletedTarget(TargetEnum targetType, Vector3 position)
         {
-            SimplePool.Spawn(targetObject, EffectContainer.Transform, position, Quaternion.identity);
+            Sprite target = targetDatabase.GetTargetIcon(targetType);
+            TargetCompletedObject flyObject = SimplePool.Spawn(targetObject, EffectContainer.Transform
+                                                               , position, Quaternion.identity);
+            flyObject.SetItemIcon(target);
+            return flyObject;
         }
 
         public void SpawnNewCreatedEffect(Vector3 position)

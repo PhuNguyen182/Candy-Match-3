@@ -9,6 +9,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
     public class MatchableRegion : IDisposable
     {
+        public int Score;
         public ItemType RegionType;
         public List<IGridCell> Elements;
 

@@ -12,5 +12,9 @@ namespace CandyMatch3.Scripts.Common.Constants
         public const float BaseItemMoveSpeed = 9f;
         public const float FallenAccelaration = 1.618f;
         public const float TouchMoveTorerance = 0.25f; // 0.5f * 0.5f
+
+        public const float MoveToNearTargetSpeed = 1f;
+        public const float MoveToFarTargetSpeed = 18f;
+        public const float MaxMoveDistance = 12f;
     }
 }

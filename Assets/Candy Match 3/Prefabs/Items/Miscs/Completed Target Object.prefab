@@ -98,3 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemRenderer: {fileID: 3163117376680065719}
+  upEase: 6
+  easeX: 1
+  easeY: 5
+  easeScale: 4

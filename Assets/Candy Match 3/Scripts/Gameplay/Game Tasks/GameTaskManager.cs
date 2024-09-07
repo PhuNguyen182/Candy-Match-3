@@ -8,8 +8,10 @@ using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
+using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Common.Databases;
 using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Gameplay.Models;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -27,13 +29,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly ActivateBoosterTask _activateBoosterTask;
         private readonly ComboBoosterHandleTask _comboBoosterHandleTask;
         private readonly CheckGameBoardMovementTask _checkGameBoardMovementTask;
+        private readonly CheckTargetTask _checkTargetTask;
         private readonly DetectMoveTask _detectMoveTask;
         private readonly SuggestTask _suggestTask;
 
         private IDisposable _disposable;
 
         public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask
-            , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase)
+            , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase
+            , MainGamePanel mainGamePanel, TargetDatabase targetDatabase)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -70,6 +74,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _spawnItemTask = spawnItemTask;
             _spawnItemTask.SetMoveItemTask(_moveItemTask);
 
+            _checkTargetTask = new(targetDatabase, mainGamePanel);
             _checkGameBoardMovementTask = new(_gridCellManager);
             _checkGameBoardMovementTask.AddTo(ref builder);
 
@@ -98,6 +103,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void Suggest(bool isSuggest)
         {
             _suggestTask.Suggest(isSuggest);
+        }
+
+        public void BuildTarget(LevelModel levelModel)
+        {
+            _checkTargetTask.InitLevelTarget(levelModel);
+        }
+
+        public async UniTask Test()
+        {
+            await UniTask.CompletedTask;
+            //var x = _checkGameBoardMovementTask.CheckBoardLockProperty
+            //                                 .Where(x => x)
+            //                                 .Take(1);
+            //Debug.Log("Lock");
         }
 
         private void SetCheckGridTask()
