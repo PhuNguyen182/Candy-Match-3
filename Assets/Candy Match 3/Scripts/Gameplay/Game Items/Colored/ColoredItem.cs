@@ -68,19 +68,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             MoveTargetData data = new MoveTargetData { TargetType = targetType };
             MoveTargetData target = await MessageBrokerUtils<MoveTargetData>
-                                          .SendAsyncMessage(_moveToTargetPublisher, data);
+                                          .PublishAsyncMessage(_moveToTargetPublisher, data);
             if (!target.IsCompleted)
             {
                 var flyObject = EffectManager.Instance.SpawnFlyCompletedTarget(targetType, transform.position);
                 flyObject.transform.localScale = Vector3.one;
                 
                 float distance = Vector3.Distance(target.Destination, transform.position);
-                
-                float speed = Mathf.Lerp(Match3Constants.MoveToNearTargetSpeed,
-                                         Match3Constants.MoveToFarTargetSpeed,
-                                         distance / Match3Constants.MaxMoveDistance);
-
+                float speed = Mathf.Lerp(Match3Constants.NearSpeed, Match3Constants.FarSpeed, distance / Match3Constants.MaxDistance);
                 float duration = distance / speed;
+
                 UniTask moveTask = flyObject.MoveToTarget(target.Destination, duration);
                 _decreaseTargetPublisher.Publish(new DecreaseTargetMessage
                 {
