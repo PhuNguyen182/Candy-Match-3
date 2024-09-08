@@ -23,6 +23,14 @@ namespace GlobalScripts.Utils
             publisher.Publish(message);
             return message.Source.Task;
         }
+
+        public static bool SendBackMessage(AsyncMessage<T> message, T data)
+        {
+            if (message.Source == null)
+                return false;
+
+            return message.Source.TrySetResult(data);
+        }
     }
 }
 #endif

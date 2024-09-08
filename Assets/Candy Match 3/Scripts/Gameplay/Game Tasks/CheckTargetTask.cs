@@ -193,7 +193,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     Destination = position
                 };
 
-                message.Source.TrySetResult(moveTargetData);
+                MessageBrokerUtils<MoveTargetData>.SendBackMessage(message, moveTargetData);
             }
         }
 
