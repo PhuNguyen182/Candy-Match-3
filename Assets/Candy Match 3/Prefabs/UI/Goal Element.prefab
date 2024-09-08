@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224323642803125586}
   - component: {fileID: 1218582540558817976}
+  - component: {fileID: 4681252528347193537}
   m_Layer: 5
   m_Name: Goal Element
   m_TagString: Untagged
@@ -50,10 +51,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetType: 0
+  targetCellAnimator: {fileID: 4681252528347193537}
   amount: {fileID: 7241956670462178263}
   targetIcon: {fileID: 114200527321358376}
   finishObject: {fileID: 1275690485990228}
   failedObject: {fileID: 1309316068847824}
+--- !u!95 &4681252528347193537
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132557072156898}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: bd2fbe37eebf0354a9befcffcd68462a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1275690485990228
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,6 +11,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
     public class TargetElement : MonoBehaviour
     {
         [SerializeField] private TargetEnum targetType;
+        [SerializeField] private Animator targetCellAnimator;
 
         [Space(10)]
         [SerializeField] private TMP_Text amount;
@@ -20,7 +21,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
         [SerializeField] private GameObject finishObject;
         [SerializeField] private GameObject failedObject;
 
+        private int _goalAchievedHash;
+
         public TargetEnum TargetType => targetType;
+
+        private void Awake()
+        {
+            _goalAchievedHash = Animator.StringToHash("GoalAchieved");
+        }
 
         public void UpdateTargetView(TargetView targetView)
         {
@@ -38,7 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
 
         public void PlayTargetAnimation()
         {
-
+            targetCellAnimator.SetTrigger(_goalAchievedHash);
         }
     }
 }
