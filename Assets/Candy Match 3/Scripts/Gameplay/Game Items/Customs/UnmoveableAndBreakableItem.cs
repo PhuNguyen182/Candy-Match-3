@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
-using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Effects;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.Messages;
+using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
@@ -11,9 +14,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
     {
         [SerializeField] private Sprite[] itemHealthStates;
         [SerializeField] private ItemAnimation itemAnimation;
+        [SerializeField] private SoundEffectType breakSound;
 
         private int _healthPoint;
         private int _maxHealthPoint;
+
+        private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
 
         public override bool IsMatchable => false;
 
@@ -32,7 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public override void InitMessages()
         {
-
+            _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
         }
 
         public override async UniTask ItemBlast()
@@ -42,6 +48,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public override void ReleaseItem()
         {
+            _decreaseTargetPublisher.Publish(new DecreaseTargetMessage
+            {
+                TargetType = targetType,
+                Task = UniTask.CompletedTask,
+                HasMoveTask = false
+            });
+
+            PlayBreakEffect(_healthPoint);
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -107,6 +121,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public void PlayBreakEffect(int healthPoint)
         {
+            EffectManager.Instance.PlaySoundEffect(breakSound);
             EffectManager.Instance.SpawnSpecialEffect(itemType, WorldPosition);
         }
 

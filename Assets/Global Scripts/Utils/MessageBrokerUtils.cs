@@ -10,7 +10,7 @@ namespace GlobalScripts.Utils
         public UniTaskCompletionSource<T> Source;
     }
 
-    public class MessageBrokerUtils<T>
+    public struct MessageBrokerUtils<T>
     {
         public static UniTask<T> PublishAsyncMessage(IPublisher<AsyncMessage<T>> publisher, T data)
         {

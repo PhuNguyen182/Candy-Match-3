@@ -161,14 +161,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void DecreaseTarget(DecreaseTargetMessage message)
         {
-            UniTask task = message.Task;
-            _moveToTargetTasks.Add(task);
-
-            var moveTask = task.ContinueWith(() =>
+            if (message.HasMoveTask)
             {
+                UniTask task = message.Task;
+                _moveToTargetTasks.Add(task);
+
+                var moveTask = task.ContinueWith(() =>
+                {
+                    UpdateTarget(message.TargetType, true);
+                    _moveToTargetTasks.Remove(task);
+                });
+            }
+
+            else
                 UpdateTarget(message.TargetType, true);
-                _moveToTargetTasks.Remove(task);
-            });
         }
 
         private void InspectTargetInfo(AsyncMessage<MoveTargetData> message)

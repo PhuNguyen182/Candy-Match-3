@@ -7,5 +7,6 @@ namespace CandyMatch3.Scripts.Common.Messages
     {
         public UniTask Task;
         public TargetEnum TargetType;
+        public bool HasMoveTask;
     }
 }

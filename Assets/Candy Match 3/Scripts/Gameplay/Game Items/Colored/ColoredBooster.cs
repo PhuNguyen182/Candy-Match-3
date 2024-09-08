@@ -5,8 +5,10 @@ using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Effects;
-using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Common.Messages;
+using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
@@ -21,6 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private Sprite[] verticalSprites;
 
         private bool _isMatchable;
+        private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
 
         public override bool IsMatchable => _isMatchable;
 
@@ -48,7 +51,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void InitMessages()
         {
-            
+            _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
         }
 
         public override async UniTask ItemBlast()
@@ -119,6 +122,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void ReleaseItem()
         {
+            _decreaseTargetPublisher.Publish(new DecreaseTargetMessage
+            {
+                TargetType = targetType,
+                Task = UniTask.CompletedTask,
+                HasMoveTask = false
+            });
+
             itemAnimation.ToggleSuggest(false);
             SimplePool.Despawn(this.gameObject);
         }

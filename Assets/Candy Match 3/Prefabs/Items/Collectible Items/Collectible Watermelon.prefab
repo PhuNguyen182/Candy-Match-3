@@ -256,6 +256,7 @@ MonoBehaviour:
   targetType: 29
   itemGraphics: {fileID: 1074295951694253239}
   itemAnimation: {fileID: 6937057249914192535}
+  collectSound: 7
 --- !u!114 &1074295951694253239
 MonoBehaviour:
   m_ObjectHideFlags: 0

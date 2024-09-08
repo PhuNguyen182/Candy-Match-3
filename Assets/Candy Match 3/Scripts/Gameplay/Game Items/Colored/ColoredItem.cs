@@ -82,7 +82,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
                 _decreaseTargetPublisher.Publish(new DecreaseTargetMessage
                 {
                     Task = moveTask,
-                    TargetType = targetType
+                    TargetType = targetType,
+                    HasMoveTask = true
                 });
             }
         }

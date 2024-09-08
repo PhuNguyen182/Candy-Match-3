@@ -342,6 +342,7 @@ MonoBehaviour:
   itemHealthStates:
   - {fileID: 21300000, guid: 928399ceec4234543b912fc99beff35c, type: 3}
   itemAnimation: {fileID: -4633946500037530502}
+  breakSound: 11
 --- !u!114 &2508693984384139615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,6 +372,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemAnimator: {fileID: 4583443513107311738}
+  itemGraphics: {fileID: 2508693984384139615}
   itemRenderer: {fileID: 3474352009185529057}
   fallenCurve:
     serializedVersion: 2
@@ -422,8 +424,13 @@ MonoBehaviour:
     m_RotationOrder: 4
   bounceDuration: 0.3
   bounceEase: 6
-  fadeDuration: 0.3
-  fadeEase: 4
+  highlightDuration: 1
+  highlightEase:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!95 &4583443513107311738
 Animator:
   serializedVersion: 5
