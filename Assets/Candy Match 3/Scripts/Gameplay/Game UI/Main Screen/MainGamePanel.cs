@@ -4,8 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.DataStructs;
-using TMPro;
 using CandyMatch3.Scripts.Gameplay.Models;
+using TMPro;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
 {

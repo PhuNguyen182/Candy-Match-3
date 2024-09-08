@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Canvas))]
-public class CanvasHelper : MonoBehaviour
+public class CanvasSafeArea : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
     [SerializeField] private RectTransform safeAreaTransform;
 
-    private List<CanvasHelper> _helpers = new();
+    private List<CanvasSafeArea> _helpers = new();
     private ScreenOrientation _lastOrientation;
     private bool _screenChangeVarsInitialized = false;
     
@@ -106,6 +106,9 @@ public class CanvasHelper : MonoBehaviour
     private void OnValidate()
     {
         canvas ??= GetComponent<Canvas>();
+
+        if (transform.childCount > 0)
+            safeAreaTransform ??= transform.GetChild(0).GetComponent<RectTransform>();
     }
 #endif
 
