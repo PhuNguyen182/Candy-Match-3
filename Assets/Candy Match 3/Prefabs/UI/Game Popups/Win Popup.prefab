@@ -21535,6 +21535,8 @@ GameObject:
   m_Component:
   - component: {fileID: 224968632706431344}
   - component: {fileID: 95489732296903676}
+  - component: {fileID: 5508914263564344156}
+  - component: {fileID: 4039056211815109584}
   m_Layer: 5
   m_Name: Win Popup
   m_TagString: Untagged
@@ -21591,6 +21593,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5508914263564344156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1766137885755772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b7aadf31e9311a4bb4f70299d69497f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextButton: {fileID: 206976590975546295}
+  levelText: {fileID: 8794223226395027730}
+  scoreText: {fileID: 8580844022253031034}
+  scoreTween: {fileID: 4039056211815109584}
+  popupAnimator: {fileID: 95489732296903676}
+--- !u!114 &4039056211815109584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1766137885755772}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a33bfbfbdc7d9941b266120d6e7b31b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  duration: 0.3
+  ease: 6
 --- !u!1 &1796185225086614
 GameObject:
   m_ObjectHideFlags: 0

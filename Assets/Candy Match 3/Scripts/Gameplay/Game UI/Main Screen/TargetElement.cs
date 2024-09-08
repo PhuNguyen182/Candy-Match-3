@@ -21,23 +21,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
         [SerializeField] private GameObject finishObject;
         [SerializeField] private GameObject failedObject;
 
-        private int _goalAchievedHash;
+        private TargetView _targetView;
+        private TargetStats _targetStats;
+        private readonly int _goalAchievedHash = Animator.StringToHash("GoalAchieved");
 
         public TargetEnum TargetType => targetType;
 
-        private void Awake()
-        {
-            _goalAchievedHash = Animator.StringToHash("GoalAchieved");
-        }
-
         public void UpdateTargetView(TargetView targetView)
         {
+            _targetView = targetView;
             targetType = targetView.TargetType;
             targetIcon.sprite = targetView.Icon;
         }
 
         public void UpdateTargetCount(TargetStats stats)
         {
+            _targetStats = stats;
             amount.text = $"{stats.Amount}";
             finishObject.SetActive(stats.IsCompleted);
             failedObject.SetActive(stats.IsFailed);
@@ -47,6 +46,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
         public void PlayTargetAnimation()
         {
             targetCellAnimator.SetTrigger(_goalAchievedHash);
+        }
+
+        public TargetView GetView()
+        {
+            return _targetView;
+        }
+
+        public TargetStats GetStats()
+        {
+            return _targetStats;
         }
     }
 }

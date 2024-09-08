@@ -10,15 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Common Popups
+  m_Name: Popups
   m_EditorClassIdentifier: 
-  m_GroupName: Common Popups
+  m_GroupName: Popups
   m_Data:
     m_SerializedData: []
   m_GUID: 52e74c4886bb79c4881e48ccf569fd44
   m_SerializeEntries:
   - m_GUID: dc8801412258ce04dbe321bbba177fb4
     m_Address: Common Popups
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2351ca68446d94540bddda7175304edf
+    m_Address: Mainhome Popups
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
