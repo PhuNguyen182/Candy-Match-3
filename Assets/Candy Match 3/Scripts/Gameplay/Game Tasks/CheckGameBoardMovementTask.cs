@@ -67,12 +67,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 LockObservable = Observable.Merge(lockStates, unlockStates);
                 LockObservable.Subscribe(value => CheckBoardLockProperty.Value = value.Value)
                               .AddTo(ref builder);
-                CheckBoardLockProperty.Subscribe(x =>
-                {
-                    if (x)
-                        Debug.Log("Lock");
-                });
-                
                 _gridLockDisposable = builder.Build();
             }
         }
