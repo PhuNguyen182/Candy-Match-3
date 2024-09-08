@@ -973,7 +973,7 @@ GameObject:
   - component: {fileID: 224318277462623630}
   - component: {fileID: 95374153877954530}
   m_Layer: 5
-  m_Name: SettingsPopup
+  m_Name: Settings Popup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

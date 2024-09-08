@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 224608114219706694}
   - component: {fileID: 95271776455845840}
   m_Layer: 5
-  m_Name: SpecialCandiesAwardPopup
+  m_Name: Special Candies Award Popup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

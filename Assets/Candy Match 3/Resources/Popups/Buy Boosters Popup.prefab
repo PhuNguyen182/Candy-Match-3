@@ -10801,7 +10801,7 @@ GameObject:
   - component: {fileID: 224762351800325126}
   - component: {fileID: 95828518727954396}
   m_Layer: 5
-  m_Name: BuyBoostersPopup
+  m_Name: Buy Boosters Popup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

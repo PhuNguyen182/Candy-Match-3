@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 95669350199544250}
   - component: {fileID: 225149327996989942}
   m_Layer: 5
-  m_Name: InGameSettingsPopup
+  m_Name: In Game Settings Popup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
