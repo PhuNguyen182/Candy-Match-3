@@ -12,6 +12,7 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.LevelDesign.Databases;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
+using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using CandyMatch3.Scripts.Gameplay.GameTasks;
 using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Common.SingleConfigs;
@@ -24,6 +25,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
     public class GameController : MonoBehaviour
     {
         [SerializeField] private MainGamePanel mainGamePanel;
+        [SerializeField] private EndGameScreen endGameScreen;
 
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
@@ -89,21 +91,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 else
                     Time.timeScale = 0.02f;
             }
-
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                Suggest(true);
-            }
-
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                Suggest(false);
-            }
-
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                _gameTaskManager.Test().Forget();
-            }
         }
 #endif
 
@@ -140,7 +127,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
                                    , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
-                                   , mainGamePanel, targetDatabase);
+                                   , mainGamePanel, endGameScreen, targetDatabase);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);

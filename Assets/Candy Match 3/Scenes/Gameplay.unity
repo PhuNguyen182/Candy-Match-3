@@ -228,6 +228,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 224968632706431344, guid: 164d504cfe6064b75849c672953d91bc, type: 3}
   m_PrefabInstance: {fileID: 35272637}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &35272639 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5508914263564344156, guid: 164d504cfe6064b75849c672953d91bc, type: 3}
+  m_PrefabInstance: {fileID: 35272637}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b7aadf31e9311a4bb4f70299d69497f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &41471068
 GameObject:
   m_ObjectHideFlags: 0
@@ -1745,6 +1756,7 @@ GameObject:
   - component: {fileID: 515441320}
   - component: {fileID: 515441319}
   - component: {fileID: 515441323}
+  - component: {fileID: 515441324}
   m_Layer: 5
   m_Name: End Game Canvas
   m_TagString: Untagged
@@ -1850,6 +1862,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 515441321}
   safeAreaTransform: {fileID: 1278839177}
+--- !u!114 &515441324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515441318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ec7f6704576cf4ea51547594d5cf39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  background: {fileID: 1107196258}
+  winGamePanel: {fileID: 35272639}
+  loseGamePanel: {fileID: 549698429}
+  continuePopup: {fileID: 1137599768}
 --- !u!1001 &549698427
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1956,6 +1984,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 224968632706431344, guid: 9f199160ceaaf42ad96d621cc5575053, type: 3}
   m_PrefabInstance: {fileID: 549698427}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &549698429 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 681925043198721540, guid: 9f199160ceaaf42ad96d621cc5575053, type: 3}
+  m_PrefabInstance: {fileID: 549698427}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36f64639e8a45f2428d2934cd250c85e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &562915113
 GameObject:
   m_ObjectHideFlags: 0
@@ -3387,7 +3426,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1107196259
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3652,11 +3691,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1099203608701288, guid: c3522ef5529d241d6bc2c4cc663313e4, type: 3}
       propertyPath: m_Name
-      value: No Moves Popup
+      value: Continue Popup
       objectReference: {fileID: 0}
     - target: {fileID: 1099203608701288, guid: c3522ef5529d241d6bc2c4cc663313e4, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224018020508665082, guid: c3522ef5529d241d6bc2c4cc663313e4, type: 3}
       propertyPath: m_Pivot.x
@@ -3748,6 +3787,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 224018020508665082, guid: c3522ef5529d241d6bc2c4cc663313e4, type: 3}
   m_PrefabInstance: {fileID: 1137599766}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1137599768 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6590902372643867365, guid: c3522ef5529d241d6bc2c4cc663313e4, type: 3}
+  m_PrefabInstance: {fileID: 1137599766}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 967da0aadacfa7442b0836cd09ea2afa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1165285151
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5469,6 +5519,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainGamePanel: {fileID: 2072654809}
+  endGameScreen: {fileID: 515441324}
   boardTilemap: {fileID: 1227475531}
   itemDatabase: {fileID: 11400000, guid: 38e4fde2c70af1d41b96215992c46be4, type: 2}
   tileDatabase: {fileID: 11400000, guid: f6726b3f937ba334f8580c6528205f29, type: 2}
@@ -6252,7 +6303,7 @@ Transform:
   m_GameObject: {fileID: 2141531762}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
   m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -1,3 +1,4 @@
+using R3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,22 +28,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private int _score = 0;
         private int _moveCount = 0;
 
-        private ScoreRule _scoreRule;
         private HashSet<UniTask> _moveToTargetTasks;
         private List<LevelTargetData> _levelTargetDatas;
         private Dictionary<TargetEnum, TargetElement> _targetCollections;
         private Dictionary<TargetEnum, int> _targetCounts;
+        
+        private ScoreRule _scoreRule;
+        private EndGameTask _endGameTask;
         private IDisposable _disposable;
+
+        public Action<bool> OnEndGame;
 
         public CheckTargetTask(TargetDatabase targetDatabase, MainGamePanel mainGameScreen)
         {
             _targetDatabase = targetDatabase;
             _mainGamePanel = mainGameScreen;
             _targetDatabase.Initialize();
+
             _moveToTargetTasks = new();
 
-            var builder = DisposableBag.CreateBuilder();
-            
+            var builder = MessagePipe.DisposableBag.CreateBuilder();            
             _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
             _moveToTargetSubscriber = GlobalMessagePipe.GetSubscriber<AsyncMessage<MoveTargetData>>();
             _decreaseTargetSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseTargetMessage>();
@@ -92,6 +97,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _targetCollections = _mainGamePanel.TargetElements;
         }
 
+        public bool IsAllItemsStop()
+        {
+            return _moveToTargetTasks.Count <= 0;
+        }
+
         public void CheckEndGame()
         {
             int remainCount = 0;
@@ -102,12 +112,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (_moveCount >= 0 && remainCount <= 0)
             {
-                // Win game
+                OnEndGame?.Invoke(true);
             }
 
             else if(_moveCount == 0 && remainCount > 0)
             {
-                // Lose game
+                OnEndGame?.Invoke(false);
             }
         }
 
@@ -129,6 +139,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             _moveCount = _moveCount + move;
             UpdateMove();
+            CheckEndGame();
+        }
+
+        public void SetEndGameTask(EndGameTask endGameTask)
+        {
+            _endGameTask = endGameTask;
         }
 
         private void UpdateMove()
@@ -209,10 +225,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void Dispose()
         {
             _disposable.Dispose();
+
+            _targetCounts.Clear();
             _moveToTargetTasks.Clear();
             _levelTargetDatas.Clear();
             _targetCollections.Clear();
-            _targetCounts.Clear();
         }
     }
 }

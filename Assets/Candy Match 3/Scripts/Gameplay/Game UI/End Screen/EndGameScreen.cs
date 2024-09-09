@@ -10,6 +10,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         [SerializeField] private GameObject background;
         [SerializeField] private WinGamePanel winGamePanel;
         [SerializeField] private LoseGamePanel loseGamePanel;
+        [SerializeField] private ContinuePopup continuePopup;
 
         private void Awake()
         {
@@ -17,9 +18,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             loseGamePanel.SetBackground(background);
         }
 
-        public void ShowWinGame()
+        public UniTask ShowWinGame()
         {
-            winGamePanel.gameObject.SetActive(true);
+            return winGamePanel.ShowWinGame();
+        }
+
+        public UniTask ShowLoseGame()
+        {
+            return loseGamePanel.ShowLosePanel();
+        }
+
+        public UniTask<bool> ShowContinue()
+        {
+            return continuePopup.ShowContinue();
         }
     }
 }

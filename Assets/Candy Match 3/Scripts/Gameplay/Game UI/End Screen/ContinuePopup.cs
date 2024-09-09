@@ -1,9 +1,12 @@
 using R3;
+using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using GlobalScripts.Effects.Tweens;
+using Cysharp.Threading.Tasks;
 using TMPro;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
@@ -25,11 +28,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         private int _price = 0;
         private ReactiveProperty<int> _reactiveCoin = new(0);
+
+        private CancellationToken _token;
+        private UniTaskCompletionSource<bool> _completionSource;
         private readonly int _closeHash = Animator.StringToHash("Close");
 
         private void Awake()
         {
-            playButton.onClick.AddListener(OnPlayClicked);
+            _token = this.GetCancellationTokenOnDestroy();
+
+            playButton.onClick.AddListener(() => OnPlayClicked().Forget());
             quitButton.onClick.AddListener(OnQuitClicked);
 
             coinTween.BindInt(_reactiveCoin, UpdateCoin);
@@ -48,14 +56,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             moveMessage.text = $"Add +{move} extra moves to continue.";
         }
 
-        private void OnPlayClicked()
+        public UniTask<bool> ShowContinue()
         {
+            _completionSource = new();
+            gameObject.SetActive(true);
+            return _completionSource.Task;
+        }
 
+        private async UniTask OnPlayClicked()
+        {
+            await Close();
+            _completionSource.TrySetResult(true);
+            gameObject.SetActive(false);
+            // To do: spend coins to purchase next moves
         }
 
         private void OnQuitClicked()
         {
-
+            //_completionSource.TrySetResult(false); This line should be called in quit popup
         }
 
         private void UpdateCoin(int coin)
@@ -66,6 +84,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         private void ShowCoin(int coin)
         {
             currentCoin.text = $"{coin:N1, ru-RU}";
+        }
+
+        private async UniTask Close()
+        {
+            popupAnimator.SetTrigger(_closeHash);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
         }
     }
 }

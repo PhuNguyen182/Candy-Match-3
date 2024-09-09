@@ -1,4 +1,6 @@
 using R3;
+using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,10 +22,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         private GameObject _background;
         private ReactiveProperty<int> _reactiveScore = new(0);
         private readonly int _closeHash = Animator.StringToHash("Close");
+        
+        private CancellationToken _token;
+        private UniTaskCompletionSource _source;
 
         private void Awake()
         {
-            nextButton.onClick.AddListener(OnNextClicked);
+            _token = this.GetCancellationTokenOnDestroy();
+
+            nextButton.onClick.AddListener(() => OnNextClicked().Forget());
             scoreTween.BindInt(_reactiveScore, ShowScore);
             _reactiveScore.Value = 0;
         }
@@ -31,6 +38,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         public void SetBackground(GameObject background)
         {
             _background = background;
+        }
+
+        public UniTask ShowWinGame()
+        {
+            _source = new();
+            gameObject.SetActive(true);
+            return _source.Task;
         }
 
         public void UpdateScore(int score)
@@ -48,14 +62,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             scoreText.text = $"Your score: <color=#B83555>{score:N1, ru-RU}</color>";
         }
 
-        private void OnNextClicked()
+        private async UniTask OnNextClicked()
         {
-
+            await Close();
+            _source.TrySetResult();
+            gameObject.SetActive(false);
         }
 
         private async UniTask Close()
         {
-            await UniTask.CompletedTask;
+            popupAnimator.SetTrigger(_closeHash);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
         }
     }
 }
