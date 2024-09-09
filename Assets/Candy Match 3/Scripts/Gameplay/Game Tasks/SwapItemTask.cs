@@ -35,7 +35,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (fromPosition == toPosition)
                 return;
 
-            _suggestTask.ClearSuggest();
+            _suggestTask.Suggest(false);
             IGridCell fromCell = _gridCellManager.Get(fromPosition);
             IGridCell toCell = _gridCellManager.Get(toPosition);
 

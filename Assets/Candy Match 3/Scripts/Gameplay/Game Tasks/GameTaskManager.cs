@@ -61,6 +61,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask);
             _inputProcessor = new(boardInput, _gridCellManager, _swapItemTask);
             _inputProcessor.AddTo(ref builder);
+            _suggestTask.SetInputProcessTask(_inputProcessor);
 
             _moveItemTask = new(_gridCellManager, _breakGridTask);
             _moveItemTask.AddTo(ref builder);
@@ -81,6 +82,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkTargetTask = new(targetDatabase, mainGamePanel);
             _checkGameBoardMovementTask = new(_gridCellManager);
             _checkGameBoardMovementTask.AddTo(ref builder);
+
+            _suggestTask.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
             _inputProcessor.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
 
             _endGameTask = new(_checkTargetTask, _checkGameBoardMovementTask, _activateBoosterTask);

@@ -73,7 +73,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                                 });
                             }
 
-                            else if(IsColorfulWithColorItem(fromGridCell, toGridCell))
+                            else if (IsColorfulWithColorItem(fromGridCell, toGridCell))
                             {
                                 score = ColorfulWithColorItemScore;
                                 positions = new() { fromPosition, toPosition };
@@ -126,10 +126,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                                     ToPosition = toPosition,
                                     Positions = positions
                                 });
-
-                                // Swap back
-                                PseudoSwapItems(fromGridCell, toGridCell);
                             }
+
+                            // Swap back
+                            PseudoSwapItems(fromGridCell, toGridCell);
                         }
                     }
                 }
