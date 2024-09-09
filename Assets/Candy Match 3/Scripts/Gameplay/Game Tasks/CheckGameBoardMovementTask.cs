@@ -14,66 +14,43 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly GridCellManager _gridCellManager;
 
-        private ReactiveProperty<bool> _aggregateValue;
-        private Observer<ReactiveProperty<bool>> _lockObserver;
-
         private TimeSpan _gridLockThrottle;
-        private IDisposable _reactivePropertyDisposable;
         private IDisposable _gridLockDisposable;
 
-        public ReactiveProperty<bool> CheckBoardLockProperty { get; private set; }
-        public Observable<ReactiveProperty<bool>> LockObservable { get; private set; }
+        public bool IsBoardLock { get; private set; }
 
         public CheckGameBoardMovementTask(GridCellManager gridCellManager)
         {
             _gridCellManager = gridCellManager;
-
             _gridLockThrottle = TimeSpan.FromSeconds(0.5f);
-            DisposableBuilder builder = Disposable.CreateBuilder();
-            
-            _aggregateValue = new();
-            _aggregateValue.AddTo(ref builder);
-
-            CheckBoardLockProperty = new();
-            _reactivePropertyDisposable = builder.Build();
         }
 
         public void BuildCheckBoard()
         {
-            using(ListPool<ReactiveProperty<bool>>.Get(out List<ReactiveProperty<bool>> gridLockProperties))
+            using (var positionPool = ListPool<Vector3Int>.Get(out var activePositions))
             {
-                using var positionPool = ListPool<Vector3Int>.Get(out var activePositions);
+                DisposableBuilder builder = Disposable.CreateBuilder();
                 activePositions.AddRange(_gridCellManager.GetActivePositions());
 
                 foreach (Vector3Int position in activePositions)
                 {
                     IGridCell gridCell = _gridCellManager.Get(position);
-                    gridLockProperties.Add(gridCell.CheckLockProperty);
+                    gridCell.CheckLockProperty
+                            .Subscribe(SetLockValue)
+                            .AddTo(ref builder);
                 }
 
-                DisposableBuilder builder = Disposable.CreateBuilder();
-                var gridLockObservable = gridLockProperties.ToObservable();
-                var latestObservable = Observable.CombineLatest(gridLockObservable)
-                                                 .Select(properties => properties.Aggregate((a, b) =>
-                                                 {
-                                                     _aggregateValue.Value = a.Value || b.Value;
-                                                     return _aggregateValue;
-                                                 }));
-
-                var lockStates = latestObservable.Where(value => value.Value);
-                var unlockStates = latestObservable.Debounce(_gridLockThrottle)
-                                                   .Where(value => !value.Value);
-
-                LockObservable = Observable.Merge(lockStates, unlockStates);
-                LockObservable.Subscribe(value => CheckBoardLockProperty.Value = value.Value)
-                              .AddTo(ref builder);
                 _gridLockDisposable = builder.Build();
             }
         }
 
+        private void SetLockValue(bool isLocked)
+        {
+            IsBoardLock = isLocked;
+        }
+
         public void Dispose()
         {
-            _reactivePropertyDisposable.Dispose();
             _gridLockDisposable?.Dispose();
         }
     }

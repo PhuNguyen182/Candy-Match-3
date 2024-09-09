@@ -29,9 +29,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _token = _cts.Token;
 
             var builder = Disposable.CreateBuilder();
-            _checkGameBoardMovementTask.CheckBoardLockProperty
-                                       .Subscribe(x => Debug.Log(x))
-                                       .AddTo(ref builder);
             _disposable = builder.Build();
 
             _checkTargetTask.SetEndGameTask(this);
@@ -49,12 +46,21 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask WaitForBoardStop()
         {
-            if (_checkGameBoardMovementTask.LockObservable != null)
-            {
-                await _checkGameBoardMovementTask.LockObservable.Where(value => !value.Value).Take(1).WaitAsync();
-                await UniTask.WaitUntil(() => _activateBoosterTask.ActiveBoosterCount <= 0 && _checkTargetTask.IsAllItemsStop()
-                , PlayerLoopTiming.Update, _token);
-            }
+            await UniTask.WaitUntil(() => IsBoardStop(), PlayerLoopTiming.Update, _token);
+        }
+
+        private bool IsBoardStop()
+        {
+            if (_checkGameBoardMovementTask.IsBoardLock)
+                return false;
+
+            if (_activateBoosterTask.ActiveBoosterCount > 0)
+                return false;
+
+            if (!_checkTargetTask.IsAllTargetsStopped())
+                return false;
+
+            return true;
         }
 
         public void Dispose()

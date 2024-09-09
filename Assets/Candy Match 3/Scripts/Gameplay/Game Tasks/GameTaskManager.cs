@@ -13,6 +13,7 @@ using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using Cysharp.Threading.Tasks;
+using UnityEngine.InputSystem;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -80,6 +81,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkTargetTask = new(targetDatabase, mainGamePanel);
             _checkGameBoardMovementTask = new(_gridCellManager);
             _checkGameBoardMovementTask.AddTo(ref builder);
+            _inputProcessor.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
 
             _endGameTask = new(_checkTargetTask, _checkGameBoardMovementTask, _activateBoosterTask);
             _endGameTask.AddTo(ref builder);
@@ -117,6 +119,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void BuildTarget(LevelModel levelModel)
         {
             _checkTargetTask.InitLevelTarget(levelModel);
+        }
+
+        public void Test(out bool isLock)
+        {
+            isLock = _checkGameBoardMovementTask.IsBoardLock;
+            if (isLock)
+                Debug.Log("Lock");
         }
 
         private void SetCheckGridTask()

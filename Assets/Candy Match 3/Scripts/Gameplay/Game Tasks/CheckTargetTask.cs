@@ -97,7 +97,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _targetCollections = _mainGamePanel.TargetElements;
         }
 
-        public bool IsAllItemsStop()
+        public bool IsAllTargetsStopped()
         {
             return _moveToTargetTasks.Count <= 0;
         }

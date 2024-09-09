@@ -16,8 +16,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly BoardInput _boardInput;
         private readonly GridCellManager _gridCellManager;
         private readonly SwapItemTask _swapItemTask;
-
+        
         private bool _isSwapped = false;
+        private CheckGameBoardMovementTask _checkGameBoardMovement;
 
         private Vector2 _movePosition;
         private Vector3 _selectedPosition;
@@ -45,12 +46,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void OnUpdate()
         {
-            if (IsActive)
+            if (IsActive && !_checkGameBoardMovement.IsBoardLock)
             {
                 OnPress();
                 OnDrag();
                 OnRelease();
             }
+        }
+
+        public void SetCheckGameBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
+        {
+            _checkGameBoardMovement = checkGameBoardMovementTask;
         }
 
         private void OnPress()
