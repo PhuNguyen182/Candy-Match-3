@@ -233,11 +233,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             return boardTilemap.WorldToCell(position);
         }
 
-        private void Suggest(bool isSuggest)
-        {
-            _gameTaskManager.Suggest(isSuggest);
-        }
-
         private void OnDestroy()
         {
             GC.Collect();

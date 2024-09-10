@@ -22,7 +22,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private const float SuggestDelay = 4f;
         private const float SuggestInterval = 6f;
-        private const float SuggestCooldown = 8f;
+        private const float SuggestCooldown = 10f;
 
         private int _suggestCount = 0;
         private bool _suggestFlag = false;

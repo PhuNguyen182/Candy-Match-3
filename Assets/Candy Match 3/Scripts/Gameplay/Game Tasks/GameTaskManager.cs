@@ -58,7 +58,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _suggestTask.AddTo(ref builder);
 
             _breakGridTask = breakGridTask;
-            _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask);
+            _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask, _breakGridTask);
             _inputProcessor = new(boardInput, _gridCellManager, _swapItemTask);
             _inputProcessor.AddTo(ref builder);
             _suggestTask.SetInputProcessTask(_inputProcessor);
@@ -114,11 +114,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _detectMoveTask.BuildLevelBoard();
         }
 
-        public void Suggest(bool isSuggest)
-        {
-            _suggestTask.Suggest(isSuggest);
-        }
-
         public void BuildTarget(LevelModel levelModel)
         {
             _checkTargetTask.InitLevelTarget(levelModel);
@@ -139,6 +134,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _spawnItemTask.SetCheckGridTask(_checkGridTask);
             _activateBoosterTask.SetCheckGridTask(_checkGridTask);
             _comboBoosterHandleTask.SetCheckGridTask(_checkGridTask);
+            _swapItemTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

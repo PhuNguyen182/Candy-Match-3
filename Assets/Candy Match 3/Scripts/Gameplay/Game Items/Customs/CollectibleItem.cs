@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -42,7 +43,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             EffectManager.Instance.PlaySoundEffect(collectSound);
             EffectManager.Instance.SpawnSpecialEffect(itemType, WorldPosition);
 
-            return UniTask.CompletedTask;
+            return UniTask.Delay(TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay)
+                                 , false, PlayerLoopTiming.FixedUpdate, destroyToken);
         }
 
         public override void InitMessages()
