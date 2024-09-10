@@ -68,15 +68,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 else if(_suggestTimer > SuggestCooldown)
                 {
-                    _suggestTimer = 0;
-                    _suggestFlag = false;
+                    ClearTimer();
                 }
             }
 
             else
             {
-                _suggestTimer = 0;
-                _suggestFlag = false;
+                ClearTimer();
             }
         }
 
@@ -96,6 +94,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 SearchSuggestions();
 
             Highlight(isSuggest);
+        }
+
+        public void ClearTimer()
+        {
+            _suggestTimer = 0;
+            _suggestFlag = false;
         }
 
         private void SearchSuggestions()
@@ -137,9 +141,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if (_itemSuggests.Count <= 0)
                 return;
-            
-            _suggestTimer = 0;
-            _suggestFlag = false;
+
+            ClearTimer();
 
             for (int i = 0; i < _itemSuggests.Count; i++)
                 _itemSuggests[i].Highlight(isActive);

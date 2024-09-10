@@ -12,6 +12,7 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.LevelDesign.Databases;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
+using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using CandyMatch3.Scripts.Gameplay.GameTasks;
 using CandyMatch3.Scripts.Gameplay.GameInput;
@@ -26,6 +27,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
     {
         [SerializeField] private MainGamePanel mainGamePanel;
         [SerializeField] private EndGameScreen endGameScreen;
+        [SerializeField] private InGameBoosterPanel inGameBoosterPanel;
 
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
@@ -127,7 +129,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
                                    , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
-                                   , mainGamePanel, endGameScreen, targetDatabase);
+                                   , mainGamePanel, endGameScreen, targetDatabase, inGameBoosterPanel);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);
@@ -218,6 +220,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
 
             _gameTaskManager.BuildSuggest();
+            _gameTaskManager.InitInGameBooster();
             _gameTaskManager.BuildTarget(levelModel);
             _gameTaskManager.BuildBoardMovementCheck();
             _gameTaskManager.SetInputActive(true);

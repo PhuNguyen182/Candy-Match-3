@@ -170,8 +170,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        // To do: use this for swaping item without checking matchable or not
-        // If this is a matchable swap, continue check match after swap
         public async UniTask SwapForward(Vector3Int fromPosition, Vector3Int toPosition)
         {
             if (fromPosition == toPosition)

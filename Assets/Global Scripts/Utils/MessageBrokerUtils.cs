@@ -4,17 +4,17 @@ using Cysharp.Threading.Tasks;
 
 namespace GlobalScripts.Utils
 {
-    public struct AsyncMessage<T>
+    public struct AsyncMessage<TData>
     {
-        public T Data;
-        public UniTaskCompletionSource<T> Source;
+        public TData Data;
+        public UniTaskCompletionSource<TData> Source;
     }
 
-    public struct MessageBrokerUtils<T>
+    public struct MessageBrokerUtils<TMessageData>
     {
-        public static UniTask<T> PublishAsyncMessage(IPublisher<AsyncMessage<T>> publisher, T data)
+        public static UniTask<TMessageData> PublishAsyncMessage(IPublisher<AsyncMessage<TMessageData>> publisher, TMessageData data)
         {
-            AsyncMessage<T> message = new AsyncMessage<T>
+            AsyncMessage<TMessageData> message = new AsyncMessage<TMessageData>
             {
                 Data = data,
                 Source = new()
@@ -24,7 +24,7 @@ namespace GlobalScripts.Utils
             return message.Source.Task;
         }
 
-        public static bool SendBackMessage(AsyncMessage<T> message, T data)
+        public static bool SendBackMessage(AsyncMessage<TMessageData> message, TMessageData data)
         {
             if (message.Source == null)
                 return false;

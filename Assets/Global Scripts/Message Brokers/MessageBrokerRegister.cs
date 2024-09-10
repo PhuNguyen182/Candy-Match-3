@@ -29,6 +29,7 @@ namespace GlobalScripts.MessageBrokers
             _builder.AddMessageBroker<DecreaseMoveMessage>();
             _builder.AddMessageBroker<DecreaseTargetMessage>();
             _builder.AddMessageBroker<AsyncMessage<MoveTargetData>>();
+            _builder.AddMessageBroker<AddInGameBoosterMessage>();
         }
     }
 }
