@@ -62,14 +62,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (_comboBoosterHandleTask.IsComboBooster(fromCell, toCell))
             {
-                if(_comboBoosterHandleTask.IsColorBoosters(fromCell, toCell))
-                {
-                    DecreaseMove();
-                    await fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
-                    await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
-                }
+                //if(_comboBoosterHandleTask.IsColorBoosters(fromCell, toCell))
+                //{
+                //    DecreaseMove();
+                //    await fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
+                //    await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
+                //}
 
-                else
+                //else
                 {
                     DecreaseMove();
                     UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);

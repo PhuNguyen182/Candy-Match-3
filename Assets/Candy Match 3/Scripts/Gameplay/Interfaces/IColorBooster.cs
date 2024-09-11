@@ -9,5 +9,6 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public BoosterType ColorBoosterType { get; }
         public void SetBoosterType(BoosterType colorBoosterType);
         public UniTask PlayBoosterCombo(int direction, ComboBoosterType comboType, bool isFirstItem);
+        public void ChangeItemSprite(int step);
     }
 }

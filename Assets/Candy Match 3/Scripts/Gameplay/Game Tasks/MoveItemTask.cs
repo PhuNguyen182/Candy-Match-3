@@ -107,8 +107,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (blockItem is ICollectible collectible)
                 {
+                    currentGrid.LockStates = LockStates.Exiting;
+
                     await collectible.Collect();
                     _breakGridTask.ReleaseGridCell(currentGrid);
+                    currentGrid.LockStates = LockStates.None;
                     _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
                 }
             }

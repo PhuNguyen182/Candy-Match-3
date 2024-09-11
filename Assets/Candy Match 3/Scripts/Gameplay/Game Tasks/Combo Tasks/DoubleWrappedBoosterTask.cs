@@ -4,8 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.GridCells;
 using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
 
@@ -36,6 +37,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         {
             using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
+                Vector3Int direction = gridCell2.GridPosition - gridCell1.GridPosition;
+                int boosterComboDirection1 = GetDirectionFromSwap(direction);
+                int boosterComboDirection2 = GetDirectionFromSwap(-direction);
+
+                IBlockItem firstItem = gridCell2.BlockItem;
+                IBlockItem secondItem = gridCell1.BlockItem;
+
+                if(firstItem is IColorBooster firstBooster && secondItem is IColorBooster secondBooster)
+                {
+                    UniTask boosterTask1 = firstBooster.PlayBoosterCombo(boosterComboDirection1, ComboBoosterType.DoubleWrapped, true);
+                    UniTask boosterTask2 = secondBooster.PlayBoosterCombo(boosterComboDirection2, ComboBoosterType.DoubleWrapped, false);
+                    await UniTask.WhenAll(boosterTask1, boosterTask2);
+                }
+
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);
 
@@ -69,6 +84,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;
+        }
+
+        private int GetDirectionFromSwap(Vector3Int direction)
+        {
+            int dir = 0;
+
+            if (direction == Vector3Int.up)
+                dir = 1;
+            else if (direction == Vector3Int.down)
+                dir = 2;
+            else if (direction == Vector3Int.left)
+                dir = 3;
+            else if (direction == Vector3Int.right)
+                dir = 4;
+
+            return dir;
         }
 
         public void Dispose()

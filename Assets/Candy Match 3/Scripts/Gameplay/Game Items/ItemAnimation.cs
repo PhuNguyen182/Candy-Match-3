@@ -96,21 +96,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
         }
 
-        public UniTask PlayStripedWrapped()
+        public async UniTask PlayStripedWrapped()
         {
+            ChangeItemLayer(true, 3);
+            itemAnimator.ResetTrigger(ItemAnimationHashKeys.ComboStripedWrappedHash);
             itemAnimator.SetTrigger(ItemAnimationHashKeys.ComboStripedWrappedHash);
             TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ComboStripedWrappedDelay);
-            return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+            await UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+            ChangeItemLayer(false);
         }
 
-        public UniTask PlayDoubleWrapped(int direction, bool isFirst)
+        public async UniTask PlayDoubleWrapped(int direction, bool isFirst)
         {
+            ChangeItemLayer(true, 3);
             itemAnimator.SetBool(ItemAnimationHashKeys.IsFirstHash, isFirst);
             itemAnimator.SetInteger(ItemAnimationHashKeys.DirectionHash, direction);
             itemAnimator.SetTrigger(ItemAnimationHashKeys.ComboDoubleWrappedHash);
 
             TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ComboDoubleWrappedDelay);
-            return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+            await UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+            ChangeItemLayer(false);
         }
 
         public void BounceTap()
@@ -175,9 +180,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
                 StopCoroutine(_highlightCoroutine);
         }
 
-        private void ChangeItemLayer(bool isPrioritized)
+        private void ChangeItemLayer(bool isPrioritized, int priorityAmount = 1)
         {
-            itemRenderer.sortingOrder = isPrioritized ? _originalSortingOrder + 1 : _originalSortingOrder;
+            itemRenderer.sortingOrder = isPrioritized ? _originalSortingOrder + priorityAmount : _originalSortingOrder;
         }
 
 #if UNITY_EDITOR

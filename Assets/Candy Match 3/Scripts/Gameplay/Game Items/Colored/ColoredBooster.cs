@@ -23,7 +23,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private Sprite[] verticalSprites;
 
         private bool _isMatchable;
-        private Sprite _oppositeIcon;
+        private Sprite _horizontalIcon;
+        private Sprite _verticalIcon;
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
 
         public override bool IsMatchable => _isMatchable;
@@ -68,32 +69,43 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void SetBoosterType(BoosterType colorBoosterType)
         {
             this.colorBoosterType = colorBoosterType;
-            Sprite[] colorSprites = colorBoosterType switch
+
+            int colorIndex = candyColor switch
             {
-                BoosterType.Horizontal => horizontalSprites,
-                BoosterType.Vertical => verticalSprites,
-                BoosterType.Wrapped => wrappedSprites,
+                CandyColor.Blue => 0,
+                CandyColor.Green => 1,
+                CandyColor.Orange => 2,
+                CandyColor.Purple => 3,
+                CandyColor.Red => 4,
+                CandyColor.Yellow => 5,
+                _ => -1
+            };
+
+            Sprite colorSprite = colorBoosterType switch
+            {
+                BoosterType.Horizontal => horizontalSprites[colorIndex],
+                BoosterType.Vertical => verticalSprites[colorIndex],
+                BoosterType.Wrapped => wrappedSprites[colorIndex],
                 _ => null
             };
 
-            Sprite colorSprite = candyColor switch
-            {
-                CandyColor.Blue => colorSprites[0],
-                CandyColor.Green => colorSprites[1],
-                CandyColor.Orange => colorSprites[2],
-                CandyColor.Purple => colorSprites[3],
-                CandyColor.Red => colorSprites[4],
-                CandyColor.Yellow => colorSprites[5],
-                _ => null
-            };
+            _horizontalIcon = horizontalSprites[colorIndex];
+            _verticalIcon = verticalSprites[colorIndex];
 
             itemGraphics.SetItemSprite(colorSprite);
             SetTargetType();
         }
 
+        public void ChangeItemSprite(int step)
+        {
+            if(step == 1)
+                itemGraphics.SetItemSprite(_horizontalIcon);
+            else if(step == 2)
+                itemGraphics.SetItemSprite(_verticalIcon);
+        }
+
         public UniTask PlayBoosterCombo(int direction, ComboBoosterType comboType, bool isFirstItem)
         {
-            // Up: 1, Down: 2, Left: 3, Right: 4
             UniTask boosterTask = UniTask.CompletedTask;
 
             if (comboType == ComboBoosterType.StripedWrapped)
