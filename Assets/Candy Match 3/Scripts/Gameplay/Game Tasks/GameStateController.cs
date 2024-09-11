@@ -30,16 +30,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly InputProcessTask _inputProcessTask;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly EndGameScreen _endGameScreen;
+        private readonly SuggestTask _suggestTask;
 
         private readonly StateMachine<State, Trigger> _gameStateMachine;
         private readonly StateMachine<State, Trigger>.TriggerWithParameters<bool> _endGameTrigger;
 
-        public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask, EndGameTask endGameTask, EndGameScreen endGameScreen)
+        public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask
+            , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask)
         {
             _endGameTask = endGameTask;
             _checkTargetTask = checkTargetTask;
             _inputProcessTask = inputProcessTask;
             _endGameScreen = endGameScreen;
+            _suggestTask = suggestTask;
 
             _checkTargetTask.OnEndGame = EndGame;
 

@@ -126,43 +126,37 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
 
         private async UniTask PreloadEffects()
         {
-            SimplePool.PoolPreLoad(effectDatabase.SoundEffect.gameObject, 20, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.SoundEffect.gameObject, 12, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
 
-            SimplePool.PoolPreLoad(effectDatabase.BlueMatchEffect, 12, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.BlueMatchEffect, 9, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
             
-            SimplePool.PoolPreLoad(effectDatabase.GreenMatchEffect, 12, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.GreenMatchEffect, 9, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
             
-            SimplePool.PoolPreLoad(effectDatabase.OrangeMatchEffect, 12, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.OrangeMatchEffect, 9, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
             
-            SimplePool.PoolPreLoad(effectDatabase.PurpleMatchEffect, 12, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.PurpleMatchEffect, 9, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
             
-            SimplePool.PoolPreLoad(effectDatabase.RedMatchEffect, 12, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.RedMatchEffect, 9, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
             
-            SimplePool.PoolPreLoad(effectDatabase.YellowMatchEffect, 12, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.YellowMatchEffect, 9, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
 
-            SimplePool.PoolPreLoad(effectDatabase.SpawnBoosterEffect, 6, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.SpawnBoosterEffect, 9, EffectContainer.Transform);
+            await UniTask.NextFrame(_token);
+                        
+            SimplePool.PoolPreLoad(effectDatabase.StripedHorizontal, 3, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
             
-            SimplePool.PoolPreLoad(effectDatabase.ColorfulEffect, 6, EffectContainer.Transform);
-            await UniTask.NextFrame(_token);
-            
-            SimplePool.PoolPreLoad(effectDatabase.StripedHorizontal, 6, EffectContainer.Transform);
-            await UniTask.NextFrame(_token);
-            
-            SimplePool.PoolPreLoad(effectDatabase.StripedVertical, 6, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.StripedVertical, 3, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
 
-            SimplePool.PoolPreLoad(effectDatabase.WrappedEffect, 6, EffectContainer.Transform);
-            await UniTask.NextFrame(_token);
-            
-            SimplePool.PoolPreLoad(effectDatabase.ColorfulFireray.gameObject, 20, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.WrappedEffect, 3, EffectContainer.Transform);
         }
     }
 }

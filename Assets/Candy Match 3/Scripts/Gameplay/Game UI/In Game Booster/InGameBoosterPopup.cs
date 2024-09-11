@@ -8,11 +8,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.DataStructs;
+using CandyMatch3.Scripts.Common.Messages;
 using GlobalScripts.Effects.Tweens;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
 using TMPro;
-using CandyMatch3.Scripts.Common.Messages;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
 {
@@ -69,10 +69,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             }
         }
 
-        private void Awake()
+        protected override void OnAwake()
         {
             _token = this.GetCancellationTokenOnDestroy();
             _addInGameBoosterPublisher = GlobalMessagePipe.GetPublisher<AddInGameBoosterMessage>();
+            popupCanvas.worldCamera = Camera.main;
 
             closeButton.onClick.AddListener(() => ClosePopup().Forget());
             purchaseButton.onClick.AddListener(PurchaseBooster);
@@ -109,7 +110,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
 
         private void UpdateCoin(int coin)
         {
-            coinText.text = $"{coin:N, ru-RU}";
+            coinText.text = $"{coin}";
         }
 
         private async UniTask ClosePopup()

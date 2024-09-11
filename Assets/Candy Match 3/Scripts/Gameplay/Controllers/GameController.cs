@@ -38,6 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private TargetDatabase targetDatabase;
         [SerializeField] private EffectDatabase effectDatabase;
         [SerializeField] private MiscCollection miscCollection;
+        [SerializeField] private InGameBoosterPackDatabase inGameBoosterPackDatabase;
         [SerializeField] private StatefulSpriteDatabase statefulSpriteDatabase;
 
         [Header("Containers")]
@@ -129,7 +130,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
                                    , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
-                                   , mainGamePanel, endGameScreen, targetDatabase, inGameBoosterPanel);
+                                   , mainGamePanel, endGameScreen, targetDatabase, inGameBoosterPanel
+                                   , inGameBoosterPackDatabase);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);

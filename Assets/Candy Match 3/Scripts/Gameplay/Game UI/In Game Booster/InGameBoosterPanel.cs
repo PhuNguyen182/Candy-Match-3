@@ -63,10 +63,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             inGameBoosterMessage.SetMessage(message);
         }
 
-        public void SetBoosterPanelActive(bool isActive)
+        public async UniTask SetBoosterPanelActive(bool isActive)
         {
+            await inGameBoosterMessage.SetMessageActive(isActive);
             levelSortingGroup.enabled = isActive;
-            inGameBoosterMessage.SetMessageActive(isActive).Forget();
         }
     }
 }

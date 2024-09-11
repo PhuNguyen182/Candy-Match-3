@@ -7,12 +7,14 @@ using UnityEngine;
 using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
+using CandyMatch3.Scripts.Common.DataStructs;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -23,9 +25,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly BlastBoosterTask _blastBoosterTask;
         private readonly PlaceBoosterTask _placeBoosterTask;
         private readonly InGameBoosterPanel _inGameBoosterPanel;
+        private readonly InGameBoosterPackDatabase _inGameBoosterPackDatabase;
         private readonly SwapItemTask _swapItemTask;
         private readonly SuggestTask _suggestTask;
 
+        private const string BuyBoosterPopupPath = "Common Popups/Buy Boosters Popup.prefab";
+
+        private CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly ISubscriber<AddInGameBoosterMessage> _addBoosterSubscriber;
         private Dictionary<InGameBoosterType, ReactiveProperty<int>> _boosters;
 
@@ -34,9 +40,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private IDisposable _disposable;
 
         public bool IsBoosterUsed { get; set; }
+        public InGameBoosterType CurrentBooster { get; private set; }
 
         public InGameBoosterTasks(InputProcessTask inputProcessTask, GridCellManager gridCellManager, BreakGridTask breakGridTask, SuggestTask suggestTask
-            , SwapItemTask swapItemTask, ActivateBoosterTask activateBoosterTask, ItemManager itemManager, InGameBoosterPanel inGameBoosterPanel)
+            , SwapItemTask swapItemTask, ActivateBoosterTask activateBoosterTask, ItemManager itemManager, InGameBoosterPanel inGameBoosterPanel
+            , InGameBoosterPackDatabase inGameBoosterPackDatabase)
         {
             _suggestTask = suggestTask;
             _swapItemTask = swapItemTask;
@@ -46,6 +54,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _placeBoosterTask = new(gridCellManager, breakGridTask
                                     , activateBoosterTask, itemManager);
             _inGameBoosterPanel = inGameBoosterPanel;
+            _inGameBoosterPackDatabase = inGameBoosterPackDatabase;
 
             var messageBuilder = MessagePipe.DisposableBag.CreateBuilder();
             _addBoosterSubscriber = GlobalMessagePipe.GetSubscriber<AddInGameBoosterMessage>();
@@ -56,6 +65,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _blastBoosterTask.AddTo(ref builder);
             _placeBoosterTask.AddTo(ref builder);
             _disposable = builder.Build();
+
+            PreloadBuyBoosterPopup();
+        }
+
+        public void SetCheckBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
+        {
+            _checkGameBoardMovementTask = checkGameBoardMovementTask;
+        }
+
+        public void SetCheckGridTask(CheckGridTask checkGridTask)
+        {
+            _blastBoosterTask.SetCheckGridTask(checkGridTask);
         }
 
         public void InitBoosters(List<InGameBoosterModel> boosterModels)
@@ -82,13 +103,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     BoosterButton boosterButton = _inGameBoosterPanel.GetBoosterButtonByType(booster.BoosterType);
 
                     boosterAmount.Subscribe(value => boosterButton.SetBoosterCount(value));
-                    IDisposable d1 = boosterButton.OnClickObserver.Where(value => (boosterAmount.Value > 0 || value.IsFree) && !value.IsActive && _inputProcessTask.IsActive)
-                                                  .Subscribe(value =>
-                                                  {
-                                                      EnableBooster(booster.BoosterType);
-                                                  });
+                    IDisposable d1 = boosterButton.OnClickObserver.Where(value => (boosterAmount.Value > 0 || value.IsFree) 
+                                                  && !value.IsActive && _inputProcessTask.IsActive && !_checkGameBoardMovementTask.IsBoardLock)
+                                                  .Subscribe(value => EnableBooster(booster.BoosterType));
 
-                    IDisposable d2 = boosterButton.OnClickObserver.Where(value => boosterAmount.Value <= 0 && !value.IsFree && !value.IsActive && _inputProcessTask.IsActive)
+                    IDisposable d2 = boosterButton.OnClickObserver.Where(value => boosterAmount.Value <= 0 && !value.IsFree && !value.IsActive 
+                                                  && _inputProcessTask.IsActive && !_checkGameBoardMovementTask.IsBoardLock)
                                                   .Subscribe(value => ShowBuyBoosterPopup(booster.BoosterType));
 
                     boosterDisposables.Add(d1);
@@ -101,47 +121,86 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
         }
 
+        public UniTask ActivatePointBooster(Vector3Int position, InGameBoosterType inGameBoosterType)
+        {
+            UniTask boosterTask = UniTask.CompletedTask;
+
+            switch (inGameBoosterType)
+            {
+                case InGameBoosterType.Break:
+                    boosterTask = ActivateBreakBooster(position);
+                    break;
+                case InGameBoosterType.Blast:
+                    boosterTask = ActivateBlastBooster(position);
+                    break;
+                case InGameBoosterType.Colorful:
+                    boosterTask = ActivatePlaceBooster(position);
+                    break;
+            }
+
+            AfterUseBooster();
+            return boosterTask;
+        }
+
+        public UniTask ActivateSwapBooster(Vector3Int fromPosition, Vector3Int toPosition)
+        {
+            AfterUseBooster();
+            return _swapItemTask.SwapForward(fromPosition, toPosition);
+        }
+
+        private UniTask ActivateBreakBooster(Vector3Int position)
+        {
+            return _breakBoosterTask.Activate(position);
+        }
+
+        private UniTask ActivateBlastBooster(Vector3Int position)
+        {
+            return _blastBoosterTask.Activate(position);
+        }
+
+        private UniTask ActivatePlaceBooster(Vector3Int position)
+        {
+            return _placeBoosterTask.Activate(position);
+        }
+
+        private void AfterUseBooster()
+        {
+            if (!IsBoosterUsed)
+                return;
+
+            IsBoosterUsed = false;
+            CurrentBooster = InGameBoosterType.None;
+
+            SetSuggestActive(true);
+            _inGameBoosterPanel.SetBoosterPanelActive(false).Forget();
+        }
+
         private void AddBooster(AddInGameBoosterMessage message)
         {
             _boosters[message.BoosterType].Value += message.Amount;
         }
 
-        public async UniTask ActivateBreakBooster(Vector3Int position)
-        {
-            await _breakBoosterTask.Activate(position);
-        }
-
-        public async UniTask ActivateBlastBooster(Vector3Int position)
-        {
-            await _blastBoosterTask.Activate(position);
-        }
-
-        public async UniTask ActivateSwapBooster(Vector3Int fromPosition, Vector3Int toPosition)
-        {
-            await _swapItemTask.SwapForward(fromPosition, toPosition);
-        }
-
-        public async UniTask ActivatePlaceBooster(Vector3Int position)
-        {
-            await _placeBoosterTask.Activate(position);
-        }
-
-        public void AfterUseBooster()
-        {
-            SetSuggestActive(true);
-            _inGameBoosterPanel.SetBoosterPanelActive(false);
-        }
-
         private void EnableBooster(InGameBoosterType boosterType)
         {
+            IsBoosterUsed = true;
+            CurrentBooster = boosterType;
+
             SetSuggestActive(false);
             _inGameBoosterPanel.ShowBoosterMessage(boosterType);
-            _inGameBoosterPanel.SetBoosterPanelActive(true);
+            _inGameBoosterPanel.SetBoosterPanelActive(true).Forget();
         }
 
         private void ShowBuyBoosterPopup(InGameBoosterType boosterType)
         {
+            var popup = InGameBoosterPopup.Create(BuyBoosterPopupPath);
+            InGameBoosterPack boosterPack = _inGameBoosterPackDatabase.BoosterPackCollections[boosterType];
+            popup.SetBoosterInfo(boosterType);
+            popup.SetBoosterPack(boosterPack);
+        }
 
+        private void PreloadBuyBoosterPopup()
+        {
+            InGameBoosterPopup.PreloadFromAddress(BuyBoosterPopupPath).Forget();
         }
 
         private void SetSuggestActive(bool isActive)

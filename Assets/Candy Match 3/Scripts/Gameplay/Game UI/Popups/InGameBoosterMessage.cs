@@ -11,7 +11,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 {
     public class InGameBoosterMessage : MonoBehaviour
     {
-        [SerializeField] private Button backgroundButton;
         [SerializeField] private Animator panelAnimator;
         [SerializeField] private TMP_Text messageText;
 
@@ -21,12 +20,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         private void Awake()
         {
             _token = this.GetCancellationTokenOnDestroy();
-            backgroundButton.onClick.AddListener(OnBackgroundClick);
-        }
-
-        private void OnBackgroundClick()
-        {
-
         }
 
         public void SetMessage(string message)
@@ -44,7 +37,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
             else
             {
                 panelAnimator.SetTrigger(_closeHash);
-                await UniTask.Delay(TimeSpan.FromSeconds(0.334f), cancellationToken: _token);
+                await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
                 gameObject.SetActive(false);
             }
         }
