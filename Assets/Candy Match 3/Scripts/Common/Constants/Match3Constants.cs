@@ -16,5 +16,8 @@ namespace CandyMatch3.Scripts.Common.Constants
         public const float NearSpeed = 1f;
         public const float FarSpeed = 18f;
         public const float MaxDistance = 12f;
+
+        public const float ComboStripedWrappedDelay = 0.416f;
+        public const float ComboDoubleWrappedDelay = 0.666f;
     }
 }

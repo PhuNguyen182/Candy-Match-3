@@ -96,6 +96,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
         }
 
+        public UniTask PlayStripedWrapped()
+        {
+            itemAnimator.SetTrigger(ItemAnimationHashKeys.ComboStripedWrappedHash);
+            TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ComboStripedWrappedDelay);
+            return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+        }
+
+        public UniTask PlayDoubleWrapped(int direction, bool isFirst)
+        {
+            itemAnimator.SetBool(ItemAnimationHashKeys.IsFirstHash, isFirst);
+            itemAnimator.SetInteger(ItemAnimationHashKeys.DirectionHash, direction);
+            itemAnimator.SetTrigger(ItemAnimationHashKeys.ComboDoubleWrappedHash);
+
+            TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ComboDoubleWrappedDelay);
+            return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+        }
+
         public void BounceTap()
         {
             itemAnimator.SetTrigger(ItemAnimationHashKeys.BounceHash);

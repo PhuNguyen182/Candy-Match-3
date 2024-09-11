@@ -91,9 +91,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             SetTargetType();
         }
 
-        public UniTask PlayComboBooster(Vector3 direction, BoosterType booster1, BoosterType booster2)
+        public UniTask PlayBoosterCombo(int direction, ComboBoosterType comboType, bool isFirstItem)
         {
-            return default; // Play combo effect
+            // Up: 1, Down: 2, Left: 3, Right: 4
+            UniTask boosterTask = UniTask.CompletedTask;
+
+            if (comboType == ComboBoosterType.StripedWrapped)
+                boosterTask = itemAnimation.PlayStripedWrapped();
+            
+            else if(comboType == ComboBoosterType.DoubleWrapped)
+                boosterTask = itemAnimation.PlayDoubleWrapped(direction, isFirstItem);
+            
+            return boosterTask;
         }
 
         public async UniTask Activate()

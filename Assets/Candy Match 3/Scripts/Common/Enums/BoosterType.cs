@@ -12,4 +12,15 @@ namespace CandyMatch3.Scripts.Common.Enums
         Wrapped = 4,
         Colorful = 5
     }
+
+    public enum ComboBoosterType
+    {
+        None = 0,
+        DoubleStriped = 1,
+        StripedWrapped = 2,
+        DoubleWrapped = 3,
+        ColorfulStriped = 4,
+        ColorfulWrapped = 5,
+        DoubleColorful = 6,
+    }
 }

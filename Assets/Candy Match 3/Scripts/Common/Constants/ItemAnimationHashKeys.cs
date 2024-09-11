@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CandyMatch3.Scripts.Common.Constants
@@ -13,5 +11,9 @@ namespace CandyMatch3.Scripts.Common.Constants
         public static readonly int KillHash = Animator.StringToHash("Kill");
         public static readonly int StartHash = Animator.StringToHash("Start");
         public static readonly int SuggestHash = Animator.StringToHash("IsSuggest");
+        public static readonly int ComboStripedWrappedHash = Animator.StringToHash("ComboStripedWrapped");
+        public static readonly int ComboDoubleWrappedHash = Animator.StringToHash("ComboDoubleWrapped");
+        public static readonly int DirectionHash = Animator.StringToHash("Direction");
+        public static readonly int IsFirstHash = Animator.StringToHash("IsFirst");
     }
 }
