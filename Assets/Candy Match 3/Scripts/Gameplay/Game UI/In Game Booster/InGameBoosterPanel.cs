@@ -17,6 +17,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [SerializeField] private BoosterButton colorfulBooster;
         [SerializeField] private InGameBoosterMessage inGameBoosterMessage;
         [SerializeField] private SortingGroup levelSortingGroup;
+        [SerializeField] private SortingGroup effectSortingGroup;
 
         private const string BreakBoosterMessage = "Choose an item to break it";
         private const string BlastBoosterMessage = "Select a cell to blast there";
@@ -67,6 +68,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         {
             await inGameBoosterMessage.SetMessageActive(isActive);
             levelSortingGroup.enabled = isActive;
+            effectSortingGroup.enabled = isActive;
         }
     }
 }

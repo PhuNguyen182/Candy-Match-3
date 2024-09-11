@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,12 +17,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
         public BlastBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
+
+            _cts = new();
+            _token = _cts.Token;
         }
 
         public async UniTask Activate(Vector3Int position)
@@ -60,6 +66,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 encapsulatePositions.Add(max);
 
                 BoundsInt attackRange = BoundsExtension.Encapsulate(encapsulatePositions);
+                TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
+                await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
                 _checkGridTask.CheckRange(attackRange);
             }
         }
@@ -81,7 +89,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void Dispose()
         {
-            
+            _cts.Dispose();
         }
     }
 }

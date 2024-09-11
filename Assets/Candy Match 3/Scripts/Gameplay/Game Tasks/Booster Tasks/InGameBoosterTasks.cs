@@ -8,13 +8,13 @@ using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Common.Databases;
+using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using CandyMatch3.Scripts.Common.DataStructs;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -123,6 +123,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public UniTask ActivatePointBooster(Vector3Int position, InGameBoosterType inGameBoosterType)
         {
+            _inputProcessTask.IsActive = false;
             UniTask boosterTask = UniTask.CompletedTask;
 
             switch (inGameBoosterType)
@@ -139,7 +140,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
 
             AfterUseBooster();
-            return boosterTask;
+            return boosterTask.ContinueWith(() => _inputProcessTask.IsActive = true);
         }
 
         public UniTask ActivateSwapBooster(Vector3Int fromPosition, Vector3Int toPosition)
