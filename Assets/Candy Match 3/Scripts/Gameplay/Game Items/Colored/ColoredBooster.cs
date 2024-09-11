@@ -23,6 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private Sprite[] verticalSprites;
 
         private bool _isMatchable;
+        private Sprite _oppositeIcon;
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
 
         public override bool IsMatchable => _isMatchable;
@@ -88,6 +89,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
             itemGraphics.SetItemSprite(colorSprite);
             SetTargetType();
+        }
+
+        public UniTask PlayComboBooster(Vector3 direction, BoosterType booster1, BoosterType booster2)
+        {
+            return default; // Play combo effect
         }
 
         public async UniTask Activate()

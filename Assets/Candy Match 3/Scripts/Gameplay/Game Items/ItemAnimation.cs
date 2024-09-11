@@ -32,7 +32,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private Tweener _moveTween;
         private Tweener _bounceMoveTween;
-        private Tweener _swapTween;
 
         private Coroutine _highlightCoroutine;
         private CancellationToken _destroyToken;
@@ -177,7 +176,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
             _moveTween?.Kill();
             _bounceMoveTween?.Kill();
-            _swapTween?.Kill();
         }
     }
 }
