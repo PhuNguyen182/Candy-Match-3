@@ -14,6 +14,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly CheckTargetTask _checkTargetTask;
         private readonly CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
+        private readonly TimeSpan _waitTimeAmount;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
@@ -24,6 +25,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkTargetTask = checkTargetTask;
             _checkGameBoardMovementTask = checkGameBoardMovementTask;
             _activateBoosterTask = activateBoosterTask;
+            _waitTimeAmount = TimeSpan.FromSeconds(0.5f);
 
             _cts = new();
             _token = _cts.Token;
@@ -47,7 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public async UniTask WaitForBoardStop()
         {
             await UniTask.WaitUntil(() => IsBoardStop(), PlayerLoopTiming.Update, _token);
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5f), false, PlayerLoopTiming.Update, _token);
+            await UniTask.Delay(_waitTimeAmount, false, PlayerLoopTiming.Update, _token);
         }
 
         private bool IsBoardStop()

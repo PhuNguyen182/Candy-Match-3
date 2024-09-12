@@ -4,30 +4,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
 using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
     public class BlastBoosterTask : IDisposable
     {
+        private readonly ExplodeItemTask _explodeItemTask;
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
+
+        private readonly IPublisher<CameraShakeMessage> _cameraShakePublisher;
+        private readonly IPublisher<UseInGameBoosterMessage> _useInGameBoosterPublisher;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
-        public BlastBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
+        public BlastBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ExplodeItemTask explodeItemTask)
         {
+            _explodeItemTask = explodeItemTask;
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
 
             _cts = new();
             _token = _cts.Token;
+
+            _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
         }
 
         public async UniTask Activate(Vector3Int position)
@@ -37,7 +47,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             if (gridCell == null)
                 return;
 
+            PlayEffect(position);
             _breakGridTask.ReleaseGridCell(gridCell);
+
+            _useInGameBoosterPublisher.Publish(new UseInGameBoosterMessage
+            {
+                BoosterType = InGameBoosterType.Blast
+            });
 
             using (var attactListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
             {
@@ -80,6 +96,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 return;
 
             await _breakGridTask.BreakItem(position);
+        }
+
+        private void PlayEffect(Vector3Int position)
+        {
+            _cameraShakePublisher.Publish(new CameraShakeMessage
+            {
+                Amplitude = 1.75f
+            });
+
+            _explodeItemTask.Blast(position, 3).Forget();
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

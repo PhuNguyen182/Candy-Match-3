@@ -27,6 +27,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
+        private Vector3Int _errorPosition;
 
         public ColorfulWrappedBoosterTask(ItemManager itemManager, GridCellManager gridCellManager, BreakGridTask breakGridTask
             , ActivateBoosterTask activateBoosterTask, ColorfulFireray colorfulFireray)
@@ -40,7 +41,53 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             _cts = new();
             _token = _cts.Token;
+            _errorPosition = new(int.MinValue, 0);
         }
+
+        public async UniTask Activate(IGridCell gridCell, IBlockItem colorBooster)
+        {
+            IBooster activeBooster = null;
+            CandyColor candyColor = colorBooster.CandyColor;
+
+            if (gridCell.BlockItem is IBooster booster)
+            {
+                activeBooster = booster;
+                activeBooster.IsActivated = true;
+            }
+
+            using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
+            {
+                positions.AddRange(_colorfulBoosterTask.FindPositionWithColor(candyColor));
+                using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
+
+                Vector3 startPosition = gridCell.WorldPosition;
+                for (int i = 0; i < positions.Count; i++)
+                {
+                    fireTasks.Add(FireItemCatchRay(positions[i], startPosition, i * 0.02f, _errorPosition, candyColor));
+                }
+
+                await UniTask.WhenAll(fireTasks);
+                float delay = positions.Count * 0.02f;
+
+                TimeSpan duration = TimeSpan.FromSeconds(delay);
+                await UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _token);
+
+                activeBooster.Explode();
+                _breakGridTask.ReleaseGridCell(gridCell);
+
+                using var boosterTaskPool = ListPool<UniTask>.Get(out List<UniTask> boosterTasks);
+                for (int i = 0; i < positions.Count; i++)
+                {
+                    IGridCell boosterGridCell = _gridCellManager.Get(positions[i]);
+                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false));
+                }
+
+                await UniTask.WhenAll(boosterTasks);
+                _colorfulBoosterTask.RemoveColor(candyColor);
+                _breakGridTask.ReleaseGridCell(gridCell);
+            }
+        }
+
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
         {
@@ -107,6 +154,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         private void AddBooster(Vector3Int checkPosition, Vector3Int colorPosition, CandyColor candyColor)
         {
+            if (colorPosition == _errorPosition)
+                return;
+
             BoosterType boosterType = BoosterType.Wrapped;
             ItemType itemType = _itemManager.GetItemTypeFromColorAndBoosterType(candyColor, boosterType);
             byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };

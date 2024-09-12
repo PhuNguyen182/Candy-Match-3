@@ -20,6 +20,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly SuggestTask _suggestTask;
 
         private readonly IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
+        private readonly IPublisher<UseInGameBoosterMessage> _useInGameBoosterPublisher;
+
         private ComboBoosterHandleTask _comboBoosterHandleTask;
         private CheckGridTask _checkGridTask;
 
@@ -171,6 +173,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (fromItem is not IItemAnimation fromAnimation || toItem is not IItemAnimation toAnimation)
                 return;
+
+            _useInGameBoosterPublisher.Publish(new UseInGameBoosterMessage
+            {
+                BoosterType = InGameBoosterType.Swap
+            });
 
             fromCell.LockStates = LockStates.Swapping;
             toCell.LockStates = LockStates.Swapping;

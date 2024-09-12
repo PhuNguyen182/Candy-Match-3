@@ -31,6 +31,7 @@ namespace GlobalScripts.MessageBrokers
             _builder.AddMessageBroker<AsyncMessage<MoveTargetData>>();
             _builder.AddMessageBroker<AddInGameBoosterMessage>();
             _builder.AddMessageBroker<CameraShakeMessage>();
+            _builder.AddMessageBroker<UseInGameBoosterMessage>();
         }
     }
 }

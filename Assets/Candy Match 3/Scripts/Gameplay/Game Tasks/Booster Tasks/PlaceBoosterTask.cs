@@ -4,12 +4,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Common.CustomData;
 using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -18,13 +21,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
         private readonly ActivateBoosterTask _activateBoosterTask;
+        private readonly ColorfulStripedBoosterTask _colorfulStripedBoosterTask;
+        private readonly ColorfulWrappedBoosterTask _colorfulWrappedBoosterTask;
         private readonly ItemManager _itemManager;
+
+        private readonly IPublisher<UseInGameBoosterMessage> _useInGameBoosterPublisher;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
-        public PlaceBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask
-            , ActivateBoosterTask activateBoosterTask, ItemManager itemManager)
+        public PlaceBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ActivateBoosterTask activateBoosterTask
+            , ItemManager itemManager, ColorfulStripedBoosterTask colorfulStripedBoosterTask, ColorfulWrappedBoosterTask colorfulWrappedBoosterTask)
         {
             _breakGridTask = breakGridTask;
             _gridCellManager = gridCellManager;
@@ -33,6 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             _cts = new();
             _token = _cts.Token;
+            _useInGameBoosterPublisher = GlobalMessagePipe.GetPublisher<UseInGameBoosterMessage>();
         }
 
         public async UniTask Activate(Vector3Int position)
@@ -46,17 +54,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 return;
 
             IBlockItem blockItem = gridCell.BlockItem;
+            if (!blockItem.IsMatchable)
+                return;
+
+            IColorBooster colorBooster = null;
             gridCell.LockStates = LockStates.Replacing;
             CandyColor candyColor = blockItem.CandyColor;
 
-            if (blockItem is IBreakable breakable)
+            _useInGameBoosterPublisher.Publish(new UseInGameBoosterMessage
             {
-                if (breakable.Break())
-                {
-                    blockItem.ItemBlast().Forget();
-                    _breakGridTask.ReleaseGridCell(gridCell);
-                }
-            }
+                BoosterType = InGameBoosterType.Colorful
+            });
+
+            if (blockItem is IColorBooster booster)
+                colorBooster = booster;         
+
+            blockItem.ItemBlast().Forget();
+            _breakGridTask.ReleaseGridCell(gridCell);
 
             _itemManager.Add(new BlockItemPosition
             {
@@ -73,8 +87,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             gridCell.LockStates = LockStates.None;
             TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
             await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
-            
-            await _activateBoosterTask.ColorfulBoosterTask.ActivateWithColor(gridCell, candyColor);
+
+            if(colorBooster != null)
+            {
+                if (colorBooster.ColorBoosterType == BoosterType.Wrapped)
+                    await _colorfulWrappedBoosterTask.Activate(gridCell, blockItem);
+
+                else
+                    await _colorfulStripedBoosterTask.Activate(gridCell, blockItem);
+            }
+
+            else
+                await _activateBoosterTask.ColorfulBoosterTask.ActivateWithColor(gridCell, candyColor);
         }
 
         public void Dispose()

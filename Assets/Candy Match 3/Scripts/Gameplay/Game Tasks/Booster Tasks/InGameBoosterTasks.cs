@@ -10,6 +10,7 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
+using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Common.Enums;
@@ -33,6 +34,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         private CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly ISubscriber<AddInGameBoosterMessage> _addBoosterSubscriber;
+        private readonly ISubscriber<UseInGameBoosterMessage> _useBoosterSubscriber;
         private Dictionary<InGameBoosterType, ReactiveProperty<int>> _boosters;
 
         private IDisposable _messageDisposable;
@@ -42,23 +44,29 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         public bool IsBoosterUsed { get; set; }
         public InGameBoosterType CurrentBooster { get; private set; }
 
-        public InGameBoosterTasks(InputProcessTask inputProcessTask, GridCellManager gridCellManager, BreakGridTask breakGridTask, SuggestTask suggestTask
-            , SwapItemTask swapItemTask, ActivateBoosterTask activateBoosterTask, ItemManager itemManager, InGameBoosterPanel inGameBoosterPanel
-            , InGameBoosterPackDatabase inGameBoosterPackDatabase)
+        public InGameBoosterTasks(InputProcessTask inputProcessTask, GridCellManager gridCellManager, BreakGridTask breakGridTask
+            , SuggestTask suggestTask, ExplodeItemTask explodeItemTask , SwapItemTask swapItemTask
+            , ActivateBoosterTask activateBoosterTask, ComboBoosterHandleTask comboBoosterHandleTask, ItemManager itemManager
+            , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase)
         {
             _suggestTask = suggestTask;
             _swapItemTask = swapItemTask;
             _inputProcessTask = inputProcessTask;
-            _breakBoosterTask = new(breakGridTask);
-            _blastBoosterTask = new(gridCellManager, breakGridTask);
-            _placeBoosterTask = new(gridCellManager, breakGridTask
-                                    , activateBoosterTask, itemManager);
+            _breakBoosterTask = new(breakGridTask, explodeItemTask);
+            _blastBoosterTask = new(gridCellManager, breakGridTask, explodeItemTask);
+            _placeBoosterTask = new(gridCellManager, breakGridTask, activateBoosterTask, itemManager
+                                    , comboBoosterHandleTask.ColorfulStripedBoosterTask
+                                    , comboBoosterHandleTask.ColorfulWrappedBoosterTask);
+
             _inGameBoosterPanel = inGameBoosterPanel;
             _inGameBoosterPackDatabase = inGameBoosterPackDatabase;
 
             var messageBuilder = MessagePipe.DisposableBag.CreateBuilder();
             _addBoosterSubscriber = GlobalMessagePipe.GetSubscriber<AddInGameBoosterMessage>();
             _addBoosterSubscriber.Subscribe(AddBooster).AddTo(messageBuilder);
+
+            _useBoosterSubscriber = GlobalMessagePipe.GetSubscriber<UseInGameBoosterMessage>();
+            _useBoosterSubscriber.Subscribe(AfterUseBooster).AddTo(messageBuilder);
             _messageDisposable = messageBuilder.Build();
 
             var builder = Disposable.CreateBuilder();
@@ -139,13 +147,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     break;
             }
 
-            AfterUseBooster();
             return boosterTask.ContinueWith(() => _inputProcessTask.IsActive = true);
         }
 
         public UniTask ActivateSwapBooster(Vector3Int fromPosition, Vector3Int toPosition)
         {
-            AfterUseBooster();
             return _swapItemTask.SwapForward(fromPosition, toPosition);
         }
 
@@ -164,7 +170,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             return _placeBoosterTask.Activate(position);
         }
 
-        private void AfterUseBooster()
+        private void AfterUseBooster(UseInGameBoosterMessage message)
         {
             if (!IsBoosterUsed)
                 return;

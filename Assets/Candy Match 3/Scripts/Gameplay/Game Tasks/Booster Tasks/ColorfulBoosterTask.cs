@@ -37,7 +37,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public async UniTask ActivateWithColor(IGridCell boosterCell, CandyColor candyColor)
         {
-            await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
+            await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 IBooster booster = default;
@@ -61,11 +61,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(fireTasks);
+                await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
                     breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
                 }
+
+                await UniTask.WhenAll(breakTasks);
 
                 booster.Explode();
                 _breakGridTask.ReleaseGridCell(boosterCell);
@@ -83,7 +86,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             gridCell.LockStates = LockStates.Preparing;
 
             _checkGridTask.CanCheck = false;
-            await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
+            await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 IBooster booster = default;
@@ -118,6 +121,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 {
                     breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
                 }
+
+                await UniTask.WhenAll(breakTasks);
 
                 booster?.Explode();
                 _breakGridTask.ReleaseGridCell(gridCell);
