@@ -25,7 +25,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
-        public BoundsInt AttackRange { get; private set; }
+        private BoundsInt _attackRange;
 
         public WrappedBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ExplodeItemTask explodeItemTask)
         {
@@ -39,7 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
         }
 
-        public async UniTask Activate(IGridCell gridCell, bool useDelay, bool doNotCheck)
+        public async UniTask Activate(IGridCell gridCell, bool useDelay, bool doNotCheck, Action<BoundsInt> attackRange)
         {
             Vector3Int position = gridCell.GridPosition;
             _breakGridTask.ReleaseGridCell(gridCell);
@@ -73,13 +73,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 encapsulatePositions.Add(min);
                 encapsulatePositions.Add(max);
 
-                AttackRange = BoundsExtension.Encapsulate(encapsulatePositions);
+                _attackRange = BoundsExtension.Encapsulate(encapsulatePositions);
+                attackRange?.Invoke(_attackRange);
 
                 if (useDelay)
                     await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
 
                 if (!doNotCheck)
-                    _checkGridTask.CheckRange(AttackRange);
+                    _checkGridTask.CheckRange(_attackRange);
             }
         }
 

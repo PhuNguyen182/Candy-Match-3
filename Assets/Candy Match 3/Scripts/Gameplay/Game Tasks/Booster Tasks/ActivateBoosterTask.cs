@@ -51,7 +51,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _token = _cts.Token;
         }
 
-        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck)
+        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck, Action<BoundsInt> attackRange = null)
         {
             Vector3Int position = gridCell.GridPosition;
             
@@ -78,13 +78,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     switch (colorBoosterType)
                     {
                         case BoosterType.Horizontal:
-                            await _horizontalBoosterTask.Activate(gridCell, useDelay, doNotCheck);
+                            await _horizontalBoosterTask.Activate(gridCell, useDelay, doNotCheck, attackRange);
                             break;
                         case BoosterType.Vertical:
-                            await _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck);
+                            await _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck, attackRange);
                             break;
                         case BoosterType.Wrapped:
-                            await _wrappedBoosterTask.Activate(gridCell, useDelay, doNotCheck);
+                            await _wrappedBoosterTask.Activate(gridCell, useDelay, doNotCheck, attackRange);
                             break;
                     }
                 }
@@ -97,24 +97,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             gridCell.LockStates = LockStates.None;
             ActiveBoosterCount = ActiveBoosterCount - 1;
-        }
-
-        public BoundsInt GetAttackedBounds(IBooster booster)
-        {
-            BoundsInt bounds = new();
-            
-            if(booster is IColorBooster colorBooster)
-            {
-                bounds = colorBooster.ColorBoosterType switch
-                {
-                    BoosterType.Horizontal => _horizontalBoosterTask.AttackRange,
-                    BoosterType.Vertical => _verticalBoosterTask.AttackRange,
-                    BoosterType.Wrapped => _wrappedBoosterTask.AttackRange,
-                    _ => new()
-                };
-            }
-
-            return bounds;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

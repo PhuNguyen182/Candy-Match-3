@@ -191,8 +191,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         return;
                     }
 
-                    await _activateBoosterTask.ActivateBooster(gridCell, true, true);
-                    onActive?.Invoke(_activateBoosterTask.GetAttackedBounds(booster));
+                    await _activateBoosterTask.ActivateBooster(gridCell, true, true, onActive);
                 }
 
                 else if (blockItem is IBreakable breakable)
@@ -262,8 +261,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
                 }
 
-                await _activateBoosterTask.ActivateBooster(gridCell, true, true);
-                onActive?.Invoke(_activateBoosterTask.GetAttackedBounds(booster));
+                await _activateBoosterTask.ActivateBooster(gridCell, true, true, onActive);
                 
                 gridCell.IsMatching = false;
                 gridCell.LockStates = LockStates.None;

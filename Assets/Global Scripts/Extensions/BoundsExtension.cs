@@ -9,6 +9,8 @@ namespace GlobalScripts.Extensions
 {
     public static class BoundsExtension
     {
+        public static Vector3IntComparer Vector3IntComparer { get; } = new();
+
         public static BoundsInt GetBounds2D(this Vector3Int position, Vector3Int size)
         {
             return new BoundsInt(position - size / 2, size);
@@ -35,19 +37,20 @@ namespace GlobalScripts.Extensions
         public static BoundsInt Encapsulate(List<Vector3Int> positions)
         {
             List<Vector3Int> sortedPosition = new(positions);
-            sortedPosition.Sort(new Vector3IntComparer());
+            sortedPosition.Sort(Vector3IntComparer);
 
             int count = sortedPosition.Count;
             Vector3Int firstPosition = sortedPosition[0];
             Vector3Int lastPosition = sortedPosition[count - 1];
-
-            return new BoundsInt
+            BoundsInt bounds = new BoundsInt
             {
                 xMin = firstPosition.x,
                 xMax = lastPosition.x + 1,
                 yMin = firstPosition.y,
                 yMax = lastPosition.y + 1
             };
+
+            return bounds;
         }
 
         public static IEnumerable<Vector3Int> GetRow(this BoundsInt boundsInt, Vector3Int checkPosition)
