@@ -60,41 +60,27 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             fromCell.LockStates = LockStates.Swapping;
             toCell.LockStates = LockStates.Swapping;
 
+            UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
+            UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
+            await UniTask.WhenAll(fromMoveTask, toMoveTask);
+
             if (_comboBoosterHandleTask.IsComboBooster(fromCell, toCell))
             {
-                //if(_comboBoosterHandleTask.IsColorBoosters(fromCell, toCell))
-                //{
-                //    DecreaseMove();
-                //    await fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
-                //    await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
-                //}
+                DecreaseMove();
+                fromCell.SetBlockItem(toItem);
+                toItem.SetWorldPosition(fromCell.WorldPosition);
+                toCell.SetBlockItem(fromItem);
+                fromItem.SetWorldPosition(toCell.WorldPosition);
 
-                //else
-                {
-                    DecreaseMove();
-                    UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
-                    UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
-                    await UniTask.WhenAll(fromMoveTask, toMoveTask);
+                fromCell.LockStates = LockStates.None;
+                toCell.LockStates = LockStates.None;
 
-                    fromCell.SetBlockItem(toItem);
-                    toItem.SetWorldPosition(fromCell.WorldPosition);
-                    toCell.SetBlockItem(fromItem);
-                    fromItem.SetWorldPosition(toCell.WorldPosition);
-
-                    fromCell.LockStates = LockStates.None;
-                    toCell.LockStates = LockStates.None;
-
-                    await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
-                }
+                await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
             }
 
             else if (_comboBoosterHandleTask.IsSwapToColorful(fromCell, toCell))
             {
                 DecreaseMove();
-                UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
-                UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
-                await UniTask.WhenAll(fromMoveTask, toMoveTask);
-
                 fromCell.SetBlockItem(toItem);
                 toItem.SetWorldPosition(fromCell.WorldPosition);
                 toCell.SetBlockItem(fromItem);
@@ -106,17 +92,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 await _comboBoosterHandleTask.CombineColorfulItemWithColorItem(fromCell, toCell);
             }
 
-            else if(CheckCollectible(fromCell, toCell))
+            else if (CheckCollectible(fromCell, toCell))
             {
                 IGridCell currentGrid;
                 IGridCell remainGrid;
                 IBlockItem blockItem;
 
                 DecreaseMove();
-                UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
-                UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
-                await UniTask.WhenAll(fromMoveTask, toMoveTask);
-
                 fromCell.SetBlockItem(toItem);
                 toItem.SetWorldPosition(fromCell.WorldPosition);
                 toCell.SetBlockItem(fromItem);
@@ -151,10 +133,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else
             {
-                UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
-                UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
-                await UniTask.WhenAll(fromMoveTask, toMoveTask);
-
                 fromCell.SetBlockItem(toItem);
                 toItem.SetWorldPosition(fromCell.WorldPosition);
                 toCell.SetBlockItem(fromItem);

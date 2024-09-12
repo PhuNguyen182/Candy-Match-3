@@ -7,8 +7,10 @@ using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Common.Messages;
 using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 {
@@ -17,6 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private readonly GridCellManager _gridCellManager;
         private readonly ExplodeItemTask _explodeItemTask;
         private readonly BreakGridTask _breakGridTask;
+        private readonly IPublisher<CameraShakeMessage> _cameraShakePublisher;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
@@ -31,6 +34,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             _cts = new();
             _token = _cts.Token;
+
+            _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
         }
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
@@ -66,6 +71,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     }
 
                     await UniTask.WhenAll(breakTasks);
+                    ShakeCamera();
+
+                    await _explodeItemTask.Blast(checkPosition, new Vector3Int(9, 8));
+                    await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 }
 
                 int count = positions.Count;
@@ -84,6 +93,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;
+        }
+
+        private void ShakeCamera()
+        {
+            _cameraShakePublisher.Publish(new CameraShakeMessage
+            {
+                Amplitude = 3f
+            });
         }
 
         private int GetDirectionFromSwap(Vector3Int direction)

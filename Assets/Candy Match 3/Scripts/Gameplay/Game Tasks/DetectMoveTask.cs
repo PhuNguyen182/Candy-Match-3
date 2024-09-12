@@ -38,7 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _availableMoves = new();
         }
 
-        // To do: Set priority for common match whether the match contains boosters or not
+        // To do: Check matching logic again, optimize do not generate to much garbage
         public void DetectPossibleMoves()
         {
             ClearResult();

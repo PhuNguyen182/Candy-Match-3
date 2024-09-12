@@ -37,8 +37,9 @@ namespace GlobalScripts.Extensions
             List<Vector3Int> sortedPosition = new(positions);
             sortedPosition.Sort(new Vector3IntComparer());
 
-            Vector3Int firstPosition = sortedPosition.First();
-            Vector3Int lastPosition = sortedPosition.Last();
+            int count = sortedPosition.Count;
+            Vector3Int firstPosition = sortedPosition[0];
+            Vector3Int lastPosition = sortedPosition[count - 1];
 
             return new BoundsInt
             {

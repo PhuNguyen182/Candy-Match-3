@@ -7,8 +7,10 @@ using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -17,6 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly GridCellManager _gridCellManager;
         private readonly ExplodeItemTask _explodeItemTask;
         private readonly BreakGridTask _breakGridTask;
+        private readonly IPublisher<CameraShakeMessage> _cameraShakePublisher;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
@@ -32,6 +35,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             _cts = new();
             _token = _cts.Token;
+
+            _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
         }
 
         public async UniTask Activate(IGridCell gridCell, bool useDelay, bool doNotCheck)
@@ -58,7 +63,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(breakTasks);
+                ShakeCamera();
 
+                await _explodeItemTask.Blast(position, 2);
+                await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 Vector3Int min = attackPositions[0] + new Vector3Int(-1, -1);
                 Vector3Int max = attackPositions[count - 1] + new Vector3Int(1, 1);
 
@@ -78,6 +86,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;
+        }
+
+        private void ShakeCamera()
+        {
+            _cameraShakePublisher.Publish(new CameraShakeMessage
+            {
+                Amplitude = 1f
+            });
         }
 
         private async UniTask BreakItem(Vector3Int position)

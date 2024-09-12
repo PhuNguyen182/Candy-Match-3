@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Cinemachine;
 using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Common.Factories;
 using CandyMatch3.Scripts.Common.Databases;
@@ -48,6 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
         [Header("Board Utils")]
         [SerializeField] private GridCellView gridCellViewPrefab;
+        [SerializeField] private CinemachineImpulseSource impulseSource;
         [SerializeField] private BoardInput boardInput;
 
         private ItemManager _itemManager;
@@ -57,7 +59,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private FillBoardTask _fillBoardTask;
         private BreakGridTask _breakGridTask;
         private MatchItemsTask _matchItemsTask;
-        private SpawnItemTask _spawnItemTask;        
+        private SpawnItemTask _spawnItemTask;
+        private CameraShakeTask _cameraShakeTask;
         private GameTaskManager _gameTaskManager;
 
         private int _check = 0;
@@ -127,6 +130,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _spawnItemTask = new(_gridCellManager, _itemManager);
             _spawnItemTask.AddTo(ref builder);
+
+            _cameraShakeTask = new(impulseSource);
+            _cameraShakeTask.AddTo(ref builder);
 
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
                                    , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
