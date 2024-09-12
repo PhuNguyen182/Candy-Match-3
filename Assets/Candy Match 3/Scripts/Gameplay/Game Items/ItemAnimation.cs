@@ -66,10 +66,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public UniTask BounceMove(Vector3 position)
         {
-            Vector3 localPosition = transform.InverseTransformPoint(position);
-            _bounceMoveTween ??= CreateMoveBounceTween(localPosition);
+            _bounceMoveTween ??= CreateMoveBounceTween(position);
             _bounceMoveTween.ChangeStartValue(itemRenderer.transform.localPosition);
-            _bounceMoveTween.ChangeEndValue(localPosition);
+            _bounceMoveTween.ChangeEndValue(position);
 
             _bounceMoveTween.Rewind();
             _bounceMoveTween.Play();

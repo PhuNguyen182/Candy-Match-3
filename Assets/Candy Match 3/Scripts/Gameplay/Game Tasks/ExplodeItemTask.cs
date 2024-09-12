@@ -57,20 +57,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                         gridCell = _gridCellManager.Get(boundsEdge[i]);
 
-                        if (gridCell == null || !gridCell.HasItem)
-                            continue;
-
-                        if (!gridCell.IsMoveable)
+                        if (gridCell == null || !gridCell.HasItem || !gridCell.IsMoveable)
                             continue;
 
                         if (gridCell.BlockItem is IItemAnimation animation)
                         {
-                            Vector3 blockPosition = gridCell.WorldPosition;
                             Vector3 direction = (centerPosition - gridCell.WorldPosition).normalized;
-
                             float distance = GetDistance(pivot, gridCell.GridPosition);
                             float bounce = Match3Constants.ExplodeAmplitude * Mathf.Log(distance, Match3Constants.ExplosionPower);
-                            explodeTasks.Add(animation.BounceInDirection(blockPosition + direction * bounce));
+                            explodeTasks.Add(animation.BounceInDirection(direction * bounce));
                         }
                     }
 
