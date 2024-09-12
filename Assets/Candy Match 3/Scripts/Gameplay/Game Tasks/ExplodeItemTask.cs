@@ -57,10 +57,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                         gridCell = _gridCellManager.Get(boundsEdge[i]);
 
-                        if (gridCell == null)
+                        if (gridCell == null || !gridCell.HasItem)
                             continue;
 
-                        if (!gridCell.HasItem)
+                        if (!gridCell.IsMoveable)
                             continue;
 
                         if (gridCell.BlockItem is IItemAnimation animation)

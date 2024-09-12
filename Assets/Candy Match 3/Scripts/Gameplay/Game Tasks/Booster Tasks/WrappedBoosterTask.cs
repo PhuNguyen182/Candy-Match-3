@@ -52,6 +52,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 using var brealListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
                 using var encapsulateListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> encapsulatePositions);
+                _explodeItemTask.Blast(position, 2).Forget();
 
                 for (int i = 0; i < attackPositions.Count; i++)
                 {
@@ -62,10 +63,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     breakTasks.Add(BreakItem(attackPositions[i]));
                 }
 
-                await UniTask.WhenAll(breakTasks);
                 ShakeCamera();
+                await UniTask.WhenAll(breakTasks);
 
-                await _explodeItemTask.Blast(position, 2);
                 await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 Vector3Int min = attackPositions[0] + new Vector3Int(-1, -1);
                 Vector3Int max = attackPositions[count - 1] + new Vector3Int(1, 1);

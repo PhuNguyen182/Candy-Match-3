@@ -374,6 +374,7 @@ MonoBehaviour:
   itemAnimator: {fileID: 4583443513107311738}
   itemGraphics: {fileID: 2508693984384139615}
   itemRenderer: {fileID: 3474352009185529057}
+  itemChild: {fileID: 4263780245494329126}
   fallenCurve:
     serializedVersion: 2
     m_Curve:

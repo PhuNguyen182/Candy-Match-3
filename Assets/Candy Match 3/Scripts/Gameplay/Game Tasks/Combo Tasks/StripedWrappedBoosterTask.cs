@@ -45,14 +45,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             if (gridCell1.BlockItem is IColorBooster booster1 && gridCell2.BlockItem is IColorBooster booster2)
             {
-                actorBooster = booster1.ColorBoosterType != BoosterType.Wrapped ? booster1 : booster2;
-                actorGridCell = booster1.ColorBoosterType != BoosterType.Wrapped ? gridCell1 : gridCell2;
-                remainGridCell = booster1.ColorBoosterType != BoosterType.Wrapped ? gridCell2 : gridCell1;
+                if(booster1.ColorBoosterType != BoosterType.Wrapped)
+                {
+                    actorBooster = booster1;
+                    actorGridCell = gridCell1;
+                    remainGridCell = gridCell2;
+                }
+
+                else
+                {
+                    actorBooster = booster2;
+                    actorGridCell = gridCell2;
+                    remainGridCell = gridCell1;
+                }
             }
 
             // Remove wrapped booster cell
+            actorBooster.IsActivated = true; // Prevent this booster active itself
             _breakGridTask.ReleaseGridCell(remainGridCell);
-            Vector3Int checkPosition = gridCell2.GridPosition;
+
+            Vector3Int checkPosition = actorGridCell.GridPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
 
             // Lock columns to block all items in these columns falling
@@ -92,10 +104,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     breakTasks.Add(_breakGridTask.BreakItem(rowListPositions[i]));
                 }
 
+                ShakeCamera();
                 await UniTask.WhenAll(breakTasks);
                 SpawnTripleHorizontal(checkPosition);
                 ExpandRange(ref rowListPositions, Vector3Int.up);
-                ShakeCamera();
 
                 // Lock this area to prevent outside items fall in to
                 BoundsInt miniCheckBounds = checkPosition.GetBounds2D(1);
@@ -125,10 +137,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 for (int i = 0; i < columnListPositions.Count; i++)
                     breakTasks.Add(_breakGridTask.BreakItem(columnListPositions[i]));
 
+                ShakeCamera();
                 await UniTask.WhenAll(breakTasks);
                 SpawnTripleVertical(checkPosition);
                 ExpandRange(ref columnListPositions, Vector3Int.right);
-                ShakeCamera();
 
                 _breakGridTask.ReleaseGridCell(actorGridCell);
                 BoundsInt verticalCheckBounds = BoundsExtension.Encapsulate(columnListPositions);

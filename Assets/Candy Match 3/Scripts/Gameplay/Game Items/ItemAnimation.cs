@@ -66,9 +66,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public UniTask BounceMove(Vector3 position)
         {
-            _bounceMoveTween ??= CreateMoveBounceTween(position);
-            _bounceMoveTween.ChangeStartValue(transform.position);
-            _bounceMoveTween.ChangeEndValue(position);
+            Vector3 localPosition = transform.InverseTransformPoint(position);
+            _bounceMoveTween ??= CreateMoveBounceTween(localPosition);
+            _bounceMoveTween.ChangeStartValue(itemRenderer.transform.localPosition);
+            _bounceMoveTween.ChangeEndValue(localPosition);
 
             _bounceMoveTween.Rewind();
             _bounceMoveTween.Play();
@@ -146,9 +147,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private Tweener CreateMoveBounceTween(Vector3 position)
         {
-            return transform.DOMove(position, bounceDuration)
-                            .SetEase(bounceEase).SetLoops(2, LoopType.Yoyo)
-                            .SetAutoKill(false);
+            return itemRenderer.transform.DOLocalMove(position, bounceDuration)
+                               .SetEase(bounceEase).SetLoops(2, LoopType.Yoyo)
+                               .SetAutoKill(false);
         }
 
         private Tweener CreateMoveTween(Vector3 toPosition, float duration)

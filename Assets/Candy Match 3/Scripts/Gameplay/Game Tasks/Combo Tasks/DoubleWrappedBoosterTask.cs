@@ -43,6 +43,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 Vector3Int direction = gridCell2.GridPosition - gridCell1.GridPosition;
+                BoundsInt attackRange = GetSizeFromDirection(gridCell1.GridPosition, gridCell2.GridPosition);
+                BoundsInt affectRange = GetAffectRangeFromDirection(gridCell1.GridPosition, gridCell2.GridPosition);
+
                 int boosterComboDirection1 = GetDirectionFromSwap(direction);
                 int boosterComboDirection2 = GetDirectionFromSwap(-direction);
 
@@ -60,8 +63,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 _breakGridTask.ReleaseGridCell(gridCell2);
 
                 Vector3Int checkPosition = gridCell2.GridPosition;
-                BoundsInt attackRange = checkPosition.GetBounds2D(new Vector3Int(5, 6));
                 positions.AddRange(attackRange.Iterator2D());
+                _explodeItemTask.Blast(checkPosition, affectRange).Forget();
 
                 using (var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
                 {
@@ -70,10 +73,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                         breakTasks.Add(_breakGridTask.BreakItem(positions[i]));
                     }
 
-                    await UniTask.WhenAll(breakTasks);
                     ShakeCamera();
+                    await UniTask.WhenAll(breakTasks);
 
-                    await _explodeItemTask.Blast(checkPosition, new Vector3Int(9, 8));
                     await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 }
 
@@ -88,6 +90,56 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 _checkGridTask.CheckRange(checkRange);
             }
+        }
+
+        private BoundsInt GetSizeFromDirection(Vector3Int from, Vector3Int to)
+        {
+            Vector3Int direction = to - from;
+
+            if (direction == Vector3Int.right || direction == Vector3Int.up)
+            {
+                return new BoundsInt
+                {
+                    min = from + new Vector3Int(-2, -2),
+                    max = to + new Vector3Int(3, 3)
+                };
+            }
+
+            if (direction == Vector3Int.left || direction == Vector3Int.down)
+            {
+                return new BoundsInt
+                {
+                    min = to + new Vector3Int(-2, -2),
+                    max = from + new Vector3Int(3, 3)
+                };
+            }
+
+            return new BoundsInt();
+        }
+
+        private BoundsInt GetAffectRangeFromDirection(Vector3Int from, Vector3Int to)
+        {
+            Vector3Int direction = to - from;
+
+            if (direction == Vector3Int.right || direction == Vector3Int.up)
+            {
+                return new BoundsInt
+                {
+                    min = from + new Vector3Int(-4, -4),
+                    max = to + new Vector3Int(5, 5)
+                };
+            }
+
+            if (direction == Vector3Int.left || direction == Vector3Int.down)
+            {
+                return new BoundsInt
+                {
+                    min = to + new Vector3Int(-4, -4),
+                    max = from + new Vector3Int(5, 5)
+                };
+            }
+
+            return new BoundsInt();
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

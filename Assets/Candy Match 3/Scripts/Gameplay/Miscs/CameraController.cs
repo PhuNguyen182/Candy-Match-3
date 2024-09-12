@@ -3,6 +3,7 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
@@ -16,6 +17,7 @@ namespace CandyMatch3.Scripts.Gameplay.Miscs
 
         [Space(10)]
         [SerializeField] private Camera mainCamera;
+        [SerializeField] private CinemachineBrain cinemachineBrain;
         [SerializeField] private SpriteRenderer background;
 
         private const float DefaultCameraSize = 7f;
@@ -28,6 +30,7 @@ namespace CandyMatch3.Scripts.Gameplay.Miscs
 
         private void Awake()
         {
+            cinemachineBrain.useGUILayout = false; // Stop generating 368B GC.Alloc
             _token = this.GetCancellationTokenOnDestroy();
         }
 

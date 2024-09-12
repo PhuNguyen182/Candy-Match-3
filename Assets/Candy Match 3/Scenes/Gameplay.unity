@@ -3068,6 +3068,7 @@ MonoBehaviour:
   moveDuration: 0.5
   moveEase: 4
   mainCamera: {fileID: 820469714}
+  cinemachineBrain: {fileID: 820469718}
   background: {fileID: 2141531763}
 --- !u!114 &820469718
 MonoBehaviour:
@@ -3082,7 +3083,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowDebugText: 0
-  m_ShowCameraFrustum: 1
+  m_ShowCameraFrustum: 0
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
   m_UpdateMethod: 2

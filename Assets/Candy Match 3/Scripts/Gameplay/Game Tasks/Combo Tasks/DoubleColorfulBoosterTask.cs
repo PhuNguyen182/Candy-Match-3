@@ -71,13 +71,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 {
                     IGridCell gridCell = _gridCellManager.Get(positions[i]);
 
-                    if (!gridCell.HasItem)
+                    if (!gridCell.HasItem || gridCell.IsLocked)
                         continue;
 
                     if (gridCell.GridPosition == gridCell1.GridPosition || gridCell.GridPosition == gridCell2.GridPosition)
-                        continue;
-
-                    if (gridCell.BlockItem is not IBreakable)
                         continue;
 
                     gridCellType = GetCellPositionType(positions[i]);
