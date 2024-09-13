@@ -2,11 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.Strategies.Suggests;
 using CandyMatch3.Scripts.Gameplay.GridCells;
-using CandyMatch3.Scripts.Common.Enums;
 using Random = UnityEngine.Random;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
@@ -21,7 +20,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _allGridPositions;
         private List<AvailableSuggest> _availableMoves;
 
-        private const int ColorfulWithColorItemScore = 7;
+        private const int ColorfulWithColorItemScore = 12;
 
         public DetectMoveTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask)
         {
@@ -177,23 +176,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 (BoosterType.Wrapped, BoosterType.Wrapped) => 11,
                 
                 // Wrapped + Striped
-                (BoosterType.Wrapped, BoosterType.Horizontal) => 12,
-                (BoosterType.Wrapped, BoosterType.Vertical) => 12,
-                (BoosterType.Horizontal, BoosterType.Wrapped) => 12,
-                (BoosterType.Vertical, BoosterType.Wrapped) => 12,
+                (BoosterType.Wrapped, BoosterType.Horizontal) => 13,
+                (BoosterType.Wrapped, BoosterType.Vertical) => 13,
+                (BoosterType.Horizontal, BoosterType.Wrapped) => 13,
+                (BoosterType.Vertical, BoosterType.Wrapped) => 13,
 
                 // Colorful + Striped
-                (BoosterType.Colorful, BoosterType.Horizontal) => 13,
-                (BoosterType.Colorful, BoosterType.Vertical) => 13,
-                (BoosterType.Horizontal, BoosterType.Colorful) => 13,
-                (BoosterType.Vertical, BoosterType.Colorful) => 13,
+                (BoosterType.Colorful, BoosterType.Horizontal) => 14,
+                (BoosterType.Colorful, BoosterType.Vertical) => 14,
+                (BoosterType.Horizontal, BoosterType.Colorful) => 14,
+                (BoosterType.Vertical, BoosterType.Colorful) => 14,
 
                 // Colorful + Wrapped
-                (BoosterType.Colorful, BoosterType.Wrapped) => 14,
-                (BoosterType.Wrapped, BoosterType.Colorful) => 14,
+                (BoosterType.Colorful, BoosterType.Wrapped) => 15,
+                (BoosterType.Wrapped, BoosterType.Colorful) => 15,
 
                 // Colorful = Colorful
-                (BoosterType.Colorful, BoosterType.Colorful) => 15,
+                (BoosterType.Colorful, BoosterType.Colorful) => 16,
                 _ => 0
             };
 

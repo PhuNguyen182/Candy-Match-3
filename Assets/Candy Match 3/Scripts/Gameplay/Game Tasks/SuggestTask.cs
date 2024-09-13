@@ -3,16 +3,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Strategies.Suggests;
+using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using GlobalScripts.UpdateHandlerPattern;
-using Random = UnityEngine.Random;
 using MessagePipe;
-using CandyMatch3.Scripts.Gameplay.Models.Match;
-using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -173,8 +170,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 availableSuggest.Positions = new() 
                 { 
-                    originalPosition
-                    , switchedPosition 
+                    originalPosition, 
+                    switchedPosition 
                 };
 
                 return availableSuggest;
@@ -207,7 +204,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             Highlight(false);
             ClearSuggestedItems();
-
             _suggestCount = 0;
         }
 

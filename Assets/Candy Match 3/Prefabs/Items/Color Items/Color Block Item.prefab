@@ -156,7 +156,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -664089845
   m_SortingLayer: 5
-  m_SortingOrder: -1
+  m_SortingOrder: -2
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -240,7 +240,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -664089845
   m_SortingLayer: 5
-  m_SortingOrder: 1
+  m_SortingOrder: 4
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -379,7 +379,6 @@ MonoBehaviour:
   itemAnimator: {fileID: 7260267152778773488}
   itemGraphics: {fileID: 1494473538025020321}
   itemRenderer: {fileID: 7636792035534320754}
-  itemChild: {fileID: 52362868050232997}
   fallenCurve:
     serializedVersion: 2
     m_Curve:
@@ -430,6 +429,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   bounceDuration: 0.125
   bounceEase: 6
+  glowLightDuration: 1
   highlightDuration: 1.25
   highlightEase:
     serializedVersion: 2
@@ -461,6 +461,12 @@ MonoBehaviour:
       weightedMode: 1
       inWeight: 0.9978466
       outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  glowlightEase:
+    serializedVersion: 2
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4

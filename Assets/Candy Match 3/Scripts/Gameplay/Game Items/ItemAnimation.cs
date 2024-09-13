@@ -134,6 +134,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
                 return;
 
             _hasBeenSuggested = isActive;
+            itemRenderer.maskInteraction = !isActive ? SpriteMaskInteraction.VisibleOutsideMask
+                                           : SpriteMaskInteraction.None;
             itemAnimator.SetBool(ItemAnimationHashKeys.SuggestHash, isActive);
 
             if (isActive)
