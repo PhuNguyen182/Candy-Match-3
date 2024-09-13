@@ -195,6 +195,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     _detectMoveTask.PseudoSwapItems(gridCell1, gridCell2);
                     return availableSuggest;
                 }
+
+                _detectMoveTask.PseudoSwapItems(gridCell1, gridCell2);
             }
 
             return new();
