@@ -16,6 +16,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         protected int[] checkAngles = new[] { 0, -90, 180, 90 };
 
         protected IDisposable disposable;
+        protected abstract int matchScoreCount { get; }
         protected abstract int requiredItemCount { get; }
         protected abstract List<SequencePattern> sequencePattern { get; }
 
@@ -36,6 +37,24 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             }
 
             disposable = builder.Build();
+        }
+
+        protected (int matchScore, int boosterCount) GetMatchableScore(Vector3Int gridPosition)
+        {
+            int matchScore = 0;
+            int boosterCount = 0;
+
+            for (int i = 0; i < sequencePattern.Count; i++)
+            {
+                matchScore = GetMatchPointFromSequence(gridPosition, sequencePattern[i], out boosterCount);
+
+                if (matchScore >= requiredItemCount)
+                {
+                    return (matchScoreCount, boosterCount);
+                }
+            }
+
+            return (0, 0);
         }
 
         protected MatchResult GetMatchResult(Vector3Int gridPosition)
@@ -75,6 +94,14 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             return isMatchable;
         }
 
+        public bool CheckMatch(Vector3Int gridPosition, out int score)
+        {
+            var (matchScore, boosterCount) = GetMatchableScore(gridPosition);
+            
+            score = matchScore + boosterCount;
+            return matchScore > 0;
+        }
+
         protected List<Vector3Int> GetRotatePositions(List<Vector3Int> checkPositions, int angle)
         {
             int count = checkPositions.Count;
@@ -96,6 +123,54 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
             return rotateMatchPositions;
         }
+
+        protected int GetMatchPointFromSequence(Vector3Int position, SequencePattern sequence, out int boosterCount)
+        {
+            int boosterAmount = 0;
+            int matchableCount = 0;
+
+            IGridCell checkCell = gridCellManager.Get(position);
+            CandyColor candyColor = checkCell.CandyColor;
+
+            if (candyColor == CandyColor.None)
+            {
+                boosterCount = 0;
+                return matchableCount;
+            }
+
+            for (int i = 0; i < sequence.Pattern.Count; i++)
+            {
+                Vector3Int checkPosition = position + sequence.Pattern[i];
+                IGridCell gridCell = gridCellManager.Get(checkPosition);
+
+                if (gridCell == null)
+                    break;
+
+                if (!gridCell.HasItem || gridCell.IsMoving || gridCell.IsLocked)
+                    break;
+
+                if (!gridCell.BlockItem.IsMatchable || gridCell.IsMatching)
+                    break;
+
+                if (gridCell.BlockItem.CandyColor != candyColor)
+                {
+                    if (matchableCount < requiredItemCount)
+                        break;
+
+                    else
+                        continue;
+                }
+
+                if (IsBooster(gridCell.BlockItem))
+                    boosterAmount = boosterAmount + 1;
+
+                matchableCount = matchableCount + 1;
+            }
+
+            boosterCount = boosterAmount;
+            return matchableCount;
+        }
+
 
         protected List<Vector3Int> GetMatchCellsFromSequence(Vector3Int position, SequencePattern sequence, out CandyColor matchColor, out bool hasBooster)
         {

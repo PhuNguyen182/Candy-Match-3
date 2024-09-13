@@ -11,6 +11,8 @@ using CandyMatch3.Scripts.Gameplay.Interfaces;
 using GlobalScripts.UpdateHandlerPattern;
 using Random = UnityEngine.Random;
 using MessagePipe;
+using CandyMatch3.Scripts.Gameplay.Models.Match;
+using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -18,6 +20,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly GridCellManager _gridCellManager;
         private readonly DetectMoveTask _detectMoveTask;
+        private readonly MatchItemsTask _matchItemsTask;
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
 
         private const float SuggestDelay = 4f;
@@ -35,11 +38,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public bool IsActive { get; set; }
 
-        public SuggestTask(GridCellManager gridCellManager, DetectMoveTask detectMoveTask)
+        public SuggestTask(GridCellManager gridCellManager, DetectMoveTask detectMoveTask, MatchItemsTask matchItemsTask)
         {
             _itemSuggests = new();
             _gridCellManager = gridCellManager;
             _detectMoveTask = detectMoveTask;
+            _matchItemsTask = matchItemsTask;
 
             DisposableBagBuilder messageBuilder = MessagePipe.DisposableBag.CreateBuilder();
             _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
@@ -111,30 +115,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (_detectMoveTask.HasPossibleMove())
             {
-                using (ListPool<AvailableSuggest>.Get(out List<AvailableSuggest> suggests))
+                ClearSuggestedItems();
+                AvailableSuggest suggest = _detectMoveTask.GetPossibleSwap(_suggestCount);
+                AvailableSuggest detectedSuggest = ExportSuggestResult(suggest);
+
+                for (int i = 0; i < detectedSuggest.Positions.Count; i++)
                 {
-                    ClearSuggestedItems();
-                    suggests.AddRange(_detectMoveTask.GetPossibleSwaps());
+                    Vector3Int position = detectedSuggest.Positions[i];
+                    IGridCell gridCell = _gridCellManager.Get(position);
+                    IBlockItem blockItem = gridCell.BlockItem;
 
-                    int count = suggests.Count;
-                    int index = _suggestCount == 0 ? count - 1 
-                                : Random.Range(count * 2 / 3, count);
-                    AvailableSuggest detectedSuggest = suggests[index];
-                    
-                    for (int i = 0; i < detectedSuggest.Positions.Count; i++)
-                    {
-                        Vector3Int position = detectedSuggest.Positions[i];
-                        IGridCell gridCell = _gridCellManager.Get(position);
-                        IBlockItem blockItem = gridCell.BlockItem;
-
-                        if (blockItem is IItemSuggest itemSuggest)
-                            _itemSuggests.Add(itemSuggest);
-                    }
+                    if (blockItem is IItemSuggest itemSuggest)
+                        _itemSuggests.Add(itemSuggest);
                 }
-
-                _suggestCount = _suggestCount + 1;
-                _inputProcessTask.IsActive = true;
             }
+
+            _suggestCount = _suggestCount + 1;
+            _inputProcessTask.IsActive = true;
         }
 
         private void Highlight(bool isActive)
@@ -162,6 +159,48 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 ClearSuggest();
             }
+        }
+
+        // Optimize modification
+        private AvailableSuggest ExportSuggestResult(AvailableSuggest availableSuggest)
+        {
+            // Instead of taking all possible positions in one loop, just take the position
+            // and direction with its score, then calculate available positions later
+            Vector3Int originalPosition = availableSuggest.Position;
+            Vector3Int switchedPosition = originalPosition + availableSuggest.Direction;
+
+            if (availableSuggest.IsSwapWithBooster)
+            {
+                availableSuggest.Positions = new() 
+                { 
+                    originalPosition
+                    , switchedPosition 
+                };
+
+                return availableSuggest;
+            }
+
+            else
+            {
+                IGridCell gridCell1 = _gridCellManager.Get(originalPosition);
+                IGridCell gridCell2 = _gridCellManager.Get(switchedPosition);
+                
+                MatchResult matchResult;
+                _detectMoveTask.PseudoSwapItems(gridCell1, gridCell2);
+
+                if (_matchItemsTask.IsMatchable(originalPosition, out matchResult))
+                {
+                    List<Vector3Int> positions = new(matchResult.MatchSequence);
+                    int count = matchResult.MatchSequence.Count;
+                    positions[count - 1] = gridCell2.GridPosition;
+                    availableSuggest.Positions = positions;
+
+                    _detectMoveTask.PseudoSwapItems(gridCell1, gridCell2);
+                    return availableSuggest;
+                }
+            }
+
+            return new();
         }
 
         public void ClearSuggest()

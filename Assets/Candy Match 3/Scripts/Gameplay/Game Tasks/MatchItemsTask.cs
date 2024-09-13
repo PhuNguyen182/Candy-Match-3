@@ -175,6 +175,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return _matchRule.CheckMatch(position, out matchResult);
         }
 
+        public bool CheckMatch(Vector3Int position, out int matchScore)
+        {
+            return _matchRule.CheckMatch(position, out matchScore);
+        }
+
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;

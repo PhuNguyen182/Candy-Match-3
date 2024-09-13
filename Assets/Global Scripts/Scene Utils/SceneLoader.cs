@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,9 +24,9 @@ namespace GlobalScripts.SceneUtils
 
 #if UNITASK_ADDRESSABLE_SUPPORT
         public static async UniTask LoadSceneViaAddressable(string key, LoadSceneMode loadMode = LoadSceneMode.Single
-            , bool activateOnLoad = true, int priority = 100)
+            , bool activateOnLoad = true, int priority = 100, CancellationToken cancellationToken = default)
         {
-            await AddressablesUtils.LoadSceneViaAddressable(key, loadMode, activateOnLoad, priority);
+            await AddressablesUtils.LoadSceneViaAddressable(key, loadMode, activateOnLoad, priority, cancellationToken);
         }
 #endif
     }

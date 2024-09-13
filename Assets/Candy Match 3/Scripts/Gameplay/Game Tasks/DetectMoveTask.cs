@@ -2,12 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.Strategies.Suggests;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Common.Enums;
+using Random = UnityEngine.Random;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -38,7 +38,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _availableMoves = new();
         }
 
-        // To do: Check matching logic again, optimize do not generate to much garbage
         public void DetectPossibleMoves()
         {
             ClearResult();
@@ -53,80 +52,70 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     if (IsSwappable(fromPosition, toPosition))
                     {
                         int score = 0;
-                        using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
+                        IGridCell fromGridCell = _gridCellManager.Get(fromPosition);
+                        IGridCell toGridCell = _gridCellManager.Get(toPosition);
+                        PseudoSwapItems(fromGridCell, toGridCell);
+
+                        if (AreBoosters(fromGridCell, toGridCell))
                         {
-                            IGridCell fromGridCell = _gridCellManager.Get(fromPosition);
-                            IGridCell toGridCell = _gridCellManager.Get(toPosition);
-                            PseudoSwapItems(fromGridCell, toGridCell);
+                            score = GetComboBoosterScore(fromGridCell, toGridCell);
 
-                            if (AreBoosters(fromGridCell, toGridCell))
+                            _availableMoves.Add(new AvailableSuggest
                             {
-                                positions = new() { fromPosition, toPosition };
-                                score = GetComboBoosterScore(fromGridCell, toGridCell);
+                                IsSwapWithBooster = true,
+                                Position = fromPosition,
+                                Direction = _swapDirections[j],
+                                Score = score
+                            });
+                        }
 
-                                _availableMoves.Add(new AvailableSuggest
-                                {
-                                    FromPosition = fromPosition,
-                                    ToPosition = toPosition,
-                                    Positions = positions,
-                                    Score = score
-                                });
+                        else if (IsColorfulWithColorItem(fromGridCell, toGridCell))
+                        {
+                            score = ColorfulWithColorItemScore;
+
+                            _availableMoves.Add(new AvailableSuggest
+                            {
+                                IsSwapWithBooster = true,
+                                Position = fromPosition,
+                                Direction = _swapDirections[j],
+                                Score = score
+                            });
+                        }
+
+                        else
+                        {
+                            int fromScore = 0, toScore = 0;
+                            _matchItemsTask.CheckMatch(fromPosition, out fromScore);
+                            _matchItemsTask.CheckMatch(toPosition, out toScore);
+
+                            if (fromScore == 0 && toScore == 0)
+                            {
+                                PseudoSwapItems(fromGridCell, toGridCell);
+                                continue;
                             }
 
-                            else if (IsColorfulWithColorItem(fromGridCell, toGridCell))
+                            Vector3Int position, direction;
+                            score = Mathf.Max(fromScore, toScore);
+                            
+                            if(fromScore >= toScore)
                             {
-                                score = ColorfulWithColorItemScore;
-                                positions = new() { fromPosition, toPosition };
-
-                                _availableMoves.Add(new AvailableSuggest
-                                {
-                                    FromPosition = fromPosition,
-                                    ToPosition = toPosition,
-                                    Positions = positions,
-                                    Score = score
-                                });
+                                position = fromPosition;
+                                direction = _swapDirections[j];
                             }
 
                             else
                             {
-                                int fromScore = 0, toScore = 0;
-
-                                if (_matchItemsTask.IsMatchable(fromPosition, out MatchResult fromMatchResult))
-                                    fromScore = GetMatchableSwapScore(fromMatchResult);
-
-                                if (_matchItemsTask.IsMatchable(toPosition, out MatchResult toMatchResult))
-                                    toScore = GetMatchableSwapScore(toMatchResult);
-
-                                if (fromScore == 0 && toScore == 0)
-                                {
-                                    PseudoSwapItems(fromGridCell, toGridCell);
-                                    continue;
-                                }
-
-                                if (fromScore >= toScore)
-                                {
-                                    score = fromScore;
-                                    positions = new(fromMatchResult.MatchSequence);
-                                    int count = fromMatchResult.MatchSequence.Count;
-                                    positions[count - 1] = toPosition;
-                                }
-
-                                else
-                                {
-                                    score = toScore;
-                                    positions = new(toMatchResult.MatchSequence);
-                                    int count = toMatchResult.MatchSequence.Count;
-                                    positions[count - 1] = fromPosition;
-                                }
-
-                                _availableMoves.Add(new AvailableSuggest
-                                {
-                                    Score = score,
-                                    FromPosition = fromPosition,
-                                    ToPosition = toPosition,
-                                    Positions = positions
-                                });
+                                position = toPosition;
+                                direction = -_swapDirections[j];
                             }
+
+                            _availableMoves.Add(new AvailableSuggest
+                            {
+                                Score = score,
+                                IsSwapWithBooster = false,
+                                Position = position,
+                                Direction = direction,
+                            });
 
                             // Swap back
                             PseudoSwapItems(fromGridCell, toGridCell);
@@ -161,7 +150,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return true;
         }
 
-        private void PseudoSwapItems(IGridCell fromGridCell, IGridCell toGridCell)
+        public void PseudoSwapItems(IGridCell fromGridCell, IGridCell toGridCell)
         {
             IBlockItem fromItem = fromGridCell.BlockItem;
             IBlockItem toItem = toGridCell.BlockItem;
@@ -179,53 +168,36 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             score = (boosterType1, boosterType2) switch
             {
                 // Striped + Striped
-                (BoosterType.Vertical, BoosterType.Vertical) => 9,
-                (BoosterType.Horizontal, BoosterType.Horizontal) => 9,
-                (BoosterType.Horizontal, BoosterType.Vertical) => 9,
-                (BoosterType.Vertical, BoosterType.Horizontal) => 9,
+                (BoosterType.Vertical, BoosterType.Vertical) => 10,
+                (BoosterType.Horizontal, BoosterType.Horizontal) => 10,
+                (BoosterType.Horizontal, BoosterType.Vertical) => 10,
+                (BoosterType.Vertical, BoosterType.Horizontal) => 10,
                 
                 // Wrapped + Wrapped
-                (BoosterType.Wrapped, BoosterType.Wrapped) => 10,
+                (BoosterType.Wrapped, BoosterType.Wrapped) => 11,
                 
                 // Wrapped + Striped
-                (BoosterType.Wrapped, BoosterType.Horizontal) => 11,
-                (BoosterType.Wrapped, BoosterType.Vertical) => 11,
-                (BoosterType.Horizontal, BoosterType.Wrapped) => 11,
-                (BoosterType.Vertical, BoosterType.Wrapped) => 11,
+                (BoosterType.Wrapped, BoosterType.Horizontal) => 12,
+                (BoosterType.Wrapped, BoosterType.Vertical) => 12,
+                (BoosterType.Horizontal, BoosterType.Wrapped) => 12,
+                (BoosterType.Vertical, BoosterType.Wrapped) => 12,
 
                 // Colorful + Striped
-                (BoosterType.Colorful, BoosterType.Horizontal) => 12,
-                (BoosterType.Colorful, BoosterType.Vertical) => 12,
-                (BoosterType.Horizontal, BoosterType.Colorful) => 12,
-                (BoosterType.Vertical, BoosterType.Colorful) => 12,
+                (BoosterType.Colorful, BoosterType.Horizontal) => 13,
+                (BoosterType.Colorful, BoosterType.Vertical) => 13,
+                (BoosterType.Horizontal, BoosterType.Colorful) => 13,
+                (BoosterType.Vertical, BoosterType.Colorful) => 13,
 
                 // Colorful + Wrapped
-                (BoosterType.Colorful, BoosterType.Wrapped) => 13,
-                (BoosterType.Wrapped, BoosterType.Colorful) => 13,
+                (BoosterType.Colorful, BoosterType.Wrapped) => 14,
+                (BoosterType.Wrapped, BoosterType.Colorful) => 14,
 
                 // Colorful = Colorful
-                (BoosterType.Colorful, BoosterType.Colorful) => 14,
+                (BoosterType.Colorful, BoosterType.Colorful) => 15,
                 _ => 0
             };
 
             return score;
-        }
-
-        private int GetMatchableSwapScore(MatchResult matchResult)
-        {
-            int score = 0;
-            int count = matchResult.Count;
-            MatchType matchType = matchResult.MatchType;
-            bool hasBooster = matchResult.HasBooster;
-
-            if (count == 3)
-                score = 1;
-            else if (count == 4)
-                score = 2;
-            else if (count >= 5)
-                score = matchType == MatchType.Match5 ? 4 : 3;
-
-            return score > 0 && hasBooster ? score + 2 : score;
         }
 
         private bool AreBoosters(IGridCell gridCell1, IGridCell gridCell2)
@@ -259,9 +231,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return BoosterType.None;
         }
 
-        public List<AvailableSuggest> GetPossibleSwaps()
+        public AvailableSuggest GetPossibleSwap(int detectCount)
         {
-            return _availableMoves;
+            // If this is first detect, get the most valueable swap
+            // After that, get the random swap near the top-valueable swap randomly
+            int count = _availableMoves.Count;
+            int index = detectCount == 0 ? count - 1 : Random.Range(count * 2 / 3, count);
+            return _availableMoves[index];
         }
 
         public void BuildLevelBoard()

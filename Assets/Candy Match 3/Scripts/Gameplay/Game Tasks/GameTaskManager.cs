@@ -57,7 +57,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _detectMoveTask = new(_gridCellManager, _matchItemsTask);
             _detectMoveTask.AddTo(ref builder);
 
-            _suggestTask = new(_gridCellManager, _detectMoveTask);
+            _suggestTask = new(_gridCellManager, _detectMoveTask, matchItemsTask);
             _suggestTask.AddTo(ref builder);
 
             _breakGridTask = breakGridTask;
