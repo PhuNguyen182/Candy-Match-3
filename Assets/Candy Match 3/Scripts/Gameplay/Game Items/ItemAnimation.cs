@@ -24,8 +24,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] private Ease bounceEase = Ease.OutQuad;
 
         [Header("Hightlight")]
+        [SerializeField] private float glowLightDuration = 1f;
         [SerializeField] private float highlightDuration = 1f;
         [SerializeField] private AnimationCurve highlightEase;
+        [SerializeField] private AnimationCurve glowlightEase;
 
         private bool _hasBeenSuggested;
         private int _originalSortingOrder;
@@ -34,6 +36,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private Tweener _bounceMoveTween;
 
         private Coroutine _highlightCoroutine;
+        private Coroutine _glowlightCoroutine;
         private CancellationToken _destroyToken;
 
         private void Awake()
@@ -108,6 +111,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public async UniTask PlayDoubleWrapped(int direction, bool isFirst)
         {
+            PlayGlowLightEffect();
             ChangeItemLayer(true, 3);
             itemAnimator.SetBool(ItemAnimationHashKeys.IsFirstHash, isFirst);
             itemAnimator.SetInteger(ItemAnimationHashKeys.DirectionHash, direction);
@@ -134,7 +138,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             if (isActive)
             {
                 ClearSuggestEffect();
-                _highlightCoroutine = StartCoroutine(Highlight());
+                PlaySuggestEffect();
             }
             
             else
@@ -156,7 +160,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             return transform.DOMove(toPosition, duration).SetEase(movingCurve).SetAutoKill(false);
         }
 
-        private IEnumerator Highlight()
+        private IEnumerator Highlight(float duration, AnimationCurve ease, bool canStop = false)
         {
             float ratio = 0;
             float elapsedTime = 0;
@@ -164,14 +168,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             while (true)
             {
                 elapsedTime += Time.deltaTime;
-                ratio = highlightEase.Evaluate(elapsedTime / highlightDuration);
+                ratio = ease.Evaluate(elapsedTime / duration);
                 itemGraphics.SetFloatRendererProperty(ItemShaderProperties.SuggestHighlight, ratio);
 
-                if (elapsedTime > highlightDuration)
+                if (elapsedTime > duration && !canStop)
                     elapsedTime = 0;
 
                 yield return null;
             }
+        }
+
+        private void PlayGlowLightEffect()
+        {
+            _glowlightCoroutine = StartCoroutine(Highlight(glowLightDuration, glowlightEase, true));
+        }
+
+        private void PlaySuggestEffect()
+        {
+            _highlightCoroutine = StartCoroutine(Highlight(highlightDuration, highlightEase));
         }
 
         private void ClearSuggestEffect()

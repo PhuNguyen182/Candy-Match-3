@@ -33,6 +33,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _suggestTask = suggestTask;
 
             _decreaseMovePublisher = GlobalMessagePipe.GetPublisher<DecreaseMoveMessage>();
+            _useInGameBoosterPublisher = GlobalMessagePipe.GetPublisher<UseInGameBoosterMessage>();
         }
 
         public async UniTask SwapItem(Vector3Int fromPosition, Vector3Int toPosition, bool isSwapBack)

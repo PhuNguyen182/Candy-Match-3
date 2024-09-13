@@ -38,6 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _token = _cts.Token;
 
             _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
+            _useInGameBoosterPublisher = GlobalMessagePipe.GetPublisher<UseInGameBoosterMessage>();
         }
 
         public async UniTask Activate(Vector3Int position)

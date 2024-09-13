@@ -109,7 +109,6 @@ MonoBehaviour:
   itemAnimator: {fileID: 3690093505019425503}
   itemGraphics: {fileID: 8241515987592640655}
   itemRenderer: {fileID: 8555525281269574999}
-  itemChild: {fileID: 3278385403813610160}
   fallenCurve:
     serializedVersion: 2
     m_Curve:
@@ -160,6 +159,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   bounceDuration: 0.125
   bounceEase: 6
+  glowLightDuration: 0.5
   highlightDuration: 1.25
   highlightEase:
     serializedVersion: 2
@@ -190,6 +190,30 @@ MonoBehaviour:
       tangentMode: 0
       weightedMode: 1
       inWeight: 0.9978466
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  glowlightEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.24721879
+      outSlope: 0.24721879
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.618
+      value: 0.4
+      inSlope: 0.24721879
+      outSlope: 0.24721879
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
