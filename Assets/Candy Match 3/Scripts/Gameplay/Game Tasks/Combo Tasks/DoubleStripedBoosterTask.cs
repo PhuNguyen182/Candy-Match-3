@@ -76,8 +76,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 Vector3Int maxHorizontal = rowListPositions[horizontalCount - 1] + new Vector3Int(0, 1);
                 Vector3Int maxVertical = columnListPositions[horizontalCount - 1] + new Vector3Int(1, 0);
 
+                rowListPositions.Clear();
                 rowListPositions.Add(minHorizontal);
                 rowListPositions.Add(maxHorizontal);
+
+                columnListPositions.Clear();
                 columnListPositions.Add(minVertical);
                 columnListPositions.Add(maxVertical);
 

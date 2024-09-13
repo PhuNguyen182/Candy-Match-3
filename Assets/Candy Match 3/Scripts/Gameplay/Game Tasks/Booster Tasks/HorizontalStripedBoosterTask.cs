@@ -60,6 +60,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 Vector3Int min = attackPositions[0] + new Vector3Int(0, -1);
                 Vector3Int max = attackPositions[count - 1] + new Vector3Int(0, 1);
 
+                encapsulatePositions.Clear();
                 encapsulatePositions.Add(min);
                 encapsulatePositions.Add(max);
 

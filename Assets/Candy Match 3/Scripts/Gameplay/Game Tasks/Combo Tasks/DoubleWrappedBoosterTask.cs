@@ -83,6 +83,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 Vector3Int min = positions[0] + new Vector3Int(-1, -1);
                 Vector3Int max = positions[count - 1] + new Vector3Int(1, 1);
 
+                positions.Clear();
                 positions.Add(min);
                 positions.Add(max);
 
