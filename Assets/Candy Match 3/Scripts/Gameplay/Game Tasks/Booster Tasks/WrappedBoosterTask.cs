@@ -93,7 +93,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             _cameraShakePublisher.Publish(new CameraShakeMessage
             {
-                Amplitude = 1f
+                Amplitude = 1f,
+                Duration = 0.3f
             });
         }
 

@@ -21,6 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _breakGridTask = breakGridTask;
             _explodeItemTask = explodeItemTask;
             _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
+            _useInGameBoosterPublisher = GlobalMessagePipe.GetPublisher<UseInGameBoosterMessage>();
         }
 
         public async UniTask Activate(Vector3Int position)
@@ -38,7 +39,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             _cameraShakePublisher.Publish(new CameraShakeMessage
             {
-                Amplitude = 0.75f
+                Amplitude = 0.75f,
+                Duration = 0.3f
             });
 
             _explodeItemTask.Blast(position, 1).Forget();

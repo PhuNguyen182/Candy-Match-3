@@ -26,6 +26,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void ShakeCamera(CameraShakeMessage message)
         {
+            _cinemachineImpulseSource.m_ImpulseDefinition = new()
+            {
+                m_ImpulseDuration = message.Duration,
+                m_ImpulseShape = CinemachineImpulseDefinition.ImpulseShapes.Explosion,
+                m_ImpulseType = CinemachineImpulseDefinition.ImpulseTypes.Uniform,
+            };
+
             Vector3 velocity = Random.insideUnitCircle.normalized;
             _cinemachineImpulseSource.GenerateImpulse(velocity * message.Amplitude);
         }

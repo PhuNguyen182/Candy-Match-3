@@ -41,7 +41,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             _cts = new();
             _token = _cts.Token;
-            _errorPosition = new(int.MinValue, 0);
+            _errorPosition = new(int.MinValue, int.MaxValue);
         }
 
         public async UniTask Activate(IGridCell gridCell, IBlockItem colorBooster)
@@ -143,25 +143,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             }
         }
 
-        private async UniTask FireItemCatchRay(Vector3Int targetPosition, Vector3 position, float delay, Vector3Int colorPosition, CandyColor candyColor)
+        private async UniTask FireItemCatchRay(Vector3Int targetPosition, Vector3 position, float delay, Vector3Int originalColorPosition, CandyColor candyColor)
         {
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                        , Vector3.zero, Quaternion.identity);
             await fireray.Fire(targetGridCell, position, delay);
-            AddBooster(targetPosition, colorPosition, candyColor);
+            AddBooster(targetPosition, originalColorPosition, candyColor);
         }
 
-        private void AddBooster(Vector3Int checkPosition, Vector3Int colorPosition, CandyColor candyColor)
+        private void AddBooster(Vector3Int checkPosition, Vector3Int originalColorPosition, CandyColor candyColor)
         {
-            if (colorPosition == _errorPosition)
-                return;
-
             BoosterType boosterType = BoosterType.Wrapped;
             ItemType itemType = _itemManager.GetItemTypeFromColorAndBoosterType(candyColor, boosterType);
             byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
 
-            if (colorPosition == checkPosition)
+            if (originalColorPosition == checkPosition)
                 return;
 
             IGridCell gridCell = _gridCellManager.Get(checkPosition);

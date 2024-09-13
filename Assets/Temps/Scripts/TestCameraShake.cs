@@ -12,6 +12,13 @@ public class TestCameraShake : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I))
         {
+            impulseSource.m_ImpulseDefinition = new CinemachineImpulseDefinition
+            {
+                m_ImpulseDuration = 0.3f,
+                m_ImpulseShape = CinemachineImpulseDefinition.ImpulseShapes.Explosion,
+                m_ImpulseType = CinemachineImpulseDefinition.ImpulseTypes.Uniform,
+            };
+
             impulseSource.GenerateImpulseWithVelocity(Random.insideUnitCircle.normalized * m);
         }
     }

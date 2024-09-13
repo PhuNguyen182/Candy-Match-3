@@ -38,6 +38,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _activateBoosterTask = activateBoosterTask;
             _itemManager = itemManager;
 
+            _colorfulStripedBoosterTask = colorfulStripedBoosterTask;
+            _colorfulWrappedBoosterTask = colorfulWrappedBoosterTask;
+
             _cts = new();
             _token = _cts.Token;
             _useInGameBoosterPublisher = GlobalMessagePipe.GetPublisher<UseInGameBoosterMessage>();
