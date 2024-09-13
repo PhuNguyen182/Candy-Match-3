@@ -7,10 +7,9 @@ using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
-using TMPro;
-using CandyMatch3.Scripts.Common.Constants;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -38,7 +37,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public async UniTask ActivateWithColor(IGridCell boosterCell, CandyColor candyColor)
         {
-            await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
+            await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 IBooster booster = default;
@@ -62,11 +61,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(fireTasks);
+                await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
                     breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
                 }
+
+                await UniTask.WhenAll(breakTasks);
 
                 booster.Explode();
                 _breakGridTask.ReleaseGridCell(boosterCell);
@@ -81,9 +83,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             CandyColor checkColor = CandyColor.None;
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
+            gridCell.LockStates = LockStates.Preparing;
 
             _checkGridTask.CanCheck = false;
-            await UniTask.DelayFrame(1, PlayerLoopTiming.FixedUpdate, _token);
+            await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 IBooster booster = default;
@@ -119,8 +122,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
                 }
 
+                await UniTask.WhenAll(breakTasks);
+
                 booster?.Explode();
                 _breakGridTask.ReleaseGridCell(gridCell);
+                gridCell.LockStates = LockStates.None;
                 RemoveColor(checkColor);
 
                 if(_checkedCandyColors.Count <= 0)
@@ -146,7 +152,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         if (gridCell == null)
                             continue;
 
-                        if (gridCell.CandyColor != color)
+                        if (gridCell.CandyColor != color || gridCell.IsLocked)
                             continue;
 
                         foundPositions.Add(positions[i]);
@@ -174,7 +180,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                             continue;
 
                         // Not a color item
-                        if (gridCell.CandyColor == CandyColor.None)
+                        if (gridCell.CandyColor == CandyColor.None || gridCell.IsLocked)
                             continue;
 
                         // Prevent duplicate color detection

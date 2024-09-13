@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.Effects;
+using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IBreakable
+    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IItemSuggest
     {
-        [SerializeField] private ColorBoosterType colorBoosterType;
+        [SerializeField] private BoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
 
         [Header("Colored Sprites")]
@@ -21,6 +23,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private Sprite[] verticalSprites;
 
         private bool _isMatchable;
+        private Sprite _horizontalIcon;
+        private Sprite _verticalIcon;
+        private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
 
         public override bool IsMatchable => _isMatchable;
 
@@ -32,13 +37,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public bool IsNewCreated { get; set; }
 
-        public ColorBoosterType ColorBoosterType => colorBoosterType;
+        public BoosterType ColorBoosterType => colorBoosterType;
 
         public override void ResetItem()
         {
             base.ResetItem();
             SetMatchable(true);
-            OnItemReset();
+            OnItemReset().Forget();
         }
 
         public override void SetMatchable(bool isMatchable)
@@ -48,7 +53,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void InitMessages()
         {
-            
+            _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
         }
 
         public override async UniTask ItemBlast()
@@ -61,30 +66,55 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             this.candyColor = candyColor;
         }
 
-        public void SetBoosterColor(ColorBoosterType colorBoosterType)
+        public void SetBoosterType(BoosterType colorBoosterType)
         {
             this.colorBoosterType = colorBoosterType;
-            Sprite[] colorSprites = colorBoosterType switch
+
+            int colorIndex = candyColor switch
             {
-                ColorBoosterType.Horizontal => horizontalSprites,
-                ColorBoosterType.Vertical => verticalSprites,
-                ColorBoosterType.Wrapped => wrappedSprites,
+                CandyColor.Blue => 0,
+                CandyColor.Green => 1,
+                CandyColor.Orange => 2,
+                CandyColor.Purple => 3,
+                CandyColor.Red => 4,
+                CandyColor.Yellow => 5,
+                _ => -1
+            };
+
+            Sprite colorSprite = colorBoosterType switch
+            {
+                BoosterType.Horizontal => horizontalSprites[colorIndex],
+                BoosterType.Vertical => verticalSprites[colorIndex],
+                BoosterType.Wrapped => wrappedSprites[colorIndex],
                 _ => null
             };
 
-            Sprite colorSprite = candyColor switch
-            {
-                CandyColor.Blue => colorSprites[0],
-                CandyColor.Green => colorSprites[1],
-                CandyColor.Orange => colorSprites[2],
-                CandyColor.Purple => colorSprites[3],
-                CandyColor.Red => colorSprites[4],
-                CandyColor.Yellow => colorSprites[5],
-                _ => null
-            };
+            _horizontalIcon = horizontalSprites[colorIndex];
+            _verticalIcon = verticalSprites[colorIndex];
 
             itemGraphics.SetItemSprite(colorSprite);
             SetTargetType();
+        }
+
+        public void ChangeItemSprite(int step)
+        {
+            if(step == 1)
+                itemGraphics.SetItemSprite(_horizontalIcon);
+            else if(step == 2)
+                itemGraphics.SetItemSprite(_verticalIcon);
+        }
+
+        public UniTask PlayBoosterCombo(int direction, ComboBoosterType comboType, bool isFirstItem)
+        {
+            UniTask boosterTask = UniTask.CompletedTask;
+
+            if (comboType == ComboBoosterType.StripedWrapped)
+                boosterTask = itemAnimation.PlayStripedWrapped();
+            
+            else if(comboType == ComboBoosterType.DoubleWrapped)
+                boosterTask = itemAnimation.PlayDoubleWrapped(direction, isFirstItem);
+            
+            return boosterTask;
         }
 
         public async UniTask Activate()
@@ -100,13 +130,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
             Vector3 position = colorBoosterType switch
             {
-                ColorBoosterType.Horizontal => new(0, y),
-                ColorBoosterType.Vertical => new(x, 0),
-                ColorBoosterType.Wrapped => new(x, y),
+                BoosterType.Horizontal => new(0, y),
+                BoosterType.Vertical => new(x, 0),
+                BoosterType.Wrapped => new(x, y),
                 _ => Vector3.zero
             };
 
-            SoundEffectType soundEffect = colorBoosterType == ColorBoosterType.Wrapped ? SoundEffectType.CandyWrap
+            SoundEffectType soundEffect = colorBoosterType == BoosterType.Wrapped ? SoundEffectType.CandyWrap
                                                                                        : SoundEffectType.LineVerticalHorizontal;
             EffectManager.Instance.SpawnBoosterEffect(itemType, colorBoosterType, position);
             EffectManager.Instance.PlaySoundEffect(soundEffect);
@@ -119,6 +149,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void ReleaseItem()
         {
+            _decreaseTargetPublisher.Publish(new DecreaseTargetMessage
+            {
+                TargetType = targetType,
+                Task = UniTask.CompletedTask,
+                HasMoveTask = false
+            });
+
+            itemAnimation.ToggleSuggest(false);
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -203,9 +241,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAward);
         }
 
-        private void OnItemReset()
+        private async UniTask OnItemReset()
         {
+            IsNewCreated = true;
             IsActivated = false;
+            TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
+            await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, destroyToken);
+            IsNewCreated = false;
+        }
+
+        public void Highlight(bool isActive)
+        {
+            itemAnimation.ToggleSuggest(isActive);
         }
     }
 }

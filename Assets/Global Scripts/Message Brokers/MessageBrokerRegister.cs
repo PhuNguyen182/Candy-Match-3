@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Messages;
+using CandyMatch3.Scripts.Common.DataStructs;
+using GlobalScripts.Utils;
 using MessagePipe;
 
 namespace GlobalScripts.MessageBrokers
@@ -23,7 +26,12 @@ namespace GlobalScripts.MessageBrokers
 
         private void AddMeggageBrokers()
         {
-            //_builder.AddMessageBroker<PowerupMessage>();
+            _builder.AddMessageBroker<DecreaseMoveMessage>();
+            _builder.AddMessageBroker<DecreaseTargetMessage>();
+            _builder.AddMessageBroker<AsyncMessage<MoveTargetData>>();
+            _builder.AddMessageBroker<AddInGameBoosterMessage>();
+            _builder.AddMessageBroker<CameraShakeMessage>();
+            _builder.AddMessageBroker<UseInGameBoosterMessage>();
         }
     }
 }

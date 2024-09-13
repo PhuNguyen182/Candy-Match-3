@@ -8,8 +8,10 @@ using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Effects;
+using CandyMatch3.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 {
@@ -17,11 +19,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
     {
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
+        private readonly IPublisher<CameraShakeMessage> _cameraShakePublisher;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
-
         private CheckGridTask _checkGridTask;
+        private IDisposable _disposable;
 
         public StripedWrappedBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
@@ -30,102 +33,177 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             _cts = new();
             _token = _cts.Token;
+
+            _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
         }
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
         {
-            _breakGridTask.ReleaseGridCell(gridCell1);
-            _breakGridTask.ReleaseGridCell(gridCell2);
+            IGridCell actorGridCell = null;
+            IGridCell remainGridCell = null;
+            IColorBooster actorBooster = null;
 
-            Vector3Int checkPosition = gridCell2.GridPosition;
+            if (gridCell1.BlockItem is IColorBooster booster1 && gridCell2.BlockItem is IColorBooster booster2)
+            {
+                if(booster1.ColorBoosterType != BoosterType.Wrapped)
+                {
+                    actorBooster = booster1;
+                    actorGridCell = gridCell1;
+                    remainGridCell = gridCell2;
+                }
+
+                else
+                {
+                    actorBooster = booster2;
+                    actorGridCell = gridCell2;
+                    remainGridCell = gridCell1;
+                }
+            }
+
+            // Remove wrapped booster cell
+            actorBooster.IsActivated = true; // Prevent this booster active itself
+            _breakGridTask.ReleaseGridCell(remainGridCell);
+
+            Vector3Int checkPosition = actorGridCell.GridPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
 
-            using (var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
+            // Lock columns to block all items in these columns falling
+            using var columnListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> columnListPositions);
+            AddTripleVerticalLine(checkPosition, activeBounds, ref columnListPositions);
+
+            for (int i = 0; i < columnListPositions.Count; i++)
+            {
+                if (columnListPositions[i] == checkPosition)
+                    continue;
+
+                if (columnListPositions[i] == actorGridCell.GridPosition)
+                    continue;
+
+                IGridCell gridCell = _gridCellManager.Get(columnListPositions[i]);
+                if (gridCell != null)
+                    gridCell.LockStates = LockStates.Preparing;
+            }
+
+            actorBooster.ChangeItemSprite(1);
+            await actorBooster.PlayBoosterCombo(0, ComboBoosterType.StripedWrapped, true);
+
+            // Break Triple Rows
+            using (ListPool<UniTask>.Get(out var breakTasks))
             {
                 using var rowListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> rowListPositions);
-                using var columnListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> columnListPositions);
-
-                rowListPositions.AddRange(activeBounds.GetRow(checkPosition + new Vector3Int(0, -1)));
-                rowListPositions.AddRange(activeBounds.GetRow(checkPosition));
-                rowListPositions.AddRange(activeBounds.GetRow(checkPosition + new Vector3Int(0, 1)));
-
-                columnListPositions.AddRange(activeBounds.GetColumn(checkPosition + new Vector3Int(-1, 0)));
-                columnListPositions.AddRange(activeBounds.GetColumn(checkPosition));
-                columnListPositions.AddRange(activeBounds.GetColumn(checkPosition + new Vector3Int(1, 0)));
+                AddTripleHorizontalLine(checkPosition, activeBounds, ref rowListPositions);
 
                 for (int i = 0; i < rowListPositions.Count; i++)
                 {
                     if (rowListPositions[i] == checkPosition)
                         continue;
 
+                    if (rowListPositions[i] == actorGridCell.GridPosition)
+                        continue;
+
                     breakTasks.Add(_breakGridTask.BreakItem(rowListPositions[i]));
                 }
 
-                for (int i = 0; i < columnListPositions.Count; i++)
-                {
-                    if (columnListPositions[i] == checkPosition)
-                        continue;
-
-                    breakTasks.Add(_breakGridTask.BreakItem(columnListPositions[i]));
-                }
-
-                PlayEffect(checkPosition);
+                ShakeCamera();
                 await UniTask.WhenAll(breakTasks);
+                SpawnTripleHorizontal(checkPosition);
+                ExpandRange(ref rowListPositions, Vector3Int.up);
 
-                int horizontalCount = rowListPositions.Count;
-                Vector3Int minHorizontal = rowListPositions[0] + new Vector3Int(0, -1);
-                Vector3Int maxHorizontal = rowListPositions[horizontalCount - 1] + new Vector3Int(0, 1);
-                rowListPositions.Add(minHorizontal);
-                rowListPositions.Add(maxHorizontal);
-
-                int verticalCount = columnListPositions.Count;
-                Vector3Int minVertical = columnListPositions[0] + new Vector3Int(-1, 0);
-                Vector3Int maxVertical = columnListPositions[horizontalCount - 1] + new Vector3Int(1, 0);
-                columnListPositions.Add(minVertical);
-                columnListPositions.Add(maxVertical);
+                // Lock this area to prevent outside items fall in to
+                BoundsInt miniCheckBounds = checkPosition.GetBounds2D(1);
+                miniCheckBounds.ForEach2D(position =>
+                {
+                    IGridCell gridCell = _gridCellManager.Get(position);
+                    if (gridCell != null)
+                        gridCell.LockStates = LockStates.Preparing;
+                });
 
                 BoundsInt horizontalCheckBounds = BoundsExtension.Encapsulate(rowListPositions);
-                BoundsInt verticalCheckBounds = BoundsExtension.Encapsulate(columnListPositions);
-
                 await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 _checkGridTask.CheckRange(horizontalCheckBounds);
+            }
+
+            // Wait a moment and enable check grid task to allow other items fall down
+            _checkGridTask.CanCheck = true;
+            await UniTask.DelayFrame(18, PlayerLoopTiming.FixedUpdate, _token);
+
+            actorBooster.ChangeItemSprite(2);
+            await actorBooster.PlayBoosterCombo(0, ComboBoosterType.StripedWrapped, true);
+            _checkGridTask.CanCheck = false;
+
+            // Break Triple Columns
+            using (ListPool<UniTask>.Get(out var breakTasks))
+            {
+                for (int i = 0; i < columnListPositions.Count; i++)
+                    breakTasks.Add(_breakGridTask.BreakItem(columnListPositions[i]));
+
+                ShakeCamera();
+                await UniTask.WhenAll(breakTasks);
+                SpawnTripleVertical(checkPosition);
+                ExpandRange(ref columnListPositions, Vector3Int.right);
+
+                _breakGridTask.ReleaseGridCell(actorGridCell);
+                BoundsInt verticalCheckBounds = BoundsExtension.Encapsulate(columnListPositions);
+                await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 _checkGridTask.CheckRange(verticalCheckBounds);
             }
         }
 
-        private void PlayEffect(Vector3Int checkPosition)
+        // This function is use to expand check range
+        private void ExpandRange(ref List<Vector3Int> positions, Vector3Int expandDirection)
         {
-            Vector3 position = _gridCellManager.Get(checkPosition).WorldPosition;
-            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Horizontal, position);
-            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Vertical, position);
-            
-            IGridCell horizontalGrid1 = _gridCellManager.Get(checkPosition + new Vector3Int(-1, 0));
-            if(horizontalGrid1 != null)
-            {
-                Vector3 blastPosition = horizontalGrid1.WorldPosition;
-                EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Vertical, blastPosition);
-            }
+            int positionCount = positions.Count;
+            Vector3Int minVertical = positions[0] - expandDirection;
+            Vector3Int maxVertical = positions[positionCount - 1] + expandDirection;
 
-            IGridCell horizontalGrid2 = _gridCellManager.Get(checkPosition + new Vector3Int(1, 0));
-            if (horizontalGrid2 != null)
-            {
-                Vector3 blastPosition = horizontalGrid2.WorldPosition;
-                EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Vertical, blastPosition);
-            }
+            positions.Clear();
+            positions.Add(minVertical);
+            positions.Add(maxVertical);
+        }
 
-            IGridCell verticalGrid1 = _gridCellManager.Get(checkPosition + new Vector3Int(0, -1));
-            if (verticalGrid1 != null)
-            {
-                Vector3 blastPosition = verticalGrid1.WorldPosition;
-                EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Horizontal, blastPosition);
-            }
+        private void AddTripleHorizontalLine(Vector3Int checkPosition, BoundsInt activeBounds, ref List<Vector3Int> positions)
+        {
+            positions.AddRange(activeBounds.GetRow(checkPosition));
+            positions.AddRange(activeBounds.GetRow(checkPosition + new Vector3Int(0, -1)));
+            positions.AddRange(activeBounds.GetRow(checkPosition + new Vector3Int(0, 1)));
+        }
 
-            IGridCell verticalGrid2 = _gridCellManager.Get(checkPosition + new Vector3Int(0, 1));
-            if (verticalGrid2 != null)
+        private void AddTripleVerticalLine(Vector3Int checkPosition, BoundsInt activeBounds, ref List<Vector3Int> positions)
+        {
+            positions.AddRange(activeBounds.GetColumn(checkPosition));
+            positions.AddRange(activeBounds.GetColumn(checkPosition + new Vector3Int(-1, 0)));
+            positions.AddRange(activeBounds.GetColumn(checkPosition + new Vector3Int(1, 0)));
+        }
+
+        private void SpawnTripleHorizontal(Vector3Int checkPosition)
+        {
+            Vector3 center = _gridCellManager.ConvertGridToWorldFunction(checkPosition);
+            Vector3 down = _gridCellManager.ConvertGridToWorldFunction(checkPosition + Vector3Int.down);
+            Vector3 up = _gridCellManager.ConvertGridToWorldFunction(checkPosition + Vector3Int.up);
+
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, BoosterType.Horizontal, down);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, BoosterType.Horizontal, center);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, BoosterType.Horizontal, up);
+        }
+
+        private void SpawnTripleVertical(Vector3Int checkPosition)
+        {
+            Vector3 center = _gridCellManager.ConvertGridToWorldFunction(checkPosition);
+            Vector3 right = _gridCellManager.ConvertGridToWorldFunction(checkPosition + Vector3Int.right);
+            Vector3 left = _gridCellManager.ConvertGridToWorldFunction(checkPosition + Vector3Int.left);
+
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, BoosterType.Vertical, left);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, BoosterType.Vertical, center);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, BoosterType.Vertical, right);
+        }
+
+        private void ShakeCamera()
+        {
+            _cameraShakePublisher.Publish(new CameraShakeMessage
             {
-                Vector3 blastPosition = verticalGrid2.WorldPosition;
-                EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Horizontal, blastPosition);
-            }
+                Amplitude = 2f,
+                Duration = 0.325f
+            });
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

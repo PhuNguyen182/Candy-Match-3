@@ -72,13 +72,17 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
                 GUI.color = colour.Value;
 
             SceneView view = SceneView.currentDrawingSceneView;
-            Vector3 screenPos = view.camera.WorldToScreenPoint(worldPos);
-            Vector2 size = GUI.skin.label.CalcSize(new GUIContent(text));
 
-            GUI.Label(new Rect(screenPos.x - (size.x / 2)
-                               , -screenPos.y + view.position.height + 4
-                               , size.x, size.y), text);
-            Handles.EndGUI();
+            if (view != null)
+            {
+                Vector3 screenPos = view.camera.WorldToScreenPoint(worldPos);
+                Vector2 size = GUI.skin.label.CalcSize(new GUIContent(text));
+
+                GUI.Label(new Rect(screenPos.x - (size.x / 2)
+                                   , -screenPos.y + view.position.height + 4
+                                   , size.x, size.y), text);
+                Handles.EndGUI();
+            }
         }
 #endif
     }

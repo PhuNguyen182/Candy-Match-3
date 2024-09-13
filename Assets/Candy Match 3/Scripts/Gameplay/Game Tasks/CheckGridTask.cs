@@ -14,6 +14,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
     public class CheckGridTask : IDisposable, IFixedUpdateHandler
     {
+        private readonly InputProcessTask _inputProcessTask;
         private readonly GridCellManager _gridCellManager;
         private readonly MoveItemTask _moveItemTask;
         private readonly MatchItemsTask _matchItemsTask;
@@ -31,9 +32,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public bool CanCheck { get; set; }
         public bool IsActive { get; set; }
 
-        public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask, MatchItemsTask matchItemsTask)
+        public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask
+            , InputProcessTask inputProcessTask, SpawnItemTask spawnItemTask, MatchItemsTask matchItemsTask)
         {
             _moveItemTask = moveItemTask;
+            _inputProcessTask = inputProcessTask;
             _gridCellManager = gridCellManager;
             _spawnItemTask = spawnItemTask;
             _matchItemsTask = matchItemsTask;
@@ -55,9 +58,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void OnFixedUpdate()
         {
             if (!CanCheck)
-            {
                 return;
-            }
 
             if (_checkPositions.Count > 0)
             {

@@ -3,9 +3,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 
@@ -16,8 +18,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly BoardInput _boardInput;
         private readonly GridCellManager _gridCellManager;
         private readonly SwapItemTask _swapItemTask;
-
+        
         private bool _isSwapped = false;
+        private CheckGameBoardMovementTask _checkGameBoardMovement;
+        private InGameBoosterTasks _inGameBoosterTasks;
 
         private Vector2 _movePosition;
         private Vector3 _selectedPosition;
@@ -45,12 +49,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void OnUpdate()
         {
-            if (IsActive)
+            if (IsActive && !_checkGameBoardMovement.IsBoardLock)
             {
                 OnPress();
                 OnDrag();
                 OnRelease();
             }
+        }
+
+        public void SetInGameBoosterTasks(InGameBoosterTasks inGameBoosterTasks)
+        {
+            _inGameBoosterTasks = inGameBoosterTasks;
+        }
+
+        public void SetCheckGameBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
+        {
+            _checkGameBoardMovement = checkGameBoardMovementTask;
         }
 
         private void OnPress()
@@ -89,12 +103,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return;
 
             _isSwapped = true;
-            Vector3Int swapDirection = GetSwapDirection(moveDirection);
-            Vector3Int swapToPosition = checkPosition + swapDirection;
-            _swapItemTask.SwapItem(checkPosition, swapToPosition, true).Forget();
+            
+            if (_inGameBoosterTasks.IsBoosterUsed)
+            {
+                if(_inGameBoosterTasks.CurrentBooster == InGameBoosterType.Swap)
+                    SwapForward(checkPosition, moveDirection).Forget();
+            }
 
-            // Reset this variable to null to prevent duplicated action inside Update loop
-            _selectecGridCell = null;
+            else
+                SwapItem(checkPosition, moveDirection).Forget();
+
+            _selectecGridCell = null; // Reset this variable to null to prevent duplicated action inside Update loop
         }
 
         private void OnRelease()
@@ -105,11 +124,39 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (_processGridCell == null)
                 return;
 
-            ProcessItemBounce(_processGridCell, _isSwapped);
+            ProcessItemOnRelease(_processGridCell, _isSwapped).Forget();
 
             _selectecGridCell = null;
             _processGridCell = null;
             _isSwapped = false;
+        }
+
+        private async UniTask SwapForward(Vector3Int checkPosition, Vector3 moveDirection)
+        {
+            Vector3Int swapDirection = GetSwapDirection(moveDirection);
+            Vector3Int swapToPosition = checkPosition + swapDirection;
+            await _inGameBoosterTasks.ActivateSwapBooster(checkPosition, swapToPosition);
+        }
+
+        private async UniTask SwapItem(Vector3Int checkPosition, Vector3 moveDirection)
+        {
+            Vector3Int swapDirection = GetSwapDirection(moveDirection);
+            Vector3Int swapToPosition = checkPosition + swapDirection;
+            await _swapItemTask.SwapItem(checkPosition, swapToPosition, true);
+        }
+
+        private async UniTask ProcessItemOnRelease(IGridCell gridCell, bool isSwapped)
+        {
+            if (_inGameBoosterTasks.IsBoosterUsed)
+            {
+                Vector3Int position = gridCell.GridPosition;
+                InGameBoosterType boosterType = _inGameBoosterTasks.CurrentBooster;
+                
+                if(boosterType != InGameBoosterType.Swap)
+                    await _inGameBoosterTasks.ActivatePointBooster(position, boosterType);
+            }
+
+            else ProcessItemBounce(gridCell, isSwapped);
         }
 
         private Vector3Int GetSwapDirection(Vector3 direction)
@@ -146,10 +193,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     animation.BounceOnTap();
             }
 
-            PrintName(gridCell);
+            PrintItemName(gridCell);
         }
 
-        private void PrintName(IGridCell gridCell)
+        private void PrintItemName(IGridCell gridCell)
         {
 #if UNITY_EDITOR
             Debug.Log(gridCell.BlockItem.GetName());

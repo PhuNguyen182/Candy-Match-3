@@ -8,7 +8,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 {
     public abstract class BaseBoosterItem : BaseItem, IBooster, IItemAnimation
     {
-        [SerializeField] private ItemAnimation itemAnimation;
+        [SerializeField] protected ItemAnimation itemAnimation;
 
         public bool IsActivated { get; set; }
 

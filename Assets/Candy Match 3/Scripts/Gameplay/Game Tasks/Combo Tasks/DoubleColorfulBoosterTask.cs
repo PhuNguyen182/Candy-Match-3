@@ -62,7 +62,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
-                positions.AddRange(_gridCellManager.GetAllPositions());
+                positions.AddRange(_gridCellManager.GetActivePositions());
 
                 using var oddListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> oddPositions);
                 using var evenListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> evenPositions);
@@ -71,13 +71,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 {
                     IGridCell gridCell = _gridCellManager.Get(positions[i]);
 
-                    if (!gridCell.HasItem)
+                    if (!gridCell.HasItem || gridCell.IsLocked)
                         continue;
 
                     if (gridCell.GridPosition == gridCell1.GridPosition || gridCell.GridPosition == gridCell2.GridPosition)
-                        continue;
-
-                    if (gridCell.BlockItem is not IBreakable)
                         continue;
 
                     gridCellType = GetCellPositionType(positions[i]);

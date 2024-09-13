@@ -72,7 +72,7 @@ namespace CandyMatch3.Scripts.LevelDesign.Databases
             return colorItemTiles.FirstOrDefault(tile => tile.ItemID == id && tile.ItemType == itemType);
         }
 
-        public ColorBoosterTile GetColorBoosterTile(int id, CandyColor candyColor, ColorBoosterType boosterType)
+        public ColorBoosterTile GetColorBoosterTile(int id, CandyColor candyColor, BoosterType boosterType)
         {
             return colorBoosterTiles.FirstOrDefault(tile => tile.ItemID == id && tile.CandyColor == candyColor && tile.ColorBoosterType == boosterType);
         }

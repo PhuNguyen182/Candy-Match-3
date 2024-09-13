@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +15,6 @@ using CandyMatch3.Scripts.Gameplay.Interfaces;
 using GlobalScripts.Probabilities;
 using GlobalScripts.Extensions;
 using Random = UnityEngine.Random;
-using System.Linq;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -162,17 +162,33 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             using(var listPool = HashSetPool<CandyColor>.Get(out HashSet<CandyColor> candyColors))
             {
-                for (int i = 0; i < _candyColors.Count; i++)
-                {
-                    candyColors.Add(_candyColors[i]);
-                }
+                candyColors.UnionWith(_candyColors);
 
                 IGridCell leftCell1 = _gridCellManager.Get(position + new Vector3Int(-1, 0));
                 IGridCell leftCell2 = _gridCellManager.Get(position + new Vector3Int(-2, 0));
 
-                if(leftCell1 != null && leftCell2 != null && leftCell1.HasItem && leftCell2.HasItem)
+                if(leftCell1 != null && leftCell2 != null)
                 {
                     if(leftCell1.CandyColor == leftCell2.CandyColor)
+                    {
+                        candyColors.Remove(leftCell1.CandyColor);
+                    }
+                }
+
+                IGridCell rightCell1 = _gridCellManager.Get(position + new Vector3Int(1, 0));
+                IGridCell rightCell2 = _gridCellManager.Get(position + new Vector3Int(2, 0));
+
+                if (rightCell1 != null && rightCell2 != null)
+                {
+                    if (rightCell1.CandyColor == rightCell2.CandyColor)
+                    {
+                        candyColors.Remove(rightCell1.CandyColor);
+                    }
+                }
+
+                if(leftCell1 != null && rightCell1 != null)
+                {
+                    if(leftCell1.CandyColor == rightCell1.CandyColor)
                     {
                         candyColors.Remove(leftCell1.CandyColor);
                     }
@@ -181,7 +197,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 IGridCell downCell1 = _gridCellManager.Get(position + new Vector3Int(0, -1));
                 IGridCell downCell2 = _gridCellManager.Get(position + new Vector3Int(0, -2));
 
-                if (downCell1 != null && downCell2 != null && downCell1.HasItem && downCell2.HasItem)
+                if (downCell1 != null && downCell2 != null)
                 {
                     if (downCell1.CandyColor == downCell2.CandyColor)
                     {
@@ -189,11 +205,30 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     }
                 }
 
+                IGridCell upCell1 = _gridCellManager.Get(position + new Vector3Int(0, 1));
+                IGridCell upCell2 = _gridCellManager.Get(position + new Vector3Int(0, 2));
+
+                if (upCell1 != null && upCell2 != null)
+                {
+                    if (upCell1.CandyColor == upCell2.CandyColor)
+                    {
+                        candyColors.Remove(upCell1.CandyColor);
+                    }
+                }
+
+                if (upCell1 != null && downCell1 != null)
+                {
+                    if (upCell1.CandyColor == downCell1.CandyColor)
+                    {
+                        candyColors.Remove(upCell1.CandyColor);
+                    }
+                }
+
                 CandyColor randomColor;
-                
+
                 if (candyColors.Count == _candyColors.Count)
                     randomColor = GetRandomColor();
-                
+
                 else
                 {
                     int randIndex = Random.Range(0, candyColors.Count);

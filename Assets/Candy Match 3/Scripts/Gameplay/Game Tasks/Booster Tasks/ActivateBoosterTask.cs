@@ -1,5 +1,6 @@
 using R3;
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,8 +20,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly VerticalStripedBoosterTask _verticalBoosterTask;
         private readonly WrappedBoosterTask _wrappedBoosterTask;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
         private IDisposable _disposable;
 
+        public int ActiveBoosterCount { get; private set; }
         public ColorfulBoosterTask ColorfulBoosterTask => _colorfulBoosterTask;
 
         public ActivateBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask
@@ -42,9 +46,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _wrappedBoosterTask.AddTo(ref builder);
             
             _disposable = builder.Build();
+
+            _cts = new();
+            _token = _cts.Token;
         }
 
-        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck)
+        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck, Action<BoundsInt> attackRange = null)
         {
             Vector3Int position = gridCell.GridPosition;
             
@@ -60,21 +67,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     return;
 
                 booster.IsActivated = true;
+                ActiveBoosterCount = ActiveBoosterCount + 1;
+
                 await booster.Activate();
+                await UniTask.NextFrame(PlayerLoopTiming.FixedUpdate);
 
                 if (blockItem is IColorBooster colorBooster)
                 {
-                    ColorBoosterType colorBoosterType = colorBooster.ColorBoosterType;
+                    BoosterType colorBoosterType = colorBooster.ColorBoosterType;
                     switch (colorBoosterType)
                     {
-                        case ColorBoosterType.Horizontal:
-                            await _horizontalBoosterTask.Activate(gridCell, useDelay, doNotCheck);
+                        case BoosterType.Horizontal:
+                            await _horizontalBoosterTask.Activate(gridCell, useDelay, doNotCheck, attackRange);
                             break;
-                        case ColorBoosterType.Vertical:
-                            await _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck);
+                        case BoosterType.Vertical:
+                            await _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck, attackRange);
                             break;
-                        case ColorBoosterType.Wrapped:
-                            await _wrappedBoosterTask.Activate(gridCell, useDelay, doNotCheck);
+                        case BoosterType.Wrapped:
+                            await _wrappedBoosterTask.Activate(gridCell, useDelay, doNotCheck, attackRange);
                             break;
                     }
                 }
@@ -86,24 +96,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
 
             gridCell.LockStates = LockStates.None;
-        }
-
-        public BoundsInt GetAttackedBounds(IBooster booster)
-        {
-            BoundsInt bounds = new();
-            
-            if(booster is IColorBooster colorBooster)
-            {
-                bounds = colorBooster.ColorBoosterType switch
-                {
-                    ColorBoosterType.Horizontal => _horizontalBoosterTask.AttackRange,
-                    ColorBoosterType.Vertical => _verticalBoosterTask.AttackRange,
-                    ColorBoosterType.Wrapped => _wrappedBoosterTask.AttackRange,
-                    _ => new()
-                };
-            }
-
-            return bounds;
+            ActiveBoosterCount = ActiveBoosterCount - 1;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
@@ -116,6 +109,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void Dispose()
         {
+            _cts.Dispose();
             _disposable.Dispose();
         }
     }

@@ -203,13 +203,13 @@ public class BasePopup<T> : BasePopup where T : BasePopup
 
     public static async UniTask<T> CreateFromAddress(string address)
     {
-        _resourcePath = address;
         T instance = default;
-        T prefab = await Addressables.LoadAssetAsync<T>(address);
+        _resourcePath = address;
+        GameObject prefab = await Addressables.LoadAssetAsync<GameObject>(address);
         
         if (prefab != null)
         {
-            instance = SimplePool.Spawn(prefab);
+            instance = SimplePool.Spawn(prefab).GetComponent<T>();
             instance.gameObject.SetActive(true);
         }
 

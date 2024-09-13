@@ -8,6 +8,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
     public class Match4VerticalModel : BaseMatchModel
     {
+        protected override int matchScoreCount => 2;
         protected override int requiredItemCount => 3;
         public override MatchType MatchType => MatchType.Match4Vertical;
 

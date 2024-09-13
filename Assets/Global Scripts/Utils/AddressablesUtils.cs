@@ -15,12 +15,12 @@ namespace GlobalScripts.Utils
     {
 #if UNITASK_ADDRESSABLE_SUPPORT
         public static async UniTask LoadSceneViaAddressable(string key, LoadSceneMode loadMode = LoadSceneMode.Single
-            , bool activateOnLoad = true, int priority = 100)
+            , bool activateOnLoad = true, int priority = 100, CancellationToken cancellationToken = default)
         {
             bool isKeyValid = await IsKeyValid(key);
 
             if (isKeyValid)
-                await Addressables.LoadSceneAsync(key, loadMode, activateOnLoad, priority);
+                await Addressables.LoadSceneAsync(key, loadMode, activateOnLoad, priority).WithCancellation(cancellationToken);
         }
 
         public static async UniTask<bool> DownloadContent(string key, bool autoRelease = true, CancellationToken cancellationToken = default)

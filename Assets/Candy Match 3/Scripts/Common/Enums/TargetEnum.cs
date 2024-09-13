@@ -43,6 +43,7 @@ namespace CandyMatch3.Scripts.Common.Enums
         WaterMelon = 29,
 
         Honey = 30,
-        Syrup = 31
+        Syrup = 31,
+        Ice = 32
     }
 }

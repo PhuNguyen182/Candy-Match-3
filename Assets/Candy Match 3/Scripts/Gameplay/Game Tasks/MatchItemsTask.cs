@@ -1,13 +1,12 @@
 using R3;
 using System;
 using System.Text;
-using System.Linq;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Constants;
-using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -15,7 +14,6 @@ using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
 using GlobalScripts.Comparers;
-using UnityEngine.Pool;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -94,6 +92,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 using (var boundListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
                 {
+                    using var boundsPool = HashSetPool<BoundsInt>.Get(out HashSet<BoundsInt> attackRanges);
                     using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
 
                     for (int i = 0; i < matchResult.MatchSequence.Count; i++)
@@ -106,10 +105,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         gridCell.IsMatching = true;
 
                         if (matchType != MatchType.Match3 && gridCell.GridPosition == matchResult.Position)
-                            matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor));
+                        {
+                            matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor, bounds =>
+                            {
+                                attackRanges.Add(bounds);
+                            }));
+                        }
 
                         else
-                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count));
+                        {
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count, bounds =>
+                            {
+                                attackRanges.Add(bounds);
+                            }));
+                        }
 
                         for (int j = 0; j < _adjacentSteps.Count; j++)
                             adjacentPositions.Add(position + _adjacentSteps[j]);
@@ -127,13 +136,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     Vector3Int min = boundPositions[0] + new Vector3Int(-1, -1);
                     Vector3Int max = boundPositions[count - 1] + new Vector3Int(1, 1);
 
+                    boundPositions.Clear();
                     boundPositions.Add(min);
                     boundPositions.Add(max);
 
                     await UniTask.WhenAll(matchTasks);
                     BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
-                    await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
+                    await UniTask.DelayFrame(Match3Constants.MatchDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
+                    
                     _checkGridTask.CheckRange(checkMatchBounds);
+                    foreach (BoundsInt range in attackRanges)
+                    {
+                        if(range.size != Vector3Int.zero)
+                            _checkGridTask.CheckRange(range);
+                    }
                 }
             }
         }
@@ -159,49 +175,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return _matchRule.CheckMatch(position, out matchResult);
         }
 
+        public bool CheckMatch(Vector3Int position, out int matchScore)
+        {
+            return _matchRule.CheckMatch(position, out matchScore);
+        }
+
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;
-        }
-
-        private void PrintMatch(MatchResult match)
-        {
-#if UNITY_EDITOR
-            StringBuilder builder = new();
-            string color = GetColor(match.CandyColor);
-
-            builder.Append($"<b>Match:</b> {match.MatchSequence.Count}.   ");
-            builder.Append($"<b>Type:</b> {match.MatchType}.    ");
-            builder.Append($"<b>Color:</b> <color={color}><b>{match.CandyColor}</b></color>.    ");
-            builder.Append($"<b>Pivot:</b> {match.Position}.    ");
-            builder.Append($"<b>Positions:</b> ");
-            builder.Append("{ ");
-
-            for (int i = 0; i < match.MatchSequence.Count; i++)
-                builder.Append($"<b>{i + 1}:</b> {match.MatchSequence[i]}; ");
-
-            builder.Append(" }");
-            Debug.Log(builder.ToString());
-            builder.Clear();
-#endif
-        }
-
-        private string GetColor(CandyColor candyColor)
-        {
-            string colorCode = "";
-
-            colorCode = candyColor switch
-            {
-                CandyColor.Red => "#F73540",
-                CandyColor.Green => "#47D112",
-                CandyColor.Orange => "#FA8500",
-                CandyColor.Purple => "#CE2AEF",
-                CandyColor.Yellow => "#F8D42A",
-                CandyColor.Blue => "#23AAFB",
-                _ => "#000000"
-            };
-
-            return colorCode;
         }
 
         public void Dispose()

@@ -49,7 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             }
         }
 
-        public ItemType ItemType => _blockItem.ItemType;
+        public ItemType ItemType => HasItem ? _blockItem.ItemType : ItemType.None;
         public CandyColor CandyColor => HasItem ? _blockItem.CandyColor : CandyColor.None;
         public LockStates LockStates
         {
@@ -57,7 +57,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             set
             {
                 _lockStates = value;
-                CheckLockProperty.Value = _lockStates != LockStates.None;
+                CheckLockProperty.Value = IsLocked;
             }
         }
 

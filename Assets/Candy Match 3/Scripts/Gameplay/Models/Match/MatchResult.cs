@@ -11,6 +11,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         public CandyColor CandyColor;
         public Vector3Int Position;
         public List<Vector3Int> MatchSequence;
+        public bool HasBooster;
 
         public int Count => MatchSequence.Count;
     }

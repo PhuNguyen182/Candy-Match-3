@@ -5,13 +5,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Cinemachine;
 using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Common.Factories;
+using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.LevelDesign.Databases;
+using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
+using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
+using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using CandyMatch3.Scripts.Gameplay.GameTasks;
-using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Common.SingleConfigs;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -22,14 +26,20 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 {
     public class GameController : MonoBehaviour
     {
+        [SerializeField] private MainGamePanel mainGamePanel;
+        [SerializeField] private EndGameScreen endGameScreen;
+        [SerializeField] private InGameBoosterPanel inGameBoosterPanel;
+
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
 
         [Header("Databases")]
         [SerializeField] private ItemDatabase itemDatabase;
         [SerializeField] private TileDatabase tileDatabase;
+        [SerializeField] private TargetDatabase targetDatabase;
         [SerializeField] private EffectDatabase effectDatabase;
         [SerializeField] private MiscCollection miscCollection;
+        [SerializeField] private InGameBoosterPackDatabase inGameBoosterPackDatabase;
         [SerializeField] private StatefulSpriteDatabase statefulSpriteDatabase;
 
         [Header("Containers")]
@@ -39,6 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
         [Header("Board Utils")]
         [SerializeField] private GridCellView gridCellViewPrefab;
+        [SerializeField] private CinemachineImpulseSource impulseSource;
         [SerializeField] private BoardInput boardInput;
 
         private ItemManager _itemManager;
@@ -48,7 +59,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private FillBoardTask _fillBoardTask;
         private BreakGridTask _breakGridTask;
         private MatchItemsTask _matchItemsTask;
-        private SpawnItemTask _spawnItemTask;        
+        private SpawnItemTask _spawnItemTask;
+        private CameraShakeTask _cameraShakeTask;
         private GameTaskManager _gameTaskManager;
 
         private int _check = 0;
@@ -119,8 +131,13 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _spawnItemTask = new(_gridCellManager, _itemManager);
             _spawnItemTask.AddTo(ref builder);
 
+            _cameraShakeTask = new(impulseSource);
+            _cameraShakeTask.AddTo(ref builder);
+
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
-                                   , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase);
+                                   , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
+                                   , mainGamePanel, endGameScreen, targetDatabase, inGameBoosterPanel
+                                   , inGameBoosterPackDatabase);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);
@@ -130,12 +147,10 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         {
             for (int i = 0; i < levelModel.BoardBlockPositions.Count; i++)
             {
-                GridCell gridCell;
-
                 Vector3Int gridPosition = levelModel.BoardBlockPositions[i].Position;
                 GridCellView gridCellView = Instantiate(gridCellViewPrefab, gridContainer);
-                
-                gridCell = new();
+
+                GridCell gridCell = new();
                 gridCell.GridPosition = gridPosition;
 
                 IGridStateful gridStateful = new AvailableState();
@@ -210,8 +225,12 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             // Build ruled random first, then build random later
             _fillBoardTask.BuildRuledRandom(levelModel.RuledRandomBlockPositions);
             _fillBoardTask.BuildRandom(levelModel.RandomBlockItemPositions);
-
             _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
+
+            _gameTaskManager.BuildSuggest();
+            _gameTaskManager.InitInGameBooster();
+            _gameTaskManager.BuildTarget(levelModel);
+            _gameTaskManager.BuildBoardMovementCheck();
             _gameTaskManager.SetInputActive(true);
         }
 
