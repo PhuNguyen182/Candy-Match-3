@@ -26,10 +26,7 @@ namespace GlobalScripts.Utils
 
         public static bool SendBackMessage(AsyncMessage<TMessageData> message, TMessageData data)
         {
-            if (message.Source == null)
-                return false;
-
-            return message.Source.TrySetResult(data);
+            return message.Source == null ? false : message.Source.TrySetResult(data);
         }
     }
 }
