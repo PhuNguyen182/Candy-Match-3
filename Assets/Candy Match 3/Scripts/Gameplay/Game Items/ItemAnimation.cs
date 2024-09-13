@@ -101,6 +101,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public async UniTask PlayStripedWrapped()
         {
+            PlayGlowLightEffect();
             ChangeItemLayer(true, 3);
             itemAnimator.ResetTrigger(ItemAnimationHashKeys.ComboStripedWrappedHash);
             itemAnimator.SetTrigger(ItemAnimationHashKeys.ComboStripedWrappedHash);
