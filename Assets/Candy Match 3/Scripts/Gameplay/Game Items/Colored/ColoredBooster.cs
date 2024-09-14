@@ -1,31 +1,40 @@
+using R3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Messages;
+using GlobalScripts.UpdateHandlerPattern;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IItemSuggest
+    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IItemSuggest, IUpdateHandler
     {
         [SerializeField] private BoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
 
         [Header("Colored Sprites")]
+        [SerializeField] private Sprite[] normalSprites;
         [SerializeField] private Sprite[] wrappedSprites;
         [SerializeField] private Sprite[] horizontalSprites;
         [SerializeField] private Sprite[] verticalSprites;
 
         private bool _isMatchable;
+        private float _explodeTimer = 0;
+
+        private Sprite _normalSprite;
         private Sprite _horizontalIcon;
         private Sprite _verticalIcon;
+
+        private ReactiveProperty<bool> _lockProperty;
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
+        private IPublisher<ActivateBoosterMessage> _activateBoosterPublisher;
 
         public override bool IsMatchable => _isMatchable;
 
@@ -39,6 +48,38 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public BoosterType ColorBoosterType => colorBoosterType;
 
+        public bool IsActive { get; set; }
+
+        protected override void OnStart()
+        {
+            UpdateHandlerManager.Instance.AddUpdateBehaviour(this);
+        }
+
+        public void OnUpdate(float deltaTime)
+        {
+            if (IsMoving) // To do: trigger only if all item on board are stopped
+            {
+                _explodeTimer = 0;
+                return;
+            }
+
+            else
+            {
+                if (_explodeTimer < Match3Constants.ExplosionDelay)
+                {
+                    _explodeTimer += deltaTime;
+                    if (_explodeTimer > Match3Constants.ExplosionDelay)
+                    {
+                        _activateBoosterPublisher.Publish(new ActivateBoosterMessage
+                        {
+                            Position = GridPosition,
+                            Sender = this
+                        });
+                    }
+                }
+            }
+        }
+
         public override void ResetItem()
         {
             base.ResetItem();
@@ -46,14 +87,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             OnItemReset().Forget();
         }
 
+        public void SetBoolReactiveProperty(ReactiveProperty<bool> lockProperty)
+        {
+            _lockProperty = lockProperty;
+        }
+
         public override void SetMatchable(bool isMatchable)
         {
+            IsActive = !isMatchable;
+            IsActivated = !isMatchable; // Prevent booster is triggered again
             _isMatchable = isMatchable;
         }
 
         public override void InitMessages()
         {
             _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
+            _activateBoosterPublisher = GlobalMessagePipe.GetPublisher<ActivateBoosterMessage>();
         }
 
         public override async UniTask ItemBlast()
@@ -89,6 +138,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
                 _ => null
             };
 
+            _normalSprite = normalSprites[colorIndex];
             _horizontalIcon = horizontalSprites[colorIndex];
             _verticalIcon = verticalSprites[colorIndex];
 
@@ -217,6 +267,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             };
         }
 
+        public void PlayBoosterEffect(BoosterType boosterType)
+        {
+            
+        }
+
         public void PlayStartEffect()
         {
             EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
@@ -243,6 +298,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         private async UniTask OnItemReset()
         {
+            _explodeTimer = 0;
             IsNewCreated = true;
             IsActivated = false;
             TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
@@ -253,6 +309,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void Highlight(bool isActive)
         {
             itemAnimation.ToggleSuggest(isActive);
+        }
+
+        public void TriggerNextStage(int stage = 0)
+        {
+            itemGraphics.SetItemSprite(_normalSprite);
+            itemAnimation.TriggerNextStage(stage);
+        }
+
+        public override void OnRelease()
+        {
+            UpdateHandlerManager.Instance.RemoveUpdateBehaviour(this);
         }
     }
 }

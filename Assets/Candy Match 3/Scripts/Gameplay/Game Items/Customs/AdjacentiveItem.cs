@@ -44,6 +44,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             await UniTask.CompletedTask;
         }
 
+        public void PlayBoosterEffect(BoosterType boosterType)
+        {
+            
+        }
+
         public void PlayBreakEffect(int healthPoint)
         {
             EffectManager.Instance.PlaySoundEffect(breakSound);

@@ -176,5 +176,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             itemAnimation.ToggleSuggest(isActive);
         }
+
+        public void PlayBoosterEffect(BoosterType boosterType)
+        {
+            
+        }
     }
 }

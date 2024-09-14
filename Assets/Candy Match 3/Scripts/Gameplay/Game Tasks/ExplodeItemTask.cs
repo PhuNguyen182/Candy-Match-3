@@ -57,7 +57,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                         gridCell = _gridCellManager.Get(boundsEdge[i]);
 
-                        if (gridCell == null || !gridCell.HasItem || !gridCell.IsMoveable)
+                        if (gridCell == null || !gridCell.HasItem)
+                            continue;
+
+                        if (gridCell.IsLocked || !gridCell.IsMoveable)
                             continue;
 
                         if (gridCell.BlockItem is IItemAnimation animation)
@@ -70,7 +73,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     }
 
                     await UniTask.WhenAll(explodeTasks);
-                    await UniTask.NextFrame(_token);
                 }
             }
         }

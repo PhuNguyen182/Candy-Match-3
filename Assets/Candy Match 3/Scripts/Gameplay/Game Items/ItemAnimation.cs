@@ -26,8 +26,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [Header("Hightlight")]
         [SerializeField] private float glowLightDuration = 1f;
         [SerializeField] private float highlightDuration = 1f;
+        [SerializeField] private float boosterDuration = 1f;
         [SerializeField] private AnimationCurve highlightEase;
         [SerializeField] private AnimationCurve glowlightEase;
+        [SerializeField] private AnimationCurve boosterEase;
 
         private bool _hasBeenSuggested;
         private int _originalSortingOrder;
@@ -37,6 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private Coroutine _highlightCoroutine;
         private Coroutine _glowlightCoroutine;
+        private Coroutine _glowBoosterCoroutine;
         private CancellationToken _destroyToken;
 
         private void Awake()
@@ -86,6 +89,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             float smoothedMagnitude = fallenCurve.Evaluate(magnitude);
             itemAnimator.SetFloat(ItemAnimationHashKeys.AmptitudeHash, smoothedMagnitude);
             itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
+        }
+
+        public void TriggerNextStage(int stage = 0)
+        {
+            PlayBoosterTrigger();
+            itemAnimator.SetTrigger(ItemAnimationHashKeys.ExplodeHash);
         }
 
         public UniTask DisappearOnMatch(bool isMatch)
@@ -181,6 +190,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             }
         }
 
+        private void PlayBoosterTrigger()
+        {
+            _glowBoosterCoroutine = StartCoroutine(Highlight(boosterDuration, boosterEase, false));
+        }
+
         private void PlayGlowLightEffect()
         {
             _glowlightCoroutine = StartCoroutine(Highlight(glowLightDuration, glowlightEase, true));
@@ -208,6 +222,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemGraphics ??= GetComponent<ItemGraphics>();
         }
 #endif
+
+        private void OnDisable()
+        {
+            itemRenderer.transform.localPosition = Vector3.zero;
+        }
 
         private void OnDestroy()
         {
