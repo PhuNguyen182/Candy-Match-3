@@ -194,7 +194,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         return;
                     }
 
-                    await _activateBoosterTask.ActivateBooster(gridCell, true, true, true, onActive);
+                    await _activateBoosterTask.ActivateBooster(gridCell, true, true, true, 1, onActive);
                 }
 
                 else if (blockItem is IBreakable breakable)
@@ -264,7 +264,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
                 }
 
-                await _activateBoosterTask.ActivateBooster(gridCell, true, true, false, onActive);
+                await _activateBoosterTask.ActivateBooster(gridCell, true, true, false, 1, onActive);
                 
                 gridCell.IsMatching = false;
                 gridCell.LockStates = LockStates.None;

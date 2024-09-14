@@ -94,10 +94,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             if(colorBooster != null)
             {
                 if (colorBooster.ColorBoosterType == BoosterType.Wrapped)
-                    await _colorfulWrappedBoosterTask.Activate(gridCell, blockItem);
+                    await _colorfulWrappedBoosterTask.PlaceAndActivate(gridCell, blockItem);
 
                 else
-                    await _colorfulStripedBoosterTask.Activate(gridCell, blockItem);
+                    await _colorfulStripedBoosterTask.PlaceAndActivate(gridCell, blockItem);
             }
 
             else

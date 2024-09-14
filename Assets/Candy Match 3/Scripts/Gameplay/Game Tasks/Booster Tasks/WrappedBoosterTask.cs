@@ -44,22 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             Vector3Int position = gridCell.GridPosition;
             IBlockItem blockItem = gridCell.BlockItem;
 
-            if (isCreateBooster)
-                _breakGridTask.ReleaseGridCell(gridCell);
-
-            else
-            {
-                if (stage == 1)
-                {
-                    blockItem.SetMatchable(false);
-
-                    if (blockItem is IColorBooster colorBooster)
-                        colorBooster.TriggerNextStage(3);
-                }
-
-                else _breakGridTask.ReleaseGridCell(gridCell);
-            }
-
+            ProcessBooster(gridCell, blockItem, isCreateBooster, stage);
             using (var attactListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
             {
                 BoundsInt checkRange = position.GetBounds2D(1);
@@ -68,7 +53,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 using var brealListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
                 using var encapsulateListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> encapsulatePositions);
-                _explodeItemTask.Blast(position, 2).Forget();
+                
+                if(stage > 0)
+                    _explodeItemTask.Blast(position, 2).Forget();
 
                 for (int i = 0; i < attackPositions.Count; i++)
                 {
@@ -104,6 +91,32 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;
+        }
+
+        private void ProcessBooster(IGridCell gridCell, IBlockItem blockItem, bool isCreateBooster, int stage)
+        {
+            if (!isCreateBooster)
+            {
+                if (stage == 1)
+                    TriggerBooster(blockItem);
+
+                else
+                    _breakGridTask.ReleaseGridCell(gridCell);
+            }
+
+            else
+                _breakGridTask.ReleaseGridCell(gridCell);
+        }
+
+        private void TriggerBooster(IBlockItem blockItem)
+        {
+            if (blockItem != null)
+            {
+                blockItem.SetMatchable(false);
+
+                if (blockItem is IColorBooster colorBooster)
+                    colorBooster.TriggerNextStage(3);
+            }
         }
 
         private void ShakeCamera()

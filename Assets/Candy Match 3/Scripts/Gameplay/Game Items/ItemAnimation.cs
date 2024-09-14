@@ -191,7 +191,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private void PlayBoosterTrigger()
         {
-            _glowBoosterCoroutine = StartCoroutine(Highlight(boosterDuration, boosterEase, false));
+            if(isActiveAndEnabled)
+                _glowBoosterCoroutine = StartCoroutine(Highlight(boosterDuration, boosterEase, false));
         }
 
         private void PlayGlowLightEffect()

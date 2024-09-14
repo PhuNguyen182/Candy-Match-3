@@ -92,7 +92,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         }
 
         public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck, bool isCreateBooster
-            , Action<BoundsInt> onActivate = null)
+            , int stage = 1, Action<BoundsInt> onActivate = null)
         {
             Vector3Int position = gridCell.GridPosition;
             
@@ -125,7 +125,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                             await _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck, onActivate);
                             break;
                         case BoosterType.Wrapped:
-                            await _wrappedBoosterTask.Activate(gridCell, 1, useDelay, doNotCheck, isCreateBooster, onActivate);
+                            await _wrappedBoosterTask.Activate(gridCell, stage, useDelay, doNotCheck, isCreateBooster, onActivate);
                             break;
                     }
                 }
