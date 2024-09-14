@@ -151,10 +151,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     {
                         IGridCell gridCell = _gridCellManager.Get(positions[i]);
 
-                        if (gridCell == null)
+                        if (gridCell == null || !gridCell.HasItem)
                             continue;
 
                         if (gridCell.CandyColor != color || gridCell.IsLocked)
+                            continue;
+
+                        if (!gridCell.BlockItem.IsMatchable)
                             continue;
 
                         foundPositions.Add(positions[i]);
@@ -178,11 +181,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     {
                         IGridCell gridCell = _gridCellManager.Get(positions[i]);
 
-                        if (gridCell == null)
+                        if (gridCell == null || !gridCell.HasItem)
                             continue;
 
                         // Not a color item
                         if (gridCell.CandyColor == CandyColor.None || gridCell.IsLocked)
+                            continue;
+
+                        if (!gridCell.BlockItem.IsMatchable)
                             continue;
 
                         // Prevent duplicate color detection

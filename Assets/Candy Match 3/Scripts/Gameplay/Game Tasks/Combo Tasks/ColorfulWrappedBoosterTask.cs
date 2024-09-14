@@ -137,6 +137,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 }
 
                 await UniTask.WhenAll(boosterTasks);
+                _colorfulBoosterTask.RemoveColor(candyColor);
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);
             }
