@@ -32,6 +32,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         private const string BuyBoosterPopupPath = "Common Popups/Buy Boosters Popup.prefab";
 
+        private CheckGridTask _checkGridTask;
         private CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly ISubscriber<AddInGameBoosterMessage> _addBoosterSubscriber;
         private readonly ISubscriber<UseInGameBoosterMessage> _useBoosterSubscriber;
@@ -84,6 +85,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
+            _checkGridTask = checkGridTask;
             _blastBoosterTask.SetCheckGridTask(checkGridTask);
         }
 
@@ -131,6 +133,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public UniTask ActivatePointBooster(Vector3Int position, InGameBoosterType inGameBoosterType)
         {
+            _checkGridTask.CanCheck = false;
             _inputProcessTask.IsActive = false;
             UniTask boosterTask = UniTask.CompletedTask;
 
@@ -147,7 +150,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     break;
             }
 
-            return boosterTask.ContinueWith(() => _inputProcessTask.IsActive = true);
+            return boosterTask.ContinueWith(() =>
+            {
+                _checkGridTask.CanCheck = true;
+                _inputProcessTask.IsActive = true;
+            });
         }
 
         public UniTask ActivateSwapBooster(Vector3Int fromPosition, Vector3Int toPosition)
