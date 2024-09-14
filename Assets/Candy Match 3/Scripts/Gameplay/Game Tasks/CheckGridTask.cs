@@ -115,6 +115,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkPositions.Add(position + Vector3Int.up);
         }
 
+        public void CheckAt(Vector3Int position)
+        {
+            _checkPositions.Add(position);
+        }
+
         public void CheckRange(BoundsInt boundsRange)
         {
             AddRangeToCheck(boundsRange);

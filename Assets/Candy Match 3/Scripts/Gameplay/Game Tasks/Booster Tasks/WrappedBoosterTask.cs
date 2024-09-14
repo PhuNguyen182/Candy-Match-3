@@ -39,22 +39,27 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
         }
 
-        public async UniTask Activate(IGridCell gridCell, int stage, bool useDelay, bool doNotCheck, Action<BoundsInt> attackRange)
+        public async UniTask Activate(IGridCell gridCell, int stage, bool useDelay, bool doNotCheck, bool isCreateBooster, Action<BoundsInt> attackRange)
         {
             Vector3Int position = gridCell.GridPosition;
             IBlockItem blockItem = gridCell.BlockItem;
 
-            if (stage == 1)
-            {
-                if (blockItem is IColorBooster colorBooster)
-                    colorBooster.TriggerNextStage(2);
-
-                blockItem.SetMatchable(false);
-            }
-            
-            else
+            if (isCreateBooster)
                 _breakGridTask.ReleaseGridCell(gridCell);
-            
+
+            else
+            {
+                if (stage == 1)
+                {
+                    blockItem.SetMatchable(false);
+
+                    if (blockItem is IColorBooster colorBooster)
+                        colorBooster.TriggerNextStage(3);
+                }
+
+                else _breakGridTask.ReleaseGridCell(gridCell);
+            }
+
             using (var attactListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
             {
                 BoundsInt checkRange = position.GetBounds2D(1);

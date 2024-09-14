@@ -83,7 +83,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         await _verticalBoosterTask.Activate(gridCell, false, false, null);
                         break;
                     case BoosterType.Wrapped:
-                        await _wrappedBoosterTask.Activate(gridCell, 2, false, false, null);
+                        await _wrappedBoosterTask.Activate(gridCell, 2, false, false, false, null);
                         break;
                 }
 
@@ -91,7 +91,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
         }
 
-        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck, Action<BoundsInt> attackRange = null)
+        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck, bool isCreateBooster
+            , Action<BoundsInt> onActivate = null)
         {
             Vector3Int position = gridCell.GridPosition;
             
@@ -118,13 +119,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     switch (colorBoosterType)
                     {
                         case BoosterType.Horizontal:
-                            await _horizontalBoosterTask.Activate(gridCell, useDelay, doNotCheck, attackRange);
+                            await _horizontalBoosterTask.Activate(gridCell, useDelay, doNotCheck, onActivate);
                             break;
                         case BoosterType.Vertical:
-                            await _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck, attackRange);
+                            await _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck, onActivate);
                             break;
                         case BoosterType.Wrapped:
-                            await _wrappedBoosterTask.Activate(gridCell, 1, useDelay, doNotCheck, attackRange);
+                            await _wrappedBoosterTask.Activate(gridCell, 1, useDelay, doNotCheck, isCreateBooster, onActivate);
                             break;
                     }
                 }

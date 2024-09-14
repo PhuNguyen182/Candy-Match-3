@@ -93,8 +93,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public override void SetMatchable(bool isMatchable)
         {
             IsActive = !isMatchable;
-            IsActivated = !isMatchable; // Prevent booster is triggered again
             _isMatchable = isMatchable;
+            
+            if(!isMatchable)
+                IsActivated = false; // Prevent booster is triggered again
         }
 
         public override void InitMessages()
@@ -320,7 +322,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public void TriggerNextStage(int stage = 0)
         {
-            itemGraphics.SetItemSprite(_normalSprite);
+            if(stage == 3)
+                itemGraphics.SetItemSprite(_normalSprite);
+            
             itemAnimation.TriggerVibrate(stage);
         }
 

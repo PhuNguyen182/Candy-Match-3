@@ -79,7 +79,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 for (int i = 0; i < positions.Count; i++)
                 {
                     IGridCell boosterGridCell = _gridCellManager.Get(positions[i]);
-                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false));
+                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false, false));
                 }
 
                 await UniTask.WhenAll(boosterTasks);
@@ -134,7 +134,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 for (int i = 0; i < positions.Count; i++)
                 {
                     IGridCell gridCell = _gridCellManager.Get(positions[i]);
-                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(gridCell, false, false));
+                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(gridCell, false, false, false));
                 }
 
                 await UniTask.WhenAll(boosterTasks);
