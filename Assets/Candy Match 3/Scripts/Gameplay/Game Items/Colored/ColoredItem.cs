@@ -169,7 +169,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public void PlayColorfulEffect()
         {
-            _colorfulEffect = SimplePool.Spawn(colorfulEffect, transform, transform.position, Quaternion.identity);
+            itemAnimation.TriggerVibrate();
         }
 
         public void Highlight(bool isActive)

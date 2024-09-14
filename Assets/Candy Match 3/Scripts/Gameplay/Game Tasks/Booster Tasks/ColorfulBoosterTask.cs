@@ -61,7 +61,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(fireTasks);
-                await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
+                TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay * 2);
+                await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
@@ -115,7 +116,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(fireTasks);
-                await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
+                TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay * 2);
+                await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
@@ -229,6 +231,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                        , Vector3.zero, Quaternion.identity);
+            targetGridCell.LockStates = LockStates.Preparing;
             await fireray.Fire(targetGridCell, position, delay);
         }
 

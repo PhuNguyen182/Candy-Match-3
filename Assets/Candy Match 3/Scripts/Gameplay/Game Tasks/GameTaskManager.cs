@@ -98,7 +98,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _endGameTask = new(_checkTargetTask, _checkGameBoardMovementTask, _activateBoosterTask);
             _endGameTask.AddTo(ref builder);
 
-            _checkGridTask = new(_gridCellManager, _moveItemTask, _inputProcessor, _spawnItemTask, _matchItemsTask);
+            _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 
             _gameStateController = new(_inputProcessor, _checkTargetTask, _endGameTask, endGameScreen, _suggestTask);

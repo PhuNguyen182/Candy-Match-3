@@ -126,38 +126,41 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return;
             }
 
-            if (!gridCell.HasItem || gridCell.IsLocked)
+            if (!gridCell.HasItem)
                 return;
 
-            gridCell.LockStates = LockStates.Breaking;
-            IBlockItem blockItem = gridCell.BlockItem;
-
-            if (blockItem is IBooster booster)
+            if (gridCell.LockStates == LockStates.Preparing || gridCell.LockStates == LockStates.None)
             {
-                if (booster.IsNewCreated)
+                gridCell.LockStates = LockStates.Breaking;
+                IBlockItem blockItem = gridCell.BlockItem;
+
+                if (blockItem is IBooster booster)
                 {
-                    gridCell.IsMatching = false;
+                    if (booster.IsNewCreated)
+                    {
+                        gridCell.IsMatching = false;
+                        gridCell.LockStates = LockStates.None;
+                        return;
+                    }
+
+                    await _activateBoosterTask.ActivateBooster(gridCell, true, false);
                     gridCell.LockStates = LockStates.None;
                     return;
                 }
 
-                await _activateBoosterTask.ActivateBooster(gridCell, true, false);
-                gridCell.LockStates = LockStates.None;
-                return;
-            }
-
-            if (blockItem is IBreakable breakable)
-            {
-                if (breakable.Break())
+                if (blockItem is IBreakable breakable)
                 {
-                    await blockItem.ItemBlast();
+                    if (breakable.Break())
+                    {
+                        await blockItem.ItemBlast();
 
-                    if (blockItem is IItemEffect effect)
-                        effect.PlayMatchEffect();
+                        if (blockItem is IItemEffect effect)
+                            effect.PlayMatchEffect();
 
-                    ReleaseGridCell(gridCell);
-                    gridCell.LockStates = LockStates.None;
-                    _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
+                        ReleaseGridCell(gridCell);
+                        gridCell.LockStates = LockStates.None;
+                        _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
+                    }
                 }
             }
         }

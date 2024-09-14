@@ -25,8 +25,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private const float SuggestCooldown = 10f;
 
         private int _suggestCount = 0;
-        private bool _suggestFlag = false;
         private float _suggestTimer = 0;
+        private bool _suggestFlag = false;
 
         private List<IItemSuggest> _itemSuggests;
         private InputProcessTask _inputProcessTask;

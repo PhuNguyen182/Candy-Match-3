@@ -1,4 +1,3 @@
-using R3;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 
@@ -9,7 +8,6 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public BoosterType ColorBoosterType { get; }
         public void SetBoosterType(BoosterType colorBoosterType);
         public UniTask PlayBoosterCombo(int direction, ComboBoosterType comboType, bool isFirstItem);
-        public void SetBoolReactiveProperty(ReactiveProperty<bool> lockProperty);
         public void ChangeItemSprite(int step);
         public void TriggerNextStage(int stage);
     }

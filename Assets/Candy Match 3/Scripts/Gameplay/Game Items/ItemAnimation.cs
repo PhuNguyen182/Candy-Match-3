@@ -91,7 +91,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
         }
 
-        public void TriggerNextStage(int stage = 0)
+        public void TriggerVibrate(int stage = 0)
         {
             PlayBoosterTrigger();
             itemAnimator.SetTrigger(ItemAnimationHashKeys.ExplodeHash);
@@ -155,7 +155,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             
             else
             {
-                itemGraphics.SetFloatRendererProperty(ItemShaderProperties.SuggestHighlight, 0);
                 ClearSuggestEffect(); // Should be place here to prevent destroy null reference
             }
         }
@@ -216,6 +215,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemRenderer.sortingOrder = isPrioritized ? _originalSortingOrder + priorityAmount : _originalSortingOrder;
         }
 
+        private void StopAllEffects()
+        {
+            ToggleSuggest(false);
+            itemGraphics.SetFloatRendererProperty(ItemShaderProperties.SuggestHighlight, 0);
+
+            if (_glowlightCoroutine != null)
+                StopCoroutine(_glowlightCoroutine);
+
+            if (_glowBoosterCoroutine != null)
+                StopCoroutine(_glowBoosterCoroutine);
+        }
+
 #if UNITY_EDITOR
         private void OnValidate()
         {
@@ -225,13 +236,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private void OnDisable()
         {
+            StopAllEffects();
             itemRenderer.transform.localPosition = Vector3.zero;
         }
 
         private void OnDestroy()
         {
-            ToggleSuggest(false);
-
             _moveTween?.Kill();
             _bounceMoveTween?.Kill();
         }

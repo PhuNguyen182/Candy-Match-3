@@ -1,4 +1,3 @@
-using R3;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,14 +26,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         private bool _isMatchable;
         private float _explodeTimer = 0;
+        private bool _isBoardStop;
 
         private Sprite _normalSprite;
         private Sprite _horizontalIcon;
         private Sprite _verticalIcon;
 
-        private ReactiveProperty<bool> _lockProperty;
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
         private IPublisher<ActivateBoosterMessage> _activateBoosterPublisher;
+        private ISubscriber<BoardStopMessage> boardStopSubscriber;
 
         public override bool IsMatchable => _isMatchable;
 
@@ -57,8 +57,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public void OnUpdate(float deltaTime)
         {
-            if (IsMoving) // To do: trigger only if all item on board are stopped
+            if (!_isBoardStop)
             {
+                IsLocking = false;
                 _explodeTimer = 0;
                 return;
             }
@@ -67,7 +68,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             {
                 if (_explodeTimer < Match3Constants.ExplosionDelay)
                 {
+                    IsLocking = true;
                     _explodeTimer += deltaTime;
+
                     if (_explodeTimer > Match3Constants.ExplosionDelay)
                     {
                         _activateBoosterPublisher.Publish(new ActivateBoosterMessage
@@ -87,11 +90,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             OnItemReset().Forget();
         }
 
-        public void SetBoolReactiveProperty(ReactiveProperty<bool> lockProperty)
-        {
-            _lockProperty = lockProperty;
-        }
-
         public override void SetMatchable(bool isMatchable)
         {
             IsActive = !isMatchable;
@@ -103,6 +101,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
             _activateBoosterPublisher = GlobalMessagePipe.GetPublisher<ActivateBoosterMessage>();
+            DisposableBagBuilder builder = DisposableBag.CreateBuilder();
+
+            boardStopSubscriber = GlobalMessagePipe.GetSubscriber<BoardStopMessage>();
+            boardStopSubscriber.Subscribe(message => _isBoardStop = message.IsStopped)
+                               .AddTo(builder);
+
+            messageDisposable = builder.Build();
         }
 
         public override async UniTask ItemBlast()
@@ -299,8 +304,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         private async UniTask OnItemReset()
         {
             _explodeTimer = 0;
+            IsLocking = false;
             IsNewCreated = true;
             IsActivated = false;
+
             TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
             await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, destroyToken);
             IsNewCreated = false;
@@ -314,7 +321,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void TriggerNextStage(int stage = 0)
         {
             itemGraphics.SetItemSprite(_normalSprite);
-            itemAnimation.TriggerNextStage(stage);
+            itemAnimation.TriggerVibrate(stage);
+        }
+
+        public override void OnDisappear()
+        {
+            IsActive = false;
+            _isBoardStop = false;
         }
 
         public override void OnRelease()

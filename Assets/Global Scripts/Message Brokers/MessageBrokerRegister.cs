@@ -33,6 +33,7 @@ namespace GlobalScripts.MessageBrokers
             _builder.AddMessageBroker<CameraShakeMessage>();
             _builder.AddMessageBroker<UseInGameBoosterMessage>();
             _builder.AddMessageBroker<ActivateBoosterMessage>();
+            _builder.AddMessageBroker<BoardStopMessage>();
         }
     }
 }
