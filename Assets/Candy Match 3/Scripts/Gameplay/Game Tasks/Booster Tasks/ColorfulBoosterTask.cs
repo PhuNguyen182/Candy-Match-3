@@ -61,12 +61,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(fireTasks);
-                TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay * 2);
+                TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay * 1.5f);
                 await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
-                    breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
+                    breakTasks.Add(_breakGridTask.Break(colorPositions[i], true));
                 }
 
                 await UniTask.WhenAll(breakTasks);
@@ -116,12 +116,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 await UniTask.WhenAll(fireTasks);
-                TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay * 2);
+                TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay * 1.5f);
                 await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
-                    breakTasks.Add(_breakGridTask.Break(colorPositions[i]));
+                    breakTasks.Add(_breakGridTask.Break(colorPositions[i], true));
                 }
 
                 await UniTask.WhenAll(breakTasks);

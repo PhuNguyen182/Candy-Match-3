@@ -13,6 +13,7 @@ using CandyMatch3.Scripts.Gameplay.Statefuls;
 using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Utils;
+using UnityEngine.Pool;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -37,17 +38,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _adjacentStepCheck = new()
             {
-                new(1, 0), new(0, 1), new(-1, 0), new(0, -1)
+                Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right
             };
 
             _cts = new();
             _token = _cts.Token;
-        }
-
-        public async UniTask Break(Vector3Int position)
-        {
-            IGridCell gridCell = _gridCellManager.Get(position);
-            await Break(gridCell);
         }
 
         public async UniTask BreakItem(Vector3Int position)
@@ -108,7 +103,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             gridCell.LockStates = LockStates.None;
         }
 
-        public async UniTask Break(IGridCell gridCell)
+        public async UniTask Break(Vector3Int position, bool breakAdjacent = false)
+        {
+            IGridCell gridCell = _gridCellManager.Get(position);
+            await Break(gridCell, breakAdjacent);
+        }
+
+        public async UniTask Break(IGridCell gridCell, bool breakAdjacent)
         {
             if (gridCell == null)
                 return;
@@ -158,9 +159,25 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                             effect.PlayMatchEffect();
 
                         ReleaseGridCell(gridCell);
-                        gridCell.LockStates = LockStates.None;
-                        _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
                     }
+
+                    if (breakAdjacent)
+                    {
+                        using (ListPool<UniTask>.Get(out List<UniTask> breakTasks))
+                        {
+                            for (int i = 0; i < _adjacentStepCheck.Count; i++)
+                            {
+                                Vector3Int checkPos = gridCell.GridPosition + _adjacentStepCheck[i];
+                                IGridCell cell = _gridCellManager.Get(checkPos);
+                                breakTasks.Add(BreakAdjacent(cell));
+                            }
+
+                            await UniTask.WhenAll(breakTasks);
+                        }
+                    }
+
+                    gridCell.LockStates = LockStates.None;
+                    _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
                 }
             }
         }
@@ -305,11 +322,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return;
             }
 
-            gridCell.LockStates = LockStates.Breaking;
             IBlockItem blockItem = gridCell.BlockItem;
-
             if (blockItem is IAdjcentBreakable breakable)
             {
+                gridCell.LockStates = LockStates.Breaking;
+
                 if (breakable.Break())
                 {
                     await blockItem.ItemBlast();
@@ -319,9 +336,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     ReleaseGridCell(gridCell);
                 }
-            }
 
-            gridCell.LockStates = LockStates.None;
+                gridCell.LockStates = LockStates.None;
+            }
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
