@@ -48,8 +48,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask WaitForBoardStop()
         {
-            await UniTask.WaitUntil(() => IsBoardStop(), PlayerLoopTiming.Update, _token);
             await UniTask.Delay(_waitTimeAmount, false, PlayerLoopTiming.Update, _token);
+            await UniTask.WaitUntil(() => IsBoardStop(), PlayerLoopTiming.Update, _token);
         }
 
         private bool IsBoardStop()

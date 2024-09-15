@@ -21,6 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly TargetDatabase _targetDatabase;
         private readonly MainGamePanel _mainGamePanel;
 
+        private readonly ISubscriber<BoardStopMessage> _boardStopSubscriber;
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
         private readonly ISubscriber<AsyncMessage<MoveTargetData>> _moveToTargetSubscriber;
         private readonly ISubscriber<DecreaseTargetMessage> _decreaseTargetSubscriber;
@@ -47,7 +48,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _moveToTargetTasks = new();
 
-            var builder = MessagePipe.DisposableBag.CreateBuilder();            
+            var builder = MessagePipe.DisposableBag.CreateBuilder();
+            _boardStopSubscriber = GlobalMessagePipe.GetSubscriber<BoardStopMessage>();
             _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
             _moveToTargetSubscriber = GlobalMessagePipe.GetSubscriber<AsyncMessage<MoveTargetData>>();
             _decreaseTargetSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseTargetMessage>();
@@ -55,6 +57,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _decreaseMoveSubscriber.Subscribe(DecreaseMove).AddTo(builder);
             _moveToTargetSubscriber.Subscribe(InspectTargetInfo).AddTo(builder);
             _decreaseTargetSubscriber.Subscribe(DecreaseTarget).AddTo(builder);
+            _boardStopSubscriber.Subscribe(message => CheckEndGameOnStop(message).Forget())
+                                .AddTo(builder);
 
             _disposable = builder.Build();
         }
@@ -191,6 +195,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else
                 UpdateTarget(message.TargetType, true);
+        }
+
+        private async UniTask CheckEndGameOnStop(BoardStopMessage message)
+        {
+            if (!message.IsStopped)
+                return;
+
+            if (_endGameTask != null)
+            {
+                await _endGameTask.WaitForBoardStop();
+                CheckEndGame();
+            }
         }
 
         private void InspectTargetInfo(AsyncMessage<MoveTargetData> message)

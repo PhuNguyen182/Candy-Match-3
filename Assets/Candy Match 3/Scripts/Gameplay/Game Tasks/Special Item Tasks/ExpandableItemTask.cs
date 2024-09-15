@@ -120,7 +120,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
                 int randIndex = Random.Range(0, expandableCount);
                 Vector3Int position = expandablePositions[randIndex];
                 IGridCell replaceCell = _gridCellManager.Get(position);
+
                 _breakGridTask.ReleaseGridCell(replaceCell);
+                replaceCell.LockStates = LockStates.Replacing;
 
                 _itemManager.Add(new BlockItemPosition
                 {
@@ -137,6 +139,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
 
                 if (replaceCell.BlockItem is IExpandableItem expandable)
                     expandable.Expand(position);
+
+                replaceCell.LockStates = LockStates.None;
             }
         }
 
