@@ -5,6 +5,7 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using Random = UnityEngine.Random;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.GridCells;
@@ -30,6 +31,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
         private bool _canExpand = false;
         private List<Vector3Int> _adjcentSteps;
         private HashSet<Vector3Int> _expandableItemPositions;
+        private CheckGridTask _checkGridTask;
         private IDisposable _disposable;
 
         private CancellationToken _token;
@@ -69,6 +71,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
             _expandableItemPositions.Add(position);
         }
 
+        public void SetCheckGridTask(CheckGridTask checkGridTask)
+        {
+            _checkGridTask = checkGridTask;
+        }
+
         private void BreakPosition(BreakExpandableMessage message)
         {
             _expandableItemPositions.Remove(message.Position);
@@ -85,7 +92,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
             // If all items on board are stopped, check and expand chocolate
             await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
 
-            if (message.IsStopped)
+            if (message.IsStopped && _checkGridTask.CanCheck)
             {
                 Expand();
             }
@@ -105,42 +112,54 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
                 return;
             }
 
-            List<Vector3Int> expandablePositions = new();
-            while (expandablePositions.Count <= 0 && count < maxCount)
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> expandablePositions))
             {
-                int randIndex = Random.Range(0, maxCount);
-                Vector3Int randPosition = _expandableItemPositions.ElementAt(randIndex);
-                expandablePositions = GetExpandable(randPosition);
-                count = count + 1;
-            }
-
-            int expandableCount = expandablePositions.Count;
-            if (expandableCount > 0)
-            {
-                int randIndex = Random.Range(0, expandableCount);
-                Vector3Int position = expandablePositions[randIndex];
-                IGridCell replaceCell = _gridCellManager.Get(position);
-
-                _breakGridTask.ReleaseGridCell(replaceCell);
-                replaceCell.LockStates = LockStates.Replacing;
-
-                _itemManager.Add(new BlockItemPosition
+                using var flagPool = HashSetPool<int>.Get(out HashSet<int> flags);
+                while (expandablePositions.Count <= 0 && count < maxCount)
                 {
-                    Position = position,
-                    ItemData = new BlockItemData
+                    // Use flags to ensure no random index was double check
+                    int randIndex = Random.Range(0, maxCount);
+                    if(flags.Contains(randIndex))
                     {
-                        HealthPoint = 1,
-                        ItemType = ItemType.Chocolate,
-                        ItemColor = CandyColor.None,
+                        count = count + 1;
+                        continue;
                     }
-                });
 
-                AddExpandablePosition(position);
+                    flags.Add(randIndex);
+                    Vector3Int randPosition = _expandableItemPositions.ElementAt(randIndex);
+                    expandablePositions = GetExpandable(randPosition);
+                    count = count + 1;
+                }
 
-                if (replaceCell.BlockItem is IExpandableItem expandable)
-                    expandable.Expand(position);
+                int expandableCount = expandablePositions.Count;
+                if (expandableCount > 0)
+                {
+                    int randIndex = Random.Range(0, expandableCount);
+                    Vector3Int position = expandablePositions[randIndex];
+                    IGridCell replaceCell = _gridCellManager.Get(position);
 
-                replaceCell.LockStates = LockStates.None;
+                    _breakGridTask.ReleaseGridCell(replaceCell);
+                    replaceCell.LockStates = LockStates.Replacing;
+
+                    _itemManager.Add(new BlockItemPosition
+                    {
+                        Position = position,
+                        ItemData = new BlockItemData
+                        {
+                            HealthPoint = 1,
+                            ItemType = ItemType.Chocolate,
+                            ItemColor = CandyColor.None,
+                        }
+                    });
+
+                    _canExpand = false;
+                    AddExpandablePosition(position);
+
+                    if (replaceCell.BlockItem is IExpandableItem expandable)
+                        expandable.Expand(position);
+
+                    replaceCell.LockStates = LockStates.None;
+                }
             }
         }
 

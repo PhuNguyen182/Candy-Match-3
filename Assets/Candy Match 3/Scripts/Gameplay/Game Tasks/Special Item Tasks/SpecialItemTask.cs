@@ -8,7 +8,7 @@ using CandyMatch3.Scripts.Gameplay.Strategies;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
 {
-    public class SpecialItemTasks : IDisposable
+    public class SpecialItemTask : IDisposable
     {
         private readonly GridCellManager _gridCellManager;
 
@@ -16,7 +16,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
 
         public ExpandableItemTask ExpandableItemTask { get; }
 
-        public SpecialItemTasks(GridCellManager gridCellManager, ItemManager itemManager, BreakGridTask breakGridTask)
+        public SpecialItemTask(GridCellManager gridCellManager, ItemManager itemManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             var builder = Disposable.CreateBuilder();
@@ -25,6 +25,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
             ExpandableItemTask.AddTo(ref builder);
 
             _disposable = builder.Build();
+        }
+
+        public void SetCheckGridTask(CheckGridTask checkGridTask)
+        {
+            ExpandableItemTask.SetCheckGridTask(checkGridTask);
         }
 
         public void Dispose()

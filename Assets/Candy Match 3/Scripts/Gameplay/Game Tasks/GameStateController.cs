@@ -85,7 +85,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void PlayContinue()
         {
-
+            _inputProcessTask.IsActive = true;
         }
 
         private void EndGame(bool isWin)

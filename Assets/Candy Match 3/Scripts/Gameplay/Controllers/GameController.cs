@@ -63,7 +63,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private BreakGridTask _breakGridTask;
         private MatchItemsTask _matchItemsTask;
         private SpawnItemTask _spawnItemTask;
-        private SpecialItemTasks _specialItemTasks;
+        private SpecialItemTask _specialItemTasks;
         private CameraShakeTask _cameraShakeTask;
         private GameTaskManager _gameTaskManager;
 
@@ -144,7 +144,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
                                    , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
                                    , mainGamePanel, endGameScreen, targetDatabase, inGameBoosterPanel
-                                   , inGameBoosterPackDatabase);
+                                   , inGameBoosterPackDatabase, _specialItemTasks);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);

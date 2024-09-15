@@ -14,6 +14,7 @@ using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
+using CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
@@ -35,6 +36,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly GameStateController _gameStateController;
         private readonly CheckTargetTask _checkTargetTask;
+        private readonly SpecialItemTask _specialItemTask;
         private readonly DetectMoveTask _detectMoveTask;
         private readonly EndGameTask _endGameTask;
         private readonly SuggestTask _suggestTask;
@@ -44,7 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask
             , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase
             , MainGamePanel mainGamePanel, EndGameScreen endGameScreen, TargetDatabase targetDatabase, InGameBoosterPanel inGameBoosterPanel
-            , InGameBoosterPackDatabase inGameBoosterPackDatabase)
+            , InGameBoosterPackDatabase inGameBoosterPackDatabase, SpecialItemTask specialItemTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -103,6 +105,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _gameStateController = new(_inputProcessor, _checkTargetTask, _endGameTask, endGameScreen, _suggestTask);
             _gameStateController.AddTo(ref builder);
+            _specialItemTask = specialItemTask;
 
             SetCheckGridTask();
             _disposable = builder.Build();
@@ -149,6 +152,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _comboBoosterHandleTask.SetCheckGridTask(_checkGridTask);
             _swapItemTask.SetCheckGridTask(_checkGridTask);
             _inGameBoosterTasks.SetCheckGridTask(_checkGridTask);
+            _specialItemTask.SetCheckGridTask(_checkGridTask);
+            _endGameTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

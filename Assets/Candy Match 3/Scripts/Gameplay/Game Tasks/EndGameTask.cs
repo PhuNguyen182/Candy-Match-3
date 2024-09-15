@@ -18,6 +18,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
+        private CheckGridTask _checkGridTask;
         private IDisposable _disposable;
 
         public EndGameTask(CheckTargetTask checkTargetTask, CheckGameBoardMovementTask checkGameBoardMovementTask, ActivateBoosterTask activateBoosterTask)
@@ -54,6 +55,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private bool IsBoardStop()
         {
+            if (!_checkGridTask.CanCheck)
+                return false;
+
             if (_checkGameBoardMovementTask.IsBoardLock)
                 return false;
 
@@ -64,6 +68,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return false;
 
             return true;
+        }
+
+        public void SetCheckGridTask(CheckGridTask checkGridTask)
+        {
+            _checkGridTask = checkGridTask;
         }
 
         public void Dispose()
