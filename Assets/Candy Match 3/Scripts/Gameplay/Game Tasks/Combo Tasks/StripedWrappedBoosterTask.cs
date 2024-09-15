@@ -107,7 +107,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 ShakeCamera();
                 SpawnTripleHorizontal(checkPosition);
-                UniTask.WhenAll(breakTasks).Forget();
+                UniTask.WhenAll(breakTasks).Forget(); // Use forget to execute the combo independently, fix bug when it hit the colorful booster
                 ExpandRange(ref rowListPositions, Vector3Int.up);
 
                 // Lock this area to prevent outside items fall in to
