@@ -139,13 +139,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkTargetTask.InitLevelTarget(levelModel);
         }
 
-        public void Test(out bool isLock)
-        {
-            isLock = _checkGameBoardMovementTask.IsBoardLock;
-            if (isLock)
-                Debug.Log("Lock");
-        }
-
         private void SetCheckGridTask()
         {
             _moveItemTask.SetCheckGridTask(_checkGridTask);

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CandyMatch3.Scripts.Gameplay.Interfaces
 {
-    public interface IAdjacentItem
+    public interface IExpandableItem
     {
         public void Expand(Vector3Int position);
     }

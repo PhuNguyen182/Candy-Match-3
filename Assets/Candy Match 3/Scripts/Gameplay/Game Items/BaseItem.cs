@@ -23,7 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public int ItemID => itemId;
         public bool IsLocking { get; set; }
 
-        public abstract bool CanBeReplace { get; }
+        public abstract bool Replacable { get; }
 
         public abstract bool IsMatchable { get; }
 

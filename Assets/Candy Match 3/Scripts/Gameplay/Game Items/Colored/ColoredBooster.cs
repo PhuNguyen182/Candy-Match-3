@@ -39,7 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override bool IsMoveable => true;
 
-        public override bool CanBeReplace => false;
+        public override bool Replacable => false;
 
         public bool IsActivated { get; set; }
 

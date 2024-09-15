@@ -29,11 +29,15 @@ namespace GlobalScripts.MessageBrokers
             _builder.AddMessageBroker<DecreaseMoveMessage>();
             _builder.AddMessageBroker<DecreaseTargetMessage>();
             _builder.AddMessageBroker<AsyncMessage<MoveTargetData>>();
-            _builder.AddMessageBroker<AddInGameBoosterMessage>();
+
             _builder.AddMessageBroker<CameraShakeMessage>();
+            _builder.AddMessageBroker<AddInGameBoosterMessage>();
             _builder.AddMessageBroker<UseInGameBoosterMessage>();
             _builder.AddMessageBroker<ActivateBoosterMessage>();
+
             _builder.AddMessageBroker<BoardStopMessage>();
+            _builder.AddMessageBroker<BreakExpandableMessage>();
+            _builder.AddMessageBroker<ExpandMessage>();
         }
     }
 }

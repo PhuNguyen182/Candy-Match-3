@@ -22,7 +22,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
         private IPublisher<AsyncMessage<MoveTargetData>> _moveToTargetPublisher;
 
-        public override bool CanBeReplace => false;
+        public override bool Replacable => false;
 
         public override bool IsMatchable => false;
 

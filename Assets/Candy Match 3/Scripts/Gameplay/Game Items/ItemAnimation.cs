@@ -42,6 +42,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private Coroutine _glowBoosterCoroutine;
         private CancellationToken _destroyToken;
 
+        public Animator ItemAnimator => itemAnimator;
+
         private void Awake()
         {
             _originalSortingOrder = itemRenderer.sortingOrder;

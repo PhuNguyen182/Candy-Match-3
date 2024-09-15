@@ -14,12 +14,15 @@ using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.LevelDesign.Databases;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
+using CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using CandyMatch3.Scripts.Gameplay.GameTasks;
 using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Common.SingleConfigs;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Statefuls;
+using CandyMatch3.Scripts.Common.CustomData;
+using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.Controllers
@@ -60,6 +63,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private BreakGridTask _breakGridTask;
         private MatchItemsTask _matchItemsTask;
         private SpawnItemTask _spawnItemTask;
+        private SpecialItemTasks _specialItemTasks;
         private CameraShakeTask _cameraShakeTask;
         private GameTaskManager _gameTaskManager;
 
@@ -125,6 +129,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _breakGridTask = new(_gridCellManager, _metaItemManager, _itemManager);
             _breakGridTask.AddTo(ref builder);
 
+            _specialItemTasks = new(_gridCellManager, _itemManager, _breakGridTask);
+            _specialItemTasks.AddTo(ref builder);
+
             _matchItemsTask = new(_gridCellManager, _breakGridTask);
             _matchItemsTask.AddTo(ref builder);
 
@@ -182,7 +189,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             for (int i = 0; i < levelModel.BreakableItemPositions.Count; i++)
             {
-                _itemManager.Add(levelModel.BreakableItemPositions[i]);
+                AddBreakableItem(levelModel.BreakableItemPositions[i]);
             }
 
             for (int i = 0; i < levelModel.UnbreakableItemPositions.Count; i++)
@@ -232,6 +239,14 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gameTaskManager.BuildTarget(levelModel);
             _gameTaskManager.BuildBoardMovementCheck();
             _gameTaskManager.SetInputActive(true);
+        }
+
+        private void AddBreakableItem(BlockItemPosition blockItemPosition)
+        {
+            _itemManager.Add(blockItemPosition);
+
+            if (blockItemPosition.ItemData.ItemType == ItemType.Chocolate)
+                _specialItemTasks.ExpandableItemTask.AddExpandablePosition(blockItemPosition.Position);
         }
 
         public Vector3 ConvertGridToWorld(Vector3Int position)

@@ -27,7 +27,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
         private IPublisher<AsyncMessage<MoveTargetData>> _moveToTargetPublisher;
 
-        public override bool CanBeReplace => true;
+        public override bool Replacable => true;
 
         public override bool IsMatchable => true;
 
