@@ -10,10 +10,10 @@ using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using Cysharp.Threading.Tasks;
-using MessagePipe;
 using CandyMatch3.Scripts.Common.CustomData;
 using CandyMatch3.Scripts.Common.Enums;
+using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
 {
@@ -93,16 +93,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
 
         private void Expand()
         {
+            int count = 0;
+            int maxCount = _expandableItemPositions.Count;
+            
+            if (maxCount <= 0)
+                return;
+
             if (!_canExpand)
             {
                 _canExpand = true;
                 return;
             }
 
-            int count = 0;
-            int maxCount = _expandableItemPositions.Count;
             List<Vector3Int> expandablePositions = new();
-
             while (expandablePositions.Count <= 0 && count < maxCount)
             {
                 int randIndex = Random.Range(0, maxCount);
@@ -131,6 +134,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
                 });
 
                 AddExpandablePosition(position);
+
                 if (replaceCell.BlockItem is IExpandableItem expandable)
                     expandable.Expand(position);
             }

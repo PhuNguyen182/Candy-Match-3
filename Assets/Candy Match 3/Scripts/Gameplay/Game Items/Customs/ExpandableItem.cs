@@ -42,8 +42,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             return true;
         }
 
-        public void Expand(Vector3Int position)
+        public void Expand(Vector3 position)
         {
+            PlayReplaceEffect();
             itemAnimation.ItemAnimator.SetTrigger(ItemAnimationHashKeys.StartHash);
             EffectManager.Instance.PlaySoundEffect(expandSound);
         }
@@ -78,7 +79,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public void PlayReplaceEffect()
         {
-            
+            EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
         }
 
         public void PlayStartEffect()

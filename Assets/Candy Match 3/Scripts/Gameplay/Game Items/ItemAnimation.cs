@@ -157,6 +157,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             
             else
             {
+                itemGraphics.SetFloatRendererProperty(ItemShaderProperties.HighlightAmount, 0);
                 ClearSuggestEffect(); // Should be place here to prevent destroy null reference
             }
         }
@@ -182,7 +183,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             {
                 elapsedTime += Time.deltaTime;
                 ratio = ease.Evaluate(elapsedTime / duration);
-                itemGraphics.SetFloatRendererProperty(ItemShaderProperties.SuggestHighlight, ratio);
+                itemGraphics.SetFloatRendererProperty(ItemShaderProperties.HighlightAmount, ratio);
 
                 if (elapsedTime > duration && !canStop)
                     elapsedTime = 0;
@@ -221,7 +222,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private void StopAllEffects()
         {
             ToggleSuggest(false);
-            itemGraphics.SetFloatRendererProperty(ItemShaderProperties.SuggestHighlight, 0);
+            itemGraphics.SetFloatRendererProperty(ItemShaderProperties.HighlightAmount, 0);
 
             if (_glowlightCoroutine != null)
                 StopCoroutine(_glowlightCoroutine);

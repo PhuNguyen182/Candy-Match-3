@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Color Item Material
-  m_Shader: {fileID: -6465566751694194690, guid: 5b7130e0a0508b7498386fce99d002bb, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 0fe4516a224066a4cbab5974b3d1d77e, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -73,6 +73,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
+    - _Highlight_Color: {r: 2.9960787, g: 2.9960787, b: 2.9960787, a: 1}
     - _Main_Color: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
