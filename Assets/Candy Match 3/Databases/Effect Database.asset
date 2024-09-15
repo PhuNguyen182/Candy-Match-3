@@ -29,6 +29,7 @@ MonoBehaviour:
   StripedHorizontal: {fileID: 1287472507236224, guid: 83ef916ae1a9e4057997885149566f6c, type: 3}
   StripedVertical: {fileID: 1287472507236224, guid: cd0653f58bc2140f8b4388d4781a7d8f, type: 3}
   WrappedEffect: {fileID: 1569230519641290, guid: 84033c06d13bb4793940be1c7cc553a7, type: 3}
+  BlastEffect: {fileID: 7773851690747187735, guid: fa47f5e07c00b094990f8eb667c9c631, type: 3}
   IceEffect: {fileID: 1957330277183174, guid: 2a647ce8a56c048dbb12d60a24d534bf, type: 3}
   HoneyEffect: {fileID: 1957330277183174, guid: 28523f5a3ce774d7b81dfe2d4253b417, type: 3}
   SyrupEffect: {fileID: 1957330277183174, guid: 7240fdedc3da540d1a329219624fdff9, type: 3}

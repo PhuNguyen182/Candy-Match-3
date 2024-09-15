@@ -55,6 +55,11 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             SimplePool.Spawn(effectDatabase.SpawnBoosterEffect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
+        public void SpawnBlastEffect(Vector3 position)
+        {
+            SimplePool.Spawn(effectDatabase.BlastEffect, EffectContainer.Transform, position, Quaternion.identity);
+        }
+
         public void SpawnColorEffect(CandyColor candyColor, Vector3 position)
         {
             GameObject effect = candyColor switch
@@ -157,6 +162,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             await UniTask.NextFrame(_token);
 
             SimplePool.PoolPreLoad(effectDatabase.WrappedEffect, 3, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.BlastEffect, 10, EffectContainer.Transform);
         }
     }
 }

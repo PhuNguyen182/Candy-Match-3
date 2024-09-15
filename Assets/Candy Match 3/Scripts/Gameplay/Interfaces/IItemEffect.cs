@@ -6,7 +6,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
     {
         public void PlayStartEffect();
         public void PlayMatchEffect();
-        public void PlayBreakEffect(int healthPoint);
+        public void PlayBreakEffect(int healthPoint = 1);
         public void PlayBoosterEffect(BoosterType boosterType);
         public void PlayReplaceEffect();
     }

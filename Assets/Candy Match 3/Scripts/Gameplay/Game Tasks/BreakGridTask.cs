@@ -92,7 +92,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                             blockItem.ItemBlast().Forget();
 
                             if (blockItem is IItemEffect effect)
-                                effect.PlayMatchEffect();
+                                effect.PlayBreakEffect();
 
                             ReleaseGridCell(gridCell);
                         }
@@ -156,7 +156,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         await blockItem.ItemBlast();
 
                         if (blockItem is IItemEffect effect)
-                            effect.PlayMatchEffect();
+                            effect.PlayBreakEffect();
 
                         ReleaseGridCell(gridCell);
                     }
@@ -332,7 +332,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     await blockItem.ItemBlast();
 
                     if (blockItem is IItemEffect effect)
-                        effect.PlayMatchEffect();
+                        effect.PlayBreakEffect();
 
                     ReleaseGridCell(gridCell);
                 }

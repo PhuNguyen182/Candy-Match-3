@@ -33,6 +33,7 @@ namespace CandyMatch3.Scripts.Common.Databases
         [SerializeField] public GameObject StripedHorizontal;
         [SerializeField] public GameObject StripedVertical;
         [SerializeField] public GameObject WrappedEffect;
+        [SerializeField] public GameObject BlastEffect;
 
         [Header("Stateful Effects")]
         [SerializeField] public GameObject IceEffect;
