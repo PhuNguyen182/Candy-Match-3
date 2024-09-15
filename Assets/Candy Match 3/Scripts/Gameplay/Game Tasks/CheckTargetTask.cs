@@ -38,7 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private EndGameTask _endGameTask;
         private IDisposable _disposable;
 
-        public Action<bool> OnEndGame;
+        public Action<EndResult> OnEndGame;
 
         public CheckTargetTask(TargetDatabase targetDatabase, MainGamePanel mainGameScreen)
         {
@@ -116,12 +116,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (_moveCount >= 0 && remainCount <= 0)
             {
-                OnEndGame?.Invoke(true);
+                OnEndGame?.Invoke(EndResult.Win);
             }
 
             else if(_moveCount == 0 && remainCount > 0)
             {
-                OnEndGame?.Invoke(false);
+                OnEndGame?.Invoke(EndResult.Lose);
             }
         }
 

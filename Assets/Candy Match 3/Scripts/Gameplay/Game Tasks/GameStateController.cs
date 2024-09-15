@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using Cysharp.Threading.Tasks;
 using Stateless;
@@ -33,7 +34,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly SuggestTask _suggestTask;
 
         private readonly StateMachine<State, Trigger> _gameStateMachine;
-        private readonly StateMachine<State, Trigger>.TriggerWithParameters<bool> _endGameTrigger;
+        private readonly StateMachine<State, Trigger>.TriggerWithParameters<EndResult> _endGameTrigger;
 
         public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask
             , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask)
@@ -47,7 +48,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkTargetTask.OnEndGame = EndGame;
 
             _gameStateMachine = new StateMachine<State, Trigger>(State.Start);
-            _endGameTrigger = _gameStateMachine.SetTriggerParameters<bool>(Trigger.EndGame);
+            _endGameTrigger = _gameStateMachine.SetTriggerParameters<EndResult>(Trigger.EndGame);
 
             _gameStateMachine.Configure(State.Start)
                              .Permit(Trigger.Play, State.Playing)
@@ -88,19 +89,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _inputProcessTask.IsActive = true;
         }
 
-        private void EndGame(bool isWin)
+        private void EndGame(EndResult result)
         {
             if (_gameStateMachine.CanFire(_endGameTrigger.Trigger))
             {
-                _gameStateMachine.Fire(_endGameTrigger, isWin);
+                _gameStateMachine.Fire(_endGameTrigger, result);
             }
         }
 
-        private async UniTask OnEndGame(bool isWin)
+        private async UniTask OnEndGame(EndResult result)
         {
             _inputProcessTask.IsActive = false;
 
-            if (isWin)
+            if (result == EndResult.Win)
             {
                 await _endGameTask.OnWinGame();
                 await _endGameScreen.ShowWinGame();
