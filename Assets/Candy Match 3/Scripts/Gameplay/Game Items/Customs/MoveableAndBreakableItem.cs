@@ -55,7 +55,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
                 HasMoveTask = false
             });
 
-            PlayBreakEffect(_healthPoint);
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -71,6 +70,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             if(_healthPoint > 0)
             {
                 // Do logic and effect things here
+                PlayBreakEffect();
                 SetItemSpriteViaHealthPoint();
                 return false;
             }
@@ -119,7 +119,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             
         }
 
-        public void PlayBreakEffect(int healthPoint)
+        public void PlayBreakEffect()
         {
             EffectManager.Instance.PlaySoundEffect(breakSound);
             EffectManager.Instance.SpawnSpecialEffect(itemType, WorldPosition);

@@ -13,6 +13,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
     public class UnmoveableAndBreakableItem : BaseItem, ISetHealthPoint, IAdjcentBreakable, IItemAnimation, IItemEffect
     {
         [SerializeField] private Sprite[] itemHealthStates;
+        [SerializeField] private ItemType[] effectTypes;
         [SerializeField] private ItemAnimation itemAnimation;
         [SerializeField] private SoundEffectType breakSound;
 
@@ -55,7 +56,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
                 HasMoveTask = false
             });
 
-            PlayBreakEffect(_healthPoint);
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -71,6 +71,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             if (_healthPoint > 0)
             {
                 // Do logic and effect things here
+                PlayBreakEffect();
                 SetItemSpriteViaHealthPoint();
                 return false;
             }
@@ -119,10 +120,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             
         }
 
-        public void PlayBreakEffect(int healthPoint)
+        public void PlayBreakEffect()
         {
+            int index = _healthPoint;
             EffectManager.Instance.PlaySoundEffect(breakSound);
-            EffectManager.Instance.SpawnSpecialEffect(itemType, WorldPosition);
+            EffectManager.Instance.SpawnSpecialEffect(effectTypes[index], WorldPosition);
         }
 
         public void PlayReplaceEffect()

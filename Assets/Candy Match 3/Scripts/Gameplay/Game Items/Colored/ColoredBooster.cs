@@ -287,7 +287,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
         }
 
-        public void PlayBreakEffect(int healthPoint)
+        public void PlayBreakEffect()
         {
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);

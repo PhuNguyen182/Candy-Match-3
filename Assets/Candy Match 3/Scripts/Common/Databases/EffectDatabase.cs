@@ -24,6 +24,7 @@ namespace CandyMatch3.Scripts.Common.Databases
         [SerializeField] public GameObject BiscuitBreakEffect;
         [SerializeField] public GameObject ChocolateBreakEffect;
         [SerializeField] public GameObject MarshmallowBreakEffect;
+        [SerializeField] public GameObject CreamBreakEffect;
         [SerializeField] public GameObject CollectibleEffect;
 
         [Header("Booster Effects")]

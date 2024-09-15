@@ -84,6 +84,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 ItemType.Biscuit => effectDatabase.BiscuitBreakEffect,
                 ItemType.Chocolate => effectDatabase.ChocolateBreakEffect,
                 ItemType.Marshmallow => effectDatabase.MarshmallowBreakEffect,
+                ItemType.Cream => effectDatabase.CreamBreakEffect,
                 ItemType.Cherry => effectDatabase.ChocolateBreakEffect,
                 ItemType.Watermelon => effectDatabase.ChocolateBreakEffect,
                 _ => null

@@ -66,7 +66,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             
         }
 
-        public void PlayBreakEffect(int healthPoint)
+        public void PlayBreakEffect()
         {
             EffectManager.Instance.PlaySoundEffect(breakSound);
             EffectManager.Instance.SpawnSpecialEffect(ItemType.Chocolate, WorldPosition);
@@ -96,7 +96,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
                 HasMoveTask = false
             });
 
-            PlayBreakEffect(0);
             itemAnimation.ItemAnimator.SetTrigger(ItemAnimationHashKeys.KillHash);
             SimplePool.Despawn(this.gameObject);
         }
