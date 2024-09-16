@@ -19,7 +19,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         [SerializeField] private TweenValueEffect scoreTween;
         [SerializeField] private Animator popupAnimator;
 
-        private GameObject _background;
         private ReactiveProperty<int> _reactiveScore = new(0);
         private readonly int _closeHash = Animator.StringToHash("Close");
         
@@ -33,11 +32,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             nextButton.onClick.AddListener(() => OnNextClicked().Forget());
             scoreTween.BindInt(_reactiveScore, ShowScore);
             _reactiveScore.Value = 0;
-        }
-
-        public void SetBackground(GameObject background)
-        {
-            _background = background;
         }
 
         public UniTask ShowWinGame()
@@ -64,12 +58,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         private async UniTask OnNextClicked()
         {
-            await Close();
+            await CloseAnimation();
             _source.TrySetResult();
             gameObject.SetActive(false);
         }
 
-        private async UniTask Close()
+        private async UniTask CloseAnimation()
         {
             popupAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);

@@ -13,7 +13,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         [SerializeField] private Button continueButton;
         [SerializeField] private Animator popupAnimator;
 
-        private readonly int _closeHash = Animator.StringToHash("Close");
+        private readonly int _closeHash = Animator.StringToHash("CloseAnimation");
 
         private void Awake()
         {

@@ -1,5 +1,6 @@
 using R3;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -101,6 +102,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _targetCollections = _mainGamePanel.TargetElements;
         }
 
+        public List<TargetElement> GetRemainTargets()
+        {
+            return _targetCollections.Values.ToList();
+        }
+
         public bool IsAllTargetsStopped()
         {
             return _moveToTargetTasks.Count <= 0;
@@ -111,16 +117,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             int remainCount = 0;
             foreach (var targetCount in _targetCounts)
             {
-                remainCount = remainCount + targetCount.Value;
+                int count = targetCount.Value > 0 ? targetCount.Value : 0;
+                remainCount = remainCount + count;
             }
 
             if (_moveCount >= 0 && remainCount <= 0)
             {
+                UpdateAll();
                 OnEndGame?.Invoke(EndResult.Win);
             }
 
             else if(_moveCount == 0 && remainCount > 0)
             {
+                UpdateAll();
                 OnEndGame?.Invoke(EndResult.Lose);
             }
         }
@@ -144,6 +153,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _moveCount = _moveCount + move;
             UpdateMove();
             CheckEndGame();
+            UpdateAll();
         }
 
         public void SetEndGameTask(EndGameTask endGameTask)

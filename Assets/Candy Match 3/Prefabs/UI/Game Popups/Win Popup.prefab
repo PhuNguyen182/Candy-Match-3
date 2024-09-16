@@ -37334,7 +37334,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "You reached the \nrequired score points!"
+  m_text: "You reached the \nrequired goals!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 51a655c7a8404cd4d99f4276f99b6b75, type: 2}
   m_sharedMaterial: {fileID: -7889157667896465159, guid: 51a655c7a8404cd4d99f4276f99b6b75, type: 2}

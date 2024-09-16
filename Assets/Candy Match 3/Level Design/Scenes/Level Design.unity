@@ -3497,7 +3497,7 @@ MonoBehaviour:
     Star2Score: 5000
     Star3Score: 8000
   targetModels:
-  - TargetAmount: 3
+  - TargetAmount: 30
     Target: 1
   - TargetAmount: 4
     Target: 3

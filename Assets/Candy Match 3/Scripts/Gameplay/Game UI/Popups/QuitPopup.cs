@@ -27,8 +27,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
             _token = this.GetCancellationTokenOnDestroy();
             continueButton.onClick.AddListener(() => Continue().Forget());
 
-            quitButton.onClick.AddListener(Quit);
-            closeButton.onClick.AddListener(Quit);
+            quitButton.onClick.AddListener(() => Quit().Forget());
+            closeButton.onClick.AddListener(() => Quit().Forget());
         }
 
         private async UniTask Continue()
@@ -39,8 +39,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
             gameObject.SetActive(false);
         }
 
-        private void Quit()
+        private async UniTask Quit()
         {
+            await Close();
             OnPlayerQuit?.Invoke();
         }
 
@@ -53,6 +54,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         private void OnDisable()
         {
             OnContinueAddMove = null;
+            OnContinuePlaying = null;
+            OnPlayerQuit = null;
         }
     }
 }
