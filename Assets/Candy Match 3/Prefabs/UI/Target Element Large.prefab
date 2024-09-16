@@ -88,7 +88,6 @@ GameObject:
   - component: {fileID: 224048326927698642}
   - component: {fileID: 222686904456663800}
   - component: {fileID: 114213162345566876}
-  - component: {fileID: 95467959559938668}
   m_Layer: 5
   m_Name: Finish
   m_TagString: Untagged
@@ -153,27 +152,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &95467959559938668
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1275690485990228}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bd2fbe37eebf0354a9befcffcd68462a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1309316068847824
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,14 +415,14 @@ MonoBehaviour:
   m_text: 300
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: bbec09e635b7ddc4088c9161f63f474a, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 2eddd3511599fc5479f0221d7d25d8d6, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 60389cd36da2ad546bb482972be1bc16, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
