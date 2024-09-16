@@ -81,7 +81,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     continue;
 
                 IGridCell gridCell = _gridCellManager.Get(columnListPositions[i]);
-                if (gridCell != null)
+                if (gridCell != null && !gridCell.IsLocked)
                     gridCell.LockStates = LockStates.Preparing;
             }
 

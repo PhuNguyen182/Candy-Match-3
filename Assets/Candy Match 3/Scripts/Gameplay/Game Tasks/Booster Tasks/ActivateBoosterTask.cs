@@ -99,7 +99,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             if (!gridCell.HasItem)
                 return;
 
-            gridCell.LockStates = LockStates.Breaking;
             IBlockItem blockItem = gridCell.BlockItem;
 
             if (blockItem is IBooster booster)
@@ -109,6 +108,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 booster.IsActivated = true;
                 ActiveBoosterCount = ActiveBoosterCount + 1;
+                gridCell.LockStates = LockStates.Breaking;
 
                 await booster.Activate();
                 await UniTask.NextFrame(PlayerLoopTiming.FixedUpdate);

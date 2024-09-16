@@ -79,7 +79,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             purchaseButton.onClick.AddListener(PurchaseBooster);
 
             coinTweenEffect.BindInt(_reactiveCoin, UpdateCoin);
-            _reactiveCoin.Value = 0;
+            _reactiveCoin.Value = 0; // Show the current value of coin in game data
         }
 
         public void SetBoosterPack(InGameBoosterPack boosterPack)
