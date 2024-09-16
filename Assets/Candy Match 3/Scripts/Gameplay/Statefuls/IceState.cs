@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Enums;
+using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.Statefuls
 {
@@ -18,11 +21,15 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         private Sprite _state;
 
+        private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
+
         public override int MaxHealthPoint => _maxHealthPoint;
 
         public override StatefulLayer StatefulLayer => StatefulLayer.Top;
 
         public override StatefulGroupType GroupType => StatefulGroupType.Ice;
+
+        public override TargetEnum TargetType => TargetEnum.Ice;
 
         public override bool IsLocked => _isLocked;
 
@@ -62,6 +69,13 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.Ice);
             EffectManager.Instance.SpawnStatefulEffect(GroupType, position);
+
+            _decreaseTargetPublisher.Publish(new DecreaseTargetMessage
+            {
+                TargetType = TargetType,
+                Task = UniTask.CompletedTask,
+                HasMoveTask = false
+            });
         }
 
         public override void ResetState()
@@ -72,7 +86,7 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override void InitMessages()
         {
-            
+            _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
         }
     }
 }
