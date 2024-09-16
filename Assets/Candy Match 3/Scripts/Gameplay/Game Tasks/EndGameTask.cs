@@ -26,7 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkTargetTask = checkTargetTask;
             _checkGameBoardMovementTask = checkGameBoardMovementTask;
             _activateBoosterTask = activateBoosterTask;
-            _waitTimeAmount = TimeSpan.FromSeconds(0.5f);
+            _waitTimeAmount = TimeSpan.FromSeconds(0.3f);
 
             _cts = new();
             _token = _cts.Token;
