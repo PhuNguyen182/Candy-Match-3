@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
-using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen

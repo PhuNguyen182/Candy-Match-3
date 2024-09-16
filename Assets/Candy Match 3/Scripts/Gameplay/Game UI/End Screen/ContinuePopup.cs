@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using GlobalScripts.Effects.Tweens;
+using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using Cysharp.Threading.Tasks;
 using TMPro;
-using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 {
@@ -50,11 +50,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         {
             quitPopup.OnContinueAddMove = () => 
             { 
-                gameObject.SetActive(true); 
+                // If player click Continue in exit popup, turn off
+                // it and show back this continue popup
+                gameObject.SetActive(true);
             };
 
             quitPopup.OnPlayerQuit = () =>
             {
+                // If player press Quit, the quit level immediately
                 _completionSource.TrySetResult(false);
             };
 
