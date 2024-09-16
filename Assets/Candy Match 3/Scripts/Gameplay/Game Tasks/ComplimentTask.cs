@@ -66,7 +66,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _ => ComplimentEnum.None
             };
 
-            if(compliment != ComplimentEnum.None)
+            if (count > 8)
+                compliment = ComplimentEnum.Super;
+
+            if (compliment != ComplimentEnum.None)
             {
                 _characterEmotion.ShowHappyState();
                 EffectManager.Instance.ShowCompliment(compliment);
