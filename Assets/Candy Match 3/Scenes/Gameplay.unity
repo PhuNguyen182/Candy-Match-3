@@ -7539,6 +7539,7 @@ MonoBehaviour:
   moveCount: {fileID: 317415197}
   scoreViews: {fileID: 1947421294}
   targetViews: {fileID: 602465990}
+  characterEmotion: {fileID: 2661692479216090712}
 --- !u!1 &2100070800
 GameObject:
   m_ObjectHideFlags: 0
@@ -8030,8 +8031,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2661692479216090711}
+  - component: {fileID: 2661692479216090712}
   m_Layer: 5
-  m_Name: Girl
+  m_Name: Girl Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8396,7 +8398,7 @@ GameObject:
   - component: {fileID: 4977624870230012178}
   - component: {fileID: 928200597364829019}
   m_Layer: 5
-  m_Name: Girl
+  m_Name: Girl Animation
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8430,8 +8432,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -1.9998279, y: 1.0006332, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4015542870654722311}
   m_Father: {fileID: 4977624870230012178}
@@ -8569,6 +8571,20 @@ RectTransform:
   m_AnchoredPosition: {x: -27.6, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2661692479216090712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377561320883111765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b29e7ed6f10ff2242a4a7f4bd360c2a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterAnimator: {fileID: 928200597364829019}
+  happyEffect: {fileID: 6160627193401300932}
 --- !u!222 &3050320715451423474
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8648,7 +8664,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 0
-    scalar: 0
+    scalar: 0.166
     minScalar: 0
     maxCurve:
       serializedVersion: 2
@@ -13454,8 +13470,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.000049591064, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2188163733333920058}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13937,7 +13953,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 0
-    scalar: 0
+    scalar: 0.166
     minScalar: 0
     maxCurve:
       serializedVersion: 2

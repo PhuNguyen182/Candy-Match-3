@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.GridCells;
@@ -14,6 +15,7 @@ using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
 using GlobalScripts.Comparers;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -22,6 +24,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly MatchRule _matchRule;
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
+        private readonly IPublisher<ComplimentMessage> _complimentPublisher;
 
         private CheckGridTask _checkGridTask;
         private Vector3IntComparer _vector3IntComparer;
@@ -49,6 +52,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _token = _cts.Token;
 
             _vector3IntComparer = new();
+            _complimentPublisher = GlobalMessagePipe.GetPublisher<ComplimentMessage>();
+
             DisposableBuilder builder = Disposable.CreateBuilder();
             _matchRule.AddTo(ref builder);
             _disposable = builder.Build();
@@ -150,6 +155,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         if(range.size != Vector3Int.zero)
                             _checkGridTask.CheckRange(range);
                     }
+
+                    _complimentPublisher.Publish(new ComplimentMessage());
                 }
             }
         }

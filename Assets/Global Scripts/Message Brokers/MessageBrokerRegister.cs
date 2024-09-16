@@ -38,6 +38,7 @@ namespace GlobalScripts.MessageBrokers
             _builder.AddMessageBroker<BoardStopMessage>();
             _builder.AddMessageBroker<BreakExpandableMessage>();
             _builder.AddMessageBroker<ExpandMessage>();
+            _builder.AddMessageBroker<ComplimentMessage>();
         }
     }
 }

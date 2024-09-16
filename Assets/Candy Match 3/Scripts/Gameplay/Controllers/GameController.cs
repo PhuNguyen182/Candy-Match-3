@@ -56,6 +56,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private BoardInput boardInput;
 
         private ItemManager _itemManager;
+        private ComplimentTask _complimentTask;
         private FactoryManager _factoryManager;
         private MetaItemManager _metaItemManager;
         private GridCellManager _gridCellManager;
@@ -137,6 +138,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _spawnItemTask = new(_gridCellManager, _itemManager);
             _spawnItemTask.AddTo(ref builder);
+
+            _complimentTask = new(mainGamePanel.CharacterEmotion);
+            _complimentTask.AddTo(ref builder);
 
             _cameraShakeTask = new(impulseSource);
             _cameraShakeTask.AddTo(ref builder);

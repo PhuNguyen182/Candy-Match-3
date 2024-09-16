@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Miscs;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using GlobalScripts.Effects;
 
@@ -40,5 +41,8 @@ namespace CandyMatch3.Scripts.Common.Databases
         [SerializeField] public GameObject IceEffect;
         [SerializeField] public GameObject HoneyEffect;
         [SerializeField] public GameObject SyrupEffect;
+
+        [Header("Miscs")]
+        [SerializeField] public ComplimentText Compliment;
     }
 }

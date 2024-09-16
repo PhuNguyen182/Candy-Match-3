@@ -41,6 +41,14 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             itemSoundEffect.PlaySound(sound);
         }
 
+        public void ShowCompliment(ComplimentEnum compliment)
+        {
+            ComplimentText complimentText = SimplePool.Spawn(effectDatabase.Compliment, UIEffectContainer.Transform
+                                                            , UIEffectContainer.Transform.position, Quaternion.identity);
+            complimentText.transform.localScale = Vector3.one;
+            complimentText.ShowCompliment(compliment);
+        }
+
         public TargetCompletedObject SpawnFlyCompletedTarget(TargetEnum targetType, Vector3 position)
         {
             Sprite target = targetDatabase.GetTargetIcon(targetType);
