@@ -3490,14 +3490,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileDatabase: {fileID: 11400000, guid: f6726b3f937ba334f8580c6528205f29, type: 2}
   gridInformation: {fileID: 1640025282}
-  targetMove: 30
+  targetMove: 3
   scoreRule:
     MaxScore: 10000
     Star1Score: 2000
     Star2Score: 5000
     Star3Score: 8000
   targetModels:
-  - TargetAmount: 300
+  - TargetAmount: 3
     Target: 1
   - TargetAmount: 4
     Target: 3

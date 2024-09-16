@@ -2448,7 +2448,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 559979014}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
@@ -4194,8 +4194,8 @@ SortingGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1049017512}
   m_Enabled: 0
-  m_SortingLayerID: -302537719
-  m_SortingLayer: 13
+  m_SortingLayerID: -386444697
+  m_SortingLayer: 11
   m_SortingOrder: 1
   m_SortAtRoot: 0
 --- !u!1 &1052193549
@@ -7175,6 +7175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1680593876}
+  - component: {fileID: 1680593878}
   - component: {fileID: 1680593877}
   m_Layer: 5
   m_Name: Effect Container
@@ -7215,6 +7216,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isAwakeInit: 1
+--- !u!223 &1680593878
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1680593875}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: 1129346501
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &1707640711
 GameObject:
   m_ObjectHideFlags: 0

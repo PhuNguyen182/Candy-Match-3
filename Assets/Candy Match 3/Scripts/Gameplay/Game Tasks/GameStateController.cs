@@ -52,7 +52,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _gameStateMachine.Configure(State.Start)
                              .Permit(Trigger.Play, State.Playing)
-                             .OnEntry(StartGame);
+                             .OnActivate(StartGame);
 
             _gameStateMachine.Configure(State.Playing)
                              .OnEntryFrom(Trigger.Play, PlayGame)
@@ -61,7 +61,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                              .Permit(Trigger.Quit, State.Quit);
 
             _gameStateMachine.Configure(State.EndGame)
-                             .OnEntryFromAsync(_endGameTrigger, value => OnEndGame(value))
+                             .OnEntryFrom(_endGameTrigger, value => OnEndGame(value).Forget())
                              .Permit(Trigger.Continue, State.Playing)
                              .Permit(Trigger.Quit, State.Quit);
 
