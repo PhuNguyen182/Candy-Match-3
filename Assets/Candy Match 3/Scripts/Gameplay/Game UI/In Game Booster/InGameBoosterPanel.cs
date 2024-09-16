@@ -11,11 +11,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
 {
     public class InGameBoosterPanel : MonoBehaviour
     {
+        [Header("Booster Buttons")]
         [SerializeField] private BoosterButton breakBooster;
         [SerializeField] private BoosterButton blastBooster;
         [SerializeField] private BoosterButton swapBooster;
         [SerializeField] private BoosterButton colorfulBooster;
+        
+        [Space(10)]
         [SerializeField] private InGameBoosterMessage inGameBoosterMessage;
+
+        [Space(10)]
         [SerializeField] private SortingGroup levelSortingGroup;
         [SerializeField] private SortingGroup effectSortingGroup;
 

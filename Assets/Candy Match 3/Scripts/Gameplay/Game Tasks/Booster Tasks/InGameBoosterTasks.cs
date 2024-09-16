@@ -119,7 +119,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                     IDisposable d2 = boosterButton.OnClickObserver.Where(value => boosterAmount.Value <= 0 && !value.IsFree && !value.IsActive 
                                                   && _inputProcessTask.IsActive && !_checkGameBoardMovementTask.IsBoardLock)
-                                                  .Subscribe(value => ShowBuyBoosterPopup(booster.BoosterType));
+                                                  .Subscribe(value => ShowBuyBoosterPopup(booster.BoosterType).Forget());
 
                     boosterDisposables.Add(d1);
                     boosterDisposables.Add(d2);
@@ -204,12 +204,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _inGameBoosterPanel.SetBoosterPanelActive(true).Forget();
         }
 
-        private void ShowBuyBoosterPopup(InGameBoosterType boosterType)
+        private async UniTask ShowBuyBoosterPopup(InGameBoosterType boosterType)
         {
-            var popup = InGameBoosterPopup.Create(BuyBoosterPopupPath);
+            SetSuggestActive(false);
+            _inputProcessTask.IsActive = false;
+
+            var popup = await InGameBoosterPopup.CreateFromAddress(BuyBoosterPopupPath);
             InGameBoosterPack boosterPack = _inGameBoosterPackDatabase.BoosterPackCollections[boosterType];
+
             popup.SetBoosterInfo(boosterType);
             popup.SetBoosterPack(boosterPack);
+            popup.OnClose = OnBuyBoosterPopupClose;
+        }
+
+        private void OnBuyBoosterPopupClose()
+        {
+            SetSuggestActive(true);
+            _inputProcessTask.IsActive = true;
         }
 
         private void PreloadBuyBoosterPopup()

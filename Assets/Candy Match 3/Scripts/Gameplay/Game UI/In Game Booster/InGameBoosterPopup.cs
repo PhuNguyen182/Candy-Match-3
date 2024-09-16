@@ -28,6 +28,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         }
 
         [SerializeField] private Animator popupAnimator;
+        [SerializeField] private Animator backgroundAnimator;
         [SerializeField] private AnimationClip closeClip;
         [SerializeField] private TweenValueEffect coinTweenEffect;
         [SerializeField] private InGameBoosterType boosterType;
@@ -56,6 +57,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         private Dictionary<InGameBoosterType, InGameBoosterBoxInfo> _boxInfoCollection;
         private ReactiveProperty<int> _reactiveCoin = new();
 
+        public Action OnClose;
+
         public Dictionary<InGameBoosterType, InGameBoosterBoxInfo> PopupInfoCollection
         {
             get
@@ -76,7 +79,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             popupCanvas.worldCamera = Camera.main;
 
             closeButton.onClick.AddListener(() => ClosePopup().Forget());
-            purchaseButton.onClick.AddListener(PurchaseBooster);
+            purchaseButton.onClick.AddListener(() => PurchaseBooster().Forget());
 
             coinTweenEffect.BindInt(_reactiveCoin, UpdateCoin);
             _reactiveCoin.Value = 0; // Show the current value of coin in game data
@@ -96,9 +99,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             SetPopupInfo(info);
         }
 
-        private void PurchaseBooster()
+        private async UniTask PurchaseBooster()
         {
+            int price = _boosterPack.Price; // Use this value to check remain coins
+
             coinEffect.Play();
+            _addInGameBoosterPublisher.Publish(new AddInGameBoosterMessage
+            {
+                BoosterType = boosterType,
+                Amount = _boosterPack.Amount
+            });
+
+            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
+            await ClosePopup();
         }
 
         private void SetPopupInfo(InGameBoosterBoxInfo info)
@@ -116,8 +129,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         private async UniTask ClosePopup()
         {
             popupAnimator.SetTrigger(_closeHash);
+            backgroundAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(closeClip.length), cancellationToken: _token);
+
             base.DoClose();
+            OnClose?.Invoke();
+            OnClose = null;
         }
     }
 }
