@@ -56,7 +56,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private void OnCounterEnd(int count)
         {
             if (count == 0)
+            {
+                _complimentCounter.Value = 0;
                 return;
+            }
 
             ComplimentEnum compliment = count switch
             {
