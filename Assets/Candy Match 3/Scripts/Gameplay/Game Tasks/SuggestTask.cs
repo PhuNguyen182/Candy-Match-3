@@ -116,14 +116,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 AvailableSuggest suggest = _detectMoveTask.GetPossibleSwap(_suggestCount);
                 AvailableSuggest detectedSuggest = ExportSuggestResult(suggest);
 
-                for (int i = 0; i < detectedSuggest.Positions.Count; i++)
+                if (detectedSuggest.Positions != null)
                 {
-                    Vector3Int position = detectedSuggest.Positions[i];
-                    IGridCell gridCell = _gridCellManager.Get(position);
-                    IBlockItem blockItem = gridCell.BlockItem;
+                    for (int i = 0; i < detectedSuggest.Positions.Count; i++)
+                    {
+                        Vector3Int position = detectedSuggest.Positions[i];
+                        IGridCell gridCell = _gridCellManager.Get(position);
+                        IBlockItem blockItem = gridCell.BlockItem;
 
-                    if (blockItem is IItemSuggest itemSuggest)
-                        _itemSuggests.Add(itemSuggest);
+                        if (blockItem is IItemSuggest itemSuggest)
+                            _itemSuggests.Add(itemSuggest);
+                    }
                 }
             }
 
