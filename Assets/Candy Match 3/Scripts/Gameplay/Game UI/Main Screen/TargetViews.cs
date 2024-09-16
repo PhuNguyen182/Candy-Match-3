@@ -9,7 +9,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
     public class TargetViews : MonoBehaviour
     {
         [SerializeField] private Transform targetContainer;
-        [SerializeField] private TargetElement targetElement;
         [SerializeField] private TargetElement[] targetElements;
         [SerializeField] private GameObject targetPair1;
         [SerializeField] private GameObject targetPair2;
