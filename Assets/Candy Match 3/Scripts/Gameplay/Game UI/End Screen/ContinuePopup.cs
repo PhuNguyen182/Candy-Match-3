@@ -55,9 +55,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
                 gameObject.SetActive(true);
             };
 
-            quitPopup.OnPlayerQuit = () =>
+            quitPopup.OnPlayerContinueQuit = () =>
             {
-                // If player press Quit, the quit level immediately
+                // If player press OpenQuitPopup, the quit level immediately
                 _completionSource.TrySetResult(false);
             };
 

@@ -40,7 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         public void UpdateScore(int score)
         {
-            scoreText.text = $"Your score: <color=#B83555>{score:N1, ru-RU}</color>";
+            scoreText.text = $"Your score: <color=#B83555>{score}</color>";
         }
 
         public void ShowRemainTarget(List<TargetElement> remainTargets)

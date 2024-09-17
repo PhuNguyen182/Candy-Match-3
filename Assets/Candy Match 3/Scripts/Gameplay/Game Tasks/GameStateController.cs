@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using Cysharp.Threading.Tasks;
@@ -32,21 +33,28 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly InputProcessTask _inputProcessTask;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly EndGameScreen _endGameScreen;
+        private readonly SettingSidePanel _settingSidePanel;
         private readonly SuggestTask _suggestTask;
 
         private readonly StateMachine<State, Trigger> _gameStateMachine;
         private readonly StateMachine<State, Trigger>.TriggerWithParameters<EndResult> _endGameTrigger;
 
         public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask
-            , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask)
+            , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask, SettingSidePanel settingSidePanel)
         {
             _endGameTask = endGameTask;
             _checkTargetTask = checkTargetTask;
             _inputProcessTask = inputProcessTask;
             _endGameScreen = endGameScreen;
+            _settingSidePanel = settingSidePanel;
             _suggestTask = suggestTask;
 
             _checkTargetTask.OnEndGame = EndGame;
+            _settingSidePanel.OnSetting = SetPlayerActive;
+            _settingSidePanel.QuitPopup.OnPlayerQuit = () =>
+            {
+                QuitGame(EndResult.Lose);
+            };
 
             _gameStateMachine = new StateMachine<State, Trigger>(State.Start);
             _endGameTrigger = _gameStateMachine.SetTriggerParameters<EndResult>(Trigger.EndGame);
@@ -74,8 +82,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void StartGame()
         {
-            _suggestTask.IsActive = false;
-            _inputProcessTask.IsActive = false;
+            SetPlayerActive(false);
 
             if (_gameStateMachine.CanFire(Trigger.Play))
             {
@@ -85,14 +92,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void PlayGame()
         {
-            _suggestTask.IsActive = true;
-            _inputProcessTask.IsActive = true;
+            SetPlayerActive(true);
         }
 
         private void PlayContinue()
         {
-            _suggestTask.IsActive = true;
-            _inputProcessTask.IsActive = true;
+            SetPlayerActive(true);
         }
 
         private void EndGame(EndResult result)
@@ -105,9 +110,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private async UniTask OnEndGame(EndResult result)
         {
-            _suggestTask.Suggest(false);
-            _suggestTask.IsActive = false;
-            _inputProcessTask.IsActive = false;
+            SetPlayerActive(false);
             _endGameScreen.ShowBackground(true);
 
             if (result == EndResult.Win)
@@ -135,6 +138,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     QuitGame(result);
                 }
             }
+        }
+
+        private void SetPlayerActive(bool isActive)
+        {
+            if (!isActive)
+                _suggestTask.Suggest(false);
+
+            _suggestTask.IsActive = isActive;
+            _inputProcessTask.IsActive = isActive;
         }
 
         private void AddMove()

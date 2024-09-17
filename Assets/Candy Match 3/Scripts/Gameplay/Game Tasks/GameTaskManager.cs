@@ -16,6 +16,7 @@ using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks;
 using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -45,8 +46,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask
             , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase
-            , MainGamePanel mainGamePanel, EndGameScreen endGameScreen, TargetDatabase targetDatabase, InGameBoosterPanel inGameBoosterPanel
-            , InGameBoosterPackDatabase inGameBoosterPackDatabase, SpecialItemTask specialItemTask)
+            , MainGamePanel mainGamePanel, EndGameScreen endGameScreen, SettingSidePanel settingSidePanel, TargetDatabase targetDatabase
+            , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase, SpecialItemTask specialItemTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -97,13 +98,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _suggestTask.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
             _inputProcessor.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
 
-            _endGameTask = new(_checkTargetTask, _checkGameBoardMovementTask, _activateBoosterTask);
+            _endGameTask = new(_checkTargetTask, _checkGameBoardMovementTask, _activateBoosterTask, endGameScreen);
             _endGameTask.AddTo(ref builder);
 
             _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 
-            _gameStateController = new(_inputProcessor, _checkTargetTask, _endGameTask, endGameScreen, _suggestTask);
+            _gameStateController = new(_inputProcessor, _checkTargetTask, _endGameTask, endGameScreen, _suggestTask, settingSidePanel);
             _gameStateController.AddTo(ref builder);
             _specialItemTask = specialItemTask;
 

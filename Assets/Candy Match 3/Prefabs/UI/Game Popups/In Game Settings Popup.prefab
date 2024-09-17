@@ -437,7 +437,6 @@ GameObject:
   - component: {fileID: 224514357394969776}
   - component: {fileID: 95669350199544250}
   - component: {fileID: 225149327996989942}
-  - component: {fileID: 3547381410821883105}
   m_Layer: 5
   m_Name: In Game Settings Popup
   m_TagString: Untagged
@@ -500,23 +499,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &3547381410821883105
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1977597825134242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 479d2d5fd4001674c81c9ce6fe6ac7ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  background: {fileID: 0}
-  quitButton: {fileID: 3480973806927726629}
-  musicButton: {fileID: 4287376364355908874}
-  soundButton: {fileID: 4100117118808650002}
-  animator: {fileID: 95669350199544250}
 --- !u!1 &3443318515359373551
 GameObject:
   m_ObjectHideFlags: 0

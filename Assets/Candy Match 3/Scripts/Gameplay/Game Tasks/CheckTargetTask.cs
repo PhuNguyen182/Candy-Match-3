@@ -40,6 +40,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private IDisposable _disposable;
 
         public Action<EndResult> OnEndGame;
+        public int Score => _score;
+        public int Stars
+        {
+            get
+            {
+                if (_score >= _scoreRule.Star3Score)
+                    return 3;
+                
+                else if (_score >= _scoreRule.Star2Score)
+                    return 2;
+                
+                else if (_score >= _scoreRule.Star1Score)
+                    return 1;
+
+                return 0;
+            }
+        }
 
         public CheckTargetTask(TargetDatabase targetDatabase, MainGamePanel mainGameScreen)
         {

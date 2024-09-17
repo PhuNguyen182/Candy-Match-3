@@ -12,6 +12,7 @@ using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.LevelDesign.Databases;
+using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
 using CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks;
@@ -32,6 +33,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private MainGamePanel mainGamePanel;
         [SerializeField] private EndGameScreen endGameScreen;
         [SerializeField] private InGameBoosterPanel inGameBoosterPanel;
+        [SerializeField] private SettingSidePanel settingSidePanel;
 
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
@@ -147,7 +149,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
                                    , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
-                                   , mainGamePanel, endGameScreen, targetDatabase, inGameBoosterPanel
+                                   , mainGamePanel, endGameScreen, settingSidePanel, targetDatabase, inGameBoosterPanel
                                    , inGameBoosterPackDatabase, _specialItemTasks);
             _gameTaskManager.AddTo(ref builder);
 

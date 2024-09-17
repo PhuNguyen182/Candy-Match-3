@@ -14,6 +14,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         [SerializeField] private LoseGamePanel loseGamePanel;
         [SerializeField] private ContinuePopup continuePopup;
 
+        public void WinSetScoreAndStars(int score, int stars)
+        {
+            winGamePanel.SetScoreAndStars(score, stars);
+        }
+
+        public void SetLoseScore(int score)
+        {
+            loseGamePanel.UpdateScore(score);
+        }
+
         public void ShowBackground(bool isActive)
         {
             background.ShowBackground(isActive);
