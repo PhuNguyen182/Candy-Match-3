@@ -15,14 +15,16 @@ namespace CandyMatch3.Scripts.Common.Cameras
         [SerializeField] private float moveDuration = 0.5f;
         [SerializeField] private Ease moveEase = Ease.InOutSine;
 
+        [Header("Game View")]
+        [SerializeField] private float defaultCameraSize = 7f;
+        [SerializeField] private float defaultBackgroundScale = 0.75f;
+
         [Space(10)]
         [SerializeField] private Camera mainCamera;
         [SerializeField] private CinemachineBrain cinemachineBrain;
         [SerializeField] private SpriteRenderer background;
         [SerializeField] private GameObject backgroundObject;
 
-        private const float DefaultCameraSize = 7f;
-        private const float DefaultBackgroundScale = 0.75f;
         private const float DefaultScreenRatio = 16f / 9f;
 
         private Tweener _moveTween;
@@ -51,11 +53,11 @@ namespace CandyMatch3.Scripts.Common.Cameras
 
             if (currentScreenRatio > DefaultScreenRatio)
             {
-                mainCamera.orthographicSize = DefaultCameraSize * currentScreenRatio / DefaultScreenRatio;
+                mainCamera.orthographicSize = defaultCameraSize * currentScreenRatio / DefaultScreenRatio;
 
                 if (background != null)
                 {
-                    background.transform.localScale = Vector3.one * DefaultBackgroundScale
+                    background.transform.localScale = Vector3.one * defaultBackgroundScale
                                                       * currentScreenRatio / DefaultScreenRatio;
                 }
             }
