@@ -18,6 +18,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         [SerializeField] private TMP_Text scoreText;
         [SerializeField] private TweenValueEffect scoreTween;
         [SerializeField] private Animator popupAnimator;
+        [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private GameObject[] stars;
 
         private int _score;
@@ -41,6 +42,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         public UniTask ShowWinGame()
         {
             _source = new();
+            canvasGroup.interactable = false;
             gameObject.SetActive(true);
             UpdateScore().Forget();
             return _source.Task;
@@ -70,6 +72,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             _reactiveScore.Value = _score;
             await UniTask.Delay(TimeSpan.FromSeconds(0.4f), cancellationToken: _token);
             await UpdateStars(_stars);
+
+            canvasGroup.interactable = true;
         }
 
         public void UpdateLevel()

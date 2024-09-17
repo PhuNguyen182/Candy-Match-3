@@ -21501,6 +21501,7 @@ GameObject:
   - component: {fileID: 95489732296903676}
   - component: {fileID: 5508914263564344156}
   - component: {fileID: 4039056211815109584}
+  - component: {fileID: 8404002484944271163}
   m_Layer: 5
   m_Name: Win Popup
   m_TagString: Untagged
@@ -21573,6 +21574,7 @@ MonoBehaviour:
   scoreText: {fileID: 8580844022253031034}
   scoreTween: {fileID: 4039056211815109584}
   popupAnimator: {fileID: 95489732296903676}
+  canvasGroup: {fileID: 8404002484944271163}
   stars:
   - {fileID: 1443730542083266}
   - {fileID: 1981849990710830}
@@ -21591,6 +21593,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.3
   ease: 6
+--- !u!225 &8404002484944271163
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1766137885755772}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1796185225086614
 GameObject:
   m_ObjectHideFlags: 0
