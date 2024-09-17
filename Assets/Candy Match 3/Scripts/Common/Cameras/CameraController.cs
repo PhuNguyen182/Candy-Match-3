@@ -22,6 +22,7 @@ namespace CandyMatch3.Scripts.Common.Cameras
         [Space(10)]
         [SerializeField] private Camera mainCamera;
         [SerializeField] private CinemachineBrain cinemachineBrain;
+        [SerializeField] private CinemachineVirtualCamera virtualCamera;
         [SerializeField] private SpriteRenderer background;
         [SerializeField] private GameObject backgroundObject;
 
@@ -53,7 +54,19 @@ namespace CandyMatch3.Scripts.Common.Cameras
 
             if (currentScreenRatio > DefaultScreenRatio)
             {
-                mainCamera.orthographicSize = defaultCameraSize * currentScreenRatio / DefaultScreenRatio;
+                if (virtualCamera != null)
+                {
+                    virtualCamera.m_Lens = new LensSettings
+                    {
+                        OrthographicSize = defaultCameraSize * currentScreenRatio / DefaultScreenRatio,
+                        NearClipPlane = 1,
+                        FarClipPlane = 100,
+                        Orthographic = true
+                    };
+                }
+
+                else
+                    mainCamera.orthographicSize = defaultCameraSize * currentScreenRatio / DefaultScreenRatio;
 
                 if (background != null)
                 {
