@@ -3978,6 +3978,7 @@ MonoBehaviour:
   mainCamera: {fileID: 820469714}
   cinemachineBrain: {fileID: 820469718}
   background: {fileID: 2141531763}
+  backgroundObject: {fileID: 0}
 --- !u!114 &820469718
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8063,7 +8064,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1191456148100694, guid: 8f715caead76a4f2f82e7b823f70d363, type: 3}
       propertyPath: m_Name
-      value: Quit Game Popup
+      value: Quit Level Popup
       objectReference: {fileID: 0}
     - target: {fileID: 1191456148100694, guid: 8f715caead76a4f2f82e7b823f70d363, type: 3}
       propertyPath: m_IsActive

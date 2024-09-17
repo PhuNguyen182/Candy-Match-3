@@ -26,10 +26,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         private void Awake()
         {
             _token = this.GetCancellationTokenOnDestroy();
-            continueButton.onClick.AddListener(() => Continue().Forget());
 
+            closeButton.onClick.AddListener(() => Continue().Forget());
+            continueButton.onClick.AddListener(() => Continue().Forget());
             quitButton.onClick.AddListener(() => Quit().Forget());
-            closeButton.onClick.AddListener(() => Quit().Forget());
         }
 
         private async UniTask Continue()
