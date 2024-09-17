@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CandyMatch3.Scripts.Common.UIElements;
+using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Audios;
 
@@ -13,11 +14,17 @@ namespace CandyMatch3.Scripts.LoadingScene.Settings
     public class SettingPopup : MonoBehaviour
     {
         [SerializeField] private Animator popupAnimator;
+        [SerializeField] private FadeBackground fadeBackground;
         [SerializeField] private ToggleGroup avatarToggles;
 
         [Header("Setting Buttons")]
         [SerializeField] private SliderButton musicButton;
         [SerializeField] private SliderButton soundButton;
+
+        [Header("Buttons")]
+        [SerializeField] private Button closeButton;
+        [SerializeField] private Button saveButton;
+        [SerializeField] private Button resetButton;
 
         private CancellationToken _token;
         private readonly int _closeHash = Animator.StringToHash("Close");
@@ -29,6 +36,10 @@ namespace CandyMatch3.Scripts.LoadingScene.Settings
 
             musicButton.AddListener(OnMusicButtonClick);
             soundButton.AddListener(OnSoundButtonClick);
+
+            closeButton.onClick.AddListener(() => ClosePanel().Forget());
+            saveButton.onClick.AddListener(SaveSetting);
+            resetButton.onClick.AddListener(ResetProgress);
         }
 
         private void OnEnable()
@@ -38,6 +49,8 @@ namespace CandyMatch3.Scripts.LoadingScene.Settings
 
             musicButton.UpdateImmediately(musicVolume > 0.5f);
             soundButton.UpdateImmediately(soundVolume > 0.5f);
+
+            fadeBackground?.ShowBackground(true);
         }
 
         private void OnMusicButtonClick()
@@ -58,9 +71,26 @@ namespace CandyMatch3.Scripts.LoadingScene.Settings
             soundButton.UpdateValue(newVolume > 0.5f);
         }
 
+        private void SaveSetting()
+        {
+            ClosePanel().Forget();
+        }
+
+        private void ResetProgress()
+        {
+            // To do: Execute logic reset level progress here
+        }
+
+        private async UniTask ClosePanel()
+        {
+            await CloseAnimation();
+            gameObject.SetActive(false);
+        }
+
         private async UniTask CloseAnimation()
         {
             popupAnimator.SetTrigger(_closeHash);
+            fadeBackground?.ShowBackground(false);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
         }
     }
