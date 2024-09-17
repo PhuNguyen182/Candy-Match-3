@@ -6,20 +6,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.Audios;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 {
-    public class SettingSidePanel : MonoBehaviour
+    public class InGameSettingPanel : MonoBehaviour
     {
         [SerializeField] private Animator animator;
+        [SerializeField] private Transform panelParent;
         [SerializeField] private FadeBackground background;
         [SerializeField] private CanvasGroup panelGroup;
 
         [Header("Buttons")]
         [SerializeField] private Button settingButton;
         [SerializeField] private Button quitButton;
-        [SerializeField] private Button musicButton;
-        [SerializeField] private Button soundButton;
+        [SerializeField] private MultiSpriteButton musicButton;
+        [SerializeField] private MultiSpriteButton soundButton;
 
         [Header("Popup")]
         [SerializeField] private QuitPopup quitPopup;
@@ -35,11 +37,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         {
             _token = this.GetCancellationTokenOnDestroy();
 
-            musicButton.onClick.AddListener(MusicButton);
-            soundButton.onClick.AddListener(SoundButton);
+            musicButton.AddListener(MusicButton);
+            soundButton.AddListener(SoundButton);
 
             quitButton.onClick.AddListener(() => OpenQuitPopup().Forget());
             settingButton.onClick.AddListener(() => OnSettingClicked().Forget());
+        }
+
+        private void OnEnable()
+        {
+            UpdateButtons();
         }
 
         private async UniTask OnSettingClicked()
@@ -81,33 +88,73 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
             OnSetting?.Invoke(false);
             background.ShowBackground(true);
             quitPopup.gameObject.SetActive(true);
+            SetButtonSettingParent(false, panelParent);
 
             quitPopup.OnContinuePlaying = () =>
             {
                 OnSetting?.Invoke(true);
                 background.ShowBackground(false);
+                SetButtonSettingParent(true);
             };
 
             quitPopup.OnPlayerQuit += () =>
             {
+                SetButtonSettingParent(true);
                 background.ShowBackground(false);
             };
         }
 
         private void MusicButton()
         {
-
+            float musicVolume = MusicManager.Instance.MusicVolume;
+            float newVolume = musicVolume > 0.5f ? 0.0001f : 1f;
+            MusicManager.Instance.MusicVolume = newVolume;
+            UpdateMusicButton();
         }
 
         private void SoundButton()
         {
-
+            float soundVolume = MusicManager.Instance.SoundVolume;
+            float newVolume = soundVolume > 0.5f ? 0.0001f : 1f;
+            MusicManager.Instance.SoundVolume = newVolume;
+            UpdateSoundButton();
         }
 
         private async UniTask CloseAnimation()
         {
             animator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _token);
+        }
+
+        private void UpdateButtons()
+        {
+            UpdateMusicButton();
+            UpdateSoundButton();
+        }
+
+        private void UpdateMusicButton()
+        {
+            float musicVolume = MusicManager.Instance.MusicVolume;
+            int musicState = musicVolume > 0.5f ? 0 : 1;
+            musicButton.SetState(musicState);
+        }
+
+        private void UpdateSoundButton()
+        {
+            float soundVolume = MusicManager.Instance.SoundVolume;
+            int soundState = soundVolume > 0.5f ? 0 : 1;
+            soundButton.SetState(soundState);
+        }
+
+        // This function is use to hide setting button every time end game popup or quit popup is shown
+        public void SetButtonSettingParent(bool isActive, Transform parent = null)
+        {
+            settingButton.transform.SetParent(isActive ? transform.parent : parent);
+
+            if (isActive)
+                settingButton.transform.SetAsLastSibling();
+            else
+                settingButton.transform.SetAsFirstSibling();
         }
     }
 }

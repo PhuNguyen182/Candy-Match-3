@@ -33,14 +33,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly InputProcessTask _inputProcessTask;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly EndGameScreen _endGameScreen;
-        private readonly SettingSidePanel _settingSidePanel;
+        private readonly InGameSettingPanel _settingSidePanel;
         private readonly SuggestTask _suggestTask;
 
         private readonly StateMachine<State, Trigger> _gameStateMachine;
         private readonly StateMachine<State, Trigger>.TriggerWithParameters<EndResult> _endGameTrigger;
 
         public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask
-            , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask, SettingSidePanel settingSidePanel)
+            , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask, InGameSettingPanel settingSidePanel)
         {
             _endGameTask = endGameTask;
             _checkTargetTask = checkTargetTask;
@@ -93,11 +93,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private void PlayGame()
         {
             SetPlayerActive(true);
+            _settingSidePanel.SetButtonSettingParent(true);
         }
 
         private void PlayContinue()
         {
             SetPlayerActive(true);
+            _settingSidePanel.SetButtonSettingParent(true);
         }
 
         private void EndGame(EndResult result)
@@ -112,6 +114,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             SetPlayerActive(false);
             _endGameScreen.ShowBackground(true);
+            _settingSidePanel.SetButtonSettingParent(false, _endGameScreen.transform);
 
             if (result == EndResult.Win)
             {

@@ -183,6 +183,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 return;
 
             IsBoosterUsed = false;
+            _boosters[message.BoosterType].Value--;
             CurrentBooster = InGameBoosterType.None;
 
             SetSuggestActive(true);

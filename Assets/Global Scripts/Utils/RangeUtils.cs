@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace GlobalScripts.Utils
 {
@@ -11,8 +12,8 @@ namespace GlobalScripts.Utils
 
         public bool IsValueInRange(TValue value)
         {
-            int minCompare = Comparer.Default.Compare(value, MinValue);
-            int maxCompare = Comparer.Default.Compare(value, MaxValue);
+            int minCompare = Comparer<TValue>.Default.Compare(value, MinValue);
+            int maxCompare = Comparer<TValue>.Default.Compare(value, MaxValue);
             return minCompare >= 0 && maxCompare <= 0;
         }
     }

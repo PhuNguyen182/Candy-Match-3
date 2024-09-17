@@ -10,6 +10,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
     public class EndGameScreen : MonoBehaviour
     {
         [SerializeField] private FadeBackground background;
+        [SerializeField] private SpecialPanel specialPanel;
         [SerializeField] private WinGamePanel winGamePanel;
         [SerializeField] private LoseGamePanel loseGamePanel;
         [SerializeField] private ContinuePopup continuePopup;

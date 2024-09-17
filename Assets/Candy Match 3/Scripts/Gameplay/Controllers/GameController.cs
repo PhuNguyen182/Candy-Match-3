@@ -33,7 +33,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private MainGamePanel mainGamePanel;
         [SerializeField] private EndGameScreen endGameScreen;
         [SerializeField] private InGameBoosterPanel inGameBoosterPanel;
-        [SerializeField] private SettingSidePanel settingSidePanel;
+        [SerializeField] private InGameSettingPanel settingSidePanel;
 
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;

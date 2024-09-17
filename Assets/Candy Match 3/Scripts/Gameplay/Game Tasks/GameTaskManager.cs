@@ -46,7 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask
             , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase
-            , MainGamePanel mainGamePanel, EndGameScreen endGameScreen, SettingSidePanel settingSidePanel, TargetDatabase targetDatabase
+            , MainGamePanel mainGamePanel, EndGameScreen endGameScreen, InGameSettingPanel settingSidePanel, TargetDatabase targetDatabase
             , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase, SpecialItemTask specialItemTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
