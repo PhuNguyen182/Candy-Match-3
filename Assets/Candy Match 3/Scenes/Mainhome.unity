@@ -1050,8 +1050,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveDuration: 0.5
   moveEase: 4
+  defaultCameraSize: 9
+  defaultBackgroundScale: 1
   mainCamera: {fileID: 739582126}
   cinemachineBrain: {fileID: 0}
+  virtualCamera: {fileID: 0}
   background: {fileID: 0}
   backgroundObject: {fileID: 171300838}
 --- !u!1 &783940564
@@ -1789,6 +1792,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ce8e978ecc7aaf459cd77c96820d5cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backButton: {fileID: 907387143}
   coinCounter: {fileID: 1668831736}
   lifeCounter: {fileID: 818031315}
 --- !u!1 &1332226429
