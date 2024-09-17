@@ -7,7 +7,7 @@ using Cinemachine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
-namespace CandyMatch3.Scripts.Gameplay.Miscs
+namespace CandyMatch3.Scripts.Common.Cameras
 {
     public class CameraController : MonoBehaviour
     {
@@ -19,6 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.Miscs
         [SerializeField] private Camera mainCamera;
         [SerializeField] private CinemachineBrain cinemachineBrain;
         [SerializeField] private SpriteRenderer background;
+        [SerializeField] private GameObject backgroundObject;
 
         private const float DefaultCameraSize = 7f;
         private const float DefaultBackgroundScale = 0.75f;
@@ -30,7 +31,9 @@ namespace CandyMatch3.Scripts.Gameplay.Miscs
 
         private void Awake()
         {
-            cinemachineBrain.useGUILayout = false; // Stop generating 368B GC.Alloc
+            if(cinemachineBrain != null)
+                cinemachineBrain.useGUILayout = false; // Stop generating 368B GC.Alloc
+            
             _token = this.GetCancellationTokenOnDestroy();
         }
 
@@ -42,12 +45,19 @@ namespace CandyMatch3.Scripts.Gameplay.Miscs
         private void GameScreenCalculate()
         {
             float currentScreenRatio = 1f / mainCamera.aspect;
-            
+
+            if(backgroundObject != null)
+                backgroundObject.transform.localScale = Vector3.one * DefaultScreenRatio / currentScreenRatio;
+
             if (currentScreenRatio > DefaultScreenRatio)
             {
                 mainCamera.orthographicSize = DefaultCameraSize * currentScreenRatio / DefaultScreenRatio;
-                background.transform.localScale = Vector3.one * DefaultBackgroundScale
-                                                  * currentScreenRatio / DefaultScreenRatio;
+
+                if (background != null)
+                {
+                    background.transform.localScale = Vector3.one * DefaultBackgroundScale
+                                                      * currentScreenRatio / DefaultScreenRatio;
+                }
             }
         }
 
