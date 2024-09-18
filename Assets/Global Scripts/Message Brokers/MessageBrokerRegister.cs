@@ -1,10 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using CandyMatch3.Scripts.Common.Messages;
-using CandyMatch3.Scripts.Common.DataStructs;
-using GlobalScripts.Utils;
 using MessagePipe;
 
 namespace GlobalScripts.MessageBrokers
@@ -16,29 +10,7 @@ namespace GlobalScripts.MessageBrokers
 
         public void InitializeMessages()
         {
-            _builder = new();
-            _builder.AddMessagePipe();
 
-            AddMeggageBrokers();
-            _provider = _builder.BuildServiceProvider();
-            GlobalMessagePipe.SetProvider(_provider);
-        }
-
-        private void AddMeggageBrokers()
-        {
-            _builder.AddMessageBroker<DecreaseMoveMessage>();
-            _builder.AddMessageBroker<DecreaseTargetMessage>();
-            _builder.AddMessageBroker<AsyncMessage<MoveTargetData>>();
-
-            _builder.AddMessageBroker<CameraShakeMessage>();
-            _builder.AddMessageBroker<AddInGameBoosterMessage>();
-            _builder.AddMessageBroker<UseInGameBoosterMessage>();
-            _builder.AddMessageBroker<ActivateBoosterMessage>();
-
-            _builder.AddMessageBroker<BoardStopMessage>();
-            _builder.AddMessageBroker<BreakExpandableMessage>();
-            _builder.AddMessageBroker<ExpandMessage>();
-            _builder.AddMessageBroker<ComplimentMessage>();
         }
     }
 }

@@ -679,6 +679,7 @@ MonoBehaviour:
   animator: {fileID: 664099722092302205}
   targetElement: {fileID: 1218582540558817976, guid: 418a627759b45554f9ffe37c5af33e2d, type: 3}
   targetDatabase: {fileID: 11400000, guid: cc4452cd77bc01f459003b542c0b2e9c, type: 2}
+  background: {fileID: 3617382294980263778}
   targetContainer: {fileID: 437456537684745923}
   levelText: {fileID: 4264712233801779497}
   playButton: {fileID: 3068364462820696483}

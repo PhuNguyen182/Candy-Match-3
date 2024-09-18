@@ -5,6 +5,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.Mainhome.UI.Popups;
+using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
+using CandyMatch3.Scripts.Common.DataStructs;
+using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 
@@ -23,7 +27,6 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
         [SerializeField] private List<LevelNodeButton> nodeButtons;
 
         private Dictionary<int, LevelNodeButton> _nodePathDict;
-
         private IDisposable _disposable;
 
         public int MinLevel => minLevel;
@@ -31,7 +34,14 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
 
         private void Awake()
         {
+            PreloadPopups();
             InitProgressLevel();
+        }
+
+        private void PreloadPopups()
+        {
+            AlertPopup.PreloadFromAddress(CommonPopupPaths.AlertPopupPath).Forget();
+            StartGamePopup.PreloadFromAddress(CommonPopupPaths.StartGamePopupPath).Forget();
         }
 
         [Button]
@@ -83,7 +93,7 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
                     //}
 
                     IDisposable d = node.OnClickObservable.Select(value => (value.Level, value.Star))
-                                        .Subscribe(value => OnNodeButtonClick(value.Level, value.Star));
+                                        .Subscribe(value => OnNodeButtonClick(value.Level, value.Star).Forget());
                     disposables.Add(d);
                     return node;
                 });
@@ -92,14 +102,24 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
             }
         }
 
-        private void OnNodeButtonClick(int level, int star)
+        private async UniTask OnNodeButtonClick(int level, int stars)
         {
-            //var popup = PlayGamePopup.Create(PlayGamePopupPath);
-            //popup.SetLevelBoxData(new LevelBoxData
+            //int currentLevel = GameData.CurrentLevel; // Fake code
+            //if (level > currentLevel)
             //{
-            //    Level = level,
-            //    Star = star
-            //});
+            //    var alertPopup = await AlertPopup.CreateFromAddress(AlertPopupPath);
+            //    alertPopup.SetMessage("This level is still locked.");
+            //}
+
+            //else
+            {
+                var startGamePopup = await StartGamePopup.CreateFromAddress(CommonPopupPaths.StartGamePopupPath);
+                await startGamePopup.SetLevelInfo(new LevelBoxData
+                {
+                    Level = level,
+                    Stars = stars
+                });
+            }
         }
 
         private void OnDestroy()

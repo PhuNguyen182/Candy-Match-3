@@ -69,6 +69,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private SpecialItemTask _specialItemTasks;
         private CameraShakeTask _cameraShakeTask;
         private GameTaskManager _gameTaskManager;
+        private MessageBrokerController _messageBrokerController;
 
         private int _check = 0;
         private CancellationToken _destroyToken;
@@ -119,6 +120,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
+            _messageBrokerController = new();
             _gridCellManager = new(ConvertGridToWorld, ConvertWorldToGrid);
             _gridCellManager.AddTo(ref builder);
 

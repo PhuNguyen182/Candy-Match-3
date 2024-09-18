@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Mainhome.UI.Popups;
+using Cysharp.Threading.Tasks;
 using TMPro;
 
 namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
@@ -15,12 +18,19 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
 
         private void Awake()
         {
+            PreloadPopup();
             lifeButton.onClick.AddListener(OpenLifePopup);
+        }
+
+        private void PreloadPopup()
+        {
+            BuyLivesPopup.PreloadFromAddress(CommonPopupPaths.LivesPopupPath).Forget();
         }
 
         private void OpenLifePopup()
         {
-
+            // To do: if life count is equal to 5, open start game popup, otherwise open buy heart popup
+            BuyLivesPopup.CreateFromAddress(CommonPopupPaths.LivesPopupPath).Forget();
         }
 
         private void UpdateTime(TimeSpan time)

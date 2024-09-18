@@ -11,12 +11,15 @@ namespace CandyMatch3.Scripts.Mainhome.Managers
         [SerializeField] private MainhomeInput mainhomeInput;
         [SerializeField] private MainUIManager mainUIManager;
 
+        private MainhomeMessageManager _mainhomeMessageManager;
+
         public static MainhomeManager Instance { get; private set; }
 
         private void Awake()
         {
             Instance = this;
 
+            _mainhomeMessageManager = new();
             mainhomeInput.IsActived = true;
         }
 

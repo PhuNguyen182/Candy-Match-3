@@ -285,6 +285,7 @@ GameObject:
   m_Component:
   - component: {fileID: 521228446}
   - component: {fileID: 521228445}
+  - component: {fileID: 521228447}
   m_Layer: 0
   m_Name: Mainhome Manager
   m_TagString: Untagged
@@ -321,6 +322,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &521228447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521228444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02a3c086962c951408533d2b3d030577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &601421431 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3243480865942591932, guid: 1ff25e40a018d3244a32751603b424c6, type: 3}
@@ -1744,6 +1757,7 @@ GameObject:
   - component: {fileID: 1668831737}
   - component: {fileID: 1668831736}
   - component: {fileID: 1668831735}
+  - component: {fileID: 1668831739}
   m_Layer: 5
   m_Name: Coin Box
   m_TagString: Untagged
@@ -1787,7 +1801,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1839,6 +1853,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coinText: {fileID: 629648182}
   shopButton: {fileID: 1668831738}
+  resouceResponder: {fileID: 1668831739}
   coinTweenEffect: {fileID: 1668831735}
 --- !u!95 &1668831737
 Animator:
@@ -1905,6 +1920,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1668831739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1668831731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4bab1354dab84499bd9771a306a5da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceType: 1
 --- !u!1 &1823365501
 GameObject:
   m_ObjectHideFlags: 0

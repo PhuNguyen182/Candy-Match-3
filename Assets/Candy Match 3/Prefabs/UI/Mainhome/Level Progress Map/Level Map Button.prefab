@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3418948837927948310}
   - component: {fileID: 686206833177538826}
-  - component: {fileID: 2227401875672174431}
   - component: {fileID: 5040117867019765674}
   m_Layer: 5
   m_Name: Blue Level Text
@@ -46,18 +45,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 734609945806574146}
   m_CullTransparentMesh: 1
---- !u!225 &2227401875672174431
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 734609945806574146}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!114 &5040117867019765674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -558,7 +545,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2823544860312834319}
   - component: {fileID: 1690167814911166971}
-  - component: {fileID: 7250054575366631500}
   - component: {fileID: 8962082939997168466}
   m_Layer: 5
   m_Name: Pink Level Text
@@ -594,18 +580,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5007034487185072337}
   m_CullTransparentMesh: 1
---- !u!225 &7250054575366631500
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5007034487185072337}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 0
-  m_BlocksRaycasts: 0
-  m_IgnoreParentGroups: 0
 --- !u!114 &8962082939997168466
 MonoBehaviour:
   m_ObjectHideFlags: 0

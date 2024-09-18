@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CandyMatch3.Scripts.Mainhome.Managers;
 using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -27,12 +28,18 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         private CancellationToken _token;
         private readonly int _closeHash = Animator.StringToHash("Close");
 
-        private void Awake()
+        protected override void OnAwake()
         {
             _token = this.GetCancellationTokenOnDestroy();
 
             purchaseButton.onClick.AddListener(Purchase);
             closeButton.onClick.AddListener(() => CloseAsync().Forget());
+        }
+
+        protected override void DoAppear()
+        {
+            MainhomeManager.Instance?.SetInputActive(false);
+            background.ShowBackground(true);
         }
 
         public void UpdateHeart(int heart)
@@ -62,7 +69,9 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         private async UniTask CloseAsync()
         {
             animator.SetTrigger(_closeHash);
+            background.ShowBackground(false);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
+            MainhomeManager.Instance?.SetInputActive(true);
             base.Close();
         }
     }
