@@ -37,7 +37,7 @@ public abstract class BasePopup : MonoBehaviour
         {
             popupCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             popupCanvas.worldCamera = Camera.main;
-            popupCanvas.sortingLayerID = SortingLayer.NameToID("Popup");
+            //popupCanvas.sortingLayerID = SortingLayer.NameToID("Popup");
         }
 
         OnAwake();
