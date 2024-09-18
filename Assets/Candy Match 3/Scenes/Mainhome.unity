@@ -200,11 +200,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &171300838 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4087339036381934360, guid: 1ff25e40a018d3244a32751603b424c6, type: 3}
-  m_PrefabInstance: {fileID: 6352085591881973912}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &309241508
 GameObject:
   m_ObjectHideFlags: 0
@@ -347,6 +342,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 309241508}
   m_CullTransparentMesh: 1
+--- !u!1 &521228444
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 521228446}
+  - component: {fileID: 521228445}
+  m_Layer: 0
+  m_Name: Mainhome Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &521228445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521228444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58a2154f4aef0334a82f44544c6926e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainhomeInput: {fileID: 1175848228}
+  mainUIManager: {fileID: 1320990081}
+--- !u!4 &521228446
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521228444}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &601421431 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3243480865942591932, guid: 1ff25e40a018d3244a32751603b424c6, type: 3}
@@ -638,7 +679,6 @@ GameObject:
   - component: {fileID: 739582126}
   - component: {fileID: 739582125}
   - component: {fileID: 739582128}
-  - component: {fileID: 739582129}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -663,8 +703,8 @@ Camera:
   m_GameObject: {fileID: 739582124}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -764,27 +804,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!114 &739582129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 739582124}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9c47a6a1de2dbf4b8d54219f8eab876, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveDuration: 0.5
-  moveEase: 4
-  defaultCameraSize: 9
-  defaultBackgroundScale: 1
-  mainCamera: {fileID: 739582126}
-  cinemachineBrain: {fileID: 0}
-  virtualCamera: {fileID: 0}
-  background: {fileID: 0}
-  backgroundObject: {fileID: 171300838}
 --- !u!1 &783940564
 GameObject:
   m_ObjectHideFlags: 0
@@ -1691,9 +1710,10 @@ MonoBehaviour:
   mainCanvasSafeArea: {fileID: 1332226430}
   screenBounds: {fileID: 601421431}
   mainhomeInput: {fileID: 1175848228}
-  smoothSpeed: 25
-  translateSpeed: 3
-  defaultCameraSize: 6.75
+  smoothSpeed: 6
+  translateSpeed: 9000
+  defaultCameraSize: 12
+  slowdownAmount: 0.25
 --- !u!4 &1551158468
 Transform:
   m_ObjectHideFlags: 0
@@ -2598,6 +2618,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 739582127}
   - {fileID: 1297229456}
+  - {fileID: 521228446}
   - {fileID: 1175848229}
   - {fileID: 1551158468}
   - {fileID: 1320990080}

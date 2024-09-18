@@ -20,6 +20,7 @@ namespace CandyMatch3.Scripts.Mainhome.CameraHandlers
         [SerializeField] private float smoothSpeed = 25f;
         [SerializeField] private float translateSpeed = 3f;
         [SerializeField] private float defaultCameraSize = 6.75f;
+        [SerializeField] private float slowdownAmount = 0.45f;
 
         private float _topCanvasOffset = 0;
         private float _bottomCanvasOffset = 0;
@@ -80,7 +81,7 @@ namespace CandyMatch3.Scripts.Mainhome.CameraHandlers
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN || UNITY_STANDALONE_OSX || UNITY_STANDALONE_LINUX
             return translateSpeed;
 #elif UNITY_ANDROID || UNITY_IOS
-            return translateSpeed * 0.45f;
+            return translateSpeed * slowdownAmount;
 #endif
         }
 
@@ -95,7 +96,7 @@ namespace CandyMatch3.Scripts.Mainhome.CameraHandlers
 
                 else _inputDelta = Vector2.Lerp(_inputDelta, Vector2.zero, smoothSpeed * Time.deltaTime);
 
-                lookCamera.transform.Translate(Vector3.up * _inputDelta.y * translateSpeed * Time.deltaTime);
+                lookCamera.transform.Translate(Vector3.up * _inputDelta.y * dragSpeed * Time.deltaTime);
             }
         }
 
