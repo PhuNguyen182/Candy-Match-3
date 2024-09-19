@@ -55,7 +55,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [Header("Booster Info")]
         [SerializeField] private List<InGameBoosterBoxInfo> inGameBoosterBoxInfos;
 
-        private bool _canBuyBooster;
         private CancellationToken _token;
         private InGameBoosterPack _boosterPack;
         private IPublisher<AddInGameBoosterMessage> _addInGameBoosterPublisher;
@@ -130,8 +129,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             if (coin >= price)
             {
                 coinEffect.Play();
-                _canBuyBooster = true;
-
                 MusicManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
                 GameDataManager.Instance.SpendResource(GameResourceType.Coin, price);
 
@@ -152,7 +149,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
 
             else
             {
-                _canBuyBooster = false;
                 Action unblockInput = UnblockInput;
                 // If not enought money, do not release this UnblockInput action, then assign this action to shop close event
                 // to ensure the on-off player input flow is not interupted
