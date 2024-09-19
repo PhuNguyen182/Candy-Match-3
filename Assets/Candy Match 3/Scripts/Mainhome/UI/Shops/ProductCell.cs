@@ -3,8 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using CandyMatch3.Scripts.Common.DataStructs;
 using Sirenix.OdinInspector;
+using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.DataStructs;
+using CandyMatch3.Scripts.Common.Controllers;
+using CandyMatch3.Scripts.Common.Messages;
+using CandyMatch3.Scripts.GameData;
 using TMPro;
 
 namespace CandyMatch3.Scripts.Mainhome.UI.Shops
@@ -29,8 +33,14 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
 
         private void Purchase()
         {
-            // To do: update value on purchase
+            int amount = _productInfo.Amount;
+            GameDataManager.Instance.EarnResource(GameResourceType.Coin, amount);
+
             OnPurchase?.Invoke();
+            UpdateResourceController.Instance?.UpdateResource(new UpdateResourceMessage
+            {
+                ResouceType = GameResourceType.Coin
+            });
         }
 
         public void SetProductInfo(ProductInfo productInfo)

@@ -215,10 +215,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             popup.SetBoosterInfo(boosterType);
             popup.SetBoosterPack(boosterPack);
-            popup.OnClose = OnBuyBoosterPopupClose;
+            popup.UnblockInput = OnBuyBoosterPopupUnblockInput;
+            popup.BlockInput = OnBuyBoosterPopupBlockInput;
         }
 
-        private void OnBuyBoosterPopupClose()
+        private void OnBuyBoosterPopupBlockInput()
+        {
+            _suggestTask.Suggest(false);
+            SetSuggestActive(false);
+            _inputProcessTask.IsActive = false;
+        }
+
+        private void OnBuyBoosterPopupUnblockInput()
         {
             SetSuggestActive(true);
             _inputProcessTask.IsActive = true;

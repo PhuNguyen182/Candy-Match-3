@@ -64,7 +64,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         private Dictionary<InGameBoosterType, InGameBoosterBoxInfo> _boxInfoCollection;
         private ReactiveProperty<int> _reactiveCoin = new();
 
-        public Action OnClose;
+        public Action UnblockInput;
+        public Action BlockInput;
 
         public Dictionary<InGameBoosterType, InGameBoosterBoxInfo> PopupInfoCollection
         {
@@ -152,12 +153,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             else
             {
                 _canBuyBooster = false;
-                // If not enought money, do not release this OnClose action, then assign this action to shop close event
+                Action unblockInput = UnblockInput;
+                // If not enought money, do not release this UnblockInput action, then assign this action to shop close event
                 // to ensure the on-off player input flow is not interupted
 
                 await ClosePopup();
+                BlockInput?.Invoke();
+                BlockInput = null;
+
                 var shop = await ShopPopup.CreateFromAddress(CommonPopupPaths.ShopPopupPath);
-                shop.OnClose = OnClose;
+                shop.OnClose = unblockInput;
             }
         }
 
@@ -183,12 +188,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
                 MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
 
             base.DoClose();
-            
-            if (_canBuyBooster)
-            {
-                OnClose?.Invoke();
-                OnClose = null;
-            }
+            UnblockInput?.Invoke();
+            UnblockInput = null;
         }
     }
 }

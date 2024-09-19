@@ -1243,6 +1243,7 @@ GameObject:
   - component: {fileID: 8359368594600504887}
   - component: {fileID: 6714614609408779498}
   - component: {fileID: 187744735718825765}
+  - component: {fileID: 857027511591274479}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -1373,6 +1374,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &857027511591274479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1739173449727336452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 6714614609408779498}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 77af96134fd7cd74a8e8042b13d7cc7a, type: 3}
 --- !u!1 &1757240207885159973
 GameObject:
   m_ObjectHideFlags: 0
@@ -1944,6 +1960,7 @@ GameObject:
   - component: {fileID: 2996311299443815111}
   - component: {fileID: 2666383037657041497}
   - component: {fileID: 7165790254525191846}
+  - component: {fileID: 777304923383761702}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -2074,6 +2091,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &777304923383761702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2307729792338708344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 2666383037657041497}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 77af96134fd7cd74a8e8042b13d7cc7a, type: 3}
 --- !u!1 &2362928420965859642
 GameObject:
   m_ObjectHideFlags: 0
@@ -8697,6 +8729,7 @@ GameObject:
   - component: {fileID: 5183492174782850319}
   - component: {fileID: 2888582634675222760}
   - component: {fileID: 2939670679008287843}
+  - component: {fileID: 5511108248152879441}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -8827,6 +8860,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5511108248152879441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4103371181254313159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 2888582634675222760}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 77af96134fd7cd74a8e8042b13d7cc7a, type: 3}
 --- !u!1 &4345973316416368076
 GameObject:
   m_ObjectHideFlags: 0
@@ -11003,6 +11051,7 @@ GameObject:
   - component: {fileID: 191850905682049564}
   - component: {fileID: 2253408569382825468}
   - component: {fileID: 5890413635257835727}
+  - component: {fileID: 5906453923099539451}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -11133,6 +11182,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5906453923099539451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7219194177869590096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 2253408569382825468}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 77af96134fd7cd74a8e8042b13d7cc7a, type: 3}
 --- !u!1 &7302158681929714499
 GameObject:
   m_ObjectHideFlags: 0
@@ -11625,6 +11689,7 @@ GameObject:
   - component: {fileID: 1806633621401230591}
   - component: {fileID: 1373217874433744069}
   - component: {fileID: 2184899171219433257}
+  - component: {fileID: 5187380896928809178}
   m_Layer: 5
   m_Name: Purchase Button
   m_TagString: Untagged
@@ -11755,6 +11820,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5187380896928809178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8120752414422476007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 1373217874433744069}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: 77af96134fd7cd74a8e8042b13d7cc7a, type: 3}
 --- !u!1 &8146700306771332306
 GameObject:
   m_ObjectHideFlags: 0
