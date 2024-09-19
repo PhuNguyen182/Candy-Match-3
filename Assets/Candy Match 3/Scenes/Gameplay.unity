@@ -3249,6 +3249,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1707640712}
   - component: {fileID: 1707640713}
+  - component: {fileID: 1707640714}
   m_Layer: 0
   m_Name: Game Controller
   m_TagString: Untagged
@@ -3301,6 +3302,18 @@ MonoBehaviour:
   gridCellViewPrefab: {fileID: 7334234748632235784, guid: e70d82db22c641346b6471b01386f440, type: 3}
   impulseSource: {fileID: 1336813331}
   boardInput: {fileID: 1336813329}
+--- !u!114 &1707640714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707640711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02a3c086962c951408533d2b3d030577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1771177874
 GameObject:
   m_ObjectHideFlags: 0

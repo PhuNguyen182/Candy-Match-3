@@ -13,6 +13,7 @@ using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Gameplay.Strategies;
+using CandyMatch3.Scripts.Mainhome.UI.Shops;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
@@ -74,7 +75,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _placeBoosterTask.AddTo(ref builder);
             _disposable = builder.Build();
 
-            PreloadBuyBoosterPopup();
+            PreloadPopups();
         }
 
         public void SetCheckBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
@@ -223,8 +224,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _inputProcessTask.IsActive = true;
         }
 
-        private void PreloadBuyBoosterPopup()
+        private void PreloadPopups()
         {
+            ShopPopup.PreloadFromAddress(CommonPopupPaths.ShopPopupPath).Forget();
             InGameBoosterPopup.PreloadFromAddress(CommonPopupPaths.BuyBoosterPopupPath).Forget();
         }
 

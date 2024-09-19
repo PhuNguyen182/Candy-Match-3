@@ -6150,6 +6150,7 @@ GameObject:
   - component: {fileID: 3932611842196051132}
   - component: {fileID: 7151533997916659622}
   - component: {fileID: 7669538620393982982}
+  - component: {fileID: 7677369529175664112}
   m_Layer: 5
   m_Name: Buy Boosters Popup
   m_TagString: Untagged
@@ -6265,6 +6266,7 @@ MonoBehaviour:
   coinTweenEffect: {fileID: 7669538620393982982}
   boosterType: 0
   coinEffect: {fileID: 6293666561785511460}
+  resouceResponder: {fileID: 7677369529175664112}
   coinText: {fileID: 7896904125613864821}
   boosterName: {fileID: 558851336154146034}
   description: {fileID: 3260002139452068635}
@@ -6304,6 +6306,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.3
   ease: 6
+--- !u!114 &7677369529175664112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6823894986632684377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4bab1354dab84499bd9771a306a5da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceType: 1
 --- !u!1 &6879298158739758407
 GameObject:
   m_ObjectHideFlags: 0

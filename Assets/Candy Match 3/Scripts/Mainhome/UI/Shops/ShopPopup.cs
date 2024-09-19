@@ -12,6 +12,7 @@ using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.Databases;
 using GlobalScripts.Effects.Tweens;
+using CandyMatch3.Scripts.GameData;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Audios;
 using TMPro;
@@ -38,6 +39,8 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
         private readonly int _closeHash = Animator.StringToHash("Close");
         private ReactiveProperty<int> _reactiveCoin = new(0);
 
+        public Action OnClose;
+
         protected override void OnAwake()
         {
             _token = this.GetCancellationTokenOnDestroy();
@@ -46,11 +49,11 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
             closeButton.onClick.AddListener(() => CloseAsync().Forget());
             InitProducts();
 
+            int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
             coinTween.BindInt(_reactiveCoin, ShowCoin);
-            resouceResponder.OnUpdate = () =>
-            {
-                // To do: update coin value here
-            };
+            _reactiveCoin.Value = coin;
+
+            resouceResponder.OnUpdate = UpdateCoin;
         }
 
         protected override void DoAppear()
@@ -85,13 +88,23 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
             currentCoinText.text = $"{coin}";
         }
 
+        private void UpdateCoin()
+        {
+            int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
+            _reactiveCoin.Value = coin;
+        }
+
         private void PlayPurchaseEffect()
         {
             coinEffect.Play();
+            MusicManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
         }
 
         protected override void DoDisappear()
         {
+            OnClose?.Invoke();
+            OnClose = null;
+
             MainhomeManager.Instance?.SetInputActive(true);
 
             if (!IsPreload)

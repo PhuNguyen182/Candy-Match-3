@@ -6,10 +6,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using GlobalScripts.Effects.Tweens;
+using CandyMatch3.Scripts.GameData;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Mainhome.UI.Shops;
+using CandyMatch3.Scripts.Common.Controllers;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.Messages;
-using GlobalScripts.Effects.Tweens;
+using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Audios;
 using MessagePipe;
@@ -34,6 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [SerializeField] private TweenValueEffect coinTweenEffect;
         [SerializeField] private InGameBoosterType boosterType;
         [SerializeField] private ParticleSystem coinEffect;
+        [SerializeField] private UpdateResouceResponder resouceResponder;
 
         [Space(10)]
         [SerializeField] private TMP_Text coinText;
@@ -50,6 +55,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [Header("Booster Info")]
         [SerializeField] private List<InGameBoosterBoxInfo> inGameBoosterBoxInfos;
 
+        private bool _canBuyBooster;
         private CancellationToken _token;
         private InGameBoosterPack _boosterPack;
         private IPublisher<AddInGameBoosterMessage> _addInGameBoosterPublisher;
@@ -83,13 +89,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             purchaseButton.onClick.AddListener(() => PurchaseBooster().Forget());
 
             coinTweenEffect.BindInt(_reactiveCoin, UpdateCoin);
-            _reactiveCoin.Value = 0; // Show the current value of coin in game data
+            resouceResponder.OnUpdate = UpdateCoin;
         }
 
         protected override void DoAppear()
         {
             if (!IsPreload)
                 MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+
+            int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
+            _reactiveCoin.Value = coin; // Show the current value of coin in game data
         }
 
         public void SetBoosterPack(InGameBoosterPack boosterPack)
@@ -106,19 +115,50 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             SetPopupInfo(info);
         }
 
+        private void UpdateCoin()
+        {
+            int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
+            _reactiveCoin.Value = coin;
+        }
+
         private async UniTask PurchaseBooster()
         {
-            int price = _boosterPack.Price; // Use this value to check remain coins
+            int price = _boosterPack.Price;
+            int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
 
-            coinEffect.Play();
-            _addInGameBoosterPublisher.Publish(new AddInGameBoosterMessage
+            if (coin >= price)
             {
-                BoosterType = boosterType,
-                Amount = _boosterPack.Amount
-            });
+                coinEffect.Play();
+                _canBuyBooster = true;
 
-            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
-            await ClosePopup();
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
+                GameDataManager.Instance.SpendResource(GameResourceType.Coin, price);
+
+                _addInGameBoosterPublisher.Publish(new AddInGameBoosterMessage
+                {
+                    BoosterType = boosterType,
+                    Amount = _boosterPack.Amount
+                });
+
+                UpdateResourceController.Instance.UpdateResource(new UpdateResourceMessage
+                {
+                    ResouceType = GameResourceType.Coin
+                });
+
+                await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
+                await ClosePopup();
+            }
+
+            else
+            {
+                _canBuyBooster = false;
+                // If not enought money, do not release this OnClose action, then assign this action to shop close event
+                // to ensure the on-off player input flow is not interupted
+
+                await ClosePopup();
+                var shop = await ShopPopup.CreateFromAddress(CommonPopupPaths.ShopPopupPath);
+                shop.OnClose = OnClose;
+            }
         }
 
         private void SetPopupInfo(InGameBoosterBoxInfo info)
@@ -143,8 +183,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
                 MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
 
             base.DoClose();
-            OnClose?.Invoke();
-            OnClose = null;
+            
+            if (_canBuyBooster)
+            {
+                OnClose?.Invoke();
+                OnClose = null;
+            }
         }
     }
 }
