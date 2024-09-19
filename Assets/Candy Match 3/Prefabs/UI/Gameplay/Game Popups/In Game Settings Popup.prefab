@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4100117118808650002}
   - component: {fileID: 95716117633310684}
   - component: {fileID: 4779546039239258855}
+  - component: {fileID: 1519262679215766434}
   m_Layer: 5
   m_Name: SoundButton
   m_TagString: Untagged
@@ -160,6 +161,21 @@ MonoBehaviour:
   states:
   - {fileID: 21300000, guid: 6a2cf3da33d9f4c33b2bcbc99c83efac, type: 3}
   - {fileID: 21300000, guid: af4b448bfc37c43a6901ccf8497bf8d5, type: 3}
+--- !u!114 &1519262679215766434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1458748585941706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4100117118808650002}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &1519419390466696
 GameObject:
   m_ObjectHideFlags: 0
@@ -173,6 +189,7 @@ GameObject:
   - component: {fileID: 114448570780464082}
   - component: {fileID: 3480973806927726629}
   - component: {fileID: 95393020765564406}
+  - component: {fileID: 917709745631376097}
   m_Layer: 5
   m_Name: ExitButton
   m_TagString: Untagged
@@ -302,6 +319,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &917709745631376097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519419390466696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 3480973806927726629}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &1816261783675402
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,6 +348,7 @@ GameObject:
   - component: {fileID: 4287376364355908874}
   - component: {fileID: 95179767329601612}
   - component: {fileID: 5216460142532236466}
+  - component: {fileID: 3022964608255573861}
   m_Layer: 5
   m_Name: MusicButton
   m_TagString: Untagged
@@ -462,6 +495,21 @@ MonoBehaviour:
   states:
   - {fileID: 21300000, guid: 39424d2bf27404d5b85ca524d7e6d27a, type: 3}
   - {fileID: 21300000, guid: 0751573ef59b44ba2abf91e9bc474de7, type: 3}
+--- !u!114 &3022964608255573861
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1816261783675402}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4287376364355908874}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &1977597825134242
 GameObject:
   m_ObjectHideFlags: 0

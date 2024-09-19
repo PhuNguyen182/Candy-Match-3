@@ -9954,6 +9954,7 @@ GameObject:
   - component: {fileID: 5129909661462864343}
   - component: {fileID: 5663262825871884899}
   - component: {fileID: 2519616840737963962}
+  - component: {fileID: 430772383908285009}
   m_Layer: 5
   m_Name: Buy Button
   m_TagString: Untagged
@@ -10085,6 +10086,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &430772383908285009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488771512344741761}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 5663262825871884899}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &1806357420242575291
 GameObject:
   m_ObjectHideFlags: 0
@@ -12290,6 +12306,7 @@ GameObject:
   - component: {fileID: 7957470477510315891}
   - component: {fileID: 4197495251208970785}
   - component: {fileID: 625668570068977358}
+  - component: {fileID: 4292885179087801916}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -12419,6 +12436,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4292885179087801916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7679174203615943740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4197495251208970785}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &8448756211628038348
 GameObject:
   m_ObjectHideFlags: 0

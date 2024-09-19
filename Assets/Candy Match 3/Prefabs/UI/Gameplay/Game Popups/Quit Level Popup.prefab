@@ -163,6 +163,7 @@ GameObject:
   - component: {fileID: 114388878145594862}
   - component: {fileID: 7857763294902437515}
   - component: {fileID: 95751955930726444}
+  - component: {fileID: 5717447605035778277}
   m_Layer: 5
   m_Name: Close Button
   m_TagString: Untagged
@@ -292,6 +293,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5717447605035778277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1213729960819004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 7857763294902437515}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &1451182765101632
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,6 +321,7 @@ GameObject:
   - component: {fileID: 114506770476109454}
   - component: {fileID: 6302345725546295028}
   - component: {fileID: 8488232482671970762}
+  - component: {fileID: 2128582246891368255}
   m_Layer: 5
   m_Name: Continue Button
   m_TagString: Untagged
@@ -435,6 +452,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2128582246891368255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451182765101632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 6302345725546295028}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &1861722030460056
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,6 +480,7 @@ GameObject:
   - component: {fileID: 114453063944457418}
   - component: {fileID: 4754532487508690686}
   - component: {fileID: 1219941246541033643}
+  - component: {fileID: 2558426347194577975}
   m_Layer: 5
   m_Name: Quit Button
   m_TagString: Untagged
@@ -578,6 +611,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2558426347194577975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861722030460056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4754532487508690686}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &2648386313424976867
 GameObject:
   m_ObjectHideFlags: 0

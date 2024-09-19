@@ -498,6 +498,7 @@ MonoBehaviour:
   currentCoin: {fileID: 4407710210663194727}
   coinTween: {fileID: 1541101016100272739}
   popupAnimator: {fileID: 95978050838256696}
+  quitPopup: {fileID: 0}
 --- !u!114 &1541101016100272739
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -638,6 +639,7 @@ GameObject:
   - component: {fileID: 114681705879879950}
   - component: {fileID: 1009539082173203997}
   - component: {fileID: 2929768816765813188}
+  - component: {fileID: 524918210137342640}
   m_Layer: 5
   m_Name: Quit Button
   m_TagString: Untagged
@@ -768,6 +770,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &524918210137342640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218281200271478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 1009539082173203997}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &1232992740038104
 GameObject:
   m_ObjectHideFlags: 0
@@ -11980,6 +11997,7 @@ GameObject:
   - component: {fileID: 114242953569327200}
   - component: {fileID: 7977632295127150406}
   - component: {fileID: 4889036428845546352}
+  - component: {fileID: 3909870142612604397}
   m_Layer: 5
   m_Name: Play On Button
   m_TagString: Untagged
@@ -12111,6 +12129,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &3909870142612604397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1911295734510902}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 7977632295127150406}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &1930903434307032
 GameObject:
   m_ObjectHideFlags: 0

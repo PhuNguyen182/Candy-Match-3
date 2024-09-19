@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7975153471832570438}
   - component: {fileID: 2388104146412379683}
   - component: {fileID: 61381926568429406}
+  - component: {fileID: 7614281523999819607}
   m_Layer: 5
   m_Name: Lollipop Booster
   m_TagString: Untagged
@@ -164,6 +165,21 @@ MonoBehaviour:
   boosterCount: {fileID: 6746569242982580282}
   lockObject: {fileID: 7274090170461498483}
   addObject: {fileID: 5485073322469272545}
+--- !u!114 &7614281523999819607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198987091284966578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 7975153471832570438}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &1302125648180244728
 GameObject:
   m_ObjectHideFlags: 0
@@ -687,6 +703,7 @@ GameObject:
   - component: {fileID: 4238924347546927624}
   - component: {fileID: 7107427060229416399}
   - component: {fileID: 68895690348284951}
+  - component: {fileID: 1025425999770784639}
   m_Layer: 5
   m_Name: Bomb Booster
   m_TagString: Untagged
@@ -837,6 +854,21 @@ MonoBehaviour:
   boosterCount: {fileID: 5652996986757799182}
   lockObject: {fileID: 2308795765679711367}
   addObject: {fileID: 2018052019433638015}
+--- !u!114 &1025425999770784639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2592948461100137916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 4238924347546927624}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &2991952858807232442
 GameObject:
   m_ObjectHideFlags: 0
@@ -1740,6 +1772,7 @@ GameObject:
   - component: {fileID: 6596975186401737014}
   - component: {fileID: 5618862846207996398}
   - component: {fileID: 2859231979481159324}
+  - component: {fileID: 4049915079352198880}
   m_Layer: 5
   m_Name: Swap Booster
   m_TagString: Untagged
@@ -1890,6 +1923,21 @@ MonoBehaviour:
   boosterCount: {fileID: 2674296645635448484}
   lockObject: {fileID: 8942355741140050040}
   addObject: {fileID: 1537300663377346159}
+--- !u!114 &4049915079352198880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8222969097329732480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 6596975186401737014}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &8573442990080055083
 GameObject:
   m_ObjectHideFlags: 0
@@ -2120,6 +2168,7 @@ GameObject:
   - component: {fileID: 520750290897738961}
   - component: {fileID: 2386894989964904002}
   - component: {fileID: 1077523425800480323}
+  - component: {fileID: 9041054425634660770}
   m_Layer: 5
   m_Name: Colorful Booster
   m_TagString: Untagged
@@ -2270,3 +2319,18 @@ MonoBehaviour:
   boosterCount: {fileID: 3917405903826599155}
   lockObject: {fileID: 2991952858807232442}
   addObject: {fileID: 3925527738218759637}
+--- !u!114 &9041054425634660770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9058192464946080612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 520750290897738961}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
