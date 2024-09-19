@@ -85,7 +85,6 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
                 {
                     node.SetAvailable(currentLevel >= node.Level);
                     bool isLevelComplete = GameDataManager.Instance.IsLevelComplete(node.Level);
-                    node.CheckCurrent(currentLevel == node.Level);
 
                     //Check less than node.Level to ensure all completed level are in idle state without animation
                     if (isLevelComplete && currentLevel >= node.Level)
@@ -94,6 +93,7 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
                         node.SetStarState(levelNode.Stars, false);
                     }
 
+                    node.CheckCurrent(currentLevel == node.Level);
                     IDisposable d = node.OnClickObservable.Select(value => (value.Level, value.Star))
                                         .Subscribe(value => OnNodeButtonClick(value.Level, value.Star).Forget());
                     disposables.Add(d);
