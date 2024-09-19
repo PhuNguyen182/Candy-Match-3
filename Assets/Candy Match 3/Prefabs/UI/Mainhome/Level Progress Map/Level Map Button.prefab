@@ -92,12 +92,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 110
+  m_fontSize: 130
   m_fontSizeBase: 110
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 50
-  m_fontSizeMax: 110
+  m_fontSizeMax: 130
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 4096
@@ -627,12 +627,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 110
+  m_fontSize: 130
   m_fontSizeBase: 110
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 50
-  m_fontSizeMax: 110
+  m_fontSizeMax: 130
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 4096
@@ -864,7 +864,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &6217298461266343058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -895,6 +895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 0
+  buttonImage: {fileID: 5680433664691045573}
   levelButton: {fileID: 3756888337237086497}
   levelNodeStar: {fileID: 8952485534473824776}
   highlightRing: {fileID: 6641797117560266797}

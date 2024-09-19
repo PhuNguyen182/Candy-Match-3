@@ -9,6 +9,7 @@ using CandyMatch3.Scripts.Mainhome.UI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.GameData;
 using Cysharp.Threading.Tasks;
 using Sirenix.OdinInspector;
 
@@ -77,20 +78,21 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
 
         private void InitProgressLevel()
         {
-            //int currentLevel = GameDataManager.Instance.GetCurrentLevel();
-            using (var listpool = ListPool<IDisposable>.Get(out var disposables))
+            int currentLevel = GameDataManager.Instance.GetCurrentLevel();
+            using (ListPool<IDisposable>.Get(out var disposables))
             {
                 _nodePathDict = nodeButtons.ToDictionary(node => node.Level, node =>
                 {
-                    //node.SetAvailableState(currentLevel >= node.Level);
-                    //bool isLevelComplete = GameDataManager.Instance.IsLevelComplete(node.Level);
+                    node.SetAvailable(currentLevel >= node.Level);
+                    bool isLevelComplete = GameDataManager.Instance.IsLevelComplete(node.Level);
+                    node.CheckCurrent(currentLevel == node.Level);
 
-                    // Check less than node.Level to ensure all completed level are in idle state without animation
-                    //if (isLevelComplete && currentLevel >= node.Level)
-                    //{
-                    //    var levelNode = GameDataManager.Instance.GetLevelProgress(node.Level);
-                    //    node.SetIdleState(levelNode.Star, false);
-                    //}
+                    //Check less than node.Level to ensure all completed level are in idle state without animation
+                    if (isLevelComplete && currentLevel >= node.Level)
+                    {
+                        var levelNode = GameDataManager.Instance.GetLevelProgress(node.Level);
+                        node.SetStarState(levelNode.Stars, false);
+                    }
 
                     IDisposable d = node.OnClickObservable.Select(value => (value.Level, value.Star))
                                         .Subscribe(value => OnNodeButtonClick(value.Level, value.Star).Forget());
@@ -104,14 +106,15 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
 
         private async UniTask OnNodeButtonClick(int level, int stars)
         {
-            //int currentLevel = GameDataManager.CurrentLevel; // Fake code
-            //if (level > currentLevel)
-            //{
-            //    var alertPopup = await AlertPopup.CreateFromAddress(AlertPopupPath);
-            //    alertPopup.SetMessage("This level is still locked.");
-            //}
+            int currentLevel = GameDataManager.Instance.GetCurrentLevel();
 
-            //else
+            if (level > currentLevel)
+            {
+                var alertPopup = await AlertPopup.CreateFromAddress(CommonPopupPaths.AlertPopupPath);
+                alertPopup.SetMessage($"Level {level} is still locked.");
+            }
+
+            else
             {
                 var startGamePopup = await StartGamePopup.CreateFromAddress(CommonPopupPaths.StartGamePopupPath);
                 await startGamePopup.SetLevelInfo(new LevelBoxData

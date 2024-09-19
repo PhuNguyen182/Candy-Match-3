@@ -67,6 +67,11 @@ namespace CandyMatch3.Scripts.GameData
             _gameResourceManager.SpendResource(resourceType, amount);
         }
 
+        public int GetCurrentLevel()
+        {
+            return _levelProgressData.Level;
+        }
+
         public void SetLevel(int level)
         {
             _levelProgressData.SetLevel(level);

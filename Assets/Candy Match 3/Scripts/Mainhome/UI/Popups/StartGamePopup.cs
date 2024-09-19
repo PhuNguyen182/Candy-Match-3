@@ -46,6 +46,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
 
         protected override void OnAwake()
         {
+            targetDatabase.Initialize();
             _token = this.GetCancellationTokenOnDestroy();
 
             playButton.onClick.AddListener(() => PlayGame().Forget());

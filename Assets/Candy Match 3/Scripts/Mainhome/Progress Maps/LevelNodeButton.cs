@@ -10,6 +10,7 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
     public class LevelNodeButton : MonoBehaviour
     {
         [SerializeField] private int level;
+        [SerializeField] private Image buttonImage;
         [SerializeField] private Button levelButton;
         [SerializeField] private LevelNodeStar levelNodeStar;
         [SerializeField] private GameObject highlightRing;
@@ -31,7 +32,6 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
 
         public Observable<(int Level, int Star)> OnClickObservable
             => levelButton.OnClickAsObservable()
-                          .Where(_ => _isAvailable)
                           .Select(_ => (level, _levelStars));
 
         private void OnEnable()
@@ -44,14 +44,34 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
             buttonCanvas.worldCamera = camera;
         }
 
+        public void CheckCurrent(bool isCurrent)
+        {
+            if (isCurrent)
+            {
+                buttonImage.sprite = enableBlueState;
+                pinkLevelText.gameObject.SetActive(false);
+            }
+
+            highlightRing.SetActive(isCurrent);
+            blueLevelText.gameObject.SetActive(isCurrent);
+        }
+
         public void SetAvailable(bool isAvailable)
         {
             _isAvailable = isAvailable;
+            levelNodeStar.gameObject.SetActive(_isAvailable);
+            pinkLevelText.gameObject.SetActive(_isAvailable);
+
+            if (!_isAvailable)
+            {
+                buttonImage.sprite = disableState;
+            }
         }
 
         public void SetStarState(int star, bool isRecentWin)
         {
             levelNodeStar.UpdateStars(star, isRecentWin);
+            buttonImage.sprite = enablePinkState;
         }
 
 #if UNITY_EDITOR
