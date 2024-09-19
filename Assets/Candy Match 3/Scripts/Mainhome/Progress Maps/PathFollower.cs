@@ -38,6 +38,9 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
 
                 elapsedTime += Time.deltaTime;
                 await UniTask.NextFrame(_token);
+                
+                if (_token.IsCancellationRequested)
+                    return;
             }
         }
 
