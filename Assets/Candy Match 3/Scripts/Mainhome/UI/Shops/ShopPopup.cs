@@ -5,13 +5,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Messages;
-using CandyMatch3.Scripts.Common.Databases;
-using CandyMatch3.Scripts.Common.DataStructs;
-using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
 using CandyMatch3.Scripts.Mainhome.Managers;
+using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
+using CandyMatch3.Scripts.Common.DataStructs;
+using CandyMatch3.Scripts.Common.Databases;
 using GlobalScripts.Effects.Tweens;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.Audios;
 using TMPro;
 
 namespace CandyMatch3.Scripts.Mainhome.UI.Shops
@@ -53,6 +55,9 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
 
         protected override void DoAppear()
         {
+            if (!IsPreload)
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+
             MainhomeManager.Instance?.SetInputActive(false);
             background.ShowBackground(true);
         }
@@ -88,6 +93,9 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
         protected override void DoDisappear()
         {
             MainhomeManager.Instance?.SetInputActive(true);
+
+            if (!IsPreload)
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
         }
     }
 }

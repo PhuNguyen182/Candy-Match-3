@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CandyMatch3.Scripts.Common.UIElements;
 using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
+using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Audios;
 
@@ -51,6 +52,7 @@ namespace CandyMatch3.Scripts.LoadingScene.Settings
             soundButton.UpdateImmediately(soundVolume > 0.5f);
 
             fadeBackground?.ShowBackground(true);
+            MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
         }
 
         private void OnMusicButtonClick()
@@ -91,6 +93,7 @@ namespace CandyMatch3.Scripts.LoadingScene.Settings
         {
             popupAnimator.SetTrigger(_closeHash);
             fadeBackground?.ShowBackground(false);
+            MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
         }
     }

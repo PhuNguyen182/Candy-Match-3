@@ -168,6 +168,7 @@ public class BasePopup<T> : BasePopup where T : BasePopup
 {
     private static string _resourcePath;
     public static string ResourcePath => _resourcePath;
+    public static bool IsPreload { get; set; }
 
     public static void Preload()
     {
@@ -199,17 +200,20 @@ public class BasePopup<T> : BasePopup where T : BasePopup
 #if UNITASK_ADDRESSABLE_SUPPORT
     public static async UniTask PreloadFromAddress(string address)
     {
-        T instance = await CreateFromAddress(address);
+        T instance = await CreateFromAddress(address, true);
         
         if(instance != null)
+        {
             SimplePool.Despawn(instance.gameObject);
+        }
     }
 
-    public static async UniTask<T> CreateFromAddress(string address)
+    public static async UniTask<T> CreateFromAddress(string address, bool isPreload = false)
     {
         T instance = default;
         _resourcePath = address;
-        
+        IsPreload = isPreload;
+
         bool isValidPath = await AddressablesUtils.IsKeyValid(address);
 
         if (isValidPath)

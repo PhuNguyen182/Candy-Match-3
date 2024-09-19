@@ -17,6 +17,7 @@ using CandyMatch3.Scripts.Mainhome.Managers;
 using CandyMatch3.Scripts.Gameplay.Models;
 using GlobalScripts.SceneUtils;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.Audios;
 using Newtonsoft.Json;
 using TMPro;
 
@@ -55,6 +56,9 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
 
         protected override void DoAppear()
         {
+            if (!IsPreload)
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+
             MainhomeManager.Instance?.SetInputActive(false);
             background.ShowBackground(true);
         }
@@ -172,6 +176,9 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         protected override void DoDisappear()
         {
             MainhomeManager.Instance?.SetInputActive(true);
+
+            if (!IsPreload)
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
         }
     }
 }

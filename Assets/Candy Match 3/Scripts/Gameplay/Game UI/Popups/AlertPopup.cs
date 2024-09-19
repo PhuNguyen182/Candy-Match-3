@@ -4,9 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Mainhome.Managers;
 using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.Audios;
 using TMPro;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
@@ -32,8 +34,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 
         protected override void DoAppear()
         {
-            MainhomeManager.Instance?.SetInputActive(false);
+            if (!IsPreload)
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+            
             background.ShowBackground(true);
+            MainhomeManager.Instance?.SetInputActive(false);
         }
 
         public void SetMessage(string message)
@@ -52,6 +57,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         protected override void DoDisappear()
         {
             MainhomeManager.Instance?.SetInputActive(true);
+
+            if (!IsPreload)
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
         }
     }
 }

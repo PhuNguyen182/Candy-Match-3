@@ -11,6 +11,7 @@ using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.Messages;
 using GlobalScripts.Effects.Tweens;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.Audios;
 using MessagePipe;
 using TMPro;
 
@@ -85,6 +86,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             _reactiveCoin.Value = 0; // Show the current value of coin in game data
         }
 
+        protected override void DoAppear()
+        {
+            if (!IsPreload)
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+        }
+
         public void SetBoosterPack(InGameBoosterPack boosterPack)
         {
             _boosterPack = boosterPack;
@@ -131,6 +138,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             popupAnimator.SetTrigger(_closeHash);
             backgroundAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(closeClip.length), cancellationToken: _token);
+
+            if (!IsPreload)
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
 
             base.DoClose();
             OnClose?.Invoke();
