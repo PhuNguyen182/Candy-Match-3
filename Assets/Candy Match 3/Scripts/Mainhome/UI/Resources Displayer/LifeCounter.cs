@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CandyMatch3.Scripts.GameData;
+using CandyMatch3.Scripts.GameManagers;
 using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Mainhome.UI.Popups;
+using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using TMPro;
 
@@ -22,6 +25,11 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
             lifeButton.onClick.AddListener(OpenLifePopup);
         }
 
+        private void Update()
+        {
+            UpdateLives();
+        }
+
         private void PreloadPopup()
         {
             BuyLivesPopup.PreloadFromAddress(CommonPopupPaths.LivesPopupPath).Forget();
@@ -33,15 +41,32 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
             BuyLivesPopup.CreateFromAddress(CommonPopupPaths.LivesPopupPath).Forget();
         }
 
-        private void UpdateTime(TimeSpan time)
+        private void UpdateLives()
         {
-            if (time.TotalSeconds > 3600)
-                timeCounter.text = $"{time.Hours:D2}:{time.Minutes:D2}:{time.Seconds:D2}";
-            else
-                timeCounter.text = $"{time.Minutes:D2}:{time.Seconds:D2}";
+            int heart = GameDataManager.Instance
+                        .GetResource(GameResourceType.Life);
+            TimeSpan time = GameManager.Instance
+                            .HeartTimer.HeartTimeDiff;
+
+            UpdateLives(heart);
+            UpdateTime(heart, time);
         }
 
-        public void UpdateLives(int lives)
+        private void UpdateTime(int heart, TimeSpan time)
+        {
+            if (heart >= 5)
+            {
+                timeCounter.text = "Full";
+            }
+
+            else
+            {
+                timeCounter.text = time.TotalSeconds > 3600 ? $"{time.Hours:D2}:{time.Minutes:D2}:{time.Seconds:D2}"
+                                                            : $"{time.Minutes:D2}:{time.Seconds:D2}";
+            }
+        }
+
+        private void UpdateLives(int lives)
         {
             lifeCounter.text = $"{lives}";
         }

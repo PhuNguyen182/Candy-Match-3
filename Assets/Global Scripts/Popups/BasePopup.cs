@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 #if UNITASK_ADDRESSABLE_SUPPORT
+using GlobalScripts.Utils;
 using UnityEngine.AddressableAssets;
 using Cysharp.Threading.Tasks;
 #endif
@@ -208,12 +209,18 @@ public class BasePopup<T> : BasePopup where T : BasePopup
     {
         T instance = default;
         _resourcePath = address;
-        GameObject prefab = await Addressables.LoadAssetAsync<GameObject>(address);
         
-        if (prefab != null)
+        bool isValidPath = await AddressablesUtils.IsKeyValid(address);
+
+        if (isValidPath)
         {
-            instance = SimplePool.Spawn(prefab).GetComponent<T>();
-            instance.gameObject.SetActive(true);
+            GameObject prefab = await Addressables.LoadAssetAsync<GameObject>(address);
+
+            if (prefab != null)
+            {
+                instance = SimplePool.Spawn(prefab).GetComponent<T>();
+                instance.gameObject.SetActive(true);
+            }
         }
 
         return instance;

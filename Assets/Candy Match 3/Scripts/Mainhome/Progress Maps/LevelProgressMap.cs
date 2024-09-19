@@ -77,18 +77,18 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
 
         private void InitProgressLevel()
         {
-            //int currentLevel = GameData.Instance.GetCurrentLevel();
+            //int currentLevel = GameDataManager.Instance.GetCurrentLevel();
             using (var listpool = ListPool<IDisposable>.Get(out var disposables))
             {
                 _nodePathDict = nodeButtons.ToDictionary(node => node.Level, node =>
                 {
                     //node.SetAvailableState(currentLevel >= node.Level);
-                    //bool isLevelComplete = GameData.Instance.IsLevelComplete(node.Level);
+                    //bool isLevelComplete = GameDataManager.Instance.IsLevelComplete(node.Level);
 
                     // Check less than node.Level to ensure all completed level are in idle state without animation
                     //if (isLevelComplete && currentLevel >= node.Level)
                     //{
-                    //    var levelNode = GameData.Instance.GetLevelProgress(node.Level);
+                    //    var levelNode = GameDataManager.Instance.GetLevelProgress(node.Level);
                     //    node.SetIdleState(levelNode.Star, false);
                     //}
 
@@ -104,7 +104,7 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
 
         private async UniTask OnNodeButtonClick(int level, int stars)
         {
-            //int currentLevel = GameData.CurrentLevel; // Fake code
+            //int currentLevel = GameDataManager.CurrentLevel; // Fake code
             //if (level > currentLevel)
             //{
             //    var alertPopup = await AlertPopup.CreateFromAddress(AlertPopupPath);
