@@ -69,6 +69,8 @@ public abstract class BasePopup : MonoBehaviour
 
     protected virtual void DoAppear() { }
 
+    protected virtual void DoDisappear() { }
+
     protected virtual void OnStart() { }
     #endregion
 
@@ -117,6 +119,7 @@ public abstract class BasePopup : MonoBehaviour
         }
 
         PopupController.Instance.OnActionOnClosedOneBox();
+        DoDisappear();
     }
 
     private void OnApplicationQuit()

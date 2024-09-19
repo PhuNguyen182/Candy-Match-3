@@ -11,6 +11,10 @@ namespace CandyMatch3.Scripts.Mainhome.CameraHandlers
         [SerializeField] private SpriteRenderer minBackground;
         [SerializeField] private SpriteRenderer maxBackground;
 
+        [Header("Extended")]
+        [SerializeField] private Vector2 minExtend = new(0, -1.5f);
+        [SerializeField] private Vector2 maxExtend = new(0, 4.5f);
+
         public Bounds ScreenBounds => bounds;
 
         [Button]
@@ -21,8 +25,8 @@ namespace CandyMatch3.Scripts.Mainhome.CameraHandlers
 
             bounds = new Bounds
             {
-                min = min,
-                max = max
+                min = min + minExtend,
+                max = max + maxExtend
             };
         }
     }

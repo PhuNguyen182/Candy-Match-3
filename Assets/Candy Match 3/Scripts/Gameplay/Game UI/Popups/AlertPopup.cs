@@ -4,10 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CandyMatch3.Scripts.Mainhome.Managers;
 using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
 using Cysharp.Threading.Tasks;
 using TMPro;
-using CandyMatch3.Scripts.Mainhome.Managers;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 {
@@ -46,8 +46,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
             background.ShowBackground(false);
             popupAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
-            MainhomeManager.Instance?.SetInputActive(true);
             base.Close();
+        }
+
+        protected override void DoDisappear()
+        {
+            MainhomeManager.Instance?.SetInputActive(true);
         }
     }
 }

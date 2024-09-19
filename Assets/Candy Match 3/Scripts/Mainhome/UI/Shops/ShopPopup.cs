@@ -72,7 +72,6 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
             animator.SetTrigger(_closeHash);
             background.ShowBackground(false);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
-            MainhomeManager.Instance?.SetInputActive(true);
             base.Close();
         }
 
@@ -84,6 +83,11 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
         private void PlayPurchaseEffect()
         {
             coinEffect.Play();
+        }
+
+        protected override void DoDisappear()
+        {
+            MainhomeManager.Instance?.SetInputActive(true);
         }
     }
 }
