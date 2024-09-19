@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.LevelDesign.LevelBuilder;
+using CandyMatch3.Scripts.LevelDesign.LevelBuilders;
 using UnityEngine.Tilemaps;
 
 namespace CandyMatch3.Scripts.LevelDesign.CustomTiles

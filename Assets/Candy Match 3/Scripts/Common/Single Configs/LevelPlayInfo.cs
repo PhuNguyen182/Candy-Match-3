@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using CandyMatch3.Scripts.LevelDesign.LevelBuilder;
+using CandyMatch3.Scripts.LevelDesign.LevelBuilders;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Common.SingleConfigs

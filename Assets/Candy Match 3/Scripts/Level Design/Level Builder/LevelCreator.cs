@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,9 +11,9 @@ using CandyMatch3.Scripts.LevelDesign.CustomTiles;
 using CandyMatch3.Scripts.Gameplay.Models;
 using Newtonsoft.Json;
 
-namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
+namespace CandyMatch3.Scripts.LevelDesign.LevelBuilders
 {
-    public class LevelBuilder : MonoBehaviour
+    public class LevelCreator : MonoBehaviour
     {
         [SerializeField] private TileDatabase tileDatabase;
         [SerializeField] private GridInformation gridInformation;
@@ -261,4 +260,3 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         #endregion
     }
 }
-#endif
