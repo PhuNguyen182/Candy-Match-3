@@ -58,9 +58,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameInput
 
         private void InputPositionHandle(InputAction.CallbackContext context)
         {
-            ScreenMousePosition = context.ReadValue<Vector2>();
-            Vector2 worldMouse = mainCamera.ScreenToWorldPoint(ScreenMousePosition);
-            WorldMoudePosition = worldMouse; // Use Vector2 to eliminate z component
+            if (mainCamera != null)
+            {
+                ScreenMousePosition = context.ReadValue<Vector2>();
+                Vector2 worldMouse = mainCamera.ScreenToWorldPoint(ScreenMousePosition);
+                WorldMoudePosition = worldMouse; // Use Vector2 to eliminate z component
+            }
         }
 
         public GridCellView GetGridCellView()

@@ -36,7 +36,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Miscs
             {
                 animator.SetTrigger(_fadeHash);
                 await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
-                gameObject.SetActive(false);
+                
+                if (_token.IsCancellationRequested)
+                    return;
+                
+                gameObject?.SetActive(false);
             }
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,9 @@ using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using CandyMatch3.Scripts.Gameplay.Models;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.SceneUtils;
 using Stateless;
+using CandyMatch3.Scripts.GameData;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -45,6 +48,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private const int DefaultContinueMove = 5;
         private const int DefaultContinuePrice = 300;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
+
         public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask, StartGameTask startGameTask
             , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask, InGameSettingPanel settingSidePanel)
         {
@@ -55,6 +61,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _endGameScreen = endGameScreen;
             _settingSidePanel = settingSidePanel;
             _suggestTask = suggestTask;
+
+            _cts = new();
+            _token = _cts.Token;
 
             _checkTargetTask.OnEndGame = EndGame;
             _settingSidePanel.OnSetting = SetPlayerActive;
@@ -79,7 +88,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                              .Permit(Trigger.Quit, State.Quit);
 
             _gameStateMachine.Configure(State.Quit)
-                             .OnEntry(OnQuitGame);
+                             .OnEntry(() => OnQuitGame().Forget());
         }
 
         public void SetLevelModel(LevelModel levelModel)
@@ -189,6 +198,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void QuitGame(EndResult result)
         {
+            if(result == EndResult.Win)
+                GameDataManager.Instance.EarnResource(GameResourceType.Life, 1);
+
 #if UNITY_EDITOR
             Debug.Log($"End result: {result}");
 #endif
@@ -200,15 +212,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        private void OnQuitGame()
+        private async UniTask OnQuitGame()
         {
 #if UNITY_EDITOR
             Debug.Log("Quit Level!");
 #endif
+            await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
+            await SceneBridge.LoadNextScene(SceneConstants.Mainhome);
         }
 
         public void Dispose()
         {
+            _cts.Dispose();
             _gameStateMachine.Deactivate();
         }
     }
