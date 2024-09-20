@@ -6,6 +6,7 @@ using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
+using CandyMatch3.Scripts.Gameplay.Models;
 using Cysharp.Threading.Tasks;
 using Stateless;
 
@@ -29,6 +30,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             Quit
         }
 
+        private readonly StartGameTask _startGameTask;
         private readonly EndGameTask _endGameTask;
         private readonly InputProcessTask _inputProcessTask;
         private readonly CheckTargetTask _checkTargetTask;
@@ -38,11 +40,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private readonly StateMachine<State, Trigger> _gameStateMachine;
         private readonly StateMachine<State, Trigger>.TriggerWithParameters<EndResult> _endGameTrigger;
+        private LevelModel _levelModel;
 
-        public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask
+        public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask, StartGameTask startGameTask
             , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask, InGameSettingPanel settingSidePanel)
         {
             _endGameTask = endGameTask;
+            _startGameTask = startGameTask;
             _checkTargetTask = checkTargetTask;
             _inputProcessTask = inputProcessTask;
             _endGameScreen = endGameScreen;
@@ -51,17 +55,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _checkTargetTask.OnEndGame = EndGame;
             _settingSidePanel.OnSetting = SetPlayerActive;
-            _settingSidePanel.QuitPopup.OnPlayerQuit = () =>
-            {
-                QuitGame(EndResult.Lose);
-            };
+            _settingSidePanel.QuitPopup.OnPlayerQuit = OnPlayerQuitPopup;
 
             _gameStateMachine = new StateMachine<State, Trigger>(State.Start);
             _endGameTrigger = _gameStateMachine.SetTriggerParameters<EndResult>(Trigger.EndGame);
 
             _gameStateMachine.Configure(State.Start)
                              .Permit(Trigger.Play, State.Playing)
-                             .OnActivate(StartGame);
+                             .OnActivate(() => Ready().Forget());
 
             _gameStateMachine.Configure(State.Playing)
                              .OnEntryFrom(Trigger.Play, PlayGame)
@@ -76,13 +77,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _gameStateMachine.Configure(State.Quit)
                              .OnEntry(OnQuitGame);
+        }
 
+        public void SetLevelModel(LevelModel levelModel)
+        {
+            _levelModel = levelModel;
+        }
+
+        public void StartGame()
+        {
             _gameStateMachine.Activate();
         }
 
-        private void StartGame()
+        private async UniTask Ready()
         {
             SetPlayerActive(false);
+            await _startGameTask.ShowLevelStart(_levelModel);
 
             if (_gameStateMachine.CanFire(Trigger.Play))
             {
@@ -161,6 +171,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 _gameStateMachine.Fire(Trigger.Continue);
             }
+        }
+
+        private void OnPlayerQuitPopup()
+        {
+            QuitGame(EndResult.Lose);
         }
 
         private void QuitGame(EndResult result)

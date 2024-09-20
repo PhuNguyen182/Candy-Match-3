@@ -128,6 +128,8 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
         private void OnDestroy()
         {
             _disposable.Dispose();
+            AlertPopup.Release();
+            StartGamePopup.Release();
         }
     }
 }

@@ -38,6 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly GameStateController _gameStateController;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly SpecialItemTask _specialItemTask;
+        private readonly StartGameTask _startGameTask;
         private readonly DetectMoveTask _detectMoveTask;
         private readonly EndGameTask _endGameTask;
         private readonly SuggestTask _suggestTask;
@@ -62,6 +63,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _suggestTask = new(_gridCellManager, _detectMoveTask, matchItemsTask);
             _suggestTask.AddTo(ref builder);
+
+            _startGameTask = new();
+            _startGameTask.AddTo(ref builder);
 
             _breakGridTask = breakGridTask;
             _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask, _breakGridTask);
@@ -104,12 +108,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 
-            _gameStateController = new(_inputProcessor, _checkTargetTask, _endGameTask, endGameScreen, _suggestTask, settingSidePanel);
+            _gameStateController = new(_inputProcessor, _checkTargetTask, _startGameTask, _endGameTask
+                                        , endGameScreen, _suggestTask, settingSidePanel);
             _gameStateController.AddTo(ref builder);
             _specialItemTask = specialItemTask;
 
             SetCheckGridTask();
             _disposable = builder.Build();
+        }
+
+        public void StartGame(LevelModel levelModel)
+        {
+            _gameStateController.SetLevelModel(levelModel);
+            _gameStateController.StartGame();
         }
 
         public void InitInGameBooster()

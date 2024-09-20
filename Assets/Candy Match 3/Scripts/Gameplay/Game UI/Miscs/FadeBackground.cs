@@ -25,7 +25,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Miscs
             ShowBackgroundAsync(isActive).Forget();
         }
 
-        private async UniTask ShowBackgroundAsync(bool isActive)
+        public async UniTask ShowBackgroundAsync(bool isActive)
         {
             if (isActive)
             {

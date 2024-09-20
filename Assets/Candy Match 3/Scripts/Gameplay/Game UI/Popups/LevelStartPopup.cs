@@ -12,11 +12,10 @@ using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.Models;
 using Cysharp.Threading.Tasks;
 using TMPro;
-using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 {
-    public class LevelStartPopup : MonoBehaviour
+    public class LevelStartPopup : BasePopup<LevelStartPopup>
     {
         [SerializeField] private TargetElement targetElement;
         [SerializeField] private Transform targetContainer;
@@ -28,7 +27,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         private CancellationToken _token;
         private List<TargetElement> _targets = new();
 
-        private void Awake()
+        protected override void OnAwake()
         {
             _token = this.GetCancellationTokenOnDestroy();
         }
@@ -66,8 +65,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 
         public async UniTask ClosePopup()
         {
-            background.ShowBackground(false);
             await UniTask.Delay(TimeSpan.FromSeconds(1.667f), cancellationToken: _token);
+            await background.ShowBackgroundAsync(false);
             gameObject.SetActive(false);
         }
 
@@ -99,6 +98,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
             }
 
             _targets.Clear();
+        }
+
+        protected override void DoDisappear()
+        {
+            ClearTargets();
         }
     }
 }

@@ -52,5 +52,10 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
         {
             _reactiveCoin.Value = coins;
         }
+
+        private void OnDestroy()
+        {
+            ShopPopup.Release();
+        }
     }
 }

@@ -3503,6 +3503,8 @@ MonoBehaviour:
     Target: 3
   - TargetAmount: 5
     Target: 5
+  - TargetAmount: 6
+    Target: 6
   boardFillRules:
   - Coefficient: 1000
     Color: 1

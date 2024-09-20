@@ -246,7 +246,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gameTaskManager.InitInGameBooster();
             _gameTaskManager.BuildTarget(levelModel);
             _gameTaskManager.BuildBoardMovementCheck();
-            _gameTaskManager.SetInputActive(true);
+            _gameTaskManager.StartGame(levelModel);
         }
 
         private void AddBreakableItem(BlockItemPosition blockItemPosition)

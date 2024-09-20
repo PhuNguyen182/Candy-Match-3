@@ -70,5 +70,10 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
         {
             lifeCounter.text = $"{lives}";
         }
+
+        private void OnDestroy()
+        {
+            BuyLivesPopup.Release();
+        }
     }
 }

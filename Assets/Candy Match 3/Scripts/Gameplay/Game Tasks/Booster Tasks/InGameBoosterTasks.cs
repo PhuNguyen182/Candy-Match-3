@@ -254,6 +254,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _disposable.Dispose();
             _boosterDisposable?.Dispose();
             _messageDisposable.Dispose();
+
+            ShopPopup.Release();
+            InGameBoosterPopup.Release();
         }
     }
 }

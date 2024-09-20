@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
 #if UNITASK_ADDRESSABLE_SUPPORT
 using GlobalScripts.Utils;
 using UnityEngine.AddressableAssets;
@@ -198,6 +200,8 @@ public class BasePopup<T> : BasePopup where T : BasePopup
     }
 
 #if UNITASK_ADDRESSABLE_SUPPORT
+    private static AsyncOperationHandle<GameObject> _opHandle;
+
     public static async UniTask PreloadFromAddress(string address)
     {
         T instance = await CreateFromAddress(address, true);
@@ -218,16 +222,25 @@ public class BasePopup<T> : BasePopup where T : BasePopup
 
         if (isValidPath)
         {
-            GameObject prefab = await Addressables.LoadAssetAsync<GameObject>(address);
+            _opHandle = Addressables.LoadAssetAsync<GameObject>(address);
+            await _opHandle;
 
-            if (prefab != null)
+            if (_opHandle.Status == AsyncOperationStatus.Succeeded)
             {
-                instance = SimplePool.Spawn(prefab).GetComponent<T>();
+                instance = SimplePool.Spawn(_opHandle.Result).GetComponent<T>();
                 instance.gameObject.SetActive(true);
             }
+
+            else Release();
         }
 
         return instance;
+    }
+
+    public static void Release()
+    {
+        if (_opHandle.IsValid())
+            Addressables.Release(_opHandle);
     }
 #endif
 }
