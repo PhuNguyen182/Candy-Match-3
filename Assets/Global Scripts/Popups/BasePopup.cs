@@ -1,6 +1,9 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
 #if UNITASK_ADDRESSABLE_SUPPORT
+using GlobalScripts.Utils;
 using UnityEngine.AddressableAssets;
 using Cysharp.Threading.Tasks;
 #endif
@@ -37,7 +40,7 @@ public abstract class BasePopup : MonoBehaviour
         {
             popupCanvas.renderMode = RenderMode.ScreenSpaceCamera;
             popupCanvas.worldCamera = Camera.main;
-            popupCanvas.sortingLayerID = SortingLayer.NameToID("Popup");
+            //popupCanvas.sortingLayerID = SortingLayer.NameToID("Popup");
         }
 
         OnAwake();
@@ -68,6 +71,8 @@ public abstract class BasePopup : MonoBehaviour
     }
 
     protected virtual void DoAppear() { }
+
+    protected virtual void DoDisappear() { }
 
     protected virtual void OnStart() { }
     #endregion
@@ -117,6 +122,7 @@ public abstract class BasePopup : MonoBehaviour
         }
 
         PopupController.Instance.OnActionOnClosedOneBox();
+        DoDisappear();
     }
 
     private void OnApplicationQuit()
@@ -153,17 +159,13 @@ public abstract class BasePopup : MonoBehaviour
     }
 
     #endregion
-
-    public virtual bool IsActive()
-    {
-        return true;
-    }
 }
 
 public class BasePopup<T> : BasePopup where T : BasePopup
 {
     private static string _resourcePath;
     public static string ResourcePath => _resourcePath;
+    public static bool IsPreload { get; set; }
 
     public static void Preload()
     {
@@ -193,27 +195,47 @@ public class BasePopup<T> : BasePopup where T : BasePopup
     }
 
 #if UNITASK_ADDRESSABLE_SUPPORT
+    private static AsyncOperationHandle<GameObject> _opHandle;
+
     public static async UniTask PreloadFromAddress(string address)
     {
-        T instance = await CreateFromAddress(address);
+        T instance = await CreateFromAddress(address, true);
         
         if(instance != null)
+        {
             SimplePool.Despawn(instance.gameObject);
+        }
     }
 
-    public static async UniTask<T> CreateFromAddress(string address)
+    public static async UniTask<T> CreateFromAddress(string address, bool isPreload = false)
     {
-        _resourcePath = address;
         T instance = default;
-        T prefab = await Addressables.LoadAssetAsync<T>(address);
-        
-        if (prefab != null)
+        _resourcePath = address;
+        IsPreload = isPreload;
+
+        bool isValidPath = await AddressablesUtils.IsKeyValid(address);
+
+        if (isValidPath)
         {
-            instance = SimplePool.Spawn(prefab);
-            instance.gameObject.SetActive(true);
+            _opHandle = Addressables.LoadAssetAsync<GameObject>(address);
+            await _opHandle;
+
+            if (_opHandle.Status == AsyncOperationStatus.Succeeded)
+            {
+                instance = SimplePool.Spawn(_opHandle.Result).GetComponent<T>();
+                instance.gameObject.SetActive(true);
+            }
+
+            else Release();
         }
 
         return instance;
+    }
+
+    public static void Release()
+    {
+        if (_opHandle.IsValid())
+            Addressables.Release(_opHandle);
     }
 #endif
 }

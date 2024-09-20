@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,11 +18,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] protected ItemGraphics itemGraphics;
 
         protected CancellationToken destroyToken;
+        protected IDisposable messageDisposable;
 
         public int ItemID => itemId;
-        public bool IsMoving { get; set; }
+        public bool IsLocking { get; set; }
 
-        public abstract bool CanBeReplace { get; }
+        public abstract bool Replacable { get; }
 
         public abstract bool IsMatchable { get; }
 
@@ -52,7 +54,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private void Start()
         {
             OnStart();
-            InitOriginalMessages();
+            InitCommonMessages();
         }
 
         protected virtual void OnAwake() { }
@@ -67,7 +69,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public virtual void SetMatchable(bool isMatchable) { }
 
-        protected void InitOriginalMessages() { }
+        protected void InitCommonMessages() { }
 
         public virtual void InitMessages() { }
 
@@ -135,6 +137,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private void OnDestroy()
         {
             OnRelease();
+            messageDisposable?.Dispose();
         }
     }
 }

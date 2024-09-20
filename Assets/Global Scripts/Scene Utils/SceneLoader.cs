@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,8 +13,7 @@ namespace GlobalScripts.SceneUtils
     {
         public static async UniTask LoadScene(string sceneName, LoadSceneMode loadMode = LoadSceneMode.Single)
         {
-            AsyncOperation sceneOperator = SceneManager.LoadSceneAsync(sceneName, loadMode);
-            await sceneOperator;
+            await SceneManager.LoadSceneAsync(sceneName, loadMode);
         }
 
         public static async UniTask LoadScene(string sceneName, IProgress<float> progress, LoadSceneMode loadMode = LoadSceneMode.Single)
@@ -24,9 +24,9 @@ namespace GlobalScripts.SceneUtils
 
 #if UNITASK_ADDRESSABLE_SUPPORT
         public static async UniTask LoadSceneViaAddressable(string key, LoadSceneMode loadMode = LoadSceneMode.Single
-            , bool activateOnLoad = true, int priority = 100)
+            , bool activateOnLoad = true, int priority = 100, CancellationToken cancellationToken = default)
         {
-            await AddressablesUtils.LoadSceneViaAddressable(key, loadMode, activateOnLoad, priority);
+            await AddressablesUtils.LoadSceneViaAddressable(key, loadMode, activateOnLoad, priority, cancellationToken);
         }
 #endif
     }

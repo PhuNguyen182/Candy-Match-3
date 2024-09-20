@@ -4,11 +4,16 @@ using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.DataStructs;
+using CandyMatch3.Scripts.Common.Messages;
+using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.Utils;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect, IColorfulEffect
+    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect, IColorfulEffect, IItemSuggest
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
@@ -19,8 +24,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private GameObject colorfulEffect;
 
         private GameObject _colorfulEffect;
+        private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
+        private IPublisher<AsyncMessage<MoveTargetData>> _moveToTargetPublisher;
 
-        public override bool CanBeReplace => true;
+        public override bool Replacable => true;
 
         public override bool IsMatchable => true;
 
@@ -34,7 +41,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void InitMessages()
         {
-            
+            _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
+            _moveToTargetPublisher = GlobalMessagePipe.GetPublisher<AsyncMessage<MoveTargetData>>();
         }
 
         public override async UniTask ItemBlast()
@@ -50,7 +58,33 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
                 _colorfulEffect.transform.SetParent(EffectContainer.Transform);
             }
 
+            itemAnimation.ToggleSuggest(false);
+            MoveToTargetAndRelease().Forget();
             SimplePool.Despawn(this.gameObject);
+        }
+
+        private async UniTask MoveToTargetAndRelease()
+        {
+            MoveTargetData data = new MoveTargetData { TargetType = targetType };
+            MoveTargetData target = await MessageBrokerUtils<MoveTargetData>
+                                          .PublishAsyncMessage(_moveToTargetPublisher, data);
+            if (!target.IsCompleted)
+            {
+                var flyObject = EffectManager.Instance.SpawnFlyCompletedTarget(targetType, transform.position);
+                flyObject.transform.localScale = Vector3.one;
+                
+                float distance = Vector3.Distance(target.Destination, transform.position);
+                float speed = Mathf.Lerp(Match3Constants.NearSpeed, Match3Constants.FarSpeed, distance / Match3Constants.MaxDistance);
+                float duration = distance / speed;
+
+                UniTask moveTask = flyObject.MoveToTarget(target.Destination, duration);
+                _decreaseTargetPublisher.Publish(new DecreaseTargetMessage
+                {
+                    Task = moveTask,
+                    TargetType = targetType,
+                    HasMoveTask = true
+                });
+            }
         }
 
         public void SetColor(CandyColor candyColor)
@@ -122,8 +156,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
         }
 
-        public void PlayBreakEffect(int healthPoint)
+        public void PlayBreakEffect()
         {
+            EffectManager.Instance.SpawnBlastEffect(WorldPosition);
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
         }
@@ -135,7 +170,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public void PlayColorfulEffect()
         {
-            _colorfulEffect = SimplePool.Spawn(colorfulEffect, transform, transform.position, Quaternion.identity);
+            itemAnimation.TriggerVibrate();
+        }
+
+        public void Highlight(bool isActive)
+        {
+            itemAnimation.ToggleSuggest(isActive);
+        }
+
+        public void PlayBoosterEffect(BoosterType boosterType)
+        {
+            
         }
     }
 }

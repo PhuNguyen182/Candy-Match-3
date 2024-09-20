@@ -9,7 +9,7 @@ public static class SimplePool
     // Note, you can also use Preload() to setSpawnPoints the initial size
     // of a pool -- this can be handy if only some of your pools
     // are going to be exceptionally large (for example, your bullets.)
-    private const int DEFAULT_POOL_SIZE = 3;
+    private const int DefaultPoolSize = 10;
 
     /// <summary>
     /// The Pool class represents the pool for a particular prefab.
@@ -138,7 +138,7 @@ public static class SimplePool
     /// <summary>
     /// Initialize our dictionary.
     /// </summary>
-    private static void Init(GameObject prefab = null, int qty = DEFAULT_POOL_SIZE)
+    private static void Init(GameObject prefab = null, int qty = DefaultPoolSize)
     {
         if (_pools == null)
             _pools = new Dictionary<int, Pool>();

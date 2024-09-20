@@ -7,8 +7,10 @@ using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -17,12 +19,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly GridCellManager _gridCellManager;
         private readonly ExplodeItemTask _explodeItemTask;
         private readonly BreakGridTask _breakGridTask;
+        private readonly IPublisher<CameraShakeMessage> _cameraShakePublisher;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
-        public BoundsInt AttackRange { get; private set; }
+        private BoundsInt _attackRange;
 
         public WrappedBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ExplodeItemTask explodeItemTask)
         {
@@ -32,13 +35,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             _cts = new();
             _token = _cts.Token;
+
+            _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
         }
 
-        public async UniTask Activate(IGridCell gridCell, bool useDelay, bool doNotCheck)
+        public async UniTask Activate(IGridCell gridCell, int stage, bool useDelay, bool doNotCheck, bool isCreateBooster, Action<BoundsInt> attackRange)
         {
             Vector3Int position = gridCell.GridPosition;
-            _breakGridTask.ReleaseGridCell(gridCell);
+            IBlockItem blockItem = gridCell.BlockItem;
 
+            ProcessBooster(gridCell, blockItem, isCreateBooster, stage);
             using (var attactListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
             {
                 BoundsInt checkRange = position.GetBounds2D(1);
@@ -47,6 +53,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 using var brealListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
                 using var encapsulateListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> encapsulatePositions);
+                
+                if(stage > 0)
+                    _explodeItemTask.Blast(position, 2).Forget();
 
                 for (int i = 0; i < attackPositions.Count; i++)
                 {
@@ -57,21 +66,25 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     breakTasks.Add(BreakItem(attackPositions[i]));
                 }
 
+                ShakeCamera();
                 await UniTask.WhenAll(breakTasks);
 
+                await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 Vector3Int min = attackPositions[0] + new Vector3Int(-1, -1);
                 Vector3Int max = attackPositions[count - 1] + new Vector3Int(1, 1);
 
+                encapsulatePositions.Clear();
                 encapsulatePositions.Add(min);
                 encapsulatePositions.Add(max);
 
-                AttackRange = BoundsExtension.Encapsulate(encapsulatePositions);
+                _attackRange = BoundsExtension.Encapsulate(encapsulatePositions);
+                attackRange?.Invoke(_attackRange);
 
                 if (useDelay)
                     await UniTask.DelayFrame(Match3Constants.BoosterDelayFrame, PlayerLoopTiming.FixedUpdate, _token);
 
                 if (!doNotCheck)
-                    _checkGridTask.CheckRange(AttackRange);
+                    _checkGridTask.CheckRange(_attackRange);
             }
         }
 
@@ -80,11 +93,46 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _checkGridTask = checkGridTask;
         }
 
+        private void ProcessBooster(IGridCell gridCell, IBlockItem blockItem, bool isCreateBooster, int stage)
+        {
+            if (!isCreateBooster)
+            {
+                if (stage == 1)
+                    TriggerBooster(blockItem);
+
+                else
+                    _breakGridTask.ReleaseGridCell(gridCell);
+            }
+
+            else
+                _breakGridTask.ReleaseGridCell(gridCell);
+        }
+
+        private void TriggerBooster(IBlockItem blockItem)
+        {
+            if (blockItem != null)
+            {
+                blockItem.SetMatchable(false);
+
+                if (blockItem is IColorBooster colorBooster)
+                    colorBooster.TriggerNextStage(3);
+            }
+        }
+
+        private void ShakeCamera()
+        {
+            _cameraShakePublisher.Publish(new CameraShakeMessage
+            {
+                Amplitude = 1f,
+                Duration = 0.3f
+            });
+        }
+
         private async UniTask BreakItem(Vector3Int position)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
 
-            if (gridCell == null || gridCell.IsLocked)
+            if (gridCell == null)
                 return;
 
             await _breakGridTask.BreakItem(position);

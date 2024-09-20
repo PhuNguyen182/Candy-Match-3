@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 6870753736870993578}
   - component: {fileID: 7063991163602557052}
   - component: {fileID: 8241515987592640655}
-  - component: {fileID: 3690093505019425503}
   - component: {fileID: 1493207833021039645}
+  - component: {fileID: 3690093505019425503}
   m_Layer: 0
   m_Name: Color Booster Item
   m_TagString: Untagged
@@ -57,6 +57,13 @@ MonoBehaviour:
   itemGraphics: {fileID: 8241515987592640655}
   colorBoosterType: 0
   itemAnimation: {fileID: 1493207833021039645}
+  normalSprites:
+  - {fileID: 21300000, guid: 265f819b96965413f8a3783d3d479592, type: 3}
+  - {fileID: 21300000, guid: c0a8f680a14404342b7afb744839cdab, type: 3}
+  - {fileID: 21300000, guid: d75a89511eeb846a79467d286ccab1f0, type: 3}
+  - {fileID: 21300000, guid: bcc2f2d61e16f452c89590375064ccab, type: 3}
+  - {fileID: 21300000, guid: 577bd8aba295c44d7b180b72d8f50956, type: 3}
+  - {fileID: 21300000, guid: 36ed891685b1247669d1e215ea0330b2, type: 3}
   wrappedSprites:
   - {fileID: 21300000, guid: 8f810f7319d6b0143b436535d013e36f, type: 3}
   - {fileID: 21300000, guid: 0055b1848a41d4f6596e8aaf62fda7a8, type: 3}
@@ -94,27 +101,6 @@ MonoBehaviour:
   bottomState: {fileID: 7464532411603574514}
   itemRenderer: {fileID: 8555525281269574999}
   topState: {fileID: 7630585003075964698}
---- !u!95 &3690093505019425503
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1297088511453682728}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2c5342120a0980b4189642d42b246c24, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &1493207833021039645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,6 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemAnimator: {fileID: 3690093505019425503}
+  itemGraphics: {fileID: 8241515987592640655}
   itemRenderer: {fileID: 8555525281269574999}
   fallenCurve:
     serializedVersion: 2
@@ -177,11 +164,122 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  bounceDuration: 0.3
-  moveEase: 1
+  bounceDuration: 0.125
   bounceEase: 6
-  fadeDuration: 0.3
-  fadeEase: 4
+  glowLightDuration: 0.5
+  highlightDuration: 1.25
+  boosterDuration: 1
+  highlightEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.35
+      value: 0.325
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 2
+      inWeight: 0.33333334
+      outWeight: 0.18022314
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 1
+      inWeight: 0.9978466
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  glowlightEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.24721879
+      outSlope: 0.24721879
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.618
+      value: 0.4
+      inSlope: 0.24721879
+      outSlope: 0.24721879
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  boosterEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.2
+      outSlope: 1.2
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.6
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1.2
+      outSlope: -1.2
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!95 &3690093505019425503
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1297088511453682728}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2c5342120a0980b4189642d42b246c24, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2643673101626527850
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,7 +332,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: b53fd848ffa310c45bbced6b6cc35e63, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -254,7 +352,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -664089845
   m_SortingLayer: 5
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 6f71e081c6c44fe48a68f54f7c10ac75, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -370,7 +468,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -664089845
   m_SortingLayer: 5
-  m_SortingOrder: 1
+  m_SortingOrder: 4
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -454,7 +552,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -664089845
   m_SortingLayer: 5
-  m_SortingOrder: -1
+  m_SortingOrder: -2
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

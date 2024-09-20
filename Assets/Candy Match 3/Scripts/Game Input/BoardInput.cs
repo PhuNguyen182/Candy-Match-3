@@ -59,10 +59,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameInput
         private void InputPositionHandle(InputAction.CallbackContext context)
         {
             ScreenMousePosition = context.ReadValue<Vector2>();
-            Vector3 worldMouse = mainCamera.ScreenToWorldPoint(ScreenMousePosition);
-            worldMouse.z = 0;
-
-            WorldMoudePosition = worldMouse;
+            Vector2 worldMouse = mainCamera.ScreenToWorldPoint(ScreenMousePosition);
+            WorldMoudePosition = worldMouse; // Use Vector2 to eliminate z component
         }
 
         public GridCellView GetGridCellView()
@@ -79,7 +77,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameInput
 
         public bool IsUIOverlayed()
         {
-            return EventSystem.current.IsPointerOverGameObject();
+            return EventSystem.current == null ? false : EventSystem.current.IsPointerOverGameObject();
         }
 
         private void OnDisable()

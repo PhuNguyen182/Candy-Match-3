@@ -76,8 +76,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 Vector3Int maxHorizontal = rowListPositions[horizontalCount - 1] + new Vector3Int(0, 1);
                 Vector3Int maxVertical = columnListPositions[horizontalCount - 1] + new Vector3Int(1, 0);
 
+                rowListPositions.Clear();
                 rowListPositions.Add(minHorizontal);
                 rowListPositions.Add(maxHorizontal);
+
+                columnListPositions.Clear();
                 columnListPositions.Add(minVertical);
                 columnListPositions.Add(maxVertical);
 
@@ -95,8 +98,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             Vector3 horizontal = new(0, position.y);
             Vector3 vertical = new(position.x, 0);
 
-            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Horizontal, horizontal);
-            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, ColorBoosterType.Vertical, vertical);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, BoosterType.Horizontal, horizontal);
+            EffectManager.Instance.SpawnBoosterEffect(ItemType.None, BoosterType.Vertical, vertical);
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

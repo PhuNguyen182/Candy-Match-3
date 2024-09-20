@@ -55,9 +55,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void OnFixedUpdate()
         {
             if (!CanCheck)
-            {
                 return;
-            }
 
             if (_checkPositions.Count > 0)
             {
@@ -115,6 +113,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkPositions.Add(position + Vector3Int.right);
             _checkPositions.Add(position + Vector3Int.down);
             _checkPositions.Add(position + Vector3Int.up);
+        }
+
+        public void CheckAt(Vector3Int position)
+        {
+            _checkPositions.Add(position);
         }
 
         public void CheckRange(BoundsInt boundsRange)

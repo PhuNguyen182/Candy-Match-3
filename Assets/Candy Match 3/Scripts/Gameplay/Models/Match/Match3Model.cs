@@ -8,6 +8,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
     public class Match3Model : BaseMatchModel
     {
+        protected override int matchScoreCount => 1;
         protected override int requiredItemCount => 2;
         public override MatchType MatchType => MatchType.Match3;
         protected override List<SequencePattern> sequencePattern { get; }

@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 871147b04707698458a7f133b3eccdc1, type: 3}
+  m_Name: Product Database
+  m_EditorClassIdentifier: 
+  ProductInfos:
+  - ProductID: Coin1
+    ProductIcon: {fileID: 21300000, guid: 34b2cb030b63b4f769b80014241050a7, type: 3}
+    DefaultPrice: 45.99
+    Amount: 3600
+  - ProductID: Coin2
+    ProductIcon: {fileID: 21300000, guid: 6df24fd3eca7b485397b8f5b2bbbe80c, type: 3}
+    DefaultPrice: 15.99
+    Amount: 1200
+  - ProductID: Coin3
+    ProductIcon: {fileID: 21300000, guid: 3c3ddf90018d74567bd47c18c09b82d4, type: 3}
+    DefaultPrice: 13.99
+    Amount: 950
+  - ProductID: Coin4
+    ProductIcon: {fileID: 21300000, guid: 82d766988cebf4b958dfe73281a99f0a, type: 3}
+    DefaultPrice: 5.99
+    Amount: 400
+  - ProductID: Coin5
+    ProductIcon: {fileID: 21300000, guid: 966fb849b138f41588870d782ec646c1, type: 3}
+    DefaultPrice: 1.99
+    Amount: 150

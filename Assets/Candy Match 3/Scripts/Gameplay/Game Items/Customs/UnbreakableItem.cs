@@ -7,7 +7,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
     public class UnbreakableItem : BaseItem
     {
-        public override bool CanBeReplace => false;
+        public override bool Replacable => false;
 
         public override bool IsMatchable => false;
 

@@ -66,6 +66,29 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             return false;
         }
 
+        public bool CheckMatch(Vector3Int checkPosition, out int matchScore)
+        {
+            if (_match5Model.CheckMatch(checkPosition, out matchScore))
+                return true;
+
+            else if (_matchLModel.CheckMatch(checkPosition, out matchScore))
+                return true;
+
+            else if (_matchTModel.CheckMatch(checkPosition, out matchScore))
+                return true;
+
+            else if (_match4HorizontalModel.CheckMatch(checkPosition, out matchScore))
+                return true;
+
+            else if (_match4VerticalModel.CheckMatch(checkPosition, out matchScore))
+                return true;
+
+            else if (_match3Model.CheckMatch(checkPosition, out matchScore))
+                return true;
+
+            return false;
+        }
+
         public void Dispose()
         {
             _disposable.Dispose();

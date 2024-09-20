@@ -23,18 +23,21 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         #region Modify Material Property
         public void SetIntegerRendererProperty(int propertyId, int value)
         {
+            itemRenderer.GetPropertyBlock(_propertyBlock);
             _propertyBlock.SetInteger(propertyId, value);
             itemRenderer.SetPropertyBlock(_propertyBlock);
         }
 
         public void SetFloatRendererProperty(int propertyId, float value)
         {
+            itemRenderer.GetPropertyBlock(_propertyBlock);
             _propertyBlock.SetFloat(propertyId, value);
             itemRenderer.SetPropertyBlock(_propertyBlock);
         }
 
         public void SetTextureRendererProperty(int propertyId, Texture2D value)
         {
+            itemRenderer.GetPropertyBlock(_propertyBlock);
             _propertyBlock.SetTexture(propertyId, value);
             itemRenderer.SetPropertyBlock(_propertyBlock);
         }

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GlobalScripts.Service;
+using CandyMatch3.Scripts.GameData;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
 
 namespace GlobalScripts.App
 {
@@ -14,7 +17,25 @@ namespace GlobalScripts.App
 
         public void Initialize()
         {
-            InitializeService.Instance.Initialize();
+            LoadGameData();
+            InitDOTween();
+            InitUnitask();
+        }
+
+        private void LoadGameData()
+        {
+            GameDataManager.Instance.LoadData();
+            GameDataManager.Instance.InitializeData();
+        }
+
+        private void InitDOTween()
+        {
+            DOTween.Init(true, true, LogBehaviour.Verbose).SetCapacity(2000, 200);
+        }
+
+        private void InitUnitask()
+        {
+            TaskPool.SetMaxPoolSize(100000);
         }
     }
 }

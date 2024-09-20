@@ -22,6 +22,8 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public abstract bool IsAvailable { get; }
 
+        public abstract TargetEnum TargetType { get; }
+
         public abstract void SetHealthPoint(int healthPoint);
 
         public abstract void Release();

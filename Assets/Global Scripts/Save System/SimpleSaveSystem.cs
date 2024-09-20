@@ -1,10 +1,10 @@
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GlobalScripts.Encryption;
 using Newtonsoft.Json;
-using System;
 
 namespace GlobalScripts.SaveSystem
 {

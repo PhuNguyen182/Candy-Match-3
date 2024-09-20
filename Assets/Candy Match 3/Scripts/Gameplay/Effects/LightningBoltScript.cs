@@ -99,7 +99,6 @@ namespace DigitalRuby.LightningBolt
         private int animationOffsetIndex;
         private int animationPingPongDirection = 1;
         private bool orthographic;
-        private float timeAwait;
 
         public bool IsActive { get; set; }
 
@@ -378,7 +377,6 @@ namespace DigitalRuby.LightningBolt
 
         private void OnDisable()
         {
-            timeAwait = 0;
             IsActive = false;
         }
 

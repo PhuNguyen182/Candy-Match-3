@@ -58,6 +58,11 @@ namespace GlobalScripts.Audios
             }
         }
 
+        protected override void OnAwake()
+        {
+            effectDatabase.Initialize();
+        }
+
         private void Start()
         {
             OnMasterChange += AdjustMasterVolume;

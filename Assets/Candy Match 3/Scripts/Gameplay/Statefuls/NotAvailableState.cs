@@ -13,6 +13,8 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
 
         public override StatefulGroupType GroupType => StatefulGroupType.NotAvailable;
 
+        public override TargetEnum TargetType => TargetEnum.None;
+
         public override bool IsLocked => true;
 
         public override bool CanContainItem => false;

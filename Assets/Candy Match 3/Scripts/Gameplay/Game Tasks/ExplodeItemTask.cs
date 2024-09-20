@@ -27,6 +27,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _token = _cts.Token;
         }
 
+        public async UniTask Blast(Vector3Int pivot, Vector3Int size)
+        {
+            BoundsInt bounds = pivot.GetBounds2D(size);
+            await Blast(pivot, bounds);
+        }
+
+        public async UniTask Blast(Vector3Int pivot, int range)
+        {
+            BoundsInt bounds = pivot.GetBounds2D(range);
+            await Blast(pivot, bounds);
+        }
+
         public async UniTask Blast(Vector3Int pivot, BoundsInt range)
         {
             using(ListPool<Vector3Int>.Get(out List<Vector3Int> boundsEdge))
@@ -45,25 +57,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                         gridCell = _gridCellManager.Get(boundsEdge[i]);
 
-                        if (gridCell == null)
+                        if (gridCell == null || !gridCell.HasItem)
                             continue;
 
-                        if (!gridCell.HasItem)
+                        if (gridCell.IsLocked || !gridCell.IsMoveable)
                             continue;
 
                         if (gridCell.BlockItem is IItemAnimation animation)
                         {
-                            Vector3 blockPosition = gridCell.WorldPosition;
-                            Vector3 direction = (gridCell.WorldPosition - centerPosition).normalized;
-
+                            Vector3 direction = (centerPosition - gridCell.WorldPosition).normalized;
                             float distance = GetDistance(pivot, gridCell.GridPosition);
                             float bounce = Match3Constants.ExplodeAmplitude * Mathf.Log(distance, Match3Constants.ExplosionPower);
-                            explodeTasks.Add(animation.BounceInDirection(blockPosition + direction * bounce));
+                            explodeTasks.Add(animation.BounceInDirection(direction * bounce));
                         }
                     }
 
                     await UniTask.WhenAll(explodeTasks);
-                    await UniTask.NextFrame(_token);
                 }
             }
         }

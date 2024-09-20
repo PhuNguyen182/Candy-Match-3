@@ -3,12 +3,15 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using GlobalScripts.Comparers;
 
 namespace GlobalScripts.Extensions
 {
     public static class BoundsExtension
     {
+        public static Vector3IntComparer Vector3IntComparer { get; } = new();
+
         public static BoundsInt GetBounds2D(this Vector3Int position, Vector3Int size)
         {
             return new BoundsInt(position - size / 2, size);
@@ -34,19 +37,24 @@ namespace GlobalScripts.Extensions
 
         public static BoundsInt Encapsulate(List<Vector3Int> positions)
         {
-            List<Vector3Int> sortedPosition = new(positions);
-            sortedPosition.Sort(new Vector3IntComparer());
-
-            Vector3Int firstPosition = sortedPosition.First();
-            Vector3Int lastPosition = sortedPosition.Last();
-
-            return new BoundsInt
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> sortedPosition))
             {
-                xMin = firstPosition.x,
-                xMax = lastPosition.x + 1,
-                yMin = firstPosition.y,
-                yMax = lastPosition.y + 1
-            };
+                sortedPosition.AddRange(positions);
+                sortedPosition.Sort(Vector3IntComparer);
+
+                int count = sortedPosition.Count;
+                Vector3Int firstPosition = sortedPosition[0];
+                Vector3Int lastPosition = sortedPosition[count - 1];
+                BoundsInt bounds = new BoundsInt
+                {
+                    xMin = firstPosition.x,
+                    xMax = lastPosition.x + 1,
+                    yMin = firstPosition.y,
+                    yMax = lastPosition.y + 1
+                };
+
+                return bounds;
+            }
         }
 
         public static IEnumerable<Vector3Int> GetRow(this BoundsInt boundsInt, Vector3Int checkPosition)

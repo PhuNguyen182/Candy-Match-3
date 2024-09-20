@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7845236151277657174}
-  - component: {fileID: 7334234748632235784}
   - component: {fileID: 6163990856977855875}
+  - component: {fileID: 7334234748632235784}
   m_Layer: 6
   m_Name: Grid Cell View
   m_TagString: Untagged
@@ -36,22 +36,6 @@ Transform:
   - {fileID: 7303449438153130429}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7334234748632235784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1115681626377819794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b0bc36a4d731d54da096849df88a01e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groundCell: {fileID: 5630804934079488076}
-  bottomState: {fileID: 3800330006288200660}
-  topState: {fileID: 2399170616265834038}
-  gridPosition: {x: 0, y: 0, z: 0}
 --- !u!61 &6163990856977855875
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -97,6 +81,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.75, y: 0.75}
   m_EdgeRadius: 0
+--- !u!114 &7334234748632235784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1115681626377819794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b0bc36a4d731d54da096849df88a01e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridPosition: {x: 0, y: 0, z: 0}
+  groundCell: {fileID: 5630804934079488076}
+  bottomState: {fileID: 3800330006288200660}
+  topState: {fileID: 2399170616265834038}
 --- !u!1 &2901851563063364717
 GameObject:
   m_ObjectHideFlags: 0
