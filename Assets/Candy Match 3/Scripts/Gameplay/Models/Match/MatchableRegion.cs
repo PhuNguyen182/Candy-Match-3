@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Models.Match
@@ -11,16 +10,16 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
     {
         public int Score;
         public ItemType RegionType;
-        public List<IGridCell> Elements;
+        public List<Vector3Int> Elements;
 
         public MatchableRegion()
         {
             Elements = new();
         }
 
-        public void Add(IGridCell gridCell)
+        public void Add(Vector3Int position)
         {
-            Elements.Add(gridCell);
+            Elements.Add(position);
         }
 
         public int Count()

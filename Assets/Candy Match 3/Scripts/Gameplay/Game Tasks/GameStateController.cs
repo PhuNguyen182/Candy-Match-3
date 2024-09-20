@@ -3,15 +3,15 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GlobalScripts.SceneUtils;
+using CandyMatch3.Scripts.GameData;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using CandyMatch3.Scripts.Gameplay.Models;
 using Cysharp.Threading.Tasks;
-using GlobalScripts.SceneUtils;
 using Stateless;
-using CandyMatch3.Scripts.GameData;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
