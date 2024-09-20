@@ -41,6 +41,14 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             itemSoundEffect.PlaySound(sound);
         }
 
+        public void ShowCompliment(ComplimentEnum compliment)
+        {
+            ComplimentText complimentText = SimplePool.Spawn(effectDatabase.Compliment, UIEffectContainer.Transform
+                                                            , UIEffectContainer.Transform.position, Quaternion.identity);
+            complimentText.transform.localScale = Vector3.one;
+            complimentText.ShowCompliment(compliment);
+        }
+
         public TargetCompletedObject SpawnFlyCompletedTarget(TargetEnum targetType, Vector3 position)
         {
             Sprite target = targetDatabase.GetTargetIcon(targetType);
@@ -53,6 +61,11 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
         public void SpawnNewCreatedEffect(Vector3 position)
         {
             SimplePool.Spawn(effectDatabase.SpawnBoosterEffect, EffectContainer.Transform, position, Quaternion.identity);
+        }
+
+        public void SpawnBlastEffect(Vector3 position)
+        {
+            SimplePool.Spawn(effectDatabase.BlastEffect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
         public void SpawnColorEffect(CandyColor candyColor, Vector3 position)
@@ -79,6 +92,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 ItemType.Biscuit => effectDatabase.BiscuitBreakEffect,
                 ItemType.Chocolate => effectDatabase.ChocolateBreakEffect,
                 ItemType.Marshmallow => effectDatabase.MarshmallowBreakEffect,
+                ItemType.Cream => effectDatabase.CreamBreakEffect,
                 ItemType.Cherry => effectDatabase.ChocolateBreakEffect,
                 ItemType.Watermelon => effectDatabase.ChocolateBreakEffect,
                 _ => null
@@ -157,6 +171,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             await UniTask.NextFrame(_token);
 
             SimplePool.PoolPreLoad(effectDatabase.WrappedEffect, 3, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.BlastEffect, 10, EffectContainer.Transform);
         }
     }
 }

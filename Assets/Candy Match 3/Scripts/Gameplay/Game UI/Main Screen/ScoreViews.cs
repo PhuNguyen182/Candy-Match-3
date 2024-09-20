@@ -15,6 +15,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
         [SerializeField] private TMP_Text scoreText;
         [SerializeField] private TMP_Text targetScore;
         [SerializeField] private StarStreak[] starStreaks;
+        [SerializeField] private RectTransform scoreBar;
         [SerializeField] private TweenValueEffect starTween;
 
         private float _streak1 = 0;
@@ -33,6 +34,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
         public void Init(ScoreRule scoreRule)
         {
             _scoreRule = scoreRule;
+            float scoreBarWidth = scoreBar.sizeDelta.x;
+
             _streak1 = (float)scoreRule.Star1Score / scoreRule.MaxScore;
             _streak2 = (float)scoreRule.Star2Score / scoreRule.MaxScore;
             _streak3 = (float)scoreRule.Star3Score / scoreRule.MaxScore;
@@ -40,6 +43,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
             starStreaks[0].SetStarActive(false);
             starStreaks[1].SetStarActive(false);
             starStreaks[2].SetStarActive(false);
+
+            starStreaks[0].SetPosition(scoreBarWidth * _streak1);
+            starStreaks[1].SetPosition(scoreBarWidth * _streak2);
+            starStreaks[2].SetPosition(scoreBarWidth * _streak3);
         }
 
         private void UpdateScore(int score)

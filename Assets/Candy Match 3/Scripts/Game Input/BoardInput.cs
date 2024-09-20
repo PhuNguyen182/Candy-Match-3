@@ -77,7 +77,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameInput
 
         public bool IsUIOverlayed()
         {
-            return EventSystem.current.IsPointerOverGameObject();
+            return EventSystem.current == null ? false : EventSystem.current.IsPointerOverGameObject();
         }
 
         private void OnDisable()

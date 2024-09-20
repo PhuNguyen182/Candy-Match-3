@@ -25,8 +25,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private const float SuggestCooldown = 10f;
 
         private int _suggestCount = 0;
-        private bool _suggestFlag = false;
         private float _suggestTimer = 0;
+        private bool _suggestFlag = false;
 
         private List<IItemSuggest> _itemSuggests;
         private InputProcessTask _inputProcessTask;
@@ -116,14 +116,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 AvailableSuggest suggest = _detectMoveTask.GetPossibleSwap(_suggestCount);
                 AvailableSuggest detectedSuggest = ExportSuggestResult(suggest);
 
-                for (int i = 0; i < detectedSuggest.Positions.Count; i++)
+                if (detectedSuggest.Positions != null)
                 {
-                    Vector3Int position = detectedSuggest.Positions[i];
-                    IGridCell gridCell = _gridCellManager.Get(position);
-                    IBlockItem blockItem = gridCell.BlockItem;
+                    for (int i = 0; i < detectedSuggest.Positions.Count; i++)
+                    {
+                        Vector3Int position = detectedSuggest.Positions[i];
+                        IGridCell gridCell = _gridCellManager.Get(position);
+                        IBlockItem blockItem = gridCell.BlockItem;
 
-                    if (blockItem is IItemSuggest itemSuggest)
-                        _itemSuggests.Add(itemSuggest);
+                        if (blockItem is IItemSuggest itemSuggest)
+                            _itemSuggests.Add(itemSuggest);
+                    }
                 }
             }
 
@@ -195,6 +198,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     _detectMoveTask.PseudoSwapItems(gridCell1, gridCell2);
                     return availableSuggest;
                 }
+
+                _detectMoveTask.PseudoSwapItems(gridCell1, gridCell2);
             }
 
             return new();

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using TMPro;
 
 namespace CandyMatch3.Scripts.Gameplay.Miscs
 {
@@ -36,8 +35,8 @@ namespace CandyMatch3.Scripts.Gameplay.Miscs
             Vector3 toPosition = destination;
             _moveToTargetSequence = CreateMoveToTargetTween(toPosition, 1.1f, 0.9f, duration, upEase, easeX, easeY, easeScale);
 
-            await _moveToTargetSequence.AwaitForComplete(TweenCancelBehaviour.Complete);
-            SimplePool.Despawn(this.gameObject);
+            await _moveToTargetSequence.AwaitForComplete(TweenCancelBehaviour.Complete)
+                                       .ContinueWith(() => SimplePool.Despawn(this.gameObject));
         }
 
         public Sequence CreateMoveToTargetTween(Vector3 toPosition, float toScale1, float toScale2

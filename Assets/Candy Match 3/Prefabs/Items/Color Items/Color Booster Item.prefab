@@ -57,6 +57,13 @@ MonoBehaviour:
   itemGraphics: {fileID: 8241515987592640655}
   colorBoosterType: 0
   itemAnimation: {fileID: 1493207833021039645}
+  normalSprites:
+  - {fileID: 21300000, guid: 265f819b96965413f8a3783d3d479592, type: 3}
+  - {fileID: 21300000, guid: c0a8f680a14404342b7afb744839cdab, type: 3}
+  - {fileID: 21300000, guid: d75a89511eeb846a79467d286ccab1f0, type: 3}
+  - {fileID: 21300000, guid: bcc2f2d61e16f452c89590375064ccab, type: 3}
+  - {fileID: 21300000, guid: 577bd8aba295c44d7b180b72d8f50956, type: 3}
+  - {fileID: 21300000, guid: 36ed891685b1247669d1e215ea0330b2, type: 3}
   wrappedSprites:
   - {fileID: 21300000, guid: 8f810f7319d6b0143b436535d013e36f, type: 3}
   - {fileID: 21300000, guid: 0055b1848a41d4f6596e8aaf62fda7a8, type: 3}
@@ -161,6 +168,7 @@ MonoBehaviour:
   bounceEase: 6
   glowLightDuration: 0.5
   highlightDuration: 1.25
+  boosterDuration: 1
   highlightEase:
     serializedVersion: 2
     m_Curve:
@@ -211,6 +219,39 @@ MonoBehaviour:
       value: 0.4
       inSlope: 0.24721879
       outSlope: 0.24721879
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  boosterEase:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.2
+      outSlope: 1.2
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.5
+      value: 0.6
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -1.2
+      outSlope: -1.2
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334

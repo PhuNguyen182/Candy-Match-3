@@ -22,20 +22,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         private readonly int _closeHash = Animator.StringToHash("Close");
 
         private CancellationToken _token;
-        private UniTaskCompletionSource _source;
-
         private List<TargetElement> _remainTargets = new();
-        private GameObject _background;
+        private UniTaskCompletionSource _source;
 
         private void Awake()
         {
             _token = this.GetCancellationTokenOnDestroy();
             continueButton.onClick.AddListener(() => OnContinueClicked().Forget());
-        }
-
-        public void SetBackground(GameObject background)
-        {
-            _background = background;
         }
 
         public UniTask ShowLosePanel()
@@ -47,7 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         public void UpdateScore(int score)
         {
-            scoreText.text = $"Your score: <color=#B83555>{score:N1, ru-RU}</color>";
+            scoreText.text = $"Your score: <color=#B83555>{score}</color>";
         }
 
         public void ShowRemainTarget(List<TargetElement> remainTargets)
@@ -58,7 +51,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             {
                 TargetView targetView = remainTargets[i].GetView();
                 TargetStats targetStats = remainTargets[i].GetStats();
-                targetStats.IsFailed = false; // Do not show cross icon in lose panel
 
                 TargetElement target = SimplePool.Spawn(targetElement, targetContainer
                                         , targetContainer.position, Quaternion.identity);

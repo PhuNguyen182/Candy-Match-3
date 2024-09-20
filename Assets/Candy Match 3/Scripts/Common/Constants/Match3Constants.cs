@@ -4,6 +4,7 @@ namespace CandyMatch3.Scripts.Common.Constants
     {
         public const int MatchDelayFrame = 3;
         public const int BoosterDelayFrame = 3;
+        public const float ExplosionDelay = 1f;
 
         public const float ExplosionPower = 0.0001f;
         public const float ExplodeAmplitude = 1.75f;

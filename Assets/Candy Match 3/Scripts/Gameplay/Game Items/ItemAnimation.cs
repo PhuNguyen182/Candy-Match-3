@@ -26,8 +26,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [Header("Hightlight")]
         [SerializeField] private float glowLightDuration = 1f;
         [SerializeField] private float highlightDuration = 1f;
+        [SerializeField] private float boosterDuration = 1f;
         [SerializeField] private AnimationCurve highlightEase;
         [SerializeField] private AnimationCurve glowlightEase;
+        [SerializeField] private AnimationCurve boosterEase;
 
         private bool _hasBeenSuggested;
         private int _originalSortingOrder;
@@ -37,7 +39,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private Coroutine _highlightCoroutine;
         private Coroutine _glowlightCoroutine;
+        private Coroutine _glowBoosterCoroutine;
         private CancellationToken _destroyToken;
+
+        public Animator ItemAnimator => itemAnimator;
 
         private void Awake()
         {
@@ -86,6 +91,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             float smoothedMagnitude = fallenCurve.Evaluate(magnitude);
             itemAnimator.SetFloat(ItemAnimationHashKeys.AmptitudeHash, smoothedMagnitude);
             itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
+        }
+
+        public void TriggerVibrate(int stage = 0)
+        {
+            PlayBoosterTrigger();
+            itemAnimator.SetTrigger(ItemAnimationHashKeys.ExplodeHash);
         }
 
         public UniTask DisappearOnMatch(bool isMatch)
@@ -146,7 +157,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             
             else
             {
-                itemGraphics.SetFloatRendererProperty(ItemShaderProperties.SuggestHighlight, 0);
+                itemGraphics.SetFloatRendererProperty(ItemShaderProperties.HighlightAmount, 0);
                 ClearSuggestEffect(); // Should be place here to prevent destroy null reference
             }
         }
@@ -172,13 +183,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             {
                 elapsedTime += Time.deltaTime;
                 ratio = ease.Evaluate(elapsedTime / duration);
-                itemGraphics.SetFloatRendererProperty(ItemShaderProperties.SuggestHighlight, ratio);
+                itemGraphics.SetFloatRendererProperty(ItemShaderProperties.HighlightAmount, ratio);
 
                 if (elapsedTime > duration && !canStop)
                     elapsedTime = 0;
 
                 yield return null;
             }
+        }
+
+        private void PlayBoosterTrigger()
+        {
+            if(isActiveAndEnabled)
+                _glowBoosterCoroutine = StartCoroutine(Highlight(boosterDuration, boosterEase, false));
         }
 
         private void PlayGlowLightEffect()
@@ -202,6 +219,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemRenderer.sortingOrder = isPrioritized ? _originalSortingOrder + priorityAmount : _originalSortingOrder;
         }
 
+        private void StopAllEffects()
+        {
+            ToggleSuggest(false);
+            itemGraphics.SetFloatRendererProperty(ItemShaderProperties.HighlightAmount, 0);
+
+            if (_glowlightCoroutine != null)
+                StopCoroutine(_glowlightCoroutine);
+
+            if (_glowBoosterCoroutine != null)
+                StopCoroutine(_glowBoosterCoroutine);
+        }
+
 #if UNITY_EDITOR
         private void OnValidate()
         {
@@ -209,10 +238,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         }
 #endif
 
+        private void OnDisable()
+        {
+            StopAllEffects();
+            itemRenderer.transform.localPosition = Vector3.zero;
+        }
+
         private void OnDestroy()
         {
-            ToggleSuggest(false);
-
             _moveTween?.Kill();
             _bounceMoveTween?.Kill();
         }

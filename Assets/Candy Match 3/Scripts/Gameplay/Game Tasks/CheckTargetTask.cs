@@ -1,5 +1,6 @@
 using R3;
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly TargetDatabase _targetDatabase;
         private readonly MainGamePanel _mainGamePanel;
 
+        private readonly ISubscriber<BoardStopMessage> _boardStopSubscriber;
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
         private readonly ISubscriber<AsyncMessage<MoveTargetData>> _moveToTargetSubscriber;
         private readonly ISubscriber<DecreaseTargetMessage> _decreaseTargetSubscriber;
@@ -37,7 +39,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private EndGameTask _endGameTask;
         private IDisposable _disposable;
 
-        public Action<bool> OnEndGame;
+        public Action<EndResult> OnEndGame;
+        public int Score => _score;
+        public int Stars
+        {
+            get
+            {
+                if (_score >= _scoreRule.Star3Score)
+                    return 3;
+                
+                else if (_score >= _scoreRule.Star2Score)
+                    return 2;
+                
+                else if (_score >= _scoreRule.Star1Score)
+                    return 1;
+
+                return 0;
+            }
+        }
 
         public CheckTargetTask(TargetDatabase targetDatabase, MainGamePanel mainGameScreen)
         {
@@ -47,7 +66,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _moveToTargetTasks = new();
 
-            var builder = MessagePipe.DisposableBag.CreateBuilder();            
+            var builder = MessagePipe.DisposableBag.CreateBuilder();
+            _boardStopSubscriber = GlobalMessagePipe.GetSubscriber<BoardStopMessage>();
             _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
             _moveToTargetSubscriber = GlobalMessagePipe.GetSubscriber<AsyncMessage<MoveTargetData>>();
             _decreaseTargetSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseTargetMessage>();
@@ -55,6 +75,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _decreaseMoveSubscriber.Subscribe(DecreaseMove).AddTo(builder);
             _moveToTargetSubscriber.Subscribe(InspectTargetInfo).AddTo(builder);
             _decreaseTargetSubscriber.Subscribe(DecreaseTarget).AddTo(builder);
+            _boardStopSubscriber.Subscribe(message => CheckEndGameOnStop(message).Forget())
+                                .AddTo(builder);
 
             _disposable = builder.Build();
         }
@@ -97,6 +119,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _targetCollections = _mainGamePanel.TargetElements;
         }
 
+        public List<TargetElement> GetRemainTargets()
+        {
+            return _targetCollections.Values.ToList();
+        }
+
         public bool IsAllTargetsStopped()
         {
             return _moveToTargetTasks.Count <= 0;
@@ -107,17 +134,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             int remainCount = 0;
             foreach (var targetCount in _targetCounts)
             {
-                remainCount = remainCount + targetCount.Value;
+                int count = targetCount.Value > 0 ? targetCount.Value : 0;
+                remainCount = remainCount + count;
             }
 
             if (_moveCount >= 0 && remainCount <= 0)
             {
-                OnEndGame?.Invoke(true);
+                UpdateAll();
+                OnEndGame?.Invoke(EndResult.Win);
             }
 
             else if(_moveCount == 0 && remainCount > 0)
             {
-                OnEndGame?.Invoke(false);
+                UpdateAll();
+                OnEndGame?.Invoke(EndResult.Lose);
             }
         }
 
@@ -140,6 +170,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _moveCount = _moveCount + move;
             UpdateMove();
             CheckEndGame();
+            UpdateAll();
         }
 
         public void SetEndGameTask(EndGameTask endGameTask)
@@ -191,6 +222,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             else
                 UpdateTarget(message.TargetType, true);
+        }
+
+        private async UniTask CheckEndGameOnStop(BoardStopMessage message)
+        {
+            if (!message.IsStopped)
+                return;
+
+            if (_endGameTask != null)
+            {
+                await _endGameTask.WaitForBoardStop();
+                CheckEndGame();
+            }
         }
 
         private void InspectTargetInfo(AsyncMessage<MoveTargetData> message)

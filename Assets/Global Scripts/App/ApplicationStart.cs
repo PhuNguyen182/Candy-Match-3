@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.GameManagers;
 using GlobalScripts.UpdateHandlerPattern;
 using GlobalScripts.Audios;
 
@@ -36,6 +37,7 @@ namespace GlobalScripts.App
             Register<AppInitializer>("App/App Initializer");
             Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
             Register<MusicManager>("Managers/Music Manager");
+            Register<GameManager>("Managers/Game Manager");
         }
 
         private static T Register<T>(string serviceName) where T : Component

@@ -12,7 +12,7 @@ using CandyMatch3.Scripts.LevelDesign.CustomTiles;
 using CandyMatch3.Scripts.Common.Enums;
 using GlobalScripts.Utils;
 
-namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
+namespace CandyMatch3.Scripts.LevelDesign.LevelBuilders
 {
     public class LevelImporter
     {

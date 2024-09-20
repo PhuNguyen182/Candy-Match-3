@@ -3,41 +3,76 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IItemSuggest
+    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IColorfulEffect, IItemSuggest
     {
         [SerializeField] private BoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
 
         [Header("Colored Sprites")]
+        [SerializeField] private Sprite[] normalSprites;
         [SerializeField] private Sprite[] wrappedSprites;
         [SerializeField] private Sprite[] horizontalSprites;
         [SerializeField] private Sprite[] verticalSprites;
 
         private bool _isMatchable;
+        private float _explodeTimer = 0;
+        private bool _isBoardStop;
+
+        private Sprite _normalSprite;
         private Sprite _horizontalIcon;
         private Sprite _verticalIcon;
+
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
+        private IPublisher<ActivateBoosterMessage> _activateBoosterPublisher;
+        private ISubscriber<BoardStopMessage> boardStopSubscriber;
 
         public override bool IsMatchable => _isMatchable;
 
         public override bool IsMoveable => true;
 
-        public override bool CanBeReplace => false;
+        public override bool Replacable => false;
 
         public bool IsActivated { get; set; }
 
         public bool IsNewCreated { get; set; }
 
         public BoosterType ColorBoosterType => colorBoosterType;
+
+        public bool IsActive { get; set; }
+
+        private void Update()
+        {
+            if (!IsActive)
+                return;
+
+            if (!_isBoardStop)
+            {
+                IsLocking = true;
+                _explodeTimer = 0;
+                return;
+            }
+
+            else
+            {
+                if (_explodeTimer < Match3Constants.ExplosionDelay)
+                {
+                    IsLocking = true;
+                    _explodeTimer += Time.deltaTime;
+
+                    if (_explodeTimer > Match3Constants.ExplosionDelay)
+                        TriggerBooster();
+                }
+            }
+        }
 
         public override void ResetItem()
         {
@@ -48,12 +83,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void SetMatchable(bool isMatchable)
         {
+            IsActive = !isMatchable;
             _isMatchable = isMatchable;
+            
+            if(!isMatchable)
+                IsActivated = true; // Prevent booster is triggered again
         }
 
         public override void InitMessages()
         {
             _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
+            _activateBoosterPublisher = GlobalMessagePipe.GetPublisher<ActivateBoosterMessage>();
+            DisposableBagBuilder builder = DisposableBag.CreateBuilder();
+
+            boardStopSubscriber = GlobalMessagePipe.GetSubscriber<BoardStopMessage>();
+            boardStopSubscriber.Subscribe(message => _isBoardStop = message.IsStopped)
+                               .AddTo(builder);
+
+            messageDisposable = builder.Build();
         }
 
         public override async UniTask ItemBlast()
@@ -89,6 +136,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
                 _ => null
             };
 
+            _normalSprite = normalSprites[colorIndex];
             _horizontalIcon = horizontalSprites[colorIndex];
             _verticalIcon = verticalSprites[colorIndex];
 
@@ -217,6 +265,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             };
         }
 
+        public void PlayColorfulEffect()
+        {
+            itemAnimation.TriggerVibrate();
+        }
+
+        public void PlayBoosterEffect(BoosterType boosterType)
+        {
+            
+        }
+
         public void PlayStartEffect()
         {
             EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
@@ -229,7 +287,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
         }
 
-        public void PlayBreakEffect(int healthPoint)
+        public void PlayBreakEffect()
         {
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
@@ -243,16 +301,42 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         private async UniTask OnItemReset()
         {
+            _explodeTimer = 0;
+            IsLocking = false;
             IsNewCreated = true;
             IsActivated = false;
+
             TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
             await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, destroyToken);
             IsNewCreated = false;
         }
 
+        private void TriggerBooster()
+        {
+            _activateBoosterPublisher.Publish(new ActivateBoosterMessage
+            {
+                Position = GridPosition,
+                Sender = this
+            });
+        }
+
         public void Highlight(bool isActive)
         {
             itemAnimation.ToggleSuggest(isActive);
+        }
+
+        public void TriggerNextStage(int stage = 0)
+        {
+            if(stage == 3)
+                itemGraphics.SetItemSprite(_normalSprite);
+            
+            itemAnimation.TriggerVibrate(stage);
+        }
+
+        public override void OnDisappear()
+        {
+            IsActive = false;
+            _isBoardStop = false;
         }
     }
 }

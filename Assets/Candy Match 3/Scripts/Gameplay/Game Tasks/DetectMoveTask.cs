@@ -95,8 +95,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                             Vector3Int position, direction;
                             score = Mathf.Max(fromScore, toScore);
-                            
-                            if(fromScore >= toScore)
+
+                            if (fromScore >= toScore)
                             {
                                 position = fromPosition;
                                 direction = _swapDirections[j];
@@ -115,10 +115,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                                 Position = position,
                                 Direction = direction,
                             });
-
-                            // Swap back
-                            PseudoSwapItems(fromGridCell, toGridCell);
                         }
+
+                        // Swap back
+                        PseudoSwapItems(fromGridCell, toGridCell);
                     }
                 }
 
@@ -212,8 +212,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!gridCell1.BlockItem.IsMatchable && !gridCell2.BlockItem.IsMatchable)
                 return false;
 
-            return gridCell1.ItemType == ItemType.ColorBomb && gridCell1.ItemType != ItemType.ColorBomb
-                || gridCell1.ItemType != ItemType.ColorBomb && gridCell1.ItemType == ItemType.ColorBomb;
+            return gridCell1.ItemType == ItemType.ColorBomb && gridCell2.ItemType != ItemType.ColorBomb
+                || gridCell1.ItemType != ItemType.ColorBomb && gridCell2.ItemType == ItemType.ColorBomb;
         }
 
         private BoosterType GetBoosterType(IGridCell gridCell)

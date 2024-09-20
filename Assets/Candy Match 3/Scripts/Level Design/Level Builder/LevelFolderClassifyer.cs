@@ -1,4 +1,4 @@
-namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
+namespace CandyMatch3.Scripts.LevelDesign.LevelBuilders
 {
     public class LevelFolderClassifyer
     {

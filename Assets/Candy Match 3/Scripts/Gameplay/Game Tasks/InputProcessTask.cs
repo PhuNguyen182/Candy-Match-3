@@ -4,12 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -18,8 +20,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly BoardInput _boardInput;
         private readonly GridCellManager _gridCellManager;
         private readonly SwapItemTask _swapItemTask;
-        
+        private readonly ISubscriber<BoardStopMessage> _boardStopSubscriber;
+
         private bool _isSwapped = false;
+        private bool _isBoardStopped = false;
+
         private CheckGameBoardMovementTask _checkGameBoardMovement;
         private InGameBoosterTasks _inGameBoosterTasks;
 
@@ -31,6 +36,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private IGridCell _processGridCell;
 
         private IDisposable _disposable;
+        private IDisposable _messageDisposable;
 
         public bool IsActive { get; set; }
 
@@ -40,16 +46,21 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _gridCellManager = gridCellManager;
             _swapItemTask = swapItemTask;
 
+            DisposableBagBuilder messageBuilder = MessagePipe.DisposableBag.CreateBuilder();
+            _boardStopSubscriber = GlobalMessagePipe.GetSubscriber<BoardStopMessage>();
+            _boardStopSubscriber.Subscribe(message => _isBoardStopped = message.IsStopped)
+                                .AddTo(messageBuilder);
+            _messageDisposable = messageBuilder.Build();
+
             DisposableBuilder builder = Disposable.CreateBuilder();
             Observable.EveryUpdate(UnityFrameProvider.Update)
-                      .Subscribe(_ => OnUpdate())
-                      .AddTo(ref builder);
+                      .Subscribe(_ => OnUpdate()).AddTo(ref builder);
             _disposable = builder.Build();
         }
 
         private void OnUpdate()
         {
-            if (IsActive && !_checkGameBoardMovement.IsBoardLock)
+            if (IsActive && _isBoardStopped)
             {
                 OnPress();
                 OnDrag();
@@ -206,6 +217,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void Dispose()
         {
             _disposable.Dispose();
+            _messageDisposable.Dispose();
         }
     }
 }

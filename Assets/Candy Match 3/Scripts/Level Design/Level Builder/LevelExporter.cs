@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,9 +13,11 @@ using CandyMatch3.Scripts.LevelDesign.CustomTiles;
 using GlobalScripts.Extensions;
 using GlobalScripts.Utils;
 using Newtonsoft.Json;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
-namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
+namespace CandyMatch3.Scripts.LevelDesign.LevelBuilders
 {
     public class LevelExporter
     {
@@ -412,7 +413,9 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
                     writer.Close();
                 }
 
+#if UNITY_EDITOR
                 AssetDatabase.ImportAsset(levelPath);
+#endif
             }
 
             Debug.Log(writeToFile ? json : "Get level data at output placeholder!");
@@ -420,4 +423,3 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
         }
     }
 }
-#endif

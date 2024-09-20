@@ -9,9 +9,11 @@ using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Common.DataStructs;
+using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Gameplay.Strategies;
+using CandyMatch3.Scripts.Mainhome.UI.Shops;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
@@ -30,8 +32,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly SwapItemTask _swapItemTask;
         private readonly SuggestTask _suggestTask;
 
-        private const string BuyBoosterPopupPath = "Common Popups/Buy Boosters Popup.prefab";
-
+        private CheckGridTask _checkGridTask;
         private CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly ISubscriber<AddInGameBoosterMessage> _addBoosterSubscriber;
         private readonly ISubscriber<UseInGameBoosterMessage> _useBoosterSubscriber;
@@ -74,7 +75,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _placeBoosterTask.AddTo(ref builder);
             _disposable = builder.Build();
 
-            PreloadBuyBoosterPopup();
+            PreloadPopups();
         }
 
         public void SetCheckBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
@@ -84,6 +85,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
+            _checkGridTask = checkGridTask;
             _blastBoosterTask.SetCheckGridTask(checkGridTask);
         }
 
@@ -117,7 +119,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                     IDisposable d2 = boosterButton.OnClickObserver.Where(value => boosterAmount.Value <= 0 && !value.IsFree && !value.IsActive 
                                                   && _inputProcessTask.IsActive && !_checkGameBoardMovementTask.IsBoardLock)
-                                                  .Subscribe(value => ShowBuyBoosterPopup(booster.BoosterType));
+                                                  .Subscribe(value => ShowBuyBoosterPopup(booster.BoosterType).Forget());
 
                     boosterDisposables.Add(d1);
                     boosterDisposables.Add(d2);
@@ -131,6 +133,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public UniTask ActivatePointBooster(Vector3Int position, InGameBoosterType inGameBoosterType)
         {
+            _checkGridTask.CanCheck = false;
             _inputProcessTask.IsActive = false;
             UniTask boosterTask = UniTask.CompletedTask;
 
@@ -147,7 +150,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     break;
             }
 
-            return boosterTask.ContinueWith(() => _inputProcessTask.IsActive = true);
+            return boosterTask.ContinueWith(() =>
+            {
+                _checkGridTask.CanCheck = true;
+                _inputProcessTask.IsActive = true;
+            });
         }
 
         public UniTask ActivateSwapBooster(Vector3Int fromPosition, Vector3Int toPosition)
@@ -176,6 +183,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 return;
 
             IsBoosterUsed = false;
+            _boosters[message.BoosterType].Value--;
             CurrentBooster = InGameBoosterType.None;
 
             SetSuggestActive(true);
@@ -197,17 +205,37 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _inGameBoosterPanel.SetBoosterPanelActive(true).Forget();
         }
 
-        private void ShowBuyBoosterPopup(InGameBoosterType boosterType)
+        private async UniTask ShowBuyBoosterPopup(InGameBoosterType boosterType)
         {
-            var popup = InGameBoosterPopup.Create(BuyBoosterPopupPath);
+            SetSuggestActive(false);
+            _inputProcessTask.IsActive = false;
+
+            var popup = await InGameBoosterPopup.CreateFromAddress(CommonPopupPaths.BuyBoosterPopupPath);
             InGameBoosterPack boosterPack = _inGameBoosterPackDatabase.BoosterPackCollections[boosterType];
+
             popup.SetBoosterInfo(boosterType);
             popup.SetBoosterPack(boosterPack);
+            popup.UnblockInput = OnBuyBoosterPopupUnblockInput;
+            popup.BlockInput = OnBuyBoosterPopupBlockInput;
         }
 
-        private void PreloadBuyBoosterPopup()
+        private void OnBuyBoosterPopupBlockInput()
         {
-            InGameBoosterPopup.PreloadFromAddress(BuyBoosterPopupPath).Forget();
+            _suggestTask.Suggest(false);
+            SetSuggestActive(false);
+            _inputProcessTask.IsActive = false;
+        }
+
+        private void OnBuyBoosterPopupUnblockInput()
+        {
+            SetSuggestActive(true);
+            _inputProcessTask.IsActive = true;
+        }
+
+        private void PreloadPopups()
+        {
+            ShopPopup.PreloadFromAddress(CommonPopupPaths.ShopPopupPath).Forget();
+            InGameBoosterPopup.PreloadFromAddress(CommonPopupPaths.BuyBoosterPopupPath).Forget();
         }
 
         private void SetSuggestActive(bool isActive)
@@ -226,6 +254,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _disposable.Dispose();
             _boosterDisposable?.Dispose();
             _messageDisposable.Dispose();
+
+            ShopPopup.Release();
+            InGameBoosterPopup.Release();
         }
     }
 }

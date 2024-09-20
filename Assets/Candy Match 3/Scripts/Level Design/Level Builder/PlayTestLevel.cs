@@ -10,11 +10,11 @@ using CandyMatch3.Scripts.Gameplay.Models;
 using GlobalScripts.SceneUtils;
 using Newtonsoft.Json;
 
-namespace CandyMatch3.Scripts.LevelDesign.LevelBuilder
+namespace CandyMatch3.Scripts.LevelDesign.LevelBuilders
 {
     public class PlayTestLevel : MonoBehaviour
     {
-        [SerializeField] private LevelBuilder levelBuilder;
+        [SerializeField] private LevelCreator levelBuilder;
 
         private CancellationToken _token;
 

@@ -18,8 +18,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         [SerializeField] private TMP_Text scoreText;
         [SerializeField] private TweenValueEffect scoreTween;
         [SerializeField] private Animator popupAnimator;
+        [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private GameObject[] stars;
 
-        private GameObject _background;
+        private int _score;
+        private int _stars;
+
         private ReactiveProperty<int> _reactiveScore = new(0);
         private readonly int _closeHash = Animator.StringToHash("Close");
         
@@ -35,21 +39,41 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             _reactiveScore.Value = 0;
         }
 
-        public void SetBackground(GameObject background)
-        {
-            _background = background;
-        }
-
         public UniTask ShowWinGame()
         {
             _source = new();
+            canvasGroup.interactable = false;
             gameObject.SetActive(true);
+            UpdateScore().Forget();
             return _source.Task;
         }
 
-        public void UpdateScore(int score)
+        public void SetScoreAndStars(int score, int stars)
         {
-            _reactiveScore.Value = score;
+            (_score, _stars) = (score, stars);
+        }
+
+        private async UniTask UpdateStars(int star)
+        {
+            if (star == 0)
+                return;
+
+            for (int i = 0; i < stars.Length; i++)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(0.15f), cancellationToken: _token);
+
+                bool isActive = i + 1 <= star;
+                stars[i].SetActive(isActive);
+            }
+        }
+
+        private async UniTask UpdateScore()
+        {
+            _reactiveScore.Value = _score;
+            await UniTask.Delay(TimeSpan.FromSeconds(0.4f), cancellationToken: _token);
+            await UpdateStars(_stars);
+
+            canvasGroup.interactable = true;
         }
 
         public void UpdateLevel()
@@ -59,17 +83,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         private void ShowScore(int score)
         {
-            scoreText.text = $"Your score: <color=#B83555>{score:N1, ru-RU}</color>";
+            scoreText.text = $"Your score: <color=#B83555>{score}</color>";
         }
 
         private async UniTask OnNextClicked()
         {
-            await Close();
+            await CloseAnimation();
             _source.TrySetResult();
             gameObject.SetActive(false);
         }
 
-        private async UniTask Close()
+        private async UniTask CloseAnimation()
         {
             popupAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);

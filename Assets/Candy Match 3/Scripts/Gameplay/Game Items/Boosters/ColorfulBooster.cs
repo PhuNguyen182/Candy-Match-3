@@ -21,7 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
         public override void ResetItem()
         {
             base.ResetItem();
-            SetMatchable(true);
+            SetMatchable(false);
             OnItemReset();
         }
 

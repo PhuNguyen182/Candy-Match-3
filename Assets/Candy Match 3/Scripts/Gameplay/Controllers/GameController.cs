@@ -12,14 +12,18 @@ using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.LevelDesign.Databases;
+using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
+using CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
 using CandyMatch3.Scripts.Gameplay.GameTasks;
 using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Common.SingleConfigs;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Statefuls;
+using CandyMatch3.Scripts.Common.CustomData;
+using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.Controllers
@@ -29,6 +33,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private MainGamePanel mainGamePanel;
         [SerializeField] private EndGameScreen endGameScreen;
         [SerializeField] private InGameBoosterPanel inGameBoosterPanel;
+        [SerializeField] private InGameSettingPanel settingSidePanel;
 
         [Header("Tilemaps")]
         [SerializeField] private Tilemap boardTilemap;
@@ -53,6 +58,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private BoardInput boardInput;
 
         private ItemManager _itemManager;
+        private ComplimentTask _complimentTask;
         private FactoryManager _factoryManager;
         private MetaItemManager _metaItemManager;
         private GridCellManager _gridCellManager;
@@ -60,8 +66,10 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private BreakGridTask _breakGridTask;
         private MatchItemsTask _matchItemsTask;
         private SpawnItemTask _spawnItemTask;
+        private SpecialItemTask _specialItemTasks;
         private CameraShakeTask _cameraShakeTask;
         private GameTaskManager _gameTaskManager;
+        private MessageBrokerController _messageBrokerController;
 
         private int _check = 0;
         private CancellationToken _destroyToken;
@@ -112,6 +120,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
+            _messageBrokerController = new();
             _gridCellManager = new(ConvertGridToWorld, ConvertWorldToGrid);
             _gridCellManager.AddTo(ref builder);
 
@@ -125,19 +134,25 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _breakGridTask = new(_gridCellManager, _metaItemManager, _itemManager);
             _breakGridTask.AddTo(ref builder);
 
+            _specialItemTasks = new(_gridCellManager, _itemManager, _breakGridTask);
+            _specialItemTasks.AddTo(ref builder);
+
             _matchItemsTask = new(_gridCellManager, _breakGridTask);
             _matchItemsTask.AddTo(ref builder);
 
             _spawnItemTask = new(_gridCellManager, _itemManager);
             _spawnItemTask.AddTo(ref builder);
 
+            _complimentTask = new(mainGamePanel.CharacterEmotion);
+            _complimentTask.AddTo(ref builder);
+
             _cameraShakeTask = new(impulseSource);
             _cameraShakeTask.AddTo(ref builder);
 
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
                                    , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
-                                   , mainGamePanel, endGameScreen, targetDatabase, inGameBoosterPanel
-                                   , inGameBoosterPackDatabase);
+                                   , mainGamePanel, endGameScreen, settingSidePanel, targetDatabase, inGameBoosterPanel
+                                   , inGameBoosterPackDatabase, _specialItemTasks);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);
@@ -182,7 +197,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
             for (int i = 0; i < levelModel.BreakableItemPositions.Count; i++)
             {
-                _itemManager.Add(levelModel.BreakableItemPositions[i]);
+                AddBreakableItem(levelModel.BreakableItemPositions[i]);
             }
 
             for (int i = 0; i < levelModel.UnbreakableItemPositions.Count; i++)
@@ -231,7 +246,15 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gameTaskManager.InitInGameBooster();
             _gameTaskManager.BuildTarget(levelModel);
             _gameTaskManager.BuildBoardMovementCheck();
-            _gameTaskManager.SetInputActive(true);
+            _gameTaskManager.StartGame(levelModel);
+        }
+
+        private void AddBreakableItem(BlockItemPosition blockItemPosition)
+        {
+            _itemManager.Add(blockItemPosition);
+
+            if (blockItemPosition.ItemData.ItemType == ItemType.Chocolate)
+                _specialItemTasks.ExpandableItemTask.AddExpandablePosition(blockItemPosition.Position);
         }
 
         public Vector3 ConvertGridToWorld(Vector3Int position)

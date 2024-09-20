@@ -16,9 +16,6 @@ namespace CandyMatch3.Scripts.LoadingScene.Miscs
             _flyHash = Animator.StringToHash("Flying");
             int rand = Random.Range(0, 6);
             animator.SetInteger(_flyHash, rand);
-
-            float angle = Random.Range(-180f, 180f);
-            item.rotation = Quaternion.Euler(0, 0, angle);
         }
     }
 }

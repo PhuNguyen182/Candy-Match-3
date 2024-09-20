@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Gameplay.Models;
@@ -14,6 +13,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.MainScreen
         [SerializeField] private TMP_Text moveCount;
         [SerializeField] private ScoreViews scoreViews;
         [SerializeField] private TargetViews targetViews;
+        [SerializeField] private CharacterEmotion characterEmotion;
+
+        public CharacterEmotion CharacterEmotion => characterEmotion;
 
         public Dictionary<TargetEnum, TargetElement> TargetElements => targetViews.TargetElements;
 

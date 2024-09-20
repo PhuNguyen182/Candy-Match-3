@@ -27,7 +27,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
         private IPublisher<AsyncMessage<MoveTargetData>> _moveToTargetPublisher;
 
-        public override bool CanBeReplace => true;
+        public override bool Replacable => true;
 
         public override bool IsMatchable => true;
 
@@ -156,8 +156,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
         }
 
-        public void PlayBreakEffect(int healthPoint)
+        public void PlayBreakEffect()
         {
+            EffectManager.Instance.SpawnBlastEffect(WorldPosition);
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
         }
@@ -169,12 +170,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public void PlayColorfulEffect()
         {
-            _colorfulEffect = SimplePool.Spawn(colorfulEffect, transform, transform.position, Quaternion.identity);
+            itemAnimation.TriggerVibrate();
         }
 
         public void Highlight(bool isActive)
         {
             itemAnimation.ToggleSuggest(isActive);
+        }
+
+        public void PlayBoosterEffect(BoosterType boosterType)
+        {
+            
         }
     }
 }

@@ -6,11 +6,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using GlobalScripts.Effects.Tweens;
+using CandyMatch3.Scripts.GameData;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Mainhome.UI.Shops;
+using CandyMatch3.Scripts.Common.Controllers;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.Messages;
-using GlobalScripts.Effects.Tweens;
+using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.Audios;
 using MessagePipe;
 using TMPro;
 
@@ -28,10 +33,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         }
 
         [SerializeField] private Animator popupAnimator;
+        [SerializeField] private Animator backgroundAnimator;
         [SerializeField] private AnimationClip closeClip;
         [SerializeField] private TweenValueEffect coinTweenEffect;
         [SerializeField] private InGameBoosterType boosterType;
         [SerializeField] private ParticleSystem coinEffect;
+        [SerializeField] private UpdateResouceResponder resouceResponder;
 
         [Space(10)]
         [SerializeField] private TMP_Text coinText;
@@ -56,6 +63,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         private Dictionary<InGameBoosterType, InGameBoosterBoxInfo> _boxInfoCollection;
         private ReactiveProperty<int> _reactiveCoin = new();
 
+        public Action UnblockInput;
+        public Action BlockInput;
+
         public Dictionary<InGameBoosterType, InGameBoosterBoxInfo> PopupInfoCollection
         {
             get
@@ -76,10 +86,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             popupCanvas.worldCamera = Camera.main;
 
             closeButton.onClick.AddListener(() => ClosePopup().Forget());
-            purchaseButton.onClick.AddListener(PurchaseBooster);
+            purchaseButton.onClick.AddListener(() => PurchaseBooster().Forget());
 
             coinTweenEffect.BindInt(_reactiveCoin, UpdateCoin);
-            _reactiveCoin.Value = 0;
+            resouceResponder.OnUpdate = UpdateCoin;
+        }
+
+        protected override void DoAppear()
+        {
+            if (!IsPreload)
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+
+            int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
+            _reactiveCoin.Value = coin; // Show the current value of coin in game data
         }
 
         public void SetBoosterPack(InGameBoosterPack boosterPack)
@@ -96,9 +115,51 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             SetPopupInfo(info);
         }
 
-        private void PurchaseBooster()
+        private void UpdateCoin()
         {
-            coinEffect.Play();
+            int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
+            _reactiveCoin.Value = coin;
+        }
+
+        private async UniTask PurchaseBooster()
+        {
+            int price = _boosterPack.Price;
+            int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
+
+            if (coin >= price)
+            {
+                coinEffect.Play();
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
+                GameDataManager.Instance.SpendResource(GameResourceType.Coin, price);
+
+                _addInGameBoosterPublisher.Publish(new AddInGameBoosterMessage
+                {
+                    BoosterType = boosterType,
+                    Amount = _boosterPack.Amount
+                });
+
+                UpdateResourceController.Instance.UpdateResource(new UpdateResourceMessage
+                {
+                    ResouceType = GameResourceType.Coin
+                });
+
+                await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
+                await ClosePopup();
+            }
+
+            else
+            {
+                Action unblockInput = UnblockInput;
+                // If not enought money, do not release this UnblockInput action, then assign this action to shop close event
+                // to ensure the on-off player input flow is not interupted
+
+                await ClosePopup();
+                BlockInput?.Invoke();
+                BlockInput = null;
+
+                var shop = await ShopPopup.CreateFromAddress(CommonPopupPaths.ShopPopupPath);
+                shop.OnClose = unblockInput;
+            }
         }
 
         private void SetPopupInfo(InGameBoosterBoxInfo info)
@@ -116,8 +177,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         private async UniTask ClosePopup()
         {
             popupAnimator.SetTrigger(_closeHash);
+            backgroundAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(closeClip.length), cancellationToken: _token);
+
+            if (!IsPreload)
+                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
+
             base.DoClose();
+            UnblockInput?.Invoke();
+            UnblockInput = null;
         }
     }
 }

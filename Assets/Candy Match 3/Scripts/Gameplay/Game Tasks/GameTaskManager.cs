@@ -14,7 +14,9 @@ using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
+using CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks;
 using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -35,6 +37,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly GameStateController _gameStateController;
         private readonly CheckTargetTask _checkTargetTask;
+        private readonly SpecialItemTask _specialItemTask;
+        private readonly StartGameTask _startGameTask;
         private readonly DetectMoveTask _detectMoveTask;
         private readonly EndGameTask _endGameTask;
         private readonly SuggestTask _suggestTask;
@@ -43,8 +47,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask
             , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase
-            , MainGamePanel mainGamePanel, EndGameScreen endGameScreen, TargetDatabase targetDatabase, InGameBoosterPanel inGameBoosterPanel
-            , InGameBoosterPackDatabase inGameBoosterPackDatabase)
+            , MainGamePanel mainGamePanel, EndGameScreen endGameScreen, InGameSettingPanel settingSidePanel, TargetDatabase targetDatabase
+            , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase, SpecialItemTask specialItemTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -59,6 +63,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _suggestTask = new(_gridCellManager, _detectMoveTask, matchItemsTask);
             _suggestTask.AddTo(ref builder);
+
+            _startGameTask = new();
+            _startGameTask.AddTo(ref builder);
 
             _breakGridTask = breakGridTask;
             _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask, _breakGridTask);
@@ -95,27 +102,35 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _suggestTask.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
             _inputProcessor.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
 
-            _endGameTask = new(_checkTargetTask, _checkGameBoardMovementTask, _activateBoosterTask);
+            _endGameTask = new(_checkTargetTask, _checkGameBoardMovementTask, _activateBoosterTask, endGameScreen);
             _endGameTask.AddTo(ref builder);
 
-            _checkGridTask = new(_gridCellManager, _moveItemTask, _inputProcessor, _spawnItemTask, _matchItemsTask);
+            _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 
-            _gameStateController = new(_inputProcessor, _checkTargetTask, _endGameTask, endGameScreen, _suggestTask);
+            _gameStateController = new(_inputProcessor, _checkTargetTask, _startGameTask, _endGameTask
+                                        , endGameScreen, _suggestTask, settingSidePanel);
             _gameStateController.AddTo(ref builder);
+            _specialItemTask = specialItemTask;
 
             SetCheckGridTask();
             _disposable = builder.Build();
+        }
+
+        public void StartGame(LevelModel levelModel)
+        {
+            _gameStateController.SetLevelModel(levelModel);
+            _gameStateController.StartGame();
         }
 
         public void InitInGameBooster()
         {
             _inGameBoosterTasks.InitBoosters(new()
             {
-                new() { Amount = 100, BoosterType = InGameBoosterType.Break },
-                new() { Amount = 100, BoosterType = InGameBoosterType.Blast },
-                new() { Amount = 100, BoosterType = InGameBoosterType.Swap },
-                new() { Amount = 100, BoosterType = InGameBoosterType.Colorful }
+                new() { Amount = 0, BoosterType = InGameBoosterType.Break },
+                new() { Amount = 0, BoosterType = InGameBoosterType.Blast },
+                new() { Amount = 0, BoosterType = InGameBoosterType.Swap },
+                new() { Amount = 0, BoosterType = InGameBoosterType.Colorful }
             });
         }
 
@@ -139,13 +154,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkTargetTask.InitLevelTarget(levelModel);
         }
 
-        public void Test(out bool isLock)
-        {
-            isLock = _checkGameBoardMovementTask.IsBoardLock;
-            if (isLock)
-                Debug.Log("Lock");
-        }
-
         private void SetCheckGridTask()
         {
             _moveItemTask.SetCheckGridTask(_checkGridTask);
@@ -156,6 +164,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _comboBoosterHandleTask.SetCheckGridTask(_checkGridTask);
             _swapItemTask.SetCheckGridTask(_checkGridTask);
             _inGameBoosterTasks.SetCheckGridTask(_checkGridTask);
+            _specialItemTask.SetCheckGridTask(_checkGridTask);
+            _endGameTask.SetCheckGridTask(_checkGridTask);
         }
 
         public void Dispose()

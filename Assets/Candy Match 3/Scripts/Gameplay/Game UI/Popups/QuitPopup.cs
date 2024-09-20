@@ -20,15 +20,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 
         public Action OnContinueAddMove; // Call this for continue playing after lose level, +5 moves
         public Action OnContinuePlaying; // Call this for continue playing during level
-        public Action OnPlayerQuit;
+        public Action OnPlayerContinueQuit; // Call this to quit level after show add move offer
+        public Action OnPlayerQuit; // Call this to quit level without end level
 
         private void Awake()
         {
             _token = this.GetCancellationTokenOnDestroy();
-            continueButton.onClick.AddListener(() => Continue().Forget());
 
-            quitButton.onClick.AddListener(Quit);
-            closeButton.onClick.AddListener(Quit);
+            closeButton.onClick.AddListener(() => Continue().Forget());
+            continueButton.onClick.AddListener(() => Continue().Forget());
+            quitButton.onClick.AddListener(() => Quit().Forget());
         }
 
         private async UniTask Continue()
@@ -39,9 +40,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
             gameObject.SetActive(false);
         }
 
-        private void Quit()
+        private async UniTask Quit()
         {
-            OnPlayerQuit?.Invoke();
+            await Close();
+
+            if (OnPlayerContinueQuit != null)
+                OnPlayerContinueQuit.Invoke();
+
+            else if (OnPlayerQuit != null)
+                OnPlayerQuit.Invoke();
         }
 
         private async UniTask Close()
@@ -53,6 +60,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         private void OnDisable()
         {
             OnContinueAddMove = null;
+            OnContinuePlaying = null;
+            OnPlayerContinueQuit = null;
         }
     }
 }

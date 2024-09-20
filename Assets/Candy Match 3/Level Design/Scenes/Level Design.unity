@@ -2711,6 +2711,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m: 1
+  x: 0
+  y: 0
+  result: 0
   impulseSource: {fileID: 783021623}
 --- !u!1 &880291435
 GameObject:
@@ -3482,33 +3485,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 2095715572}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d9e9744bf41baf43b9f5490657463d8, type: 3}
+  m_Script: {fileID: 11500000, guid: ded5409e68cf05647b00c11910cfa108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tileDatabase: {fileID: 11400000, guid: f6726b3f937ba334f8580c6528205f29, type: 2}
   gridInformation: {fileID: 1640025282}
-  targetMove: 30
+  targetMove: 3
   scoreRule:
     MaxScore: 10000
-    Star1Score: 2000
+    Star1Score: 8000
     Star2Score: 5000
-    Star3Score: 8000
+    Star3Score: 2000
   targetModels:
-  - TargetAmount: 300
+  - TargetAmount: 30
     Target: 1
   - TargetAmount: 4
     Target: 3
   - TargetAmount: 5
     Target: 5
+  - TargetAmount: 6
+    Target: 6
   boardFillRules:
   - Coefficient: 1000
     Color: 1
   - Coefficient: 1000
-    Color: 6
-  - Coefficient: 1000
     Color: 2
   - Coefficient: 1000
     Color: 3
+  - Coefficient: 1000
+    Color: 6
+  - Coefficient: 1000
+    Color: 4
   ruledRandomFills: []
   spawnerRules:
   - ID: 0
@@ -3518,15 +3525,17 @@ MonoBehaviour:
     - Coefficient: 1000
       ItemType: 6
     - Coefficient: 1000
-      ItemType: 22
-    - Coefficient: 1000
       ItemType: 10
+    - Coefficient: 1000
+      ItemType: 14
+    - Coefficient: 1000
+      ItemType: 22
   boardTilemap: {fileID: 583834200}
   itemTilemap: {fileID: 269106886}
   spawnerTilemap: {fileID: 773047408}
   statefulTilemap: {fileID: 391042897}
   collectibleCheckTilemap: {fileID: 1897150872}
-  LevelData: '{"TargetMove":30,"ScoreRule":{"MaxScore":10000,"Star1Score":2000,"Star2Score":5000,"Star3Score":8000},"SpawnerRules":[{"ID":0,"ItemSpawnerData":[[1000,2],[1000,6],[1000,18],[1000,22]]}],"BoardFillRule":[[1000,1],[1000,3],[1000,5],[1000,2],[1000,4],[1000,6]],"RuledRandomFill":[[0,2],[0,5],[1000,6]],"LevelTargetData":[[3,1],[4,3],[5,5]],"BoardBlockPositions":[[-4,-4],[-4,-3],[-4,-2],[-4,-1],[-4,0],[-4,1],[-4,2],[-4,3],[-4,4],[-3,-4],[-3,-3],[-3,-2],[-3,-1],[-3,0],[-3,1],[-3,2],[-3,3],[-3,4],[-2,-4],[-2,-3],[-2,-2],[-2,-1],[-2,0],[-2,1],[-2,2],[-2,3],[-2,4],[-1,-4],[-1,-3],[-1,-2],[-1,-1],[-1,0],[-1,1],[-1,2],[-1,3],[-1,4],[0,-4],[0,-3],[0,-2],[0,-1],[0,0],[0,1],[0,2],[0,3],[0,4],[1,-4],[1,-3],[1,-2],[1,-1],[1,0],[1,1],[1,2],[1,3],[1,4],[2,-4],[2,-3],[2,-2],[2,-1],[2,0],[2,1],[2,2],[2,3],[2,4],[3,-4],[3,-3],[3,-2],[3,-1],[3,0],[3,1],[3,2],[3,3],[3,4],[4,-4],[4,-3],[4,-2],[4,-1],[4,0],[4,1],[4,2],[4,3],[4,4]],"ColorBlockItemPositions":[[-4,4,0,1,2,1,0,0],[-3,4,0,1,6,2,0,0],[-2,4,0,1,2,1,0,0],[-1,4,0,1,6,2,0,0],[0,4,0,1,2,1,0,0],[1,4,0,1,6,2,0,0],[2,4,0,1,2,1,0,0],[3,4,0,1,6,2,0,0],[4,4,0,1,2,1,0,0]],"ColorBoosterItemPositions":[],"BoosterItemPositions":[],"CollectibleCheckBlockPositions":[[-4,-4],[-3,-4],[-2,-4],[-1,-4],[0,-4],[1,-4],[2,-4],[3,-4],[4,-4]],"RandomBlockItemPositions":[],"RuledRandomBlockPositions":[],"BreakableItemPositions":[],"UnbreakableItemPositions":[[-4,-4,0,100,31,0,0,0],[-3,-4,0,100,31,0,0,0],[-2,-4,0,100,31,0,0,0],[-1,-4,0,100,31,0,0,0],[0,-4,0,100,31,0,0,0],[1,-4,0,100,31,0,0,0],[2,-4,0,100,31,0,0,0],[3,-4,0,100,31,0,0,0],[4,-4,0,100,31,0,0,0]],"CollectibleItemPositions":[],"StatefulBlockPositions":[],"SpawnerBlockPositions":[[-4,4,0],[-3,4,0],[-2,4,0],[-1,4,0],[0,4,0],[1,4,0],[2,4,0],[3,4,0],[4,4,0]]}'
+  LevelData: 
 --- !u!4 &2095715574
 Transform:
   m_ObjectHideFlags: 0
@@ -3560,6 +3569,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1592576623}
+  - {fileID: 491831332}
   - {fileID: 1640025284}
   - {fileID: 2095715574}
-  - {fileID: 491831332}

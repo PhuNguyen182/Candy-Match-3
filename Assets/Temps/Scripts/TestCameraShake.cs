@@ -6,6 +6,11 @@ using Cinemachine;
 public class TestCameraShake : MonoBehaviour
 {
     public float m;
+    [Range(-1f, 1f)]
+    public float x;
+    [Range(-1f, 1f)]
+    public float y;
+    public float result;
     public CinemachineImpulseSource impulseSource;
 
     private void Update()
@@ -21,5 +26,7 @@ public class TestCameraShake : MonoBehaviour
 
             impulseSource.GenerateImpulseWithVelocity(Random.insideUnitCircle.normalized * m);
         }
+
+        result = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
     }
 }
