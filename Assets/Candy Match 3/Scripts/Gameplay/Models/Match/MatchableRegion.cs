@@ -10,21 +10,18 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
     {
         public int Score;
         public ItemType RegionType;
-        public List<Vector3Int> Elements;
+        public CandyColor RegionColor;
+        public HashSet<Vector3Int> Elements;
+        public Vector3Int Capital;
 
         public MatchableRegion()
         {
             Elements = new();
         }
 
-        public void Add(Vector3Int position)
+        public bool IsInRegion(Vector3Int position)
         {
-            Elements.Add(position);
-        }
-
-        public int Count()
-        {
-            return Elements.Count;
+            return Elements.Contains(position);
         }
 
         public void Dispose()
