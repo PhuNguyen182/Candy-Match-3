@@ -10150,7 +10150,7 @@ GameObject:
   - component: {fileID: 4936929905499351698}
   - component: {fileID: 9109515050102893689}
   m_Layer: 5
-  m_Name: Amount
+  m_Name: Price
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10922,7 +10922,6 @@ RectTransform:
   - {fileID: 2179724785296444612}
   - {fileID: 3572579438731118727}
   - {fileID: 5488740988106110992}
-  - {fileID: 9143832160924390828}
   - {fileID: 8272268235510725974}
   - {fileID: 4064721407703477588}
   - {fileID: 4665498761386906861}
@@ -11495,7 +11494,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 9143832160924390828}
   m_Father: {fileID: 7402944173731007603}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -11684,12 +11684,15 @@ MonoBehaviour:
   IsPopup: 1
   IsNotStack: 0
   isAnim: 0
+  price: 300
   animator: {fileID: 7814622793931372733}
   heartEffect: {fileID: 7370277949269907826}
   background: {fileID: 6723206642726379042}
   closeButton: {fileID: 4197495251208970785}
   purchaseButton: {fileID: 5663262825871884899}
   timeText: {fileID: 6948313269835210046}
+  priceText: {fileID: 9109515050102893689}
+  timerObject: {fileID: 1806357420242575291}
   heartIcons:
   - {fileID: 6421961857461133855}
   - {fileID: 7109878972303267568}
@@ -11977,11 +11980,11 @@ RectTransform:
   m_Children:
   - {fileID: 8131762240706540718}
   - {fileID: 7570727013929435973}
-  m_Father: {fileID: 7402944173731007603}
+  m_Father: {fileID: 5488740988106110992}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -405, y: -25}
+  m_AnchoredPosition: {x: -189.99998, y: -165}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &6884315204352358078

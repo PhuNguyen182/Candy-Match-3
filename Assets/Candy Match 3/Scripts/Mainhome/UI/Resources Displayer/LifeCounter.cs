@@ -10,6 +10,8 @@ using CandyMatch3.Scripts.Mainhome.UI.Popups;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
+using CandyMatch3.Scripts.Common.DataStructs;
 
 namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
 {
@@ -19,10 +21,12 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
         [SerializeField] private TMP_Text timeCounter;
         [SerializeField] private Button lifeButton;
 
+        private int _heart = 0;
+
         private void Awake()
         {
             PreloadPopup();
-            lifeButton.onClick.AddListener(OpenLifePopup);
+            lifeButton.onClick.AddListener(() => OpenLifePopup().Forget());
         }
 
         private void Update()
@@ -35,21 +39,48 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
             BuyLivesPopup.PreloadFromAddress(CommonPopupPaths.LivesPopupPath).Forget();
         }
 
-        private void OpenLifePopup()
+        private async UniTask OpenLifePopup()
         {
-            // To do: if life count is equal to 5, open start game popup, otherwise open buy heart popup
-            BuyLivesPopup.CreateFromAddress(CommonPopupPaths.LivesPopupPath).Forget();
+            if (_heart >= 5)
+            {
+                var alert = await AlertPopup.CreateFromAddress(CommonPopupPaths.AlertPopupPath);
+                alert.SetMessage("Your lives is full!\nLet's play game!");
+                alert.OnClose = () =>
+                {
+                    OpenPlayGamePopup().Forget();
+                };
+            }
+            
+            else
+                BuyLivesPopup.CreateFromAddress(CommonPopupPaths.LivesPopupPath).Forget();
+        }
+
+        private async UniTask OpenPlayGamePopup()
+        {
+            int level = GameDataManager.Instance.GetCurrentLevel();
+            var levelNode = GameDataManager.Instance.GetLevelProgress(level);
+        
+            if (levelNode.Level > 0)
+            {
+                int stars = levelNode.Stars;
+                var startGamePopup = await StartGamePopup.CreateFromAddress(CommonPopupPaths.StartGamePopupPath);
+                await startGamePopup.SetLevelInfo(new LevelBoxData
+                {
+                    Level = level,
+                    Stars = stars
+                });
+            }
         }
 
         private void UpdateLives()
         {
-            int heart = GameDataManager.Instance
-                        .GetResource(GameResourceType.Life);
+            _heart = GameDataManager.Instance
+                     .GetResource(GameResourceType.Life);
             TimeSpan time = GameManager.Instance
                             .HeartTimer.HeartTimeDiff;
 
-            UpdateLives(heart);
-            UpdateTime(heart, time);
+            UpdateLives(_heart);
+            UpdateTime(_heart, time);
         }
 
         private void UpdateTime(int heart, TimeSpan time)

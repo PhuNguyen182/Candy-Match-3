@@ -89,7 +89,8 @@ namespace CandyMatch3.Scripts.GameData
 
         public LevelProgressNode GetLevelProgress(int level)
         {
-            return _levelProgressData.GetLevelProgress(level).DataValue;
+            var data = _levelProgressData.GetLevelProgress(level);
+            return data != null ? data.DataValue : new LevelProgressNode { Level = -1 };
         }
 
         public DateTime GetCurrentHeartTime()

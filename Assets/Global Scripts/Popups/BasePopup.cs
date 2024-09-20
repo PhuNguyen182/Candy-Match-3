@@ -159,11 +159,6 @@ public abstract class BasePopup : MonoBehaviour
     }
 
     #endregion
-
-    public virtual bool IsActive()
-    {
-        return true;
-    }
 }
 
 public class BasePopup<T> : BasePopup where T : BasePopup

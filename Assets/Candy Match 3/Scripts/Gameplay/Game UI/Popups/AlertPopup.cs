@@ -23,6 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 
         private CancellationToken _token;
         private readonly int _closeHash = Animator.StringToHash("Close");
+        public Action OnClose;
 
         protected override void OnAwake()
         {
@@ -60,6 +61,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 
             if (!IsPreload)
                 MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
+
+            OnClose?.Invoke();
+            OnClose = null;
         }
     }
 }
