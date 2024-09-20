@@ -42,6 +42,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly StateMachine<State, Trigger>.TriggerWithParameters<EndResult> _endGameTrigger;
         private LevelModel _levelModel;
 
+        private const int DefaultContinueMove = 5;
+        private const int DefaultContinuePrice = 300;
+
         public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask, StartGameTask startGameTask
             , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask, InGameSettingPanel settingSidePanel)
         {
@@ -86,7 +89,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void StartGame()
         {
+            SetUpEndgame();
             _gameStateMachine.Activate();
+        }
+
+        private void SetUpEndgame()
+        {
+            _endGameScreen.SetContinuePriceAndMove(DefaultContinuePrice, DefaultContinueMove);
         }
 
         private async UniTask Ready()
