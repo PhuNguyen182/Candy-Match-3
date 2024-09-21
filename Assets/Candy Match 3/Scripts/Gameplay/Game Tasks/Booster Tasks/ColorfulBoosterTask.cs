@@ -148,7 +148,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             using(var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
-                positions.AddRange(_gridCellManager.Iterator());
+                positions.AddRange(_gridCellManager.GetActivePositions());
 
                 using (var foundListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> foundPositions))
                 {
@@ -180,7 +180,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             {
                 using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
                 {
-                    positions.AddRange(_gridCellManager.Iterator());
+                    positions.AddRange(_gridCellManager.GetActivePositions());
 
                     for (int i = 0; i < positions.Count; i++)
                     {
