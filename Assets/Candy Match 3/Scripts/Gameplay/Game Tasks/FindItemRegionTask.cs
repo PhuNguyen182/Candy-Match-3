@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,6 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using Cysharp.Threading.Tasks;
-using System.Linq;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -39,7 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             await UniTask.CompletedTask;
         }
 
-        public void CollectMatchableRegions()
+        public List<MatchableRegion> CollectMatchableRegions()
         {
             HashSet<Vector3Int> regionPositions = new();
             List<MatchableRegion> matchableRegions = new();
@@ -66,6 +66,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 matchableRegions.Add(region);
             }
+
+            return matchableRegions;
         }
 
         private void InspectMatchableRegion(Vector3Int position, HashSet<Vector3Int> positions)
@@ -107,28 +109,27 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             foreach(Vector3Int position in region.Elements)
             {
                 int extendCount = 0;
-                Vector3Int checkPosition = position;
 
                 for (int j = 0; j < _adjacentSteps.Count; j++)
                 {
-                    int count = ExtendCount(checkPosition, _adjacentSteps[j], region.IsInRegion);
+                    int count = Extend(position, _adjacentSteps[j], region.IsInRegion);
                     extendCount = count + extendCount;
                 }
 
                 if(extendCount > maxCount)
                 {
                     maxCount = extendCount;
-                    capitalPosition = checkPosition;
+                    capitalPosition = position;
                 }
             }
 
             region.Capital = capitalPosition;
         }
 
-        private int ExtendCount(Vector3Int position, Vector3Int direction, Func<Vector3Int, bool> predicate)
+        private int Extend(Vector3Int startPosition, Vector3Int direction, Func<Vector3Int, bool> predicate)
         {
             int count = 0;
-            Vector3Int extendPosition = position + direction;
+            Vector3Int extendPosition = startPosition + direction;
 
             while (predicate(extendPosition))
             {
