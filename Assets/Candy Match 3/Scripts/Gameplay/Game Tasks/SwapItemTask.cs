@@ -36,6 +36,83 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _useInGameBoosterPublisher = GlobalMessagePipe.GetPublisher<UseInGameBoosterMessage>();
         }
 
+        public async UniTask SwapForward(Vector3Int fromPosition, Vector3Int toPosition)
+        {
+            if (fromPosition == toPosition)
+                return;
+
+            _suggestTask.Suggest(false);
+            IGridCell fromCell = _gridCellManager.Get(fromPosition);
+            IGridCell toCell = _gridCellManager.Get(toPosition);
+
+            if (fromCell == null || toCell == null)
+                return;
+
+            if (!fromCell.HasItem || !toCell.HasItem)
+                return;
+
+            if (!fromCell.IsMoveable || !toCell.IsMoveable)
+                return;
+
+            IBlockItem fromItem = fromCell.BlockItem;
+            IBlockItem toItem = toCell.BlockItem;
+
+            if (fromItem is not IItemAnimation fromAnimation || toItem is not IItemAnimation toAnimation)
+                return;
+
+            UseSwapBooster();
+            fromCell.LockStates = LockStates.Swapping;
+            toCell.LockStates = LockStates.Swapping;
+            bool isCollectible = CheckCollectible(fromCell, toCell);
+
+            UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
+            UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
+            await UniTask.WhenAll(fromMoveTask, toMoveTask);
+
+            fromCell.SetBlockItem(toItem);
+            toCell.SetBlockItem(fromItem);
+
+            toItem.SetWorldPosition(fromCell.WorldPosition);
+            fromItem.SetWorldPosition(toCell.WorldPosition);
+
+            fromCell.LockStates = LockStates.None;
+            toCell.LockStates = LockStates.None;
+
+            if (isCollectible)
+            {
+                IBlockItem collectItem;
+                IGridCell collectCell, remainCell;
+
+                if (fromCell.IsCollectible)
+                {
+                    collectCell = fromCell;
+                    remainCell = toCell;
+                }
+
+                else
+                {
+                    collectCell = toCell;
+                    remainCell = fromCell;
+                }
+
+                collectItem = collectCell.BlockItem;
+                _matchItemsTask.CheckMatchInSwap(remainCell.GridPosition);
+
+                if (collectItem is ICollectible collectible)
+                {
+                    await collectible.Collect();
+                    _breakGridTask.ReleaseGridCell(collectCell);
+                    _checkGridTask.CheckAroundPosition(collectCell.GridPosition, 1);
+                }
+            }
+
+            else
+            {
+                _matchItemsTask.CheckMatchInSwap(fromPosition);
+                _matchItemsTask.CheckMatchInSwap(toPosition);
+            }
+        }
+
         public async UniTask SwapItem(Vector3Int fromPosition, Vector3Int toPosition, bool isSwapBack)
         {
             if (fromPosition == toPosition)
@@ -70,165 +147,107 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (_comboBoosterHandleTask.IsComboBooster(fromCell, toCell))
             {
                 DecreaseMove();
-                fromCell.SetBlockItem(toItem);
-                toItem.SetWorldPosition(fromCell.WorldPosition);
-                toCell.SetBlockItem(fromItem);
-                fromItem.SetWorldPosition(toCell.WorldPosition);
-
-                fromCell.LockStates = LockStates.None;
-                toCell.LockStates = LockStates.None;
-
-                await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
+                await SwapComboBooster(fromCell, toCell, fromItem, toItem);
             }
 
             else if (_comboBoosterHandleTask.IsSwapToColorful(fromCell, toCell))
             {
                 DecreaseMove();
-                fromCell.SetBlockItem(toItem);
-                toItem.SetWorldPosition(fromCell.WorldPosition);
-                toCell.SetBlockItem(fromItem);
-                fromItem.SetWorldPosition(toCell.WorldPosition);
-
-                fromCell.LockStates = LockStates.None;
-                toCell.LockStates = LockStates.None;
-
-                await _comboBoosterHandleTask.CombineColorfulItemWithColorItem(fromCell, toCell);
+                await SwapToColorful(fromCell, toCell, fromItem, toItem);
             }
 
             else if (CheckCollectible(fromCell, toCell))
             {
-                IGridCell currentGrid;
-                IGridCell remainGrid;
-                IBlockItem blockItem;
-
                 DecreaseMove();
-                fromCell.SetBlockItem(toItem);
-                toItem.SetWorldPosition(fromCell.WorldPosition);
-                toCell.SetBlockItem(fromItem);
-                fromItem.SetWorldPosition(toCell.WorldPosition);
-
-                fromCell.LockStates = LockStates.None;
-                toCell.LockStates = LockStates.None;
-
-                if (fromCell.IsCollectible)
-                {
-                    currentGrid = fromCell;
-                    remainGrid = toCell;
-                    blockItem = fromCell.BlockItem;
-                }
-
-                else
-                {
-                    currentGrid = toCell;
-                    remainGrid = fromCell;
-                    blockItem = toCell.BlockItem;
-                }
-
-                if (blockItem is ICollectible collectible)
-                {
-                    await collectible.Collect();
-                    _breakGridTask.ReleaseGridCell(currentGrid);
-                    _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
-                }
-
-                _matchItemsTask.CheckMatchInSwap(remainGrid.GridPosition);
+                await SwapCollectible(fromCell, toCell, fromItem, toItem);
             }
 
             else
             {
-                fromCell.SetBlockItem(toItem);
-                toItem.SetWorldPosition(fromCell.WorldPosition);
-                toCell.SetBlockItem(fromItem);
-                fromItem.SetWorldPosition(toCell.WorldPosition);
-
-                fromCell.LockStates = LockStates.None;
-                toCell.LockStates = LockStates.None;
-
-                if (isSwapBack)
-                {
-                    await CheckMatchOnSwap(fromCell, toCell);
-                }
+                await SwapItems(fromCell, toCell, fromItem, toItem, isSwapBack);
             }
         }
 
-        public async UniTask SwapForward(Vector3Int fromPosition, Vector3Int toPosition)
+        private async UniTask SwapComboBooster(IGridCell fromCell, IGridCell toCell, IBlockItem fromItem, IBlockItem toItem)
         {
-            if (fromPosition == toPosition)
-                return;
-
-            _suggestTask.Suggest(false);
-            IGridCell fromCell = _gridCellManager.Get(fromPosition);
-            IGridCell toCell = _gridCellManager.Get(toPosition);
-
-            if (fromCell == null || toCell == null)
-                return;
-
-            if (!fromCell.HasItem || !toCell.HasItem)
-                return;
-
-            if (!fromCell.IsMoveable || !toCell.IsMoveable)
-                return;
-
-            IBlockItem fromItem = fromCell.BlockItem;
-            IBlockItem toItem = toCell.BlockItem;
-
-            if (fromItem is not IItemAnimation fromAnimation || toItem is not IItemAnimation toAnimation)
-                return;
-
-            _useInGameBoosterPublisher.Publish(new UseInGameBoosterMessage
-            {
-                BoosterType = InGameBoosterType.Swap
-            });
-
-            fromCell.LockStates = LockStates.Swapping;
-            toCell.LockStates = LockStates.Swapping;
-            bool isCollectible = CheckCollectible(fromCell, toCell);
-
-            UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
-            UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
-            await UniTask.WhenAll(fromMoveTask, toMoveTask);
-
             fromCell.SetBlockItem(toItem);
-            toItem.SetWorldPosition(fromCell.WorldPosition);
             toCell.SetBlockItem(fromItem);
+
+            toItem.SetWorldPosition(fromCell.WorldPosition);
             fromItem.SetWorldPosition(toCell.WorldPosition);
 
             fromCell.LockStates = LockStates.None;
             toCell.LockStates = LockStates.None;
 
-            if (isCollectible)
+            await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
+        }
+
+        private async UniTask SwapToColorful(IGridCell fromCell, IGridCell toCell, IBlockItem fromItem, IBlockItem toItem)
+        {
+            fromCell.SetBlockItem(toItem);
+            toCell.SetBlockItem(fromItem);
+            
+            toItem.SetWorldPosition(fromCell.WorldPosition);
+            fromItem.SetWorldPosition(toCell.WorldPosition);
+
+            fromCell.LockStates = LockStates.None;
+            toCell.LockStates = LockStates.None;
+
+            await _comboBoosterHandleTask.CombineColorfulItemWithColorItem(fromCell, toCell);
+        }
+
+        private async UniTask SwapCollectible(IGridCell fromCell, IGridCell toCell, IBlockItem fromItem, IBlockItem toItem)
+        {
+            IGridCell currentGrid;
+            IGridCell remainGrid;
+            IBlockItem blockItem;
+
+            fromCell.SetBlockItem(toItem);
+            toCell.SetBlockItem(fromItem);
+
+            toItem.SetWorldPosition(fromCell.WorldPosition);
+            fromItem.SetWorldPosition(toCell.WorldPosition);
+
+            fromCell.LockStates = LockStates.None;
+            toCell.LockStates = LockStates.None;
+
+            if (fromCell.IsCollectible)
             {
-                IBlockItem collectItem;
-                IGridCell collectCell, remainCell;
-
-                if (fromCell.IsCollectible)
-                {
-                    collectCell = fromCell;
-                    remainCell = toCell;
-                }
-
-                else
-                {
-                    collectCell = toCell;
-                    remainCell = fromCell;
-                }
-
-                collectItem = collectCell.BlockItem;
-                _matchItemsTask.CheckMatchInSwap(remainCell.GridPosition);
-
-                if(collectItem is ICollectible collectible)
-                {
-                    await collectible.Collect();
-                    _breakGridTask.ReleaseGridCell(collectCell);
-                    _checkGridTask.CheckAroundPosition(collectCell.GridPosition, 1);
-                }
+                currentGrid = fromCell;
+                remainGrid = toCell;
+                blockItem = fromCell.BlockItem;
             }
 
             else
             {
-                _matchItemsTask.CheckMatchInSwap(fromPosition);
-                _matchItemsTask.CheckMatchInSwap(toPosition);
+                currentGrid = toCell;
+                remainGrid = fromCell;
+                blockItem = toCell.BlockItem;
             }
+
+            if (blockItem is ICollectible collectible)
+            {
+                await collectible.Collect();
+                _breakGridTask.ReleaseGridCell(currentGrid);
+                _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
+            }
+
+            _matchItemsTask.CheckMatchInSwap(remainGrid.GridPosition);
+        }
+
+        private async UniTask SwapItems(IGridCell fromCell, IGridCell toCell, IBlockItem fromItem, IBlockItem toItem, bool isSwapBack)
+        {
+            fromCell.SetBlockItem(toItem);
+            toCell.SetBlockItem(fromItem);
+
+            toItem.SetWorldPosition(fromCell.WorldPosition);
+            fromItem.SetWorldPosition(toCell.WorldPosition);
+
+            fromCell.LockStates = LockStates.None;
+            toCell.LockStates = LockStates.None;
+
+            if (isSwapBack)
+                await CheckMatchOnSwap(fromCell, toCell);
         }
 
         private bool CheckCollectible(IGridCell fromCell, IGridCell toCell)
@@ -246,14 +265,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (!isMatchedFrom)
                 {
-                    fromCell.LockStates = LockStates.None;
-                    toCell.LockStates = LockStates.None;
+                    fromCell.LockStates = toCell.LockStates = LockStates.None;
                     await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
                     EffectManager.Instance.PlaySoundEffect(SoundEffectType.Error);
                 }
 
-                else
-                    DecreaseMove();
+                else DecreaseMove();
             }
 
             else
@@ -261,6 +278,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 DecreaseMove();
                 _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
             }
+        }
+
+        private void UseSwapBooster()
+        {
+            _useInGameBoosterPublisher.Publish(new UseInGameBoosterMessage
+            {
+                BoosterType = InGameBoosterType.Swap
+            });
         }
 
         private void DecreaseMove()

@@ -67,6 +67,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 matchableRegions.Add(region);
             }
 
+            _gridCellManager.ClearVisitStates();
             return matchableRegions;
         }
 
