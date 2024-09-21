@@ -430,6 +430,7 @@ GameObject:
   - component: {fileID: 95978050838256696}
   - component: {fileID: 6590902372643867365}
   - component: {fileID: 1541101016100272739}
+  - component: {fileID: 3108586794644969392}
   m_Layer: 5
   m_Name: No Moves Popup
   m_TagString: Untagged
@@ -496,7 +497,9 @@ MonoBehaviour:
   moveMessage: {fileID: 797365171623103639}
   moveText: {fileID: 6065288499401057094}
   currentCoin: {fileID: 4407710210663194727}
+  coinEffect: {fileID: 198891299770808678}
   coinTween: {fileID: 1541101016100272739}
+  resouceResponder: {fileID: 3108586794644969392}
   popupAnimator: {fileID: 95978050838256696}
   quitPopup: {fileID: 0}
 --- !u!114 &1541101016100272739
@@ -513,6 +516,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.3
   ease: 6
+--- !u!114 &3108586794644969392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099203608701288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b4bab1354dab84499bd9771a306a5da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  resourceType: 1
 --- !u!1 &1169599249703934
 GameObject:
   m_ObjectHideFlags: 0
@@ -6245,7 +6261,7 @@ Transform:
   m_GameObject: {fileID: 1499826952752324}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 297, y: -360, z: 0}
+  m_LocalPosition: {x: 219, y: -313.4, z: 0}
   m_LocalScale: {x: 90, y: 90, z: 90}
   m_ConstrainProportionsScale: 1
   m_Children:

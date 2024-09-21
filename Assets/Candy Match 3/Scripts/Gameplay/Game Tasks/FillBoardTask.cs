@@ -77,7 +77,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             for (int i = 0; i < _ruledRandomFill.Count; i++)
             {
-                if (itemData.ID == i)
+                if (itemData.ID == i + 1)
                     return _ruledRandomFill[i].DataValue.Color;
             }
 

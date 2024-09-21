@@ -35,11 +35,19 @@ namespace CandyMatch3.Scripts.GameManagers
                         GameDataManager.Instance.SetResource(GameResourceType.Life, _maxHeart);
                         GameDataManager.Instance.SaveHeartTime(_savedHeartTime);
                     }
+
                     else
                     {
                         _savedHeartTime = _savedHeartTime.AddSeconds(_heartCooldown);
                     }
                 }
+            }
+
+            else
+            {
+                _savedHeartTime = DateTime.Now;
+                GameDataManager.Instance.SetResource(GameResourceType.Life, _maxHeart);
+                GameDataManager.Instance.SaveHeartTime(_savedHeartTime);
             }
         }
 

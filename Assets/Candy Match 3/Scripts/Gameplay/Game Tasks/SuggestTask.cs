@@ -128,9 +128,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                             _itemSuggests.Add(itemSuggest);
                     }
                 }
+
+                _suggestCount = _suggestCount + 1;
             }
 
-            _suggestCount = _suggestCount + 1;
+            else
+            {
+#if UNITY_EDITOR
+                Debug.Log("No Possible Moves!");
+#endif
+            }
+
             _inputProcessTask.IsActive = true;
         }
 

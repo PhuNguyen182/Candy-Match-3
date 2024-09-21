@@ -13,9 +13,7 @@ namespace GlobalScripts.Extensions
             for (int i = 0; i < count - 1; i++)
             {
                 int randIndex = Random.Range(i + 1, count);
-                T temp = list[i];
-                list[i] = list[randIndex];
-                list[randIndex] = temp;
+                (list[i], list[randIndex]) = (list[randIndex], list[i]);
             }
         }
     }
