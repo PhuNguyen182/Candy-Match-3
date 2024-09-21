@@ -45,7 +45,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
         public bool CheckMatch(Vector3Int checkPosition, out MatchResult matchResult)
         {
-            int matchScore = 0;
+            MatchScore matchScore;
             BaseMatchModel matchModel = null;
 
             if (_match5Model.CheckMatch(checkPosition, out matchScore))
@@ -76,7 +76,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             return false;
         }
 
-        public bool CheckMatch(Vector3Int checkPosition, out int matchScore)
+        public bool CheckMatch(Vector3Int checkPosition, out MatchScore matchScore)
         {
             if (_match5Model.CheckMatch(checkPosition, out matchScore))
                 return true;

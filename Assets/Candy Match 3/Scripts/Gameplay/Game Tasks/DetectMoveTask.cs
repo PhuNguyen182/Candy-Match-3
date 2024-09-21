@@ -5,6 +5,7 @@ using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.Strategies.Suggests;
+using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using Random = UnityEngine.Random;
 
@@ -83,20 +84,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                         else
                         {
-                            int fromScore = 0, toScore = 0;
+                            MatchScore fromScore, toScore;
                             _matchItemsTask.CheckMatch(fromPosition, out fromScore);
                             _matchItemsTask.CheckMatch(toPosition, out toScore);
 
-                            if (fromScore == 0 && toScore == 0)
+                            if (fromScore.Score == 0 && toScore.Score == 0)
                             {
                                 PseudoSwapItems(fromGridCell, toGridCell);
                                 continue;
                             }
 
                             Vector3Int position, direction;
-                            score = Mathf.Max(fromScore, toScore);
+                            score = Mathf.Max(fromScore.Score, toScore.Score);
 
-                            if (fromScore >= toScore)
+                            if (fromScore.Score >= toScore.Score)
                             {
                                 position = fromPosition;
                                 direction = _swapDirections[j];

@@ -86,11 +86,18 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             }
         }
 
-        public bool CheckMatch(Vector3Int gridPosition, out int score)
+        public bool CheckMatch(Vector3Int gridPosition, out MatchScore score)
         {
             var (matchScore, boosterCount) = GetMatchableScore(gridPosition);
             
-            score = matchScore + boosterCount;
+            score = new MatchScore
+            {
+                HasBooster = boosterCount> 0,
+                ItemCount = requiredItemCount,
+                Score = matchScore + boosterCount,
+                MatchType = MatchType
+            };
+
             return matchScore > 0;
         }
 
