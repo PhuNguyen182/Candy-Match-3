@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
@@ -85,6 +86,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             IGridCell gridCell = _gridCellManager.Get(position);
 
             if (gridCell == null)
+                return;
+
+            if (gridCell.LockStates == LockStates.Preparing)
                 return;
 
             await _breakGridTask.BreakItem(position);

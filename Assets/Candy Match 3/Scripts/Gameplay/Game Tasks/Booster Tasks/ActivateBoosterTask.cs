@@ -11,7 +11,6 @@ using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Databases;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using CandyMatch3.Scripts.LevelDesign.CustomTiles.ItemTiles;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {

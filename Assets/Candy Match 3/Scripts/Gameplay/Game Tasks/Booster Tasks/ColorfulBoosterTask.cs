@@ -125,6 +125,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
+                    IGridCell cell = _gridCellManager.Get(colorPositions[i]);
+                    cell.LockStates = LockStates.Preparing;
                     breakTasks.Add(_breakGridTask.Break(colorPositions[i], true));
                 }
 
