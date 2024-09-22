@@ -35,6 +35,33 @@ namespace GlobalScripts.Extensions
             return bounds;
         }
 
+        public static BoundsInt EncapsulateExpand(List<Vector3Int> positions)
+        {
+            int minX = int.MaxValue, maxX = int.MinValue;
+            int minY = int.MaxValue, maxY = int.MinValue;
+
+            for (int i = 0; i < positions.Count; i++)
+            {
+                if (positions[i].x < minX)
+                    minX = positions[i].x;
+                
+                if (positions[i].x > maxX)
+                    maxX = positions[i].x;
+                
+                if (positions[i].y < minY)
+                    minY = positions[i].y;
+
+                if (positions[i].y > maxY)
+                    maxY = positions[i].y;
+            }
+
+            return new BoundsInt
+            {
+                min = new(minX, minY),
+                max = new(maxX, maxY)
+            };
+        }
+
         public static BoundsInt Encapsulate(List<Vector3Int> positions)
         {
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> sortedPosition))
