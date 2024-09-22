@@ -240,11 +240,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
             });
 
-            if (gridCell.BlockItem is IItemEffect effect)
-                effect.PlayStartEffect();
-
             TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
             await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
+
+            if (gridCell.BlockItem is IItemEffect effect)
+                effect.PlayStartEffect();
 
             gridCell.IsMatching = false;
             gridCell.LockStates = LockStates.None;

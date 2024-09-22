@@ -63,11 +63,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             itemAnimation.JumpDown(amptitude);
         }
 
-        public void FallDown(bool isFallDown, float stretch)
-        {
-            itemAnimation.FallDown(isFallDown, stretch);
-        }
-
         public UniTask MoveTo(Vector3 position, float duration)
         {
             return itemAnimation.MoveTo(position, duration);

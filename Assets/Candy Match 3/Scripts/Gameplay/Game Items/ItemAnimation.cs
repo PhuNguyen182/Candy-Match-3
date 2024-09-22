@@ -93,12 +93,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
         }
 
-        public void FallDown(bool isFallDown, float stretch)
-        {
-            itemAnimator.SetBool(ItemAnimationHashKeys.IsMovingHash, isFallDown);
-            itemAnimator.SetFloat(ItemAnimationHashKeys.FallDownHash, stretch);
-        }
-
         public void TriggerVibrate(int stage = 0)
         {
             PlayBoosterTrigger();

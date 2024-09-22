@@ -133,8 +133,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if (blockItem is IItemAnimation animation)
             {
-                _boardHeight = _gridCellManager.BoardHeight;
-                animation.FallDown(true, 1.0f * stepCount / _boardHeight);
                 float moveSpeed = Match3Constants.BaseItemMoveSpeed + Match3Constants.FallenAccelaration * stepCount;
                 await animation.MoveTo(targetCell.WorldPosition, 1f / moveSpeed);
             }
@@ -144,8 +142,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if(blockItem is IItemAnimation animation)
             {
-                animation.FallDown(false, 0);
-
                 if(stepCount > 0)
                 {
                     _boardHeight = _gridCellManager.BoardHeight;
