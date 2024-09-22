@@ -136,9 +136,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             if (gridCell == null)
                 return;
 
-            if (gridCell.LockStates == LockStates.Preparing)
-                return;
-
             await _breakGridTask.BreakItem(position);
         }
 

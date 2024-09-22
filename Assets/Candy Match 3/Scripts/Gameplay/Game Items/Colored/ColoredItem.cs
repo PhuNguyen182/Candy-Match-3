@@ -23,20 +23,28 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [Header("Effects")]
         [SerializeField] private GameObject colorfulEffect;
 
+        private bool _isMatchable;
         private GameObject _colorfulEffect;
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
         private IPublisher<AsyncMessage<MoveTargetData>> _moveToTargetPublisher;
 
         public override bool Replacable => true;
 
-        public override bool IsMatchable => true;
+        public override bool IsMatchable => _isMatchable;
 
-        public override bool IsMoveable => true;
+        public override bool IsMoveable => !IsLocking;
 
         public override void ResetItem()
         {
             base.ResetItem();
+            IsLocking = false;
+            SetMatchable(true);
             itemAnimation.DisappearOnMatch(false).Forget();
+        }
+
+        public override void SetMatchable(bool isMatchable)
+        {
+            _isMatchable = isMatchable;
         }
 
         public override void InitMessages()

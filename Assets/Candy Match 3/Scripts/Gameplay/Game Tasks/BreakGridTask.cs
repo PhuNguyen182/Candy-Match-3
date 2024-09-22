@@ -66,7 +66,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (gridCell.HasItem)
             {
-                if (gridCell.LockStates == LockStates.Preparing || gridCell.LockStates == LockStates.None)
+                if (!gridCell.IsLocked)
                 {
                     gridCell.LockStates = LockStates.Breaking;
                     IBlockItem blockItem = gridCell.BlockItem;
@@ -130,7 +130,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!gridCell.HasItem)
                 return;
 
-            if (gridCell.LockStates == LockStates.Preparing || gridCell.LockStates == LockStates.None)
+            if (!gridCell.IsLocked)
             {
                 gridCell.LockStates = LockStates.Breaking;
                 IBlockItem blockItem = gridCell.BlockItem;

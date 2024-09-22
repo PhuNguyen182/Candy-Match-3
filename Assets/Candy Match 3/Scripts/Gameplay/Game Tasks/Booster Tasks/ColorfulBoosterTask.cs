@@ -125,8 +125,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
-                    IGridCell cell = _gridCellManager.Get(colorPositions[i]);
-                    cell.LockStates = LockStates.Preparing;
                     breakTasks.Add(_breakGridTask.Break(colorPositions[i], true));
                 }
 
@@ -244,7 +242,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                        , Vector3.zero, Quaternion.identity);
-            targetGridCell.LockStates = LockStates.Preparing;
+            targetGridCell.BlockItem.IsLocking = true;
+            targetGridCell.BlockItem.SetMatchable(false);
             await fireray.Fire(targetGridCell, position, delay);
         }
 
