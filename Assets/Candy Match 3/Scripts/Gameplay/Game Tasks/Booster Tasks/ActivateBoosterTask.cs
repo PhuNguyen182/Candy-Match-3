@@ -69,7 +69,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             if (message.Sender is IColorBooster colorBooster)
             {
-                await colorBooster.Activate();
                 gridCell.LockStates = LockStates.Preparing;
                 BoosterType boosterType = colorBooster.ColorBoosterType;
 
