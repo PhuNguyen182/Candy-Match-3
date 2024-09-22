@@ -42,10 +42,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _adjacentSteps = new()
             {
-                new(1, 0),
-                new(0, 1),
-                new(-1, 0),
-                new(0, -1)
+                Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right
             };
 
             _cts = new();
