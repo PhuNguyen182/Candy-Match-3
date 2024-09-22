@@ -161,7 +161,7 @@ public abstract class BasePopup : MonoBehaviour
     #endregion
 }
 
-public class BasePopup<T> : BasePopup where T : BasePopup
+public class BasePopup<TPopup> : BasePopup where TPopup : BasePopup
 {
     private static string _resourcePath;
     public static string ResourcePath => _resourcePath;
@@ -169,27 +169,27 @@ public class BasePopup<T> : BasePopup where T : BasePopup
 
     public static void Preload()
     {
-        T instance = Create();
+        TPopup instance = Create();
         SimplePool.Despawn(instance.gameObject);
     }
 
     public static void Preload(string path)
     {
-        T instance = Create(path);
+        TPopup instance = Create(path);
         SimplePool.Despawn(instance.gameObject);
     }
 
-    public static T Create()
+    public static TPopup Create()
     {
-        _resourcePath = $"Popups/{typeof(T).FullName}";
+        _resourcePath = $"Popups/{typeof(TPopup).FullName}";
         return Create(_resourcePath);
     }
     
-    public static T Create(string path)
+    public static TPopup Create(string path)
     {
         _resourcePath = path;
-        T prefab = Resources.Load<T>(path);
-        T instance = SimplePool.Spawn(prefab);
+        TPopup prefab = Resources.Load<TPopup>(path);
+        TPopup instance = SimplePool.Spawn(prefab);
         instance.gameObject.SetActive(true);
         return instance;
     }
@@ -199,7 +199,7 @@ public class BasePopup<T> : BasePopup where T : BasePopup
 
     public static async UniTask PreloadFromAddress(string address)
     {
-        T instance = await CreateFromAddress(address, true);
+        TPopup instance = await CreateFromAddress(address, true);
         
         if(instance != null)
         {
@@ -207,9 +207,9 @@ public class BasePopup<T> : BasePopup where T : BasePopup
         }
     }
 
-    public static async UniTask<T> CreateFromAddress(string address, bool isPreload = false)
+    public static async UniTask<TPopup> CreateFromAddress(string address, bool isPreload = false)
     {
-        T instance = default;
+        TPopup instance = default;
         _resourcePath = address;
         IsPreload = isPreload;
 
@@ -222,7 +222,7 @@ public class BasePopup<T> : BasePopup where T : BasePopup
 
             if (_opHandle.Status == AsyncOperationStatus.Succeeded)
             {
-                instance = SimplePool.Spawn(_opHandle.Result).GetComponent<T>();
+                instance = SimplePool.Spawn(_opHandle.Result).GetComponent<TPopup>();
                 instance.gameObject.SetActive(true);
             }
 

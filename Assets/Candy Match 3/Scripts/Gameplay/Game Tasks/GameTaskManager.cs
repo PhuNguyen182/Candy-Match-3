@@ -10,13 +10,13 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.GameInput;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
-using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
+using CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks;
+using CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
-using CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks;
-using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
+using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -170,6 +170,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
             _disposable.Dispose();
         }
     }

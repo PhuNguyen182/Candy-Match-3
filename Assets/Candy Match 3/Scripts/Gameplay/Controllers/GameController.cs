@@ -270,7 +270,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private void OnDestroy()
         {
             GC.Collect();
-            GC.SuppressFinalize(this);
         }
     }
 }
