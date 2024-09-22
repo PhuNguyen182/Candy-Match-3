@@ -22,10 +22,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private IDisposable _messageDisposable;
         private IDisposable _disposable;
 
+        public bool IsEndGame { get; set; }
+
         public ComplimentTask(CharacterEmotion characterEmotion)
         {
             _complimentCounter = new();
-            _delay = TimeSpan.FromSeconds(0.5f);
+            _delay = TimeSpan.FromSeconds(1f);
             _throttle = TimeSpan.FromSeconds(0.5f);
             _characterEmotion = characterEmotion;
 
@@ -55,6 +57,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void OnCounterEnd(int count)
         {
+            if (IsEndGame)
+                return;
+
             if (count == 0)
             {
                 _complimentCounter.Value = 0;

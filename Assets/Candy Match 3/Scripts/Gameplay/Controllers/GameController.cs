@@ -152,7 +152,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
                                    , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
                                    , mainGamePanel, endGameScreen, settingSidePanel, targetDatabase, inGameBoosterPanel
-                                   , inGameBoosterPackDatabase, _specialItemTasks);
+                                   , inGameBoosterPackDatabase, _specialItemTasks, _complimentTask);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);

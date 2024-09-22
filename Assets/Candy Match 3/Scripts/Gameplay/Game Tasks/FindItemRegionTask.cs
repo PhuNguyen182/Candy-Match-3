@@ -16,27 +16,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly GridCellManager _gridCellManager;
         private readonly List<Vector3Int> _adjacentSteps;
-        private readonly List<Vector3Int> _allPositions;
+
+        private HashSet<Vector3Int> _findRegionPosition;
 
         public FindItemRegionTask(GridCellManager gridCellManager)
         {
             _gridCellManager = gridCellManager;
 
-            _allPositions = new();
+            _findRegionPosition = new();
             _adjacentSteps = new()
             {
                 Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right
             };
         }
 
-        public void BuildGridBoardData()
+        public void CheckRegion(Vector3Int position)
         {
-            _allPositions.AddRange(_gridCellManager.GetActivePositions());
-        }
-
-        public async UniTask MatchAllRegions()
-        {
-            await UniTask.CompletedTask;
+            _findRegionPosition.Add(position);
         }
 
         public List<MatchableRegion> CollectMatchableRegions()
@@ -44,15 +40,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             HashSet<Vector3Int> regionPositions = new();
             List<MatchableRegion> matchableRegions = new();
 
-            for (int i = 0; i < _allPositions.Count; i++)
+            foreach (Vector3Int position in _findRegionPosition)
             {
-                IGridCell gridCell = _gridCellManager.Get(_allPositions[i]);
+                IGridCell gridCell = _gridCellManager.Get(position);
 
                 if (!IsValidGridCell(gridCell))
                     continue;
 
                 regionPositions.Clear(); // Clear this collection to refresh region positions
-                InspectMatchableRegion(_allPositions[i], regionPositions);
+                InspectMatchableRegion(position, regionPositions);
 
                 if (regionPositions.Count < 3)
                     continue;
@@ -67,6 +63,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 matchableRegions.Add(region);
             }
 
+            _findRegionPosition.Clear();
             _gridCellManager.ClearVisitStates();
             return matchableRegions;
         }
@@ -149,7 +146,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void Dispose()
         {
             _adjacentSteps.Clear();
-            _allPositions.Clear();
+            _findRegionPosition.Clear();
         }
     }
 }

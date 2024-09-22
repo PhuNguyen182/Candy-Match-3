@@ -48,7 +48,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask
             , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase
             , MainGamePanel mainGamePanel, EndGameScreen endGameScreen, InGameSettingPanel settingSidePanel, TargetDatabase targetDatabase
-            , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase, SpecialItemTask specialItemTask)
+            , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase, SpecialItemTask specialItemTask
+            , ComplimentTask complimentTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -108,7 +109,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
             _checkGridTask.AddTo(ref builder);
 
-            _gameStateController = new(_inputProcessor, _checkTargetTask, _startGameTask, _endGameTask
+            _gameStateController = new(_inputProcessor, _checkTargetTask, _startGameTask, complimentTask, _endGameTask
                                         , endGameScreen, _suggestTask, settingSidePanel);
             _gameStateController.AddTo(ref builder);
             _specialItemTask = specialItemTask;

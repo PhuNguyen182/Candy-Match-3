@@ -98,6 +98,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             itemAnimation.JumpDown(amptitude);
         }
 
+        public void FallDown(bool isFallDown, float stretch)
+        {
+
+        }
+
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
             return itemAnimation.SwapTo(position, duration, isMoveFirst);

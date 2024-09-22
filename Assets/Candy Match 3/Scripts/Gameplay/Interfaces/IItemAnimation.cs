@@ -11,6 +11,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public UniTask BounceInDirection(Vector3 direction);
         public UniTask MoveTo(Vector3 position, float duration);
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst);
+        public void FallDown(bool isFallDown, float stretch);
         public void JumpDown(float amptitude);
     }
 }
