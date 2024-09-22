@@ -116,7 +116,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 blockItem.SetMatchable(false);
 
                 if (blockItem is IColorBooster colorBooster)
+                {
+                    colorBooster.IsActivated = true;
                     colorBooster.TriggerNextStage(3);
+                }
             }
         }
 

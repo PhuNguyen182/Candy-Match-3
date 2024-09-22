@@ -125,13 +125,27 @@ namespace GlobalScripts.Extensions
             }
         }
 
-        public static IEnumerable<Vector3Int> Iterator2D(this BoundsInt boundsInt)
+        public static IEnumerable<Vector3Int> Iterator2D(this BoundsInt boundsInt, bool isAscendingOrder = true)
         {
-            for (int x = boundsInt.xMin; x < boundsInt.xMax; x++)
+            if (isAscendingOrder)
             {
-                for (int y = boundsInt.yMin; y < boundsInt.yMax; y++)
+                for (int x = boundsInt.xMin; x < boundsInt.xMax; x++)
                 {
-                    yield return new Vector3Int(x, y);
+                    for (int y = boundsInt.yMin; y < boundsInt.yMax; y++)
+                    {
+                        yield return new Vector3Int(x, y);
+                    }
+                }
+            }
+
+            else
+            {
+                for (int x = boundsInt.xMax - 1; x >= boundsInt.xMin; x--)
+                {
+                    for (int y = boundsInt.yMax - 1; y >= boundsInt.yMin; y--)
+                    {
+                        yield return new Vector3Int(x, y);
+                    }
                 }
             }
         }
