@@ -99,45 +99,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        private void DetectCapitalOfRegion(MatchableRegion region)
-        {
-            int maxCount = int.MinValue;
-            Vector3Int capitalPosition = Vector3Int.zero;
-
-            foreach(Vector3Int position in region.Elements)
-            {
-                int extendCount = 0;
-
-                for (int j = 0; j < _adjacentSteps.Count; j++)
-                {
-                    int count = Extend(position, _adjacentSteps[j], region.IsInRegion);
-                    extendCount = count + extendCount;
-                }
-
-                if(extendCount > maxCount)
-                {
-                    maxCount = extendCount;
-                    capitalPosition = position;
-                }
-            }
-
-            region.Capital = capitalPosition;
-        }
-
-        private int Extend(Vector3Int startPosition, Vector3Int direction, Func<Vector3Int, bool> predicate)
-        {
-            int count = 0;
-            Vector3Int extendPosition = startPosition + direction;
-
-            while (predicate(extendPosition))
-            {
-                extendPosition = extendPosition + direction;
-                count = count + 1;
-            }
-
-            return count;
-        }
-
         private bool IsValidGridCell(IGridCell gridCell)
         {
             return gridCell != null && gridCell.HasItem && _gridCellManager.GetVisitState(gridCell.GridPosition);
