@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 namespace CandyMatch3.Scripts.Common.Constants
 {
     public struct Match3Constants
@@ -20,5 +23,7 @@ namespace CandyMatch3.Scripts.Common.Constants
 
         public const float ComboStripedWrappedDelay = 0.25f;
         public const float ComboDoubleWrappedDelay = 0.666f;
+
+        public static List<Vector3Int> AdjacentSteps = new() { Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right };
     }
 }

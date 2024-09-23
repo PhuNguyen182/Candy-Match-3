@@ -13,7 +13,7 @@ using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect, IColorfulEffect, IItemSuggest
+    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect, IColorfulEffect, IItemSuggest, IItemTransform
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
@@ -189,6 +189,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayBoosterEffect(BoosterType boosterType)
         {
             
+        }
+
+        public async UniTask TransformTo(ItemType itemType)
+        {
+            this.itemType = itemType;
+            await UniTask.CompletedTask; // Wait for animation
         }
     }
 }

@@ -57,8 +57,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             IBlockItem fromItem = fromCell.BlockItem;
             IBlockItem toItem = toCell.BlockItem;
 
-            if (fromItem is not IItemAnimation fromAnimation || toItem is not IItemAnimation toAnimation)
-                return;
+            IItemAnimation fromAnimation = fromItem as IItemAnimation;
+            IItemAnimation toAnimation = toItem as IItemAnimation;
 
             UseSwapBooster();
             fromCell.LockStates = LockStates.Swapping;

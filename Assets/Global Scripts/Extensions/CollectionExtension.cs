@@ -6,6 +6,14 @@ namespace GlobalScripts.Extensions
 {
     public static class CollectionExtension
     {
+        public static void AddRange<T>(this HashSet<T> hashSet, IEnumerable<T> collection)
+        {
+            foreach (T item in collection)
+            {
+                hashSet.Add(item);
+            }
+        }
+
         public static void Shuffle<T>(this List<T> list)
         {
             int count = list.Count;

@@ -10,6 +10,12 @@ namespace GlobalScripts.Extensions
 {
     public static class BoundsExtension
     {
+        public enum SortOrder
+        {
+            Ascending = 1,
+            Descending = 2
+        }
+
         public static Vector3IntComparer Vector3IntComparer { get; } = new();
 
         public static BoundsInt GetBounds2D(this Vector3Int position, Vector3Int size)
@@ -100,13 +106,27 @@ namespace GlobalScripts.Extensions
             }
         }
 
-        public static void ForEach2D(this BoundsInt boundsInt, Action<Vector3Int> callback)
+        public static void ForEach2D(this BoundsInt boundsInt, Action<Vector3Int> callback, SortOrder sortOrder = SortOrder.Ascending)
         {
-            for (int x = boundsInt.xMin; x < boundsInt.xMax; x++)
+            if (sortOrder == SortOrder.Ascending)
             {
-                for (int y = boundsInt.yMin; y < boundsInt.yMax; y++)
+                for (int x = boundsInt.xMin; x < boundsInt.xMax; x++)
                 {
-                    callback.Invoke(new Vector3Int(x, y));
+                    for (int y = boundsInt.yMin; y < boundsInt.yMax; y++)
+                    {
+                        callback.Invoke(new Vector3Int(x, y));
+                    }
+                }
+            }
+
+            else if(sortOrder == SortOrder.Descending)
+            {
+                for (int x = boundsInt.xMax - 1; x >= boundsInt.xMin; x--)
+                {
+                    for (int y = boundsInt.yMax - 1; y >= boundsInt.yMin; y--)
+                    {
+                        callback.Invoke(new Vector3Int(x, y));
+                    }
                 }
             }
         }
@@ -125,9 +145,9 @@ namespace GlobalScripts.Extensions
             }
         }
 
-        public static IEnumerable<Vector3Int> Iterator2D(this BoundsInt boundsInt, bool isAscendingOrder = true)
+        public static IEnumerable<Vector3Int> Iterator2D(this BoundsInt boundsInt, SortOrder sortOrder = SortOrder.Ascending)
         {
-            if (isAscendingOrder)
+            if (sortOrder == SortOrder.Ascending)
             {
                 for (int x = boundsInt.xMin; x < boundsInt.xMax; x++)
                 {
@@ -138,7 +158,7 @@ namespace GlobalScripts.Extensions
                 }
             }
 
-            else
+            else if(sortOrder == SortOrder.Descending)
             {
                 for (int x = boundsInt.xMax - 1; x >= boundsInt.xMin; x--)
                 {
@@ -150,15 +170,32 @@ namespace GlobalScripts.Extensions
             }
         }
 
-        public static IEnumerable<Vector3Int> Iterator3D(this BoundsInt boundsInt)
+        public static IEnumerable<Vector3Int> Iterator3D(this BoundsInt boundsInt, SortOrder sortOrder = SortOrder.Ascending)
         {
-            for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
+            if (sortOrder == SortOrder.Ascending)
             {
-                for (int y = boundsInt.yMin; y <= boundsInt.yMax; y++)
+                for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
                 {
-                    for (int z = boundsInt.zMin; z <= boundsInt.zMax; z++)
+                    for (int y = boundsInt.yMin; y <= boundsInt.yMax; y++)
                     {
-                        yield return new Vector3Int(x, y, z);
+                        for (int z = boundsInt.zMin; z <= boundsInt.zMax; z++)
+                        {
+                            yield return new Vector3Int(x, y, z);
+                        }
+                    }
+                }
+            }
+
+            else if(sortOrder == SortOrder.Descending)
+            {
+                for (int x = boundsInt.xMax - 1; x >= boundsInt.xMin; x--)
+                {
+                    for (int y = boundsInt.yMax - 1; y >= boundsInt.yMin; y--)
+                    {
+                        for (int z = boundsInt.zMax - 1; z >= boundsInt.zMin; z--)
+                        {
+                            yield return new Vector3Int(x, y, z);
+                        }
                     }
                 }
             }

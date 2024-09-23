@@ -17,14 +17,10 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             sequencePattern = new()
             {
                 new(new() { new(0, -1), new(0, 1), new(0, 2) }),
-                new(new() { new(0, 1), new(0, 2), new(0, 3) }), // use for falling check
             };
 
             List<Vector3Int> sequence1 = GetRotatePositions(sequencePattern[0].Pattern, 180);
-            List<Vector3Int> sequence2 = GetRotatePositions(sequencePattern[1].Pattern, 180);
-
             sequencePattern.Add(new(sequence1));
-            sequencePattern.Add(new(sequence2));
 
             OnConstuctor();
         }

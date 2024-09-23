@@ -85,14 +85,84 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return isMatch;
         }
 
+        public async UniTask ProcessMatch(MatchRegionResult regionResult)
+        {
+            MatchType matchType = regionResult.MatchType;
+            CandyColor candyColor = regionResult.CandyColor;
+
+            using (ListPool<UniTask>.Get(out List<UniTask> matchTasks))
+            {
+                using (ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
+                {
+                    using var boundsPool = HashSetPool<BoundsInt>.Get(out HashSet<BoundsInt> attackRanges);
+                    using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
+
+                    foreach (Vector3Int position in regionResult.Positions)
+                    {
+                        boundPositions.Add(position);
+                        IGridCell gridCell = _gridCellManager.Get(position);
+                        IBlockItem blockItem = gridCell.BlockItem;
+                        gridCell.IsMatching = true;
+
+                        if (matchType != MatchType.Match3 && gridCell.GridPosition == regionResult.PivotPosition)
+                        {
+                            matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor, bounds =>
+                            {
+                                attackRanges.Add(bounds);
+                            }));
+                        }
+
+                        else
+                        {
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, 3, bounds =>
+                            {
+                                attackRanges.Add(bounds);
+                            }));
+                        }
+
+                        for (int j = 0; j < _adjacentSteps.Count; j++)
+                            adjacentPositions.Add(position + _adjacentSteps[j]);
+                    }
+
+                    foreach (Vector3Int adjacentPosition in adjacentPositions)
+                    {
+                        IGridCell gridCell = _gridCellManager.Get(adjacentPosition);
+                        matchTasks.Add(_breakGridTask.BreakAdjacent(gridCell));
+                    }
+
+                    int count = boundPositions.Count;
+                    boundPositions.Sort(_vector3IntComparer);
+
+                    Vector3Int min = boundPositions[0] + new Vector3Int(-1, -1);
+                    Vector3Int max = boundPositions[count - 1] + new Vector3Int(1, 1);
+
+                    boundPositions.Clear();
+                    boundPositions.Add(min);
+                    boundPositions.Add(max);
+
+                    await UniTask.WhenAll(matchTasks);
+                    BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
+
+                    _checkGridTask.CheckRange(checkMatchBounds);
+                    foreach (BoundsInt range in attackRanges)
+                    {
+                        if (range.size != Vector3Int.zero)
+                            _checkGridTask.CheckRange(range);
+                    }
+
+                    _complimentPublisher.Publish(new ComplimentMessage());
+                }
+            }
+        }
+
         private async UniTask ProcessMatch(MatchResult matchResult)
         {
             MatchType matchType = matchResult.MatchType;
             CandyColor candyColor = matchResult.CandyColor;
 
-            using (var matchListPool = ListPool<UniTask>.Get(out List<UniTask> matchTasks))
+            using (ListPool<UniTask>.Get(out List<UniTask> matchTasks))
             {
-                using (var boundListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
+                using (ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
                 {
                     using var boundsPool = HashSetPool<BoundsInt>.Get(out HashSet<BoundsInt> attackRanges);
                     using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
