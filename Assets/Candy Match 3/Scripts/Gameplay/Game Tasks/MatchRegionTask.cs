@@ -27,7 +27,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void CheckMatchRegion(Vector3Int position)
         {
-            _findItemRegionTask.CheckRegion(position);
+            _findItemRegionTask.CheckMatchRegion(position);
         }
 
         public async UniTask MatchAllRegions()

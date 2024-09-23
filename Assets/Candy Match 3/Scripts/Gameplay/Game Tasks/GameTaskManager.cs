@@ -22,26 +22,42 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
     public class GameTaskManager : IDisposable
     {
+        #region Most Important Tasks
+        private readonly InputProcessTask _inputProcessor;
+        private readonly GridCellManager _gridCellManager;
+        #endregion
+
+        #region Basic Tasks
         private readonly MoveItemTask _moveItemTask;
         private readonly SwapItemTask _swapItemTask;
         private readonly SpawnItemTask _spawnItemTask;
         private readonly BreakGridTask _breakGridTask;
         private readonly CheckGridTask _checkGridTask;
         private readonly MatchItemsTask _matchItemsTask;
-        private readonly InputProcessTask _inputProcessor;
-        private readonly GridCellManager _gridCellManager;
+        #endregion
+
+        #region Booster And Special Item Tasks
         private readonly ExplodeItemTask _explodeItemTask;
+        private readonly SpecialItemTask _specialItemTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
         private readonly ComboBoosterHandleTask _comboBoosterHandleTask;
         private readonly InGameBoosterTasks _inGameBoosterTasks;
         private readonly CheckGameBoardMovementTask _checkGameBoardMovementTask;
+        #endregion
+
+        #region Advanced Tasks
+        private readonly SuggestTask _suggestTask;
+        private readonly DetectMoveTask _detectMoveTask;
+        private readonly FindItemRegionTask _findItemRegionTask;
+        private readonly MatchRegionTask _matchRegionTask;
+        #endregion
+
+        #region Game State Tasks
+        private readonly StartGameTask _startGameTask;
         private readonly GameStateController _gameStateController;
         private readonly CheckTargetTask _checkTargetTask;
-        private readonly SpecialItemTask _specialItemTask;
-        private readonly StartGameTask _startGameTask;
-        private readonly DetectMoveTask _detectMoveTask;
         private readonly EndGameTask _endGameTask;
-        private readonly SuggestTask _suggestTask;
+        #endregion
 
         private IDisposable _disposable;
 
@@ -106,7 +122,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _endGameTask = new(_checkTargetTask, _checkGameBoardMovementTask, _activateBoosterTask, endGameScreen);
             _endGameTask.AddTo(ref builder);
 
-            _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask);
+            _findItemRegionTask = new(_gridCellManager);
+            _findItemRegionTask.AddTo(ref builder);
+
+            _matchRegionTask = new(_gridCellManager, _findItemRegionTask, _matchItemsTask);
+            _matchRegionTask.AddTo(ref builder);
+
+            _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask, _matchRegionTask);
             _checkGridTask.AddTo(ref builder);
 
             _gameStateController = new(_inputProcessor, _checkTargetTask, _startGameTask, complimentTask, _endGameTask

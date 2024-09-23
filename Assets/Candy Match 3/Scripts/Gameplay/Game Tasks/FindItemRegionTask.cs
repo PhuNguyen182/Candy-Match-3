@@ -4,10 +4,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -29,42 +29,45 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             };
         }
 
-        public void CheckRegion(Vector3Int position)
+        public void CheckMatchRegion(Vector3Int position)
         {
             _findRegionPosition.Add(position);
         }
 
         public List<MatchableRegion> CollectMatchableRegions()
         {
-            HashSet<Vector3Int> regionPositions = new();
-            List<MatchableRegion> matchableRegions = new();
-
-            foreach (Vector3Int position in _findRegionPosition)
+            using (HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> regionPositions))
             {
-                IGridCell gridCell = _gridCellManager.Get(position);
-
-                if (!IsValidGridCell(gridCell))
-                    continue;
-
-                regionPositions.Clear(); // Clear this collection to refresh region positions
-                InspectMatchableRegion(position, regionPositions);
-
-                if (regionPositions.Count < 3)
-                    continue;
-
-                MatchableRegion region = new()
+                using (ListPool<MatchableRegion>.Get(out List<MatchableRegion> matchableRegions))
                 {
-                    RegionType = gridCell.BlockItem.ItemType,
-                    RegionColor = gridCell.BlockItem.CandyColor,
-                    Elements = regionPositions
-                };
+                    foreach (Vector3Int position in _findRegionPosition)
+                    {
+                        IGridCell gridCell = _gridCellManager.Get(position);
 
-                matchableRegions.Add(region);
+                        if (!IsValidGridCell(gridCell))
+                            continue;
+
+                        regionPositions.Clear(); // Clear this collection to refresh region positions
+                        InspectMatchableRegion(position, regionPositions);
+
+                        if (regionPositions.Count < 3)
+                            continue;
+
+                        MatchableRegion region = new()
+                        {
+                            RegionType = gridCell.BlockItem.ItemType,
+                            RegionColor = gridCell.BlockItem.CandyColor,
+                            Elements = regionPositions
+                        };
+
+                        matchableRegions.Add(region);
+                    }
+
+                    _findRegionPosition.Clear();
+                    _gridCellManager.ClearVisitStates();
+                    return matchableRegions;
+                }
             }
-
-            _findRegionPosition.Clear();
-            _gridCellManager.ClearVisitStates();
-            return matchableRegions;
         }
 
         private void InspectMatchableRegion(Vector3Int position, HashSet<Vector3Int> positions)

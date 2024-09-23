@@ -14,6 +14,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
     public class CheckGridTask : IDisposable, IFixedUpdateHandler
     {
+        private readonly MatchRegionTask _matchRegionTask;
         private readonly GridCellManager _gridCellManager;
         private readonly MoveItemTask _moveItemTask;
         private readonly MatchItemsTask _matchItemsTask;
@@ -31,12 +32,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public bool CanCheck { get; set; }
         public bool IsActive { get; set; }
 
-        public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask, MatchItemsTask matchItemsTask)
+        public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask
+            , MatchItemsTask matchItemsTask, MatchRegionTask matchRegionTask)
         {
             _moveItemTask = moveItemTask;
             _gridCellManager = gridCellManager;
             _spawnItemTask = spawnItemTask;
             _matchItemsTask = matchItemsTask;
+            _matchRegionTask = matchRegionTask;
 
             _checkPositions = new();
             _positionsToCheck = new();
@@ -45,7 +48,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _cts = new();
             _token = _cts.Token;
-            
+
             CanCheck = true;
             IsActive = true;
 
@@ -102,6 +105,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 _matchPositions.Add(position);
             }
+
+            _matchRegionTask.CheckMatchRegion(position);
         }
 
         public void CheckCross(Vector3Int position, bool checkSelf = true)
