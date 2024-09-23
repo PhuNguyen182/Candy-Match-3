@@ -114,7 +114,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                         else
                         {
-                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchType, bounds =>
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, regionResult.PivotPosition, matchType, bounds =>
                             {
                                 attackRanges.Add(bounds);
                             }));
@@ -186,7 +186,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                         else
                         {
-                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchType, bounds =>
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.Position, matchType, bounds =>
                             {
                                 attackRanges.Add(bounds);
                             }));
