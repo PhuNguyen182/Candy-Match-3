@@ -22,10 +22,6 @@ namespace CandyMatch3.Scripts.Mainhome.Managers
 
             _mainhomeMessageManager = new();
             mainhomeInput.IsActived = true;
-
-#if !UNITY_EDITOR
-            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
-#endif
         }
 
         public void SetInputActive(bool isActive)

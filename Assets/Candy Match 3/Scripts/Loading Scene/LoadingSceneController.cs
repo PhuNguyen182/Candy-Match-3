@@ -24,10 +24,6 @@ namespace CandyMatch3.Scripts.LoadingScene
 
             settingButton.onClick.AddListener(OpenSetting);
             playButton.onClick.AddListener(() => PlayGame().Forget());
-
-#if !UNITY_EDITOR
-            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
-#endif
         }
 
         private void OpenSetting()

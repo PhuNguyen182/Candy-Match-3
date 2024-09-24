@@ -89,36 +89,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             }
         }
 
-#if UNITY_EDITOR
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                _check = _check + 1;
-
-                if (_check % 4 == 0)
-                    Time.timeScale = 1;
-                else if (_check % 4 == 1)
-                    Time.timeScale = 0.1f;
-                else if (_check % 4 == 2)
-                    Time.timeScale = 0.05f;
-                else
-                    Time.timeScale = 0.02f;
-            }
-
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                _gameTaskManager.TestFindRegion();
-            }
-        }
-#endif
-
         private void Setup()
         {
             _destroyToken = this.GetCancellationTokenOnDestroy();
-#if !UNITY_EDITOR
-            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
-#endif
         }
 
         private void Initialize()
