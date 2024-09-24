@@ -82,13 +82,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
             }
 
-            else
-            {
-                if (_matchPositions.Count > 0 && !_checkMatch)
-                {
-                    CheckMatchPositions(_matchPositions).Forget();
-                }
-            }
+            //else
+            //{
+            //    if (_matchPositions.Count > 0 && !_checkMatch)
+            //    {
+            //        CheckMatchPositions(_matchPositions).Forget();
+            //    }
+            //}
         }
 
         private void AddRangeToCheck(BoundsInt bounds)
@@ -101,10 +101,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void CheckMatchAtPosition(Vector3Int position)
         {
-            if (_matchItemsTask.CheckMatchAt(position))
-            {
-                _matchPositions.Add(position);
-            }
+            //if (_matchItemsTask.CheckMatchAt(position))
+            //{
+            //    _matchPositions.Add(position);
+            //}
 
             _matchRegionTask.CheckMatchRegion(position);
         }

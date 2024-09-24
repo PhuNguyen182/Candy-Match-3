@@ -88,8 +88,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public async UniTask ProcessMatch(MatchRegionResult regionResult)
         {
             MatchType matchType = regionResult.MatchType;
-            CandyColor candyColor = regionResult.CandyColor;
+            if (matchType == MatchType.None)
+                return;
 
+            CandyColor candyColor = regionResult.CandyColor;
             using (ListPool<UniTask>.Get(out List<UniTask> matchTasks))
             {
                 using (ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))

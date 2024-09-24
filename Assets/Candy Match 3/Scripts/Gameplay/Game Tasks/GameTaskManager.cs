@@ -42,7 +42,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly ActivateBoosterTask _activateBoosterTask;
         private readonly ComboBoosterHandleTask _comboBoosterHandleTask;
         private readonly InGameBoosterTasks _inGameBoosterTasks;
-        private readonly CheckGameBoardMovementTask _checkGameBoardMovementTask;
         #endregion
 
         #region Advanced Tasks
@@ -55,6 +54,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         #region Game State Tasks
         private readonly StartGameTask _startGameTask;
         private readonly GameStateController _gameStateController;
+        private readonly CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly EndGameTask _endGameTask;
         #endregion
@@ -111,7 +111,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _spawnItemTask = spawnItemTask;
             _spawnItemTask.SetMoveItemTask(_moveItemTask);
 
-            _checkTargetTask = new(targetDatabase, mainGamePanel);
+            _findItemRegionTask = new(_gridCellManager);
+            _findItemRegionTask.AddTo(ref builder);
+
+            _matchRegionTask = new(_gridCellManager, _findItemRegionTask, _matchItemsTask);
+            _matchRegionTask.AddTo(ref builder);
+
+            _checkTargetTask = new(_matchRegionTask, targetDatabase, mainGamePanel);
             _checkGameBoardMovementTask = new(_gridCellManager);
             _checkGameBoardMovementTask.AddTo(ref builder);
             _inGameBoosterTasks.SetCheckBoardMovementTask(_checkGameBoardMovementTask);
@@ -121,12 +127,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _endGameTask = new(_checkTargetTask, _checkGameBoardMovementTask, _activateBoosterTask, endGameScreen);
             _endGameTask.AddTo(ref builder);
-
-            _findItemRegionTask = new(_gridCellManager);
-            _findItemRegionTask.AddTo(ref builder);
-
-            _matchRegionTask = new(_gridCellManager, _findItemRegionTask, _matchItemsTask);
-            _matchRegionTask.AddTo(ref builder);
 
             _checkGridTask = new(_gridCellManager, _moveItemTask, _spawnItemTask, _matchItemsTask, _matchRegionTask);
             _checkGridTask.AddTo(ref builder);
@@ -165,6 +165,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void BuildBoardMovementCheck()
         {
             _checkGameBoardMovementTask.BuildCheckBoard();
+        }
+
+        public void BuildMatchRegion()
+        {
+            
+        }
+
+        public void TestFindRegion()
+        {
+            
         }
 
         public void BuildSuggest()

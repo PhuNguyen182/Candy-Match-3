@@ -14,7 +14,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
     {
         private BoundsInt _boardActiveBounds;
         private Dictionary<Vector3Int, IGridCell> _kpv;
-        private Dictionary<Vector3Int, bool> _visitCollection;
+        private Dictionary<Vector3Int, int> _visitCollection;
         private OrderablePartitioner<Vector3Int> _partitioner;
 
         public int BoardWidth => MaxPosition.x - MinPosition.x;
@@ -86,26 +86,26 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
             for (int i = 0; i < _gridPositions.Count; i++)
             {
-                _visitCollection.Add(_gridPositions[i], false);
+                _visitCollection.Add(_gridPositions[i], 0);
             }
         }
 
-        public bool GetVisitState(Vector3Int position)
+        public int GetVisitState(Vector3Int position)
         {
-            return _visitCollection.TryGetValue(position, out bool visit) ? visit : false;
+            return _visitCollection.TryGetValue(position, out int visit) ? visit : 0;
         }
 
-        public void SetVisitState(Vector3Int position, bool isVisited)
+        public void SetVisitState(Vector3Int position, int visit)
         {
             if (_visitCollection.ContainsKey(position))
-                _visitCollection[position] = isVisited;
+                _visitCollection[position] = visit;
         }
 
         public void ClearVisitStates()
         {
             Parallel.ForEach(_partitioner, gridPosition =>
             {
-                _visitCollection[gridPosition] = false;
+                _visitCollection[gridPosition] = 0;
             });
         }
 

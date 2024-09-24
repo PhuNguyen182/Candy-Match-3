@@ -27,7 +27,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public CheckGameBoardMovementTask(GridCellManager gridCellManager)
         {
             _gridCellManager = gridCellManager;
-            _gridLockThrottle = TimeSpan.FromSeconds(0.5f);
+            _gridLockThrottle = TimeSpan.FromSeconds(0.25f);
             _boardStopMessage = GlobalMessagePipe.GetPublisher<BoardStopMessage>();
             LockProperty = new();
         }

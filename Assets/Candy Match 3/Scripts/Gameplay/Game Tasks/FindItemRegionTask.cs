@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -17,15 +16,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly List<Vector3Int> _adjacentSteps;
 
         private HashSet<Vector3Int> _findRegionPosition;
+        private List<MatchableRegion> _matchableRegions;
 
         public FindItemRegionTask(GridCellManager gridCellManager)
         {
             _gridCellManager = gridCellManager;
-
+            _matchableRegions = new();
             _findRegionPosition = new();
             _adjacentSteps = new()
             {
-                Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right
+                new(0, 1), new(0, -1), new(-1, 0), new(1, 0),
             };
         }
 
@@ -34,52 +34,54 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _findRegionPosition.Add(position);
         }
 
-        public List<MatchableRegion> CollectMatchableRegions()
+        public void Cleanup()
         {
-            using (HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> regionPositions))
-            {
-                using (ListPool<MatchableRegion>.Get(out List<MatchableRegion> matchableRegions))
-                {
-                    foreach (Vector3Int position in _findRegionPosition)
-                    {
-                        IGridCell gridCell = _gridCellManager.Get(position);
-
-                        if (!IsValidGridCell(gridCell))
-                            continue;
-
-                        regionPositions.Clear(); // Clear this collection to refresh region positions
-                        InspectMatchableRegion(position, regionPositions);
-
-                        if (regionPositions.Count < 3)
-                            continue;
-
-                        MatchableRegion region = new()
-                        {
-                            RegionType = gridCell.BlockItem.ItemType,
-                            RegionColor = gridCell.BlockItem.CandyColor,
-                            Elements = regionPositions
-                        };
-
-                        matchableRegions.Add(region);
-                    }
-
-                    _findRegionPosition.Clear();
-                    _gridCellManager.ClearVisitStates();
-                    return matchableRegions;
-                }
-            }
+            _findRegionPosition.Clear();
+            _gridCellManager.ClearVisitStates();
         }
 
-        private void InspectMatchableRegion(Vector3Int position, HashSet<Vector3Int> positions)
+        public List<MatchableRegion> CollectMatchableRegions()
+        {
+            _matchableRegions.Clear();
+            HashSet<Vector3Int> matchPositions = new();
+
+            foreach(Vector3Int position in _findRegionPosition)
+            {
+                if (IsSelectedPosition(position))
+                    continue;
+
+                IGridCell gridCell = _gridCellManager.Get(position);
+                if (!IsValidGridCell(gridCell))
+                    continue;
+
+                matchPositions.Clear();
+                InspectMatchableRegion(position, matchPositions);
+
+                if (matchPositions.Count < 3)
+                    continue;
+
+                MatchableRegion region = new()
+                {
+                    RegionType = gridCell.ItemType,
+                    RegionColor = gridCell.CandyColor,
+                    Elements = new(matchPositions)
+                };
+
+                _matchableRegions.Add(region);
+            }
+
+            return _matchableRegions;
+        }
+
+        private void InspectMatchableRegion(Vector3Int position, HashSet<Vector3Int> matchPositions)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
 
-            if (!IsValidGridCell(gridCell))
+            if (!IsValidGridCell(gridCell) || IsSelectedPosition(position))
                 return;
 
-            positions.Add(position);
-            CandyColor candyColor = gridCell.BlockItem.CandyColor;
-            _gridCellManager.SetVisitState(position, true);
+            matchPositions.Add(position);
+            CandyColor candyColor = gridCell.CandyColor;
 
             for (int i = 0; i < _adjacentSteps.Count; i++)
             {
@@ -89,27 +91,41 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (!IsValidGridCell(checkCell))
                     continue;
 
-                if (checkCell.BlockItem.CandyColor == CandyColor.None)
+                if (matchPositions.Contains(checkPosition))
                     continue;
 
-                if (checkCell.BlockItem.CandyColor != candyColor)
+                if (IsSelectedPosition(checkPosition))
                     continue;
 
-                positions.Add(checkPosition);
-                _gridCellManager.SetVisitState(checkPosition, true);
-                InspectMatchableRegion(checkPosition, positions);
+                if (checkCell.CandyColor != candyColor || checkCell.CandyColor == CandyColor.None)
+                    continue;
+
+                matchPositions.Add(checkPosition);
+                InspectMatchableRegion(checkPosition, matchPositions);
             }
         }
 
         private bool IsValidGridCell(IGridCell gridCell)
         {
-            return gridCell != null && gridCell.HasItem && _gridCellManager.GetVisitState(gridCell.GridPosition);
+            return gridCell != null && gridCell.HasItem;
+        }
+
+        private bool IsSelectedPosition(Vector3Int position)
+        {
+            foreach (var region in _matchableRegions)
+            {
+                if (region.IsInRegion(position))
+                    return true;
+            }
+
+            return false;
         }
 
         public void Dispose()
         {
             _adjacentSteps.Clear();
             _findRegionPosition.Clear();
+            _matchableRegions.Clear();
         }
     }
 }

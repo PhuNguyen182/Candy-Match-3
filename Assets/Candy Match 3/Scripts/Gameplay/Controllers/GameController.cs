@@ -105,6 +105,11 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 else
                     Time.timeScale = 0.02f;
             }
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                _gameTaskManager.TestFindRegion();
+            }
         }
 #endif
 
@@ -246,6 +251,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gameTaskManager.InitInGameBooster();
             _gameTaskManager.BuildTarget(levelModel);
             _gameTaskManager.BuildBoardMovementCheck();
+            _gameTaskManager.BuildMatchRegion();
             _gameTaskManager.StartGame(levelModel);
         }
 

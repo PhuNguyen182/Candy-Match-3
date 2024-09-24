@@ -64,7 +64,7 @@ namespace GlobalScripts.Extensions
             return new BoundsInt
             {
                 min = new(minX, minY),
-                max = new(maxX, maxY)
+                max = new(maxX + 1, maxY + 1)
             };
         }
 

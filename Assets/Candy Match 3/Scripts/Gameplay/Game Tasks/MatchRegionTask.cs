@@ -36,12 +36,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 regions = _findItemRegionTask.CollectMatchableRegions();
 
+                if (regions.Count <= 0)
+                    return;
+
                 using (ListPool<UniTask>.Get(out List<UniTask> matchTasks))
                 {
                     for (int i = 0; i < regions.Count; i++)
                     {
-                        using MatchRegionResult result = GetMatchRegionResult(regions[i]);
-                        matchTasks.Add(_matchItemsTask.ProcessMatch(result));
+                        using (MatchRegionResult result = GetMatchRegionResult(regions[i]))
+                        {
+                            matchTasks.Add(_matchItemsTask.ProcessMatch(result));
+                        }
                     }
 
                     await UniTask.WhenAll(matchTasks);
@@ -65,7 +70,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     if (!region.IsInRegion(position))
                         continue;
 
-                    if (region.GetExtendablePositionCount(position) < 2)
+                    if (!region.IsMatchPivot(position))
                         continue;
 
                     pivotPosition = position;
@@ -190,21 +195,21 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             MatchType matchType = MatchType.None;
 
-            if(totalItemCount >= 3 && totalItemCount <= 4)
+            if(totalItemCount == 3 || totalItemCount == 4)
             {
-                if (maxExtendCount == 2)
+                if (maxExtendCount < 3)
                     matchType = MatchType.Match3;
 
                 else if (maxExtendCount == 3)
                     matchType = direction == Direction.Horizontal ? MatchType.Match4Vertical : MatchType.Match4Horizontal;
             }
 
-            else
+            else if(totalItemCount >= 5)
             {
-                if (maxExtendCount < 3)
+                if (maxExtendCount < 3 && maxExtendCount > 1)
                     matchType = MatchType.MatchT;
-                
-                else
+
+                else if (maxExtendCount >= 3)
                     matchType = MatchType.Match5;
             }
 

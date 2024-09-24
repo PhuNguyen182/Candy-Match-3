@@ -2719,14 +2719,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c332f759560e9f1498b5473c9c6cbb50, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartPosition: {x: -1, y: 3, z: 0}
+  StartPosition: {x: 1, y: 3, z: 0}
   Positions:
-  - {x: -1, y: 3, z: 0}
-  - {x: -1, y: 2, z: 0}
-  - {x: -1, y: 1, z: 0}
-  - {x: -1, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 1, y: 0, z: 0}
+  - {x: 2, y: 3, z: 0}
+  - {x: 1, y: 3, z: 0}
+  - {x: 1, y: 2, z: 0}
+  - {x: 2, y: 2, z: 0}
+  - {x: 1, y: 1, z: 0}
 --- !u!1 &1592576620
 GameObject:
   m_ObjectHideFlags: 0

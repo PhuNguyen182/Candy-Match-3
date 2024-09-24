@@ -52,6 +52,20 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             return BoundsExtension.EncapsulateExpand(Elements);
         }
 
+        public bool IsMatchPivot(Vector3Int position)
+        {
+            for (int i = 0; i < Match3Constants.AdjacentSteps.Count; i++)
+            {
+                Vector3Int adjacentStep = Match3Constants.AdjacentSteps[i];
+                int count = GetExtendedLength(position, adjacentStep);
+                
+                if (count >= 2)
+                    return true;
+            }
+
+            return false;
+        }
+
         public int GetExtendablePositionCount(Vector3Int position)
         {
             int extendCount = 0;
