@@ -45,6 +45,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 _checkGridTask.CanCheck = false;
+                _findItemRegionTask.ClearCheckPositions();
+
                 using (ListPool<UniTask>.Get(out List<UniTask> matchTasks))
                 {
                     for (int i = 0; i < regions.Count; i++)
@@ -58,7 +60,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     await UniTask.WhenAll(matchTasks);
                 }
 
-                _findItemRegionTask.Cleanup();
+                _findItemRegionTask.ClearRegions();
                 _checkGridTask.CanCheck = true;
             }
         }

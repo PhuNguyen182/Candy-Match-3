@@ -41,7 +41,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             Vector3Int checkPosition = gridCell2.GridPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
 
-            using (var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
+            using (ListPool<UniTask>.Get(out List<UniTask> breakTasks))
             {
                 using var rowListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> rowListPositions);
                 using var columnListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> columnListPositions);

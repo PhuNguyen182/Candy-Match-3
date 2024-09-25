@@ -40,9 +40,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _findRegionPosition.Clear();
         }
 
-        public List<MatchableRegion> CollectMatchableRegions()
+        public void ClearRegions()
         {
             _matchableRegions.Clear();
+        }
+
+        public void ClearCheckPositions()
+        {
+            _findRegionPosition.Clear();
+        }
+
+        public List<MatchableRegion> CollectMatchableRegions()
+        {
+            ClearRegions();
             HashSet<Vector3Int> matchPositions = new();
 
             foreach(Vector3Int position in _findRegionPosition)

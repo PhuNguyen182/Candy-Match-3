@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
-using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
@@ -46,7 +45,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             IBlockItem blockItem = gridCell.BlockItem;
 
             ProcessBooster(gridCell, blockItem, isCreateBooster, stage);
-            using (var attactListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
             {
                 BoundsInt checkRange = position.GetBounds2D(1);
                 attackPositions.AddRange(checkRange.Iterator2D());

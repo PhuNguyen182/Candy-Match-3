@@ -40,7 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
         {
-            using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 Vector3Int direction = gridCell2.GridPosition - gridCell1.GridPosition;
                 BoundsInt attackRange = GetSizeFromDirection(gridCell1.GridPosition, gridCell2.GridPosition);
@@ -66,7 +66,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 positions.AddRange(attackRange.Iterator2D());
                 _explodeItemTask.Blast(checkPosition, affectRange).Forget();
 
-                using (var breakListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks))
+                using (ListPool<UniTask>.Get(out List<UniTask> breakTasks))
                 {
                     for (int i = 0; i < positions.Count; i++)
                     {

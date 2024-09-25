@@ -39,7 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
             _breakGridTask.ReleaseGridCell(gridCell);
 
-            using (var attactListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
             {
                 attackPositions.AddRange(activeBounds.GetRow(position));
 
