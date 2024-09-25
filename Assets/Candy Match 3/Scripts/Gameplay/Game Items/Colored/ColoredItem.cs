@@ -197,10 +197,29 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             
         }
 
-        public async UniTask TransformTo(ItemType itemType)
+        public void SwitchTo(ItemType itemType)
         {
             this.itemType = itemType;
+            candyColor = GetColor(itemType);
+        }
+
+        public async UniTask Transform()
+        {
             await UniTask.CompletedTask; // Wait for animation
+        }
+
+        private CandyColor GetColor(ItemType itemType)
+        {
+            return itemType switch
+            {
+                ItemType.Blue => CandyColor.Blue,
+                ItemType.Green => CandyColor.Green,
+                ItemType.Orange => CandyColor.Orange,
+                ItemType.Purple => CandyColor.Purple,
+                ItemType.Red => CandyColor.Red,
+                ItemType.Yellow => CandyColor.Yellow,
+                _ => CandyColor.None
+            };
         }
     }
 }

@@ -5,6 +5,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
 {
     public interface IItemTransform
     {
-        public UniTask TransformTo(ItemType itemType);
+        public void SwitchTo(ItemType itemType);
+        public UniTask Transform();
     }
 }
