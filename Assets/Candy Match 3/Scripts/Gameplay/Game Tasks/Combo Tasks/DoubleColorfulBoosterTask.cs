@@ -77,6 +77,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     if (gridCell.GridPosition == gridCell1.GridPosition || gridCell.GridPosition == gridCell2.GridPosition)
                         continue;
 
+                    if (gridCell.ItemType == ItemType.ColorBomb)
+                        continue;
+
                     gridCellType = GetCellPositionType(positions[i]);
 
                     if (gridCellType == GridPositionType.Odd)

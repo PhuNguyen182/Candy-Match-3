@@ -37,7 +37,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 regions = _findItemRegionTask.CollectMatchableRegions();
 
                 if (regions.Count <= 0)
+                {
+                    _findItemRegionTask.Cleanup();
                     return;
+                }
 
                 using (ListPool<UniTask>.Get(out List<UniTask> matchTasks))
                 {

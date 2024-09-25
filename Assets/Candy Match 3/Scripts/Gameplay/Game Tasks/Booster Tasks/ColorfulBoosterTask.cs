@@ -239,8 +239,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                        , Vector3.zero, Quaternion.identity);
-            targetGridCell.BlockItem.IsLocking = true;
-            targetGridCell.BlockItem.SetMatchable(false);
+            if (targetGridCell.HasItem)
+            {
+                targetGridCell.BlockItem.IsLocking = true;
+                targetGridCell.BlockItem.SetMatchable(false);
+            }
+
             await fireray.Fire(targetGridCell, position, delay);
         }
 
