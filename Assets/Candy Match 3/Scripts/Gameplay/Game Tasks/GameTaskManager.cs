@@ -182,12 +182,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _moveItemTask.SetCheckGridTask(_checkGridTask);
             _breakGridTask.SetCheckGridTask(_checkGridTask);
             _matchItemsTask.SetCheckGridTask(_checkGridTask);
+            _matchRegionTask.SetCheckGridTask(_checkGridTask);
             _spawnItemTask.SetCheckGridTask(_checkGridTask);
+            _swapItemTask.SetCheckGridTask(_checkGridTask);
+
             _activateBoosterTask.SetCheckGridTask(_checkGridTask);
             _comboBoosterHandleTask.SetCheckGridTask(_checkGridTask);
-            _swapItemTask.SetCheckGridTask(_checkGridTask);
             _inGameBoosterTasks.SetCheckGridTask(_checkGridTask);
             _specialItemTask.SetCheckGridTask(_checkGridTask);
+
             _endGameTask.SetCheckGridTask(_checkGridTask);
         }
 

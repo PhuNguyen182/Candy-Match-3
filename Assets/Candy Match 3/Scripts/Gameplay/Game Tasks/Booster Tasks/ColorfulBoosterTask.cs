@@ -41,7 +41,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _checkGridTask.CanCheck = false;
             _activateCount = _activateCount + 1;
 
-            using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 IBooster booster = boosterCell.BlockItem as IBooster;
                 Vector3 startPosition = boosterCell.WorldPosition;
@@ -91,7 +91,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             gridCell.LockStates = LockStates.Preparing;
             _checkGridTask.CanCheck = false;
 
-            using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
                 IBooster booster = gridCell.BlockItem as IBooster;
                 Vector3 startPosition = gridCell.WorldPosition;
@@ -143,11 +143,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _checkedCandyColors.Add(color);
             List<Vector3Int> colorPositions = new();
 
-            using(var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
+            using(ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 positions.AddRange(_gridCellManager.GetActivePositions());
 
-                using (var foundListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> foundPositions))
+                using (ListPool<Vector3Int>.Get(out List<Vector3Int> foundPositions))
                 {
                     for (int i = 0; i < positions.Count; i++)
                     {
@@ -173,9 +173,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public List<Vector3Int> FindMostFrequentColor()
         {
-            using (var hashedItemPool = DictionaryPool<CandyColor, List<Vector3Int>>.Get(out var itemCollection))
+            using (DictionaryPool<CandyColor, List<Vector3Int>>.Get(out var itemCollection))
             {
-                using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
+                using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
                 {
                     positions.AddRange(_gridCellManager.GetActivePositions());
 

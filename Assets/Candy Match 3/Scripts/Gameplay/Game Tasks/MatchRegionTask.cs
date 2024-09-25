@@ -18,6 +18,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly FindItemRegionTask _findItemRegionTask;
         private readonly MatchItemsTask _matchItemsTask;
 
+        private CheckGridTask _checkGridTask;
+
         public MatchRegionTask(GridCellManager gridCellManager, FindItemRegionTask findItemRegionTask, MatchItemsTask matchItemsTask)
         {
             _gridCellManager = gridCellManager;
@@ -42,6 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
                 }
 
+                _checkGridTask.CanCheck = false;
                 using (ListPool<UniTask>.Get(out List<UniTask> matchTasks))
                 {
                     for (int i = 0; i < regions.Count; i++)
@@ -56,6 +59,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 _findItemRegionTask.Cleanup();
+                _checkGridTask.CanCheck = true;
             }
         }
 
@@ -219,6 +223,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
 
             return matchType;
+        }
+
+        public void SetCheckGridTask(CheckGridTask checkGridTask)
+        {
+            _checkGridTask = checkGridTask;
         }
 
         public void Dispose()
