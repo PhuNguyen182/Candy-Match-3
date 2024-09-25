@@ -42,6 +42,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public List<MatchableRegion> CollectMatchableRegions()
         {
+            _matchableRegions.Clear();
             HashSet<Vector3Int> matchPositions = new();
 
             foreach(Vector3Int position in _findRegionPosition)
@@ -97,6 +98,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     continue;
 
                 if (checkCell.CandyColor != candyColor || checkCell.CandyColor == CandyColor.None)
+                    continue;
+
+                if (!checkCell.BlockItem.IsMatchable)
                     continue;
 
                 matchPositions.Add(checkPosition);

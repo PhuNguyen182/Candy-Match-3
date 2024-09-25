@@ -40,20 +40,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             _checkGridTask.CanCheck = false;
             _activateCount = _activateCount + 1;
-            await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
+
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
-                IBooster booster = default;
+                IBooster booster = boosterCell.BlockItem as IBooster;
                 Vector3 startPosition = boosterCell.WorldPosition;
                 colorPositions = FindPositionWithColor(candyColor);
-                
-                if (boosterCell.BlockItem is IBooster colorBooster)
-                {
-                    booster = colorBooster;
-                    booster.IsActivated = true;
-                    await booster.Activate();
-                }
 
+                booster.IsActivated = true;
+                await booster.Activate();
+
+                await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
                 using var breakTaskPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
 
@@ -75,8 +72,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 booster.Explode();
                 _breakGridTask.ReleaseGridCell(boosterCell);
-                _activateCount = _activateCount - 1;
                 RemoveColor(candyColor);
+
+                boosterCell.LockStates = LockStates.None;
+                _activateCount = _activateCount - 1;
 
                 if (_checkedCandyColors.Count <= 0 && _activateCount <= 0)
                     _checkGridTask.CanCheck = true;
@@ -87,30 +86,27 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             _activateCount = _activateCount + 1;
             CandyColor checkColor = CandyColor.None;
+
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
             gridCell.LockStates = LockStates.Preparing;
-
             _checkGridTask.CanCheck = false;
-            await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
+
             using (var positionListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
-                IBooster booster = default;
+                IBooster booster = gridCell.BlockItem as IBooster;
                 Vector3 startPosition = gridCell.WorldPosition;
                 colorPositions = FindMostFrequentColor();
 
-                if(colorPositions.Count > 0)
+                if (colorPositions.Count > 0)
                 {
                     IGridCell colorCell = _gridCellManager.Get(colorPositions[0]);
                     checkColor = colorCell.CandyColor;
                 }
 
-                if (gridCell.BlockItem is IBooster colorBooster)
-                {
-                    booster = colorBooster;
-                    booster.IsActivated = true;
-                    await booster.Activate();
-                }
+                booster.IsActivated = true;
+                await booster.Activate();
 
+                await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
                 using var breakTaskPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
 
@@ -130,13 +126,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 await UniTask.WhenAll(breakTasks);
 
-                booster?.Explode();
+                booster.Explode();
                 _breakGridTask.ReleaseGridCell(gridCell);
-                gridCell.LockStates = LockStates.None;
-                _activateCount = _activateCount - 1;
                 RemoveColor(checkColor);
 
-                if(_checkedCandyColors.Count <= 0 && _activateCount <= 0)
+                gridCell.LockStates = LockStates.None;
+                _activateCount = _activateCount - 1;
+
+                if (_checkedCandyColors.Count <= 0 && _activateCount <= 0)
                     _checkGridTask.CanCheck = true;
             }
         }
