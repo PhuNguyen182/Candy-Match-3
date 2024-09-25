@@ -167,16 +167,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkGameBoardMovementTask.BuildCheckBoard();
         }
 
-        public void BuildMatchRegion()
-        {
-            
-        }
-
-        public void TestFindRegion()
-        {
-            
-        }
-
         public void BuildSuggest()
         {
             _detectMoveTask.BuildLevelBoard();

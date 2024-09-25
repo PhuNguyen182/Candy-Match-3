@@ -71,7 +71,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private GameTaskManager _gameTaskManager;
         private MessageBrokerController _messageBrokerController;
 
-        private int _check = 0;
         private CancellationToken _destroyToken;
 
         private void Awake()
@@ -224,7 +223,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gameTaskManager.InitInGameBooster();
             _gameTaskManager.BuildTarget(levelModel);
             _gameTaskManager.BuildBoardMovementCheck();
-            _gameTaskManager.BuildMatchRegion();
             _gameTaskManager.StartGame(levelModel);
         }
 
