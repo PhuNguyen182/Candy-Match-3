@@ -13,7 +13,8 @@ using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable, IItemEffect, IColorfulEffect, IItemSuggest, IItemTransform
+    public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable
+        , IItemEffect, IColorfulEffect, IItemSuggest, IItemTransform, IMatchAnimation
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
@@ -136,6 +137,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public UniTask BounceInDirection(Vector3 direction)
         {
             return itemAnimation.BounceMove(direction);
+        }
+
+        public UniTask MatchTo(Vector3 position, float duration)
+        {
+            return itemAnimation.MatchTo(position, duration);
         }
 
         public UniTask MoveTo(Vector3 position, float duration)

@@ -3,7 +3,6 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 using GlobalScripts.Extensions;
 using GlobalScripts.UpdateHandlerPattern;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -17,13 +16,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly MatchRegionTask _matchRegionTask;
         private readonly GridCellManager _gridCellManager;
         private readonly MoveItemTask _moveItemTask;
-        private readonly MatchItemsTask _matchItemsTask;
         private readonly SpawnItemTask _spawnItemTask;
 
         private List<Vector3Int> _positionsToCheck;
-        private List<Vector3Int> _positionsToMatch;
         private HashSet<Vector3Int> _checkPositions;
-        private HashSet<Vector3Int> _matchPositions;
 
         private bool _checkMatch = false;
         private CancellationToken _token;
@@ -32,19 +28,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public bool CanCheck { get; set; }
         public bool IsActive { get; set; }
 
-        public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask, SpawnItemTask spawnItemTask
-            , MatchItemsTask matchItemsTask, MatchRegionTask matchRegionTask)
+        public CheckGridTask(GridCellManager gridCellManager, MoveItemTask moveItemTask
+            , SpawnItemTask spawnItemTask, MatchRegionTask matchRegionTask)
         {
             _moveItemTask = moveItemTask;
             _gridCellManager = gridCellManager;
             _spawnItemTask = spawnItemTask;
-            _matchItemsTask = matchItemsTask;
             _matchRegionTask = matchRegionTask;
 
             _checkPositions = new();
             _positionsToCheck = new();
-            _positionsToMatch = new();
-            _matchPositions = new();
 
             _cts = new();
             _token = _cts.Token;
@@ -81,14 +74,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     }
                 }
             }
-
-            //else
-            //{
-            //    if (_matchPositions.Count > 0 && !_checkMatch)
-            //    {
-            //        CheckMatchPositions(_matchPositions).Forget();
-            //    }
-            //}
         }
 
         private void AddRangeToCheck(BoundsInt bounds)
@@ -101,11 +86,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void CheckMatchAtPosition(Vector3Int position)
         {
-            //if (_matchItemsTask.CheckMatchAt(position))
-            //{
-            //    _matchPositions.Add(position);
-            //}
-
             _matchRegionTask.CheckMatchRegion(position);
         }
 
@@ -141,42 +121,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _checkPositions.Add(position + direction);
         }
 
-        private async UniTask CheckMatchPositions(HashSet<Vector3Int> matchPositions)
-        {
-            CanCheck = false;
-            _checkMatch = true;
-
-            await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
-            using(var matchPositionPool = ListPool<Vector3Int>.Get(out List<Vector3Int> checkMatchPositions))
-            {
-                checkMatchPositions.AddRange(matchPositions);
-
-                using (var matchTaskPool = ListPool<UniTask>.Get(out List<UniTask> matchTasks))
-                {
-                    for (int i = 0; i < checkMatchPositions.Count; i++)
-                    {
-                        Vector3Int position = checkMatchPositions[i];
-                        
-                        if (_matchItemsTask.CheckMatchAt(position))
-                            matchTasks.Add(_matchItemsTask.Match(position));
-                        
-                        matchPositions.Remove(position);
-                    }
-
-                    await UniTask.WhenAll(matchTasks);
-                }
-            }
-
-            CanCheck = true;
-            _checkMatch = false;
-        }
-
         public void Dispose()
         {
             _cts.Dispose();
             _positionsToCheck.Clear();
             _checkPositions.Clear();
-            _matchPositions.Clear();
 
             UpdateHandlerManager.Instance.RemoveFixedUpdateBehaviour(this);
         }

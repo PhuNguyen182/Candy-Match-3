@@ -36,13 +36,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Cleanup()
         {
+            _matchableRegions.Clear();
             _findRegionPosition.Clear();
-            _gridCellManager.ClearVisitStates();
         }
 
         public List<MatchableRegion> CollectMatchableRegions()
         {
-            _matchableRegions.Clear();
             HashSet<Vector3Int> matchPositions = new();
 
             foreach(Vector3Int position in _findRegionPosition)
@@ -123,9 +122,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
+            Cleanup();
             _adjacentSteps.Clear();
-            _findRegionPosition.Clear();
-            _matchableRegions.Clear();
         }
     }
 }

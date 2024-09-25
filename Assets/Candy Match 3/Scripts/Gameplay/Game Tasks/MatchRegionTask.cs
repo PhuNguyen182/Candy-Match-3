@@ -45,12 +45,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     {
                         using (MatchRegionResult result = GetMatchRegionResult(regions[i]))
                         {
-                            matchTasks.Add(_matchItemsTask.ProcessMatch(result));
+                            matchTasks.Add(_matchItemsTask.ProcessRegionMatch(result));
                         }
                     }
 
                     await UniTask.WhenAll(matchTasks);
                 }
+
+                _findItemRegionTask.Cleanup();
             }
         }
 

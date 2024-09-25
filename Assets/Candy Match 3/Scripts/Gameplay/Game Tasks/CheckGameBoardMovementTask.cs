@@ -6,8 +6,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Messages;
-using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
+using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.Constants;
 using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
@@ -27,14 +28,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public CheckGameBoardMovementTask(GridCellManager gridCellManager)
         {
             _gridCellManager = gridCellManager;
-            _gridLockThrottle = TimeSpan.FromSeconds(0.25f);
+            _gridLockThrottle = TimeSpan.FromSeconds(Match3Constants.RegionMatchDelay);
             _boardStopMessage = GlobalMessagePipe.GetPublisher<BoardStopMessage>();
             LockProperty = new();
         }
 
         public void BuildCheckBoard()
         {
-            using (var positionPool = ListPool<Vector3Int>.Get(out var activePositions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> activePositions))
             {
                 DisposableBuilder builder = Disposable.CreateBuilder();
                 activePositions.AddRange(_gridCellManager.GetActivePositions());
@@ -53,27 +54,25 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 LockObservable = Observable.Merge(lockStates, unlockStates);
                 LockObservable.Where(isLocked => isLocked).Take(1)
-                              .Subscribe(value =>
-                              {
-                                  _boardStopMessage.Publish(new BoardStopMessage
-                                  {
-                                      IsStopped = false
-                                  });
-                              }).AddTo(ref builder);
+                              .Subscribe(value => SendBoardStopMessage(false))
+                              .AddTo(ref builder);
 
                 LockObservable.Subscribe(isBoardLock =>
                               {
                                   if (!isBoardLock)
-                                  {
-                                      _boardStopMessage.Publish(new BoardStopMessage
-                                      {
-                                          IsStopped = true
-                                      });
-                                  }
+                                      SendBoardStopMessage(true);
                               }).AddTo(ref builder);
 
                 _gridLockDisposable = builder.Build();
             }
+        }
+
+        private void SendBoardStopMessage(bool isBoardLock)
+        {
+            _boardStopMessage.Publish(new BoardStopMessage
+            {
+                IsStopped = isBoardLock
+            });
         }
 
         private void SetLockValue(bool isLocked)

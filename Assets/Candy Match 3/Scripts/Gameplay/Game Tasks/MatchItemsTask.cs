@@ -6,12 +6,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Messages;
-using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
 using GlobalScripts.Comparers;
@@ -60,11 +60,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if(CheckMatchAt(position))
             {
-                MatchResult matchResult;
-                bool isMatch = IsMatchable(position, out matchResult);
+                bool isMatch = IsMatchable(position, out MatchResult matchResult);
                 
                 if(isMatch)
-                    ProcessMatch(matchResult).Forget();
+                    ProcessNormalMatch(matchResult).Forget();
 
                 return isMatch;
             }
@@ -72,20 +71,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return false;
         }
 
-        public async UniTask<bool> Match(Vector3Int position)
-        {
-            MatchResult matchResult;
-            bool isMatch = IsMatchable(position, out matchResult);
-
-            if (isMatch)
-            {
-                await ProcessMatch(matchResult);
-            }
-
-            return isMatch;
-        }
-
-        public async UniTask ProcessMatch(MatchRegionResult regionResult)
+        public async UniTask ProcessRegionMatch(MatchRegionResult regionResult)
         {
             MatchType matchType = regionResult.MatchType;
             if (matchType == MatchType.None)
@@ -96,6 +82,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 using (ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
                 {
+                    Vector3 matchPivot = _gridCellManager.Get(regionResult.PivotPosition).WorldPosition;
                     using var boundsPool = HashSetPool<BoundsInt>.Get(out HashSet<BoundsInt> attackRanges);
                     using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
 
@@ -116,7 +103,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                         else
                         {
-                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, regionResult.PivotPosition, matchType, bounds =>
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchPivot, matchType, bounds =>
                             {
                                 attackRanges.Add(bounds);
                             }));
@@ -157,7 +144,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        private async UniTask ProcessMatch(MatchResult matchResult)
+        private async UniTask ProcessNormalMatch(MatchResult matchResult)
         {
             MatchType matchType = matchResult.MatchType;
             CandyColor candyColor = matchResult.CandyColor;
@@ -166,6 +153,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 using (ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
                 {
+                    Vector3 matchPivot = _gridCellManager.Get(matchResult.Position).WorldPosition;
                     using var boundsPool = HashSetPool<BoundsInt>.Get(out HashSet<BoundsInt> attackRanges);
                     using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
 
@@ -188,7 +176,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                         else
                         {
-                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.Position, matchType, bounds =>
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchPivot, matchType, bounds =>
                             {
                                 attackRanges.Add(bounds);
                             }));

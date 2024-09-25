@@ -250,7 +250,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             gridCell.LockStates = LockStates.None;
         }
 
-        public async UniTask BreakMatchItem(IGridCell gridCell, Vector3Int boosterPosition, MatchType matchType, Action<BoundsInt> onActive = null)
+        public async UniTask BreakMatchItem(IGridCell gridCell, Vector3 matchPivot, MatchType matchType, Action<BoundsInt> onActive = null)
         {
             if (gridCell.GridStateful is IBreakable stateBreakable)
             {

@@ -16,6 +16,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] private SpriteRenderer itemRenderer;
 
         [Header("Movement Ease")]
+        [SerializeField] private Ease matchItemEase;
         [SerializeField] private AnimationCurve fallenCurve;
         [SerializeField] private AnimationCurve movingCurve;
 
@@ -36,6 +37,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private Tweener _moveTween;
         private Tweener _bounceMoveTween;
+        private Tweener _matchTween;
 
         private Coroutine _highlightCoroutine;
         private Coroutine _glowlightCoroutine;
@@ -48,6 +50,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         {
             _originalSortingOrder = itemRenderer.sortingOrder;
             _destroyToken = this.GetCancellationTokenOnDestroy();
+        }
+
+        public UniTask MatchTo(Vector3 toPosition, float duration)
+        {
+            _matchTween ??= CreateMatchTween(toPosition, duration);
+            _matchTween.ChangeValues(transform.position, toPosition, duration);
+            _matchTween.Play();
+
+            TimeSpan totalDuration = TimeSpan.FromSeconds(_matchTween.Duration());
+            return UniTask.Delay(totalDuration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
         }
 
         public UniTask MoveTo(Vector3 toPosition, float duration)
@@ -174,6 +186,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             return transform.DOMove(toPosition, duration).SetEase(movingCurve).SetAutoKill(false);
         }
 
+        private Tweener CreateMatchTween(Vector3 toPosition, float duration)
+        {
+            return transform.DOMove(toPosition, duration).SetEase(matchItemEase).SetAutoKill(false);
+        }
+
         private IEnumerator Highlight(float duration, AnimationCurve ease, bool canStop = false)
         {
             float ratio = 0;
@@ -248,6 +265,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         {
             _moveTween?.Kill();
             _bounceMoveTween?.Kill();
+            _matchTween?.Kill();
         }
     }
 }

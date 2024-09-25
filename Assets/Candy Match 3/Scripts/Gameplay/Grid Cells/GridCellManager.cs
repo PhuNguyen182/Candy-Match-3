@@ -4,9 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using System.Collections.Concurrent;
 using UnityEngine.Tilemaps;
-using System.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GridCells
 {
@@ -14,8 +12,6 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
     {
         private BoundsInt _boardActiveBounds;
         private Dictionary<Vector3Int, IGridCell> _kpv;
-        private Dictionary<Vector3Int, int> _visitCollection;
-        private OrderablePartitioner<Vector3Int> _partitioner;
 
         public int BoardWidth => MaxPosition.x - MinPosition.x;
         public int BoardHeight => _boardActiveBounds.yMax - _boardActiveBounds.yMin;
@@ -29,7 +25,6 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public GridCellManager(Func<Vector3Int, Vector3> convertGridToWorldFunction, Func<Vector3, Vector3Int> convertWorldToGridFunction)
         {
             _kpv = new();
-            _visitCollection = new();
 
             ConvertGridToWorldFunction = convertGridToWorldFunction;
             ConvertWorldToGridFunction = convertWorldToGridFunction;
@@ -80,33 +75,6 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         {
             boardArea.CompressBounds();
             _boardActiveBounds = boardArea.cellBounds;
-
-            List<Vector3Int> _gridPositions = _kpv.Keys.ToList();
-            _partitioner = Partitioner.Create(_gridPositions, true);
-
-            for (int i = 0; i < _gridPositions.Count; i++)
-            {
-                _visitCollection.Add(_gridPositions[i], 0);
-            }
-        }
-
-        public int GetVisitState(Vector3Int position)
-        {
-            return _visitCollection.TryGetValue(position, out int visit) ? visit : 0;
-        }
-
-        public void SetVisitState(Vector3Int position, int visit)
-        {
-            if (_visitCollection.ContainsKey(position))
-                _visitCollection[position] = visit;
-        }
-
-        public void ClearVisitStates()
-        {
-            Parallel.ForEach(_partitioner, gridPosition =>
-            {
-                _visitCollection[gridPosition] = 0;
-            });
         }
 
         public IEnumerable<Vector3Int> Iterator()
@@ -128,7 +96,6 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public void Dispose()
         {
             _kpv.Clear();
-            _visitCollection.Clear();
         }
     }
 }
