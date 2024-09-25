@@ -67,7 +67,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        private void SendBoardStopMessage(bool isBoardLock)
+        public void SendBoardStopMessage(bool isBoardLock)
         {
             _boardStopMessage.Publish(new BoardStopMessage
             {

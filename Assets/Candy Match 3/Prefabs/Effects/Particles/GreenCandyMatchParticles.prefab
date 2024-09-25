@@ -4912,12 +4912,12 @@ GameObject:
   - component: {fileID: 198915891741042856}
   - component: {fileID: 199915396418257398}
   m_Layer: 0
-  m_Name: DustParticle (2)
+  m_Name: DustParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4357185952729222
 Transform:
   m_ObjectHideFlags: 0
