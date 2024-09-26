@@ -41,6 +41,11 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             itemSoundEffect.PlaySound(sound);
         }
 
+        public void PlayShuffleEffect()
+        {
+            SimplePool.Spawn(effectDatabase.ShuffleEffect, EffectContainer.Transform, Vector3.zero, Quaternion.identity);
+        }
+
         public void ShowCompliment(ComplimentEnum compliment)
         {
             ComplimentText complimentText = SimplePool.Spawn(effectDatabase.Compliment, UIEffectContainer.Transform

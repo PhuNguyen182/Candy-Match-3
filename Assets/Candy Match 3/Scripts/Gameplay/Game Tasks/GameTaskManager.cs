@@ -89,7 +89,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask, _breakGridTask);
             _inputProcessor = new(boardInput, _gridCellManager, _swapItemTask);
             _inputProcessor.AddTo(ref builder);
-            _suggestTask.SetInputProcessTask(_inputProcessor);
 
             _moveItemTask = new(_gridCellManager, _breakGridTask);
             _moveItemTask.AddTo(ref builder);
@@ -122,7 +121,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _matchRegionTask = new(_gridCellManager, _findItemRegionTask, _matchItemsTask);
             _matchRegionTask.AddTo(ref builder);
 
-            _shuffleBoardTask = new(_gridCellManager, _detectMoveTask, fillBoardTask);
+            _shuffleBoardTask = new(_gridCellManager, _inputProcessor, _detectMoveTask, _suggestTask, fillBoardTask);
             _shuffleBoardTask.AddTo(ref builder);
 
             _checkTargetTask = new(_matchRegionTask, targetDatabase, mainGamePanel);
@@ -161,11 +160,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             });
         }
 
-        public void SetInputActive(bool isActive)
-        {
-            _inputProcessor.IsActive = isActive;
-        }
-
         public void BuildBoardMovementCheck()
         {
             _checkGameBoardMovementTask.BuildCheckBoard();
@@ -186,9 +180,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _shuffleBoardTask.BuildActivePositions();
         }
 
-        public void ShuffleBoard(bool immediately)
+        public void ShuffleBoard()
         {
-            _shuffleBoardTask.Shuffle(immediately).Forget();
+            _shuffleBoardTask.Shuffle();
+        }
+
+        public void Test()
+        {
+            _shuffleBoardTask.Shuffle(false).Forget();
         }
 
         private void SetCheckGridTask()

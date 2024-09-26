@@ -91,14 +91,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.T))
-            {
-                _gameTaskManager.ShuffleBoard(false);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Y))
-            {
-                _gameTaskManager.ShuffleBoard(true);
-            }
+                _gameTaskManager.Test();
         }
 
         private void Setup()
@@ -233,6 +226,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
 
             _gameTaskManager.BuildSuggest();
+            _gameTaskManager.ShuffleBoard();
             _gameTaskManager.InitInGameBooster();
             _gameTaskManager.BuildTarget(levelModel);
             _gameTaskManager.BuildBoardMovementCheck();
