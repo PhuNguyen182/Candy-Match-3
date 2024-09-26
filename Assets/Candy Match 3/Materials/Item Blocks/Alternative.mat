@@ -67,14 +67,14 @@ Material:
     m_Ints: []
     m_Floats:
     - _EnableExternalAlpha: 0
-    - _Highlight_Amount: 0.1
+    - _Highlight_Amount: 0.3
     - _Is_Add_Color: 0
     - _Sprite_Multiplier_Time: 2
     - _Suggest_Highlight: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
-    - _Highlight_Color: {r: 127.99999, g: 127.99999, b: 127.99999, a: 1}
+    - _Highlight_Color: {r: 2.9960785, g: 2.9960785, b: 2.9960785, a: 1}
     - _Main_Color: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
     - _Tint: {r: 1, g: 1, b: 1, a: 1}
