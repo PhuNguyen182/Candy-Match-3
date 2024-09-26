@@ -5,6 +5,7 @@ namespace CandyMatch3.Scripts.Common.Constants
     public struct ItemAnimationHashKeys
     {
         public static readonly int BounceHash = Animator.StringToHash("Bounce");
+        public static readonly int TransformHash = Animator.StringToHash("Transform");
         public static readonly int SuggestHash = Animator.StringToHash("IsSuggest");
         public static readonly int ExplodeHash = Animator.StringToHash("Explode");
 

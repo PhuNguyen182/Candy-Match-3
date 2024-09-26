@@ -88,6 +88,19 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             }
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                _gameTaskManager.ShuffleBoard(false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                _gameTaskManager.ShuffleBoard(true);
+            }
+        }
+
         private void Setup()
         {
             _destroyToken = this.GetCancellationTokenOnDestroy();
@@ -126,10 +139,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _cameraShakeTask = new(impulseSource);
             _cameraShakeTask.AddTo(ref builder);
 
-            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
-                                   , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
-                                   , mainGamePanel, endGameScreen, settingSidePanel, targetDatabase, inGameBoosterPanel
-                                   , inGameBoosterPackDatabase, _specialItemTasks, _complimentTask);
+            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask, _matchItemsTask, _metaItemManager
+                                  , _breakGridTask, effectDatabase, mainGamePanel, endGameScreen, settingSidePanel, targetDatabase
+                                  , inGameBoosterPanel, inGameBoosterPackDatabase, _specialItemTasks, _complimentTask, _fillBoardTask);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);
@@ -152,6 +164,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 _gridCellManager.Add(gridCell);
             }
 
+            _gameTaskManager.BuildShufflePositions();
             _fillBoardTask.SetBoardFillRule(levelModel.BoardFillRule);
             _fillBoardTask.SetRuledRandomFill(levelModel.RuledRandomFill);
             _fillBoardTask.BuildBoard(levelModel.BoardBlockPositions);

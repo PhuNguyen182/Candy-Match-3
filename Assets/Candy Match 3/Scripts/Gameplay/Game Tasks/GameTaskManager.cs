@@ -49,6 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly DetectMoveTask _detectMoveTask;
         private readonly FindItemRegionTask _findItemRegionTask;
         private readonly MatchRegionTask _matchRegionTask;
+        private readonly ShuffleBoardTask _shuffleBoardTask;
         #endregion
 
         #region Game State Tasks
@@ -65,7 +66,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase
             , MainGamePanel mainGamePanel, EndGameScreen endGameScreen, InGameSettingPanel settingSidePanel, TargetDatabase targetDatabase
             , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase, SpecialItemTask specialItemTask
-            , ComplimentTask complimentTask)
+            , ComplimentTask complimentTask, FillBoardTask fillBoardTask)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -121,6 +122,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _matchRegionTask = new(_gridCellManager, _findItemRegionTask, _matchItemsTask);
             _matchRegionTask.AddTo(ref builder);
 
+            _shuffleBoardTask = new(_gridCellManager, _detectMoveTask, fillBoardTask);
+            _shuffleBoardTask.AddTo(ref builder);
+
             _checkTargetTask = new(_matchRegionTask, targetDatabase, mainGamePanel);
             _suggestTask.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
             _inputProcessor.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
@@ -175,6 +179,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void BuildTarget(LevelModel levelModel)
         {
             _checkTargetTask.InitLevelTarget(levelModel);
+        }
+
+        public void BuildShufflePositions()
+        {
+            _shuffleBoardTask.BuildActivePositions();
+        }
+
+        public void ShuffleBoard(bool immediately)
+        {
+            _shuffleBoardTask.Shuffle(immediately).Forget();
         }
 
         private void SetCheckGridTask()

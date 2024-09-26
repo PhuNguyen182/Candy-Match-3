@@ -34,10 +34,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _activePositions = _gridCellManager.GetActivePositions().ToList();
         }
 
-        public async UniTask Shuffle()
+        public async UniTask Shuffle(bool immediately = false)
+        {
+            bool canShuffle = TryShuffle();
+
+            if (canShuffle)
+                await TransformItems(immediately);
+        }
+
+        private bool TryShuffle()
         {
             int shuffleCount = 0;
-            bool hasPossibleMove = false;
             CollectShuffleableCell();
 
             while (shuffleCount < 1000)
@@ -47,16 +54,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _detectMoveTask.DetectPossibleMoves();
 
                 if (_detectMoveTask.HasPossibleMove())
-                {
-                    hasPossibleMove = true;
-                    break;
-                }
+                    return true;
 
                 shuffleCount = shuffleCount + 1;
             }
 
-            if (hasPossibleMove)
-                await TransformItems();
+            return false;
         }
 
         private void CollectShuffleableCell()
@@ -95,18 +98,31 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        private async UniTask TransformItems()
+        private async UniTask TransformItems(bool immediately)
         {
-            using (ListPool<UniTask>.Get(out List<UniTask> transformTasks))
+            if (immediately)
             {
                 for (int i = 0; i < _shuffleableCells.Count; i++)
                 {
                     IGridCell gridCell = _gridCellManager.Get(_shuffleableCells[i]);
                     IItemTransform itemTransform = gridCell.BlockItem as IItemTransform;
-                    transformTasks.Add(itemTransform.Transform());
+                    itemTransform.TransformImmediately();
                 }
+            }
 
-                await UniTask.WhenAll(transformTasks);
+            else
+            {
+                using (ListPool<UniTask>.Get(out List<UniTask> transformTasks))
+                {
+                    for (int i = 0; i < _shuffleableCells.Count; i++)
+                    {
+                        IGridCell gridCell = _gridCellManager.Get(_shuffleableCells[i]);
+                        IItemTransform itemTransform = gridCell.BlockItem as IItemTransform;
+                        transformTasks.Add(itemTransform.Transform(i * 0.005f));
+                    }
+
+                    await UniTask.WhenAll(transformTasks);
+                }
             }
         }
 

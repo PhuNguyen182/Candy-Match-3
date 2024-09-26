@@ -53,6 +53,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void OnUpdate(float deltaTime)
         {
+            /*
             if (!_checkGameBoardMovementTask.IsBoardLock)
             {
                 _suggestTimer += Time.deltaTime;
@@ -77,6 +78,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 ClearTimer();
             }
+            */
         }
 
         public void SetInputProcessTask(InputProcessTask inputProcessTask)
@@ -224,6 +226,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             ClearSuggest();
             _messageDisposable.Dispose();
+            UpdateHandlerManager.Instance.RemoveUpdateBehaviour(this);
         }
     }
 }

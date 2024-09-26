@@ -157,8 +157,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
                 return;
 
             _hasBeenSuggested = isActive;
-            itemRenderer.maskInteraction = !isActive ? SpriteMaskInteraction.VisibleOutsideMask
-                                           : SpriteMaskInteraction.None;
+            ChangeVisibleMask(isActive);
             itemAnimator.SetBool(ItemAnimationHashKeys.SuggestHash, isActive);
 
             if (isActive)
@@ -172,6 +171,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
                 itemGraphics.SetFloatRendererProperty(ItemShaderProperties.HighlightAmount, 0);
                 ClearSuggestEffect(); // Should be place here to prevent destroy null reference
             }
+        }
+
+        public void ChangeVisibleMask(bool enable)
+        {
+            itemGraphics.ChangeMaskInteraction(enable);
+        }
+
+        public void Transform()
+        {
+            itemAnimator.SetTrigger(ItemAnimationHashKeys.TransformHash);
         }
 
         private Tweener CreateMoveBounceTween(Vector3 position)

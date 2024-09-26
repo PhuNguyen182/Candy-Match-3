@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -99,16 +100,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void SetColor(CandyColor candyColor)
         {
             this.candyColor = candyColor;
-            Sprite colorSprite = candyColor switch
-            {
-                CandyColor.Blue => candyColors[0],
-                CandyColor.Green => candyColors[1],
-                CandyColor.Orange => candyColors[2],
-                CandyColor.Purple => candyColors[3],
-                CandyColor.Red => candyColors[4],
-                CandyColor.Yellow => candyColors[5],
-                _ => null
-            };
+            Sprite colorSprite = GetSprite(candyColor);
 
             targetType = candyColor switch
             {
@@ -203,9 +195,45 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             candyColor = GetColor(itemType);
         }
 
-        public async UniTask Transform()
+        public async UniTask Transform(float delay = 0)
         {
-            await UniTask.CompletedTask; // Wait for animation
+            Sprite alternativeSprite = GetSprite(candyColor);
+            itemGraphics.SetAlternateSprite(alternativeSprite);
+            itemAnimation.ChangeVisibleMask(true);
+
+            if(delay > 0)
+            {
+                TimeSpan delayAmount = TimeSpan.FromSeconds(delay);
+                await UniTask.Delay(delayAmount, cancellationToken: destroyToken);
+            }
+
+            itemAnimation.Transform();
+            TimeSpan changeSpriteDelay = TimeSpan.FromSeconds(0.167);
+            await UniTask.Delay(changeSpriteDelay, cancellationToken: destroyToken);
+            SetColor(candyColor);
+
+            TimeSpan itemTransformDelay = TimeSpan.FromSeconds(1.167);
+            await UniTask.Delay(itemTransformDelay, cancellationToken: destroyToken);
+            itemAnimation.ChangeVisibleMask(false);
+        }
+
+        public void TransformImmediately()
+        {
+            SetColor(candyColor);
+        }
+
+        private Sprite GetSprite(CandyColor candyColor)
+        {
+            return candyColor switch
+            {
+                CandyColor.Blue => candyColors[0],
+                CandyColor.Green => candyColors[1],
+                CandyColor.Orange => candyColors[2],
+                CandyColor.Purple => candyColors[3],
+                CandyColor.Red => candyColors[4],
+                CandyColor.Yellow => candyColors[5],
+                _ => null
+            };
         }
 
         private CandyColor GetColor(ItemType itemType)
