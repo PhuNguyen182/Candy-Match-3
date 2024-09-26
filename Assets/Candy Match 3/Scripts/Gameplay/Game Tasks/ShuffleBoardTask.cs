@@ -65,7 +65,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 TransformItems(true).Forget();
         }
 
-        public async UniTask Shuffle(bool immediately = false)
+        public async UniTask Shuffle(bool immediately)
         {
             _suggestTask.ClearSuggest();
             _suggestTask.IsActive = false;
