@@ -185,11 +185,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _shuffleBoardTask.Shuffle();
         }
 
-        public void Test()
-        {
-            _shuffleBoardTask.Shuffle(false).Forget();
-        }
-
         private void SetCheckGridTask()
         {
             _moveItemTask.SetCheckGridTask(_checkGridTask);

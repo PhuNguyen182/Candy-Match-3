@@ -9,10 +9,10 @@ using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using CandyMatch3.Scripts.Gameplay.Effects;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -67,7 +67,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask Shuffle(bool immediately = false)
         {
-            _suggestTask.Suggest(false);
+            _suggestTask.ClearSuggest();
             _suggestTask.IsActive = false;
             bool canShuffle = TryShuffle();
 
@@ -154,7 +154,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     {
                         IGridCell gridCell = _gridCellManager.Get(_shuffleableCells[i]);
                         IItemTransform itemTransform = gridCell.BlockItem as IItemTransform;
-                        transformTasks.Add(itemTransform.Transform(i * 0.005f));
+                        transformTasks.Add(itemTransform.Transform(i * 0.0075f));
                     }
 
                     await UniTask.WhenAll(transformTasks);

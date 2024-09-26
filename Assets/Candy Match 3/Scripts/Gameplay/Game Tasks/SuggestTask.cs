@@ -78,6 +78,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
+        public void ResetSuggestCount()
+        {
+            _suggestCount = 0;
+        }
+
         public void SetCheckGameBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
         {
             _checkGameBoardMovementTask = checkGameBoardMovementTask;
@@ -197,7 +202,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             Highlight(false);
             ClearSuggestedItems();
-            _suggestCount = 0;
+            ResetSuggestCount();
         }
 
         public void Dispose()

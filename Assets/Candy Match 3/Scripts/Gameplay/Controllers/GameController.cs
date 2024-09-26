@@ -88,12 +88,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             }
         }
 
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.T))
-                _gameTaskManager.Test();
-        }
-
         private void Setup()
         {
             _destroyToken = this.GetCancellationTokenOnDestroy();
