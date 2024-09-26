@@ -35,3 +35,4 @@ MonoBehaviour:
   HoneyEffect: {fileID: 1957330277183174, guid: 28523f5a3ce774d7b81dfe2d4253b417, type: 3}
   SyrupEffect: {fileID: 1957330277183174, guid: 7240fdedc3da540d1a329219624fdff9, type: 3}
   Compliment: {fileID: -3713860229533644558, guid: 6f776270e67befa4d8cb2ee17848cf4a, type: 3}
+  ShuffleEffect: {fileID: 7757093161400126996, guid: 95037ae6ce2649f458416ad7b0048b26, type: 3}

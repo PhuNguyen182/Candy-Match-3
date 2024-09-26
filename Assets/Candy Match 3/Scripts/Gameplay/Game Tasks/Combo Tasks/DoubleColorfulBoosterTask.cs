@@ -60,7 +60,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 (swapBooster1, swapBooster2) = (booster1, booster2);
             }
 
-            using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 positions.AddRange(_gridCellManager.GetActivePositions());
 
@@ -75,6 +75,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                         continue;
 
                     if (gridCell.GridPosition == gridCell1.GridPosition || gridCell.GridPosition == gridCell2.GridPosition)
+                        continue;
+
+                    if (gridCell.ItemType == ItemType.ColorBomb)
                         continue;
 
                     gridCellType = GetCellPositionType(positions[i]);

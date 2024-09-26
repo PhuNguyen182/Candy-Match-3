@@ -66,7 +66,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (gridCell.HasItem)
             {
-                if (gridCell.LockStates == LockStates.Preparing || gridCell.LockStates == LockStates.None)
+                if (!gridCell.IsLocked)
                 {
                     gridCell.LockStates = LockStates.Breaking;
                     IBlockItem blockItem = gridCell.BlockItem;
@@ -130,7 +130,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!gridCell.HasItem)
                 return;
 
-            if (gridCell.LockStates == LockStates.Preparing || gridCell.LockStates == LockStates.None)
+            if (!gridCell.IsLocked)
             {
                 gridCell.LockStates = LockStates.Breaking;
                 IBlockItem blockItem = gridCell.BlockItem;
@@ -240,17 +240,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
             });
 
-            if (gridCell.BlockItem is IItemEffect effect)
-                effect.PlayStartEffect();
-
             TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
             await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
+
+            if (gridCell.BlockItem is IItemEffect effect)
+                effect.PlayStartEffect();
 
             gridCell.IsMatching = false;
             gridCell.LockStates = LockStates.None;
         }
 
-        public async UniTask BreakMatchItem(IGridCell gridCell, int matchCount, Action<BoundsInt> onActive = null)
+        public async UniTask BreakMatchItem(IGridCell gridCell, Vector3 matchPivot, MatchType matchType, Action<BoundsInt> onActive = null)
         {
             if (gridCell.GridStateful is IBreakable stateBreakable)
             {

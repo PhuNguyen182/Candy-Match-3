@@ -15,4 +15,12 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
         public int Count => MatchSequence.Count;
     }
+
+    public struct MatchScore
+    {
+        public int Score;
+        public int ItemCount;
+        public MatchType MatchType;
+        public bool HasBooster;
+    }
 }

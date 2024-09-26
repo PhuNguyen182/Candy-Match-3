@@ -19,6 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
     public class CheckTargetTask : IDisposable
     {
+        private readonly MatchRegionTask _matchRegionTask;
         private readonly TargetDatabase _targetDatabase;
         private readonly MainGamePanel _mainGamePanel;
 
@@ -58,8 +59,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public CheckTargetTask(TargetDatabase targetDatabase, MainGamePanel mainGameScreen)
+        public CheckTargetTask(MatchRegionTask matchRegionTask, TargetDatabase targetDatabase, MainGamePanel mainGameScreen)
         {
+            _matchRegionTask = matchRegionTask;
             _targetDatabase = targetDatabase;
             _mainGamePanel = mainGameScreen;
             _targetDatabase.Initialize();
@@ -231,6 +233,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (_endGameTask != null)
             {
+                await _matchRegionTask.MatchAllRegions();
+                await _endGameTask.WaitAWhile();
                 await _endGameTask.WaitForBoardStop();
                 CheckEndGame();
             }

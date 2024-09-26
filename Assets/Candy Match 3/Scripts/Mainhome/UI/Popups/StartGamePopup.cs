@@ -5,8 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
+using CandyMatch3.Scripts.GameData;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.CustomData;
@@ -95,13 +96,28 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
 
         private async UniTask PlayGame()
         {
-            PlayGameConfig.Current = new()
-            {
-                IsTestMode = false,
-                LevelModel = _levelModel
-            };
+            int lives = GameDataManager.Instance.GetResource(GameResourceType.Life);
 
-            await SceneLoader.LoadScene(SceneConstants.Transition, LoadSceneMode.Single);
+            if (lives <= 0)
+            {
+                if (_levelModel == null)
+                    return;
+
+                PlayGameConfig.Current = new()
+                {
+                    IsTestMode = false,
+                    LevelModel = _levelModel
+                };
+
+                GameDataManager.Instance.SpendResource(GameResourceType.Life, 1);
+                await SceneBridge.LoadNextScene(SceneConstants.Gameplay);
+            }
+
+            else
+            {
+                await CloseAsync();
+                await BuyLivesPopup.CreateFromAddress(CommonPopupPaths.LivesPopupPath);
+            }
         }
 
         private async UniTask CloseAsync()

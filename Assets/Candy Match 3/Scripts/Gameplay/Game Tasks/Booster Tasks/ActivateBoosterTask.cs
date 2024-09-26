@@ -11,7 +11,6 @@ using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Databases;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using CandyMatch3.Scripts.LevelDesign.CustomTiles.ItemTiles;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -70,7 +69,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             if (message.Sender is IColorBooster colorBooster)
             {
-                await colorBooster.Activate();
                 gridCell.LockStates = LockStates.Preparing;
                 BoosterType boosterType = colorBooster.ColorBoosterType;
 

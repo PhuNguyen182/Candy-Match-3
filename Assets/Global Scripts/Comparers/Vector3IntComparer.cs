@@ -15,12 +15,12 @@ namespace GlobalScripts.Comparers
 
             else if (a.x != b.x && a.y == b.y)
                 compare = a.x.CompareTo(b.x);
-            
-            else if(a.x == b.x && a.y != b.y)
+
+            else if (a.x == b.x && a.y != b.y)
                 compare = a.y.CompareTo(b.y);
-            
+
             else
-                compare = a.x.CompareTo(b.x) + a.y.CompareTo(b.y);
+                compare = a.y.CompareTo(b.y);
 
             return compare;
         }

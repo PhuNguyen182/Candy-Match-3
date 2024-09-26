@@ -45,7 +45,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             IBlockItem blockItem = gridCell.BlockItem;
 
             ProcessBooster(gridCell, blockItem, isCreateBooster, stage);
-            using (var attactListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
             {
                 BoundsInt checkRange = position.GetBounds2D(1);
                 attackPositions.AddRange(checkRange.Iterator2D());
@@ -115,7 +115,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 blockItem.SetMatchable(false);
 
                 if (blockItem is IColorBooster colorBooster)
+                {
+                    colorBooster.IsActivated = true;
                     colorBooster.TriggerNextStage(3);
+                }
             }
         }
 

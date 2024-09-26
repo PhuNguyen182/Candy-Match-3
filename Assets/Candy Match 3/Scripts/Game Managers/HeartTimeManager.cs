@@ -12,6 +12,7 @@ namespace CandyMatch3.Scripts.GameManagers
     {
         private DateTime _savedHeartTime;
         private TimeSpan _heartTimeDiff;
+        private TimeSpan _offset;
 
         private readonly int _maxHeart = GameDataConstants.MaxLives;
         private readonly int _heartCooldown = GameDataConstants.NextLifeTimer;
@@ -23,8 +24,8 @@ namespace CandyMatch3.Scripts.GameManagers
             if (GameDataManager.Instance.GetResource(GameResourceType.Life) < _maxHeart)
             {
                 _savedHeartTime = GameDataManager.Instance.GetCurrentHeartTime();
-                TimeSpan offset = DateTime.Now.Subtract(_savedHeartTime);
-                _heartTimeDiff = TimeSpan.FromSeconds(_heartCooldown).Subtract(offset);
+                _offset = DateTime.Now.Subtract(_savedHeartTime);
+                _heartTimeDiff = TimeSpan.FromSeconds(_heartCooldown).Subtract(_offset);
 
                 if (_heartTimeDiff.TotalSeconds <= 0)
                 {
@@ -35,11 +36,19 @@ namespace CandyMatch3.Scripts.GameManagers
                         GameDataManager.Instance.SetResource(GameResourceType.Life, _maxHeart);
                         GameDataManager.Instance.SaveHeartTime(_savedHeartTime);
                     }
+
                     else
                     {
                         _savedHeartTime = _savedHeartTime.AddSeconds(_heartCooldown);
                     }
                 }
+            }
+
+            else
+            {
+                _savedHeartTime = DateTime.Now;
+                GameDataManager.Instance.SetResource(GameResourceType.Life, _maxHeart);
+                GameDataManager.Instance.SaveHeartTime(_savedHeartTime);
             }
         }
 
