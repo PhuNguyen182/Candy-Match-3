@@ -38,6 +38,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly InputProcessTask _inputProcessTask;
         private readonly CheckTargetTask _checkTargetTask;
         private readonly EndGameScreen _endGameScreen;
+        private readonly ComplimentTask _complimentTask;
         private readonly InGameSettingPanel _settingSidePanel;
         private readonly SuggestTask _suggestTask;
 
@@ -51,7 +52,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
-        public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask, StartGameTask startGameTask
+        public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask, StartGameTask startGameTask, ComplimentTask complimentTask
             , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask, InGameSettingPanel settingSidePanel)
         {
             _endGameTask = endGameTask;
@@ -61,6 +62,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _endGameScreen = endGameScreen;
             _settingSidePanel = settingSidePanel;
             _suggestTask = suggestTask;
+            _complimentTask = complimentTask;
 
             _cts = new();
             _token = _cts.Token;
@@ -121,12 +123,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private void PlayGame()
         {
             SetPlayerActive(true);
+            _complimentTask.IsEndGame = false;
             _settingSidePanel.SetButtonSettingParent(true);
         }
 
         private void PlayContinue()
         {
             SetPlayerActive(true);
+            _complimentTask.IsEndGame = false;
             _settingSidePanel.SetButtonSettingParent(true);
         }
 
@@ -141,6 +145,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private async UniTask OnEndGame(EndResult result)
         {
             SetPlayerActive(false);
+            _complimentTask.IsEndGame = true;
             _endGameScreen.ShowBackground(true);
             _settingSidePanel.SetButtonSettingParent(false, _endGameScreen.transform);
 

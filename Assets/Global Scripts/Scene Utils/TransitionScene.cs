@@ -30,6 +30,10 @@ namespace GlobalScripts.SceneUtils
         private void Awake()
         {
             _token = this.GetCancellationTokenOnDestroy();
+
+#if !UNITY_EDITOR
+            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
+#endif
         }
 
         private void Start()

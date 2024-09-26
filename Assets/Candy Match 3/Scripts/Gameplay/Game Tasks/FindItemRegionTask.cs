@@ -3,12 +3,10 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
-using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -16,70 +14,84 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly GridCellManager _gridCellManager;
         private readonly List<Vector3Int> _adjacentSteps;
-        private readonly List<Vector3Int> _allPositions;
+
+        private HashSet<Vector3Int> _findRegionPosition;
+        private List<MatchableRegion> _matchableRegions;
 
         public FindItemRegionTask(GridCellManager gridCellManager)
         {
             _gridCellManager = gridCellManager;
-
-            _allPositions = new();
+            _matchableRegions = new();
+            _findRegionPosition = new();
             _adjacentSteps = new()
             {
-                Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right
+                new(0, 1), new(0, -1), new(-1, 0), new(1, 0),
             };
         }
 
-        public void BuildGridBoardData()
+        public void CheckMatchRegion(Vector3Int position)
         {
-            _allPositions.AddRange(_gridCellManager.GetActivePositions());
+            _findRegionPosition.Add(position);
         }
 
-        public async UniTask MatchAllRegions()
+        public void Cleanup()
         {
-            await UniTask.CompletedTask;
+            _matchableRegions.Clear();
+            _findRegionPosition.Clear();
+        }
+
+        public void ClearRegions()
+        {
+            _matchableRegions.Clear();
+        }
+
+        public void ClearCheckPositions()
+        {
+            _findRegionPosition.Clear();
         }
 
         public List<MatchableRegion> CollectMatchableRegions()
         {
-            HashSet<Vector3Int> regionPositions = new();
-            List<MatchableRegion> matchableRegions = new();
+            ClearRegions();
+            HashSet<Vector3Int> matchPositions = new();
 
-            for (int i = 0; i < _allPositions.Count; i++)
+            foreach(Vector3Int position in _findRegionPosition)
             {
-                IGridCell gridCell = _gridCellManager.Get(_allPositions[i]);
+                if (IsSelectedPosition(position))
+                    continue;
 
+                IGridCell gridCell = _gridCellManager.Get(position);
                 if (!IsValidGridCell(gridCell))
                     continue;
 
-                regionPositions.Clear(); // Clear this collection to refresh region positions
-                InspectMatchableRegion(_allPositions[i], regionPositions);
+                matchPositions.Clear();
+                InspectMatchableRegion(position, matchPositions);
 
-                if (regionPositions.Count < 3)
+                if (matchPositions.Count < 3)
                     continue;
 
                 MatchableRegion region = new()
                 {
-                    RegionType = gridCell.BlockItem.ItemType,
-                    RegionColor = gridCell.BlockItem.CandyColor,
-                    Elements = regionPositions
+                    RegionType = gridCell.ItemType,
+                    RegionColor = gridCell.CandyColor,
+                    Elements = new(matchPositions)
                 };
 
-                matchableRegions.Add(region);
+                _matchableRegions.Add(region);
             }
 
-            return matchableRegions;
+            return _matchableRegions;
         }
 
-        private void InspectMatchableRegion(Vector3Int position, HashSet<Vector3Int> positions)
+        private void InspectMatchableRegion(Vector3Int position, HashSet<Vector3Int> matchPositions)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
 
-            if (!IsValidGridCell(gridCell))
+            if (!IsValidGridCell(gridCell) || IsSelectedPosition(position))
                 return;
 
-            positions.Add(position);
-            CandyColor candyColor = gridCell.BlockItem.CandyColor;
-            _gridCellManager.SetVisitState(position, true);
+            matchPositions.Add(position);
+            CandyColor candyColor = gridCell.CandyColor;
 
             for (int i = 0; i < _adjacentSteps.Count; i++)
             {
@@ -89,66 +101,43 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (!IsValidGridCell(checkCell))
                     continue;
 
-                if (checkCell.BlockItem.CandyColor == CandyColor.None)
+                if (matchPositions.Contains(checkPosition))
                     continue;
 
-                if (checkCell.BlockItem.CandyColor != candyColor)
+                if (IsSelectedPosition(checkPosition))
                     continue;
 
-                positions.Add(checkPosition);
-                _gridCellManager.SetVisitState(checkPosition, true);
-                InspectMatchableRegion(checkPosition, positions);
+                if (checkCell.CandyColor != candyColor || checkCell.CandyColor == CandyColor.None)
+                    continue;
+
+                if (!checkCell.BlockItem.IsMatchable)
+                    continue;
+
+                matchPositions.Add(checkPosition);
+                InspectMatchableRegion(checkPosition, matchPositions);
             }
-        }
-
-        private void DetectCapitalOfRegion(MatchableRegion region)
-        {
-            int maxCount = int.MinValue;
-            Vector3Int capitalPosition = Vector3Int.zero;
-
-            foreach(Vector3Int position in region.Elements)
-            {
-                int extendCount = 0;
-
-                for (int j = 0; j < _adjacentSteps.Count; j++)
-                {
-                    int count = Extend(position, _adjacentSteps[j], region.IsInRegion);
-                    extendCount = count + extendCount;
-                }
-
-                if(extendCount > maxCount)
-                {
-                    maxCount = extendCount;
-                    capitalPosition = position;
-                }
-            }
-
-            region.Capital = capitalPosition;
-        }
-
-        private int Extend(Vector3Int startPosition, Vector3Int direction, Func<Vector3Int, bool> predicate)
-        {
-            int count = 0;
-            Vector3Int extendPosition = startPosition + direction;
-
-            while (predicate(extendPosition))
-            {
-                extendPosition = extendPosition + direction;
-                count = count + 1;
-            }
-
-            return count;
         }
 
         private bool IsValidGridCell(IGridCell gridCell)
         {
-            return gridCell != null && gridCell.HasItem && _gridCellManager.GetVisitState(gridCell.GridPosition);
+            return gridCell != null && gridCell.HasItem;
+        }
+
+        private bool IsSelectedPosition(Vector3Int position)
+        {
+            foreach (var region in _matchableRegions)
+            {
+                if (region.IsInRegion(position))
+                    return true;
+            }
+
+            return false;
         }
 
         public void Dispose()
         {
+            Cleanup();
             _adjacentSteps.Clear();
-            _allPositions.Clear();
         }
     }
 }

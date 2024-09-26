@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Enums;
@@ -57,48 +58,46 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             return (0, 0);
         }
 
-        protected MatchResult GetMatchResult(Vector3Int gridPosition)
+        public MatchResult GetMatchResult(Vector3Int gridPosition)
         {
-            List<Vector3Int> matchSequence = new();
-
-            for (int i = 0; i < sequencePattern.Count; i++)
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> matchSequence))
             {
-                matchSequence = GetMatchCellsFromSequence(gridPosition, sequencePattern[i], out CandyColor matchColor, out bool hasBooster);
-                if (matchSequence.Count >= requiredItemCount)
+                for (int i = 0; i < sequencePattern.Count; i++)
                 {
-                    return new MatchResult
+                    matchSequence = GetMatchCellsFromSequence(gridPosition, sequencePattern[i]
+                                            , out CandyColor matchColor, out bool hasBooster);
+                    
+                    if (matchSequence.Count >= requiredItemCount)
                     {
-                        MatchType = MatchType,
-                        CandyColor = matchColor,
-                        Position = gridPosition,
-                        MatchSequence = matchSequence,
-                        HasBooster = hasBooster
-                    };
+                        matchSequence.Add(gridPosition);
+
+                        return new MatchResult
+                        {
+                            MatchType = MatchType,
+                            CandyColor = matchColor,
+                            Position = gridPosition,
+                            MatchSequence = matchSequence,
+                            HasBooster = hasBooster
+                        };
+                    }
                 }
+
+                return new() { MatchSequence = new() };
             }
-
-            return new MatchResult { MatchSequence = new() };
         }
 
-        public bool CheckMatch(Vector3Int gridPosition, out MatchResult matchResult)
-        {
-            MatchResult result = GetMatchResult(gridPosition);
-            bool isMatchable = result.MatchSequence.Count >= requiredItemCount;
-
-            if (isMatchable)
-                result.MatchSequence.Add(gridPosition);
-            else
-                result.MatchSequence.Clear();
-
-            matchResult = result;
-            return isMatchable;
-        }
-
-        public bool CheckMatch(Vector3Int gridPosition, out int score)
+        public bool CheckMatch(Vector3Int gridPosition, out MatchScore score)
         {
             var (matchScore, boosterCount) = GetMatchableScore(gridPosition);
             
-            score = matchScore + boosterCount;
+            score = new MatchScore
+            {
+                HasBooster = boosterCount> 0,
+                ItemCount = requiredItemCount,
+                Score = matchScore + boosterCount,
+                MatchType = MatchType
+            };
+
             return matchScore > 0;
         }
 

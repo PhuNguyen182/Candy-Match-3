@@ -85,9 +85,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             IsActive = !isMatchable;
             _isMatchable = isMatchable;
-            
-            if(!isMatchable)
-                IsActivated = true; // Prevent booster is triggered again
         }
 
         public override void InitMessages()

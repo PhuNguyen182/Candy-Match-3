@@ -29,7 +29,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private bool _suggestFlag = false;
 
         private List<IItemSuggest> _itemSuggests;
-        private InputProcessTask _inputProcessTask;
         private CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private IDisposable _messageDisposable;
 
@@ -79,9 +78,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public void SetInputProcessTask(InputProcessTask inputProcessTask)
+        public void ResetSuggestCount()
         {
-            _inputProcessTask = inputProcessTask;
+            _suggestCount = 0;
         }
 
         public void SetCheckGameBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
@@ -105,11 +104,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void SearchSuggestions()
         {
-            _inputProcessTask.IsActive = false;
-
-            if (_suggestCount == 0)
-                _detectMoveTask.DetectPossibleMoves();
-
             if (_detectMoveTask.HasPossibleMove())
             {
                 ClearSuggestedItems();
@@ -131,15 +125,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 _suggestCount = _suggestCount + 1;
             }
-
-            else
-            {
-#if UNITY_EDITOR
-                Debug.Log("No Possible Moves!");
-#endif
-            }
-
-            _inputProcessTask.IsActive = true;
         }
 
         private void Highlight(bool isActive)
@@ -217,13 +202,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             Highlight(false);
             ClearSuggestedItems();
-            _suggestCount = 0;
+            ResetSuggestCount();
         }
 
         public void Dispose()
         {
             ClearSuggest();
             _messageDisposable.Dispose();
+            UpdateHandlerManager.Instance.RemoveUpdateBehaviour(this);
         }
     }
 }

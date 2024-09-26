@@ -71,7 +71,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private GameTaskManager _gameTaskManager;
         private MessageBrokerController _messageBrokerController;
 
-        private int _check = 0;
         private CancellationToken _destroyToken;
 
         private void Awake()
@@ -89,31 +88,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             }
         }
 
-#if UNITY_EDITOR
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                _check = _check + 1;
-
-                if (_check % 4 == 0)
-                    Time.timeScale = 1;
-                else if (_check % 4 == 1)
-                    Time.timeScale = 0.1f;
-                else if (_check % 4 == 2)
-                    Time.timeScale = 0.05f;
-                else
-                    Time.timeScale = 0.02f;
-            }
-        }
-#endif
-
         private void Setup()
         {
             _destroyToken = this.GetCancellationTokenOnDestroy();
-#if !UNITY_EDITOR
-            Application.targetFrameRate = (int)Screen.currentResolution.refreshRateRatio.value;
-#endif
         }
 
         private void Initialize()
@@ -149,10 +126,9 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _cameraShakeTask = new(impulseSource);
             _cameraShakeTask.AddTo(ref builder);
 
-            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask
-                                   , _matchItemsTask, _metaItemManager, _breakGridTask, effectDatabase
-                                   , mainGamePanel, endGameScreen, settingSidePanel, targetDatabase, inGameBoosterPanel
-                                   , inGameBoosterPackDatabase, _specialItemTasks);
+            _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask, _matchItemsTask, _metaItemManager
+                                  , _breakGridTask, effectDatabase, mainGamePanel, endGameScreen, settingSidePanel, targetDatabase
+                                  , inGameBoosterPanel, inGameBoosterPackDatabase, _specialItemTasks, _complimentTask, _fillBoardTask);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);
@@ -175,6 +151,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 _gridCellManager.Add(gridCell);
             }
 
+            _gameTaskManager.BuildShufflePositions();
             _fillBoardTask.SetBoardFillRule(levelModel.BoardFillRule);
             _fillBoardTask.SetRuledRandomFill(levelModel.RuledRandomFill);
             _fillBoardTask.BuildBoard(levelModel.BoardBlockPositions);
@@ -243,6 +220,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _spawnItemTask.SetItemSpawnerData(levelModel.SpawnerRules);
 
             _gameTaskManager.BuildSuggest();
+            _gameTaskManager.ShuffleBoard();
             _gameTaskManager.InitInGameBooster();
             _gameTaskManager.BuildTarget(levelModel);
             _gameTaskManager.BuildBoardMovementCheck();
@@ -270,7 +248,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private void OnDestroy()
         {
             GC.Collect();
-            GC.SuppressFinalize(this);
         }
     }
 }

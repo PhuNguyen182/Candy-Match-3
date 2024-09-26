@@ -56,7 +56,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 activeBooster.IsActivated = true;
             }
 
-            using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 positions.AddRange(_colorfulBoosterTask.FindPositionWithColor(candyColor));
                 using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
@@ -110,7 +110,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 booster.IsActivated = true;
             }
 
-            using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 positions.AddRange(_colorfulBoosterTask.FindPositionWithColor(candyColor));
                 using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
