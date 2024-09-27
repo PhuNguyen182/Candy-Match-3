@@ -3,6 +3,7 @@ using System;
 namespace CandyMatch3.Scripts.Common.Enums
 {
     [Flags]
+    [Serializable]
     public enum LockStates
     {
         None = 0,

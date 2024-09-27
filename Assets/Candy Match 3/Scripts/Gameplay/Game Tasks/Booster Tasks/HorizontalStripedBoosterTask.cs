@@ -85,7 +85,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             IGridCell gridCell = _gridCellManager.Get(position);
 
-            if (gridCell == null)
+            if (gridCell == null || gridCell.LockStates == LockStates.Preparing) // Prevent break items inside lock-on booster range
                 return;
 
             await _breakGridTask.BreakItem(position);

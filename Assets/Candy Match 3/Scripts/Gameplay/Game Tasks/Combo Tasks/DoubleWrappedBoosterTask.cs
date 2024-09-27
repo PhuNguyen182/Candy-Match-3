@@ -52,12 +52,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 IBlockItem firstItem = gridCell2.BlockItem;
                 IBlockItem secondItem = gridCell1.BlockItem;
 
-                if(firstItem is IColorBooster firstBooster && secondItem is IColorBooster secondBooster)
-                {
-                    UniTask boosterTask1 = firstBooster.PlayBoosterCombo(boosterComboDirection1, ComboBoosterType.DoubleWrapped, true);
-                    UniTask boosterTask2 = secondBooster.PlayBoosterCombo(boosterComboDirection2, ComboBoosterType.DoubleWrapped, false);
-                    await UniTask.WhenAll(boosterTask1, boosterTask2);
-                }
+                gridCell1.LockStates = LockStates.Preparing;
+                gridCell2.LockStates = LockStates.Preparing;
+
+                IColorBooster firstBooster = firstItem as IColorBooster;
+                IColorBooster secondBooster = secondItem as IColorBooster;
+
+                UniTask boosterTask1 = firstBooster.PlayBoosterCombo(boosterComboDirection1, ComboBoosterType.DoubleWrapped, true);
+                UniTask boosterTask2 = secondBooster.PlayBoosterCombo(boosterComboDirection2, ComboBoosterType.DoubleWrapped, false);
+                await UniTask.WhenAll(boosterTask1, boosterTask2);
 
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);
@@ -89,6 +92,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 BoundsInt checkRange = BoundsExtension.Encapsulate(positions);
                 await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
+                gridCell1.LockStates = LockStates.None;
+                gridCell2.LockStates = LockStates.None;
                 _checkGridTask.CheckRange(checkRange);
             }
         }
@@ -101,8 +106,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             {
                 return new BoundsInt
                 {
-                    min = from + new Vector3Int(-2, -2),
-                    max = to + new Vector3Int(3, 3)
+                    min = from + new Vector3Int(-3, -3),
+                    max = to + new Vector3Int(4, 4)
                 };
             }
 
@@ -110,8 +115,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             {
                 return new BoundsInt
                 {
-                    min = to + new Vector3Int(-2, -2),
-                    max = from + new Vector3Int(3, 3)
+                    min = to + new Vector3Int(-3, -3),
+                    max = from + new Vector3Int(4, 4)
                 };
             }
 
