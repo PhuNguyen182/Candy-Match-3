@@ -10,19 +10,6 @@ using GlobalScripts.Comparers;
 
 namespace CandyMatch3.Scripts.Gameplay.Models.Match
 {
-    public class MatchRegionResult : IDisposable
-    {
-        public MatchType MatchType;
-        public CandyColor CandyColor;
-        public Vector3Int PivotPosition;
-        public HashSet<Vector3Int> Positions;
-
-        public void Dispose()
-        {
-            Positions?.Clear();
-        }
-    }
-
     public class MatchableRegion : IDisposable
     {
         public ItemType RegionType;

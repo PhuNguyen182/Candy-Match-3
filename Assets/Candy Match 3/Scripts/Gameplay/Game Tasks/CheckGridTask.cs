@@ -21,7 +21,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _positionsToCheck;
         private HashSet<Vector3Int> _checkPositions;
 
-        private bool _checkMatch = false;
         private CancellationToken _token;
         private CancellationTokenSource _cts;
 
@@ -89,22 +88,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _matchRegionTask.CheckMatchRegion(position);
         }
 
-        public void CheckCross(Vector3Int position, bool checkSelf = true)
-        {
-            if(checkSelf)
-                _checkPositions.Add(position);
-            
-            _checkPositions.Add(position + Vector3Int.left);
-            _checkPositions.Add(position + Vector3Int.right);
-            _checkPositions.Add(position + Vector3Int.down);
-            _checkPositions.Add(position + Vector3Int.up);
-        }
-
-        public void CheckAt(Vector3Int position)
-        {
-            _checkPositions.Add(position);
-        }
-
         public void CheckRange(BoundsInt boundsRange)
         {
             AddRangeToCheck(boundsRange);
@@ -114,11 +97,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             BoundsInt checkRange = position.GetBounds2D(range);
             AddRangeToCheck(checkRange);
-        }
-
-        public void CheckInDirection(Vector3Int position, Vector3Int direction)
-        {
-            _checkPositions.Add(position + direction);
         }
 
         public void Dispose()

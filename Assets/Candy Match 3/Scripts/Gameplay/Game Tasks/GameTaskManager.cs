@@ -124,7 +124,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _shuffleBoardTask = new(_gridCellManager, _inputProcessor, _detectMoveTask, _suggestTask, fillBoardTask);
             _shuffleBoardTask.AddTo(ref builder);
 
-            _checkTargetTask = new(_matchRegionTask, targetDatabase, mainGamePanel);
+            _checkTargetTask = new(_matchRegionTask, targetDatabase, _shuffleBoardTask, mainGamePanel);
             _suggestTask.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
             _inputProcessor.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
 
@@ -183,6 +183,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void ShuffleBoard()
         {
             _shuffleBoardTask.Shuffle();
+        }
+
+        public void Test()
+        {
+            _matchRegionTask.MatchAllRegions().Forget();
         }
 
         private void SetCheckGridTask()

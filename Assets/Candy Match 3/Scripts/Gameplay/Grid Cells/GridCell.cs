@@ -47,7 +47,9 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             set
             {
                 _lockStates = value;
-                CheckLockProperty.Value = IsLocked || IsItemLocked;
+                GridCellView.LockStates = _lockStates;
+                GridCellView.IsLocked = IsLocked;
+                CheckLockProperty.Value = IsLocked;
             }
         }
 

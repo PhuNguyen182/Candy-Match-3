@@ -71,7 +71,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!_checkGridTask.CanCheck)
                 return false;
 
-            if (_checkGameBoardMovementTask.IsBoardLock)
+            if (!_checkGameBoardMovementTask.AllGridsUnlocked)
                 return false;
 
             if (_activateBoosterTask.ActiveBoosterCount > 0)

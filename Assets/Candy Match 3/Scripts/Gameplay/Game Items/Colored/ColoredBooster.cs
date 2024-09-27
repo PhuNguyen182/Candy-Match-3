@@ -91,12 +91,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
             _activateBoosterPublisher = GlobalMessagePipe.GetPublisher<ActivateBoosterMessage>();
+
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
-
             boardStopSubscriber = GlobalMessagePipe.GetSubscriber<BoardStopMessage>();
-            boardStopSubscriber.Subscribe(message => _isBoardStop = message.IsStopped)
-                               .AddTo(builder);
-
+            boardStopSubscriber.Subscribe(SetBoardStopState).AddTo(builder);
             messageDisposable = builder.Build();
         }
 
@@ -228,6 +226,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
             return itemAnimation.SwapTo(position, duration, isMoveFirst);
+        }
+
+        private void SetBoardStopState(BoardStopMessage message)
+        {
+            _isBoardStop = message.IsStopped;
+            // To do: instead of taking board stop message, create new message contain item state of item locking and use it
         }
 
         private void SetTargetType()

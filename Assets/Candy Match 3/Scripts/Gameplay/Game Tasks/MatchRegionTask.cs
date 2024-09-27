@@ -32,16 +32,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _findItemRegionTask.CheckMatchRegion(position);
         }
 
-        public async UniTask MatchAllRegions()
+        public async UniTask<int> MatchAllRegions()
         {
             using(ListPool<MatchableRegion>.Get(out List<MatchableRegion> regions))
             {
                 regions = _findItemRegionTask.CollectMatchableRegions();
+                int matchCount = regions.Count;
 
                 if (regions.Count <= 0)
                 {
                     _findItemRegionTask.Cleanup();
-                    return;
+                    return matchCount;
                 }
 
                 _checkGridTask.CanCheck = false;
@@ -62,6 +63,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 _findItemRegionTask.ClearRegions();
                 _checkGridTask.CanCheck = true;
+                return matchCount;
             }
         }
 

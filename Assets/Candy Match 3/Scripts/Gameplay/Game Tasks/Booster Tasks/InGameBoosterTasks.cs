@@ -114,11 +114,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                     boosterAmount.Subscribe(value => boosterButton.SetBoosterCount(value));
                     IDisposable d1 = boosterButton.OnClickObserver.Where(value => (boosterAmount.Value > 0 || value.IsFree) 
-                                                  && !value.IsActive && _inputProcessTask.IsActive && !_checkGameBoardMovementTask.IsBoardLock)
+                                                  && !value.IsActive && _inputProcessTask.IsActive && _checkGameBoardMovementTask.AllGridsUnlocked)
                                                   .Subscribe(value => EnableBooster(booster.BoosterType));
 
                     IDisposable d2 = boosterButton.OnClickObserver.Where(value => boosterAmount.Value <= 0 && !value.IsFree && !value.IsActive 
-                                                  && _inputProcessTask.IsActive && !_checkGameBoardMovementTask.IsBoardLock)
+                                                  && _inputProcessTask.IsActive && _checkGameBoardMovementTask.AllGridsUnlocked)
                                                   .Subscribe(value => ShowBuyBoosterPopup(booster.BoosterType).Forget());
 
                     boosterDisposables.Add(d1);
