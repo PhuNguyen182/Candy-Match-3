@@ -29,7 +29,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private bool _suggestFlag = false;
 
         private List<IItemSuggest> _itemSuggests;
-        private InputProcessTask _inputProcessTask;
         private CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private IDisposable _messageDisposable;
 
@@ -48,12 +47,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _messageDisposable = messageBuilder.Build();
 
             IsActive = true;
-            UpdateHandlerManager.Instance.AddUpdateBehaviour(this);
+            //UpdateHandlerManager.Instance.AddUpdateBehaviour(this);
         }
 
         public void OnUpdate(float deltaTime)
         {
-            if (!_checkGameBoardMovementTask.IsBoardLock)
+            if (_checkGameBoardMovementTask.AllGridsUnlocked)
             {
                 _suggestTimer += Time.deltaTime;
                 if(_suggestTimer > SuggestDelay && !_suggestFlag)
@@ -79,9 +78,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public void SetInputProcessTask(InputProcessTask inputProcessTask)
+        public void ResetSuggestCount()
         {
-            _inputProcessTask = inputProcessTask;
+            _suggestCount = 0;
         }
 
         public void SetCheckGameBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
@@ -105,11 +104,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void SearchSuggestions()
         {
-            _inputProcessTask.IsActive = false;
-
-            if (_suggestCount == 0)
-                _detectMoveTask.DetectPossibleMoves();
-
             if (_detectMoveTask.HasPossibleMove())
             {
                 ClearSuggestedItems();
@@ -128,10 +122,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                             _itemSuggests.Add(itemSuggest);
                     }
                 }
-            }
 
-            _suggestCount = _suggestCount + 1;
-            _inputProcessTask.IsActive = true;
+                _suggestCount = _suggestCount + 1;
+            }
         }
 
         private void Highlight(bool isActive)
@@ -209,13 +202,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             Highlight(false);
             ClearSuggestedItems();
-            _suggestCount = 0;
+            ResetSuggestCount();
         }
 
         public void Dispose()
         {
             ClearSuggest();
             _messageDisposable.Dispose();
+            UpdateHandlerManager.Instance.RemoveUpdateBehaviour(this);
         }
     }
 }

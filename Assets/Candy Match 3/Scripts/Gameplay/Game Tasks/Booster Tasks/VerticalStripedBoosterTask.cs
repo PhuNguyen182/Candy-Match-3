@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
@@ -38,7 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
             _breakGridTask.ReleaseGridCell(gridCell);
 
-            using (var attactListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> attackPositions))
             {
                 attackPositions.AddRange(activeBounds.GetColumn(position));
                 int count = attackPositions.Count;
@@ -84,7 +85,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             IGridCell gridCell = _gridCellManager.Get(position);
 
-            if (gridCell == null)
+            if (gridCell == null || gridCell.LockStates == LockStates.Preparing) // Prevent break items inside lock-on booster range
                 return;
 
             await _breakGridTask.BreakItem(position);

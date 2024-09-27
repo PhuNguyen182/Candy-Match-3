@@ -15,6 +15,8 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 {
     public class GridCellView : MonoBehaviour, IGridCellView
     {
+        [SerializeField] private bool isLocked;
+        [SerializeField] private LockStates lockStates;
         [SerializeField] private Vector3Int gridPosition;
 
         [Header("Sprite Views")]
@@ -24,6 +26,18 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
         public Vector3Int GridPosition => gridPosition;
         public Vector3 WorldPosition => transform.position;
+
+        public bool IsLocked 
+        { 
+            get => isLocked; 
+            set => isLocked = value; 
+        }
+
+        public LockStates LockStates 
+        { 
+            get => lockStates; 
+            set => lockStates = value; 
+        }
 
         private CancellationToken _destroyToken;
 

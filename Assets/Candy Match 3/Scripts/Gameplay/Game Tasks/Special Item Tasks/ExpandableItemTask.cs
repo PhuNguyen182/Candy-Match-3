@@ -29,7 +29,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
         private readonly ISubscriber<BoardStopMessage> _boardStopSubscriber;
 
         private bool _canExpand = false;
-        private List<Vector3Int> _adjcentSteps;
+        private List<Vector3Int> _adjacentSteps;
         private HashSet<Vector3Int> _expandableItemPositions;
         private CheckGridTask _checkGridTask;
         private IDisposable _disposable;
@@ -60,7 +60,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
             _cts = new();
             _token = _cts.Token;
 
-            _adjcentSteps = new()
+            _adjacentSteps = new()
             {
                 Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right
             };
@@ -166,9 +166,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
         private List<Vector3Int> GetExpandable(Vector3Int position)
         {
             List<Vector3Int> expandablePositions = new();
-            for (int i = 0; i < _adjcentSteps.Count; i++)
+            for (int i = 0; i < _adjacentSteps.Count; i++)
             {
-                Vector3Int checkPosition = position + _adjcentSteps[i];
+                Vector3Int checkPosition = position + _adjacentSteps[i];
                 IGridCell checkGridCell = _gridCellManager.Get(checkPosition);
 
                 if (checkGridCell == null || !checkGridCell.HasItem)
@@ -188,7 +188,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
             _cts.Dispose();
             _expandableItemPositions.Clear();
             _disposable.Dispose();
-            _adjcentSteps.Clear();
+            _adjacentSteps.Clear();
         }
     }
 }

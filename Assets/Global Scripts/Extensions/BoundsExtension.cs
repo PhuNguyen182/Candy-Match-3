@@ -10,6 +10,12 @@ namespace GlobalScripts.Extensions
 {
     public static class BoundsExtension
     {
+        public enum SortOrder
+        {
+            Ascending = 1,
+            Descending = 2
+        }
+
         public static Vector3IntComparer Vector3IntComparer { get; } = new();
 
         public static BoundsInt GetBounds2D(this Vector3Int position, Vector3Int size)
@@ -35,7 +41,34 @@ namespace GlobalScripts.Extensions
             return bounds;
         }
 
-        public static BoundsInt Encapsulate(List<Vector3Int> positions)
+        public static BoundsInt EncapsulateExpand(IEnumerable<Vector3Int> positions)
+        {
+            int minX = int.MaxValue, maxX = int.MinValue;
+            int minY = int.MaxValue, maxY = int.MinValue;
+
+            foreach(Vector3Int position in positions)
+            {
+                if (position.x < minX)
+                    minX = position.x;
+                
+                if (position.x > maxX)
+                    maxX = position.x;
+                
+                if (position.y < minY)
+                    minY = position.y;
+
+                if (position.y > maxY)
+                    maxY = position.y;
+            }
+
+            return new BoundsInt
+            {
+                min = new(minX, minY),
+                max = new(maxX + 1, maxY + 1)
+            };
+        }
+
+        public static BoundsInt Encapsulate(IEnumerable<Vector3Int> positions)
         {
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> sortedPosition))
             {
@@ -73,13 +106,27 @@ namespace GlobalScripts.Extensions
             }
         }
 
-        public static void ForEach2D(this BoundsInt boundsInt, Action<Vector3Int> callback)
+        public static void ForEach2D(this BoundsInt boundsInt, Action<Vector3Int> callback, SortOrder sortOrder = SortOrder.Ascending)
         {
-            for (int x = boundsInt.xMin; x < boundsInt.xMax; x++)
+            if (sortOrder == SortOrder.Ascending)
             {
-                for (int y = boundsInt.yMin; y < boundsInt.yMax; y++)
+                for (int x = boundsInt.xMin; x < boundsInt.xMax; x++)
                 {
-                    callback.Invoke(new Vector3Int(x, y));
+                    for (int y = boundsInt.yMin; y < boundsInt.yMax; y++)
+                    {
+                        callback.Invoke(new Vector3Int(x, y));
+                    }
+                }
+            }
+
+            else if(sortOrder == SortOrder.Descending)
+            {
+                for (int x = boundsInt.xMax - 1; x >= boundsInt.xMin; x--)
+                {
+                    for (int y = boundsInt.yMax - 1; y >= boundsInt.yMin; y--)
+                    {
+                        callback.Invoke(new Vector3Int(x, y));
+                    }
                 }
             }
         }
@@ -98,26 +145,57 @@ namespace GlobalScripts.Extensions
             }
         }
 
-        public static IEnumerable<Vector3Int> Iterator2D(this BoundsInt boundsInt)
+        public static IEnumerable<Vector3Int> Iterator2D(this BoundsInt boundsInt, SortOrder sortOrder = SortOrder.Ascending)
         {
-            for (int x = boundsInt.xMin; x < boundsInt.xMax; x++)
+            if (sortOrder == SortOrder.Ascending)
             {
-                for (int y = boundsInt.yMin; y < boundsInt.yMax; y++)
+                for (int x = boundsInt.xMin; x < boundsInt.xMax; x++)
                 {
-                    yield return new Vector3Int(x, y);
+                    for (int y = boundsInt.yMin; y < boundsInt.yMax; y++)
+                    {
+                        yield return new Vector3Int(x, y);
+                    }
+                }
+            }
+
+            else if(sortOrder == SortOrder.Descending)
+            {
+                for (int x = boundsInt.xMax - 1; x >= boundsInt.xMin; x--)
+                {
+                    for (int y = boundsInt.yMax - 1; y >= boundsInt.yMin; y--)
+                    {
+                        yield return new Vector3Int(x, y);
+                    }
                 }
             }
         }
 
-        public static IEnumerable<Vector3Int> Iterator3D(this BoundsInt boundsInt)
+        public static IEnumerable<Vector3Int> Iterator3D(this BoundsInt boundsInt, SortOrder sortOrder = SortOrder.Ascending)
         {
-            for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
+            if (sortOrder == SortOrder.Ascending)
             {
-                for (int y = boundsInt.yMin; y <= boundsInt.yMax; y++)
+                for (int x = boundsInt.xMin; x <= boundsInt.xMax; x++)
                 {
-                    for (int z = boundsInt.zMin; z <= boundsInt.zMax; z++)
+                    for (int y = boundsInt.yMin; y <= boundsInt.yMax; y++)
                     {
-                        yield return new Vector3Int(x, y, z);
+                        for (int z = boundsInt.zMin; z <= boundsInt.zMax; z++)
+                        {
+                            yield return new Vector3Int(x, y, z);
+                        }
+                    }
+                }
+            }
+
+            else if(sortOrder == SortOrder.Descending)
+            {
+                for (int x = boundsInt.xMax - 1; x >= boundsInt.xMin; x--)
+                {
+                    for (int y = boundsInt.yMax - 1; y >= boundsInt.yMin; y--)
+                    {
+                        for (int z = boundsInt.zMax - 1; z >= boundsInt.zMin; z--)
+                        {
+                            yield return new Vector3Int(x, y, z);
+                        }
                     }
                 }
             }

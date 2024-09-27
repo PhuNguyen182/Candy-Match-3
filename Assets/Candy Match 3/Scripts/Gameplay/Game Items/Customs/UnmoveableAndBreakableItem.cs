@@ -96,7 +96,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public void JumpDown(float amptitude)
         {
-            
+            return;
         }
 
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)

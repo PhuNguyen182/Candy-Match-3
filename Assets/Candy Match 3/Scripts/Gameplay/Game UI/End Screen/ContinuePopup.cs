@@ -6,7 +6,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using GlobalScripts.Effects.Tweens;
+using CandyMatch3.Scripts.GameData;
+using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
+using CandyMatch3.Scripts.Common.Controllers;
+using CandyMatch3.Scripts.Mainhome.UI.Shops;
+using CandyMatch3.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
 using TMPro;
 
@@ -24,11 +31,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         [SerializeField] private TMP_Text currentCoin;
 
         [Space(10)]
+        [SerializeField] private ParticleSystem coinEffect;
         [SerializeField] private TweenValueEffect coinTween;
+        [SerializeField] private UpdateResouceResponder resouceResponder;
+        [SerializeField] private FadeBackground background;
         [SerializeField] private Animator popupAnimator;
         [SerializeField] private QuitPopup quitPopup;
 
         private int _price = 0;
+        private int _currentCoin = 0;
         private ReactiveProperty<int> _reactiveCoin = new(0);
 
         private CancellationToken _token;
@@ -42,8 +53,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             playButton.onClick.AddListener(() => OnPlayClicked().Forget());
             quitButton.onClick.AddListener(() => OnQuitClicked().Forget());
 
-            coinTween.BindInt(_reactiveCoin, UpdateCoin);
-            // _reactiveCoin.Value = 0; update letest value from shop
+            coinTween.BindInt(_reactiveCoin, ShowCoin);
+            resouceResponder.OnUpdate = UpdateCoin;
+        }
+
+        private void OnEnable()
+        {
+            _currentCoin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
+            _reactiveCoin.Value = _currentCoin;
         }
 
         private void ShowQuitPopup(bool isActive)
@@ -72,7 +89,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         public void SetMove(int move)
         {
-            moveText.text = $"{move}";
+            moveText.text = $"+{move}";
             moveMessage.text = $"Add +{move} extra moves to continue.";
         }
 
@@ -83,12 +100,37 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             return _completionSource.Task;
         }
 
+        private void ShowPopupAgain()
+        {
+            background.ShowBackground(true);
+            gameObject.SetActive(true);
+        }
+
         private async UniTask OnPlayClicked()
         {
-            await CloseAnimation();
-            _completionSource.TrySetResult(true);
-            gameObject.SetActive(false);
-            // To do: spend coins to purchase next moves
+            if (_currentCoin >= _price)
+            {
+                coinEffect.Play();
+                GameDataManager.Instance.SpendResource(GameResourceType.Coin, _price);
+                UpdateResourceController.Instance.UpdateResource(new UpdateResourceMessage
+                {
+                    ResouceType = GameResourceType.Coin
+                });
+                
+                await CloseAnimation();
+                _completionSource.TrySetResult(true);
+                gameObject.SetActive(false);
+            }
+
+            else
+            {
+                background.ShowBackground(false);
+                await CloseAnimation();
+
+                var shop = await ShopPopup.CreateFromAddress(CommonPopupPaths.ShopPopupPath);
+                shop.OnClose = ShowPopupAgain;
+                gameObject.SetActive(false);
+            }
         }
 
         private async UniTask OnQuitClicked()
@@ -98,14 +140,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             gameObject.SetActive(false);
         }
 
-        private void UpdateCoin(int coin)
+        private void UpdateCoin()
         {
-            _reactiveCoin.Value = coin;
+            _reactiveCoin.Value = GameDataManager.Instance.GetResource(GameResourceType.Coin);
         }
 
         private void ShowCoin(int coin)
         {
-            currentCoin.text = $"{coin:N1}";
+            currentCoin.text = $"{coin}";
         }
 
         private async UniTask CloseAnimation()

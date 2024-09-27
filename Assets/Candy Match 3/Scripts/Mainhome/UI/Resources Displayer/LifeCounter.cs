@@ -5,13 +5,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using CandyMatch3.Scripts.GameData;
 using CandyMatch3.Scripts.GameManagers;
-using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Mainhome.UI.Popups;
+using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
+using CandyMatch3.Scripts.Common.DataStructs;
+using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using TMPro;
-using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
-using CandyMatch3.Scripts.Common.DataStructs;
 
 namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
 {
@@ -22,6 +22,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
         [SerializeField] private Button lifeButton;
 
         private int _heart = 0;
+        private TimeSpan _lifeTime;
 
         private void Awake()
         {
@@ -74,13 +75,11 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
 
         private void UpdateLives()
         {
-            _heart = GameDataManager.Instance
-                     .GetResource(GameResourceType.Life);
-            TimeSpan time = GameManager.Instance
-                            .HeartTimer.HeartTimeDiff;
+            _heart = GameDataManager.Instance.GetResource(GameResourceType.Life);
+            _lifeTime = GameManager.Instance.HeartTimer.HeartTimeDiff;
 
             UpdateLives(_heart);
-            UpdateTime(_heart, time);
+            UpdateTime(_heart, _lifeTime);
         }
 
         private void UpdateTime(int heart, TimeSpan time)

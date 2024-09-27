@@ -45,28 +45,38 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
 
         public bool CheckMatch(Vector3Int checkPosition, out MatchResult matchResult)
         {
-            if (_match5Model.CheckMatch(checkPosition, out matchResult))
-                return true;
+            MatchScore matchScore;
+            BaseMatchModel matchModel = null;
 
-            else if (_matchLModel.CheckMatch(checkPosition, out matchResult))
-                return true;
+            if (_match5Model.CheckMatch(checkPosition, out matchScore))
+                matchModel = _match5Model;
 
-            else if (_matchTModel.CheckMatch(checkPosition, out matchResult))
-                return true;
+            else if (_matchLModel.CheckMatch(checkPosition, out matchScore))
+                matchModel = _matchLModel;
 
-            else if(_match4HorizontalModel.CheckMatch(checkPosition, out matchResult))
-                return true;
-            
-            else if(_match4VerticalModel.CheckMatch(checkPosition, out matchResult))
-                return true;
+            else if (_matchTModel.CheckMatch(checkPosition, out matchScore))
+                matchModel = _matchTModel;
 
-            else if (_match3Model.CheckMatch(checkPosition, out matchResult))
-                return true;
+            else if (_match4HorizontalModel.CheckMatch(checkPosition, out matchScore))
+                matchModel = _match4HorizontalModel;
 
+            else if (_match4VerticalModel.CheckMatch(checkPosition, out matchScore))
+                matchModel = _match4VerticalModel;
+
+            else if (_match3Model.CheckMatch(checkPosition, out matchScore))
+                matchModel = _match3Model;
+
+            if(matchModel != null)
+            {
+                matchResult = matchModel.GetMatchResult(checkPosition);
+                return true;
+            }
+
+            matchResult = new() { MatchSequence = new() };
             return false;
         }
 
-        public bool CheckMatch(Vector3Int checkPosition, out int matchScore)
+        public bool CheckMatch(Vector3Int checkPosition, out MatchScore matchScore)
         {
             if (_match5Model.CheckMatch(checkPosition, out matchScore))
                 return true;

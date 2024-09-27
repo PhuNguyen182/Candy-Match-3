@@ -19,7 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
         public GridCell()
         {
-            CheckLockProperty = new();
+            GridLockProperty = new();
         }
 
         public int GridID => _gridId;
@@ -47,7 +47,9 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             set
             {
                 _lockStates = value;
-                CheckLockProperty.Value = IsLocked || IsItemLocked;
+                GridCellView.LockStates = _lockStates;
+                GridCellView.IsLocked = IsLocked;
+                GridLockProperty.Value = IsLocked;
             }
         }
 
@@ -58,7 +60,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public IGridCellView GridCellView => _gridCellView;
         public IBlockItem BlockItem => _blockItem;
 
-        public ReactiveProperty<bool> CheckLockProperty { get; }
+        public ReactiveProperty<bool> GridLockProperty { get; }
 
         public void ReleaseGrid()
         {

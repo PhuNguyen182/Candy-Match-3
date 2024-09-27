@@ -11,6 +11,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [Header("Item Sprites")]
         [SerializeField] private SpriteRenderer bottomState;
         [SerializeField] private SpriteRenderer itemRenderer;
+        [SerializeField] private SpriteRenderer alternateRenderer;
         [SerializeField] private SpriteRenderer topState;
 
         private MaterialPropertyBlock _propertyBlock;
@@ -49,6 +50,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemRenderer.sprite = sprite;
         }
 
+        public void SetAlternateSprite(Sprite sprite)
+        {
+            if (alternateRenderer != null)
+                alternateRenderer.sprite = sprite;
+        }
+
         public void SetBottomStateSprite(Sprite sprite)
         {
             bottomState.sprite = sprite;
@@ -59,6 +66,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             topState.sprite = sprite;
         }
         #endregion
+
+        public void ChangeMaskInteraction(bool isActive)
+        {
+            itemRenderer.maskInteraction = !isActive ? SpriteMaskInteraction.VisibleOutsideMask
+                                           : SpriteMaskInteraction.None;
+            
+            if (alternateRenderer != null)
+                alternateRenderer.maskInteraction = !isActive ? SpriteMaskInteraction.VisibleOutsideMask
+                                                    : SpriteMaskInteraction.None;
+        }
+
 
         private void OnDestroy()
         {

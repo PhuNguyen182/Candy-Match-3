@@ -36,9 +36,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         {
             Vector3 oddStartPosition, evenStartPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
-            
+
             IBooster swapBooster1 = default, swapBooster2 = default;
             GridPositionType gridCellType = GetCellPositionType(gridCell1.GridPosition);
+
+            gridCell1.LockStates = LockStates.Preparing;
+            gridCell2.LockStates = LockStates.Preparing;
 
             if (gridCellType == GridPositionType.Odd)
             {
@@ -52,15 +55,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 evenStartPosition = gridCell1.WorldPosition;
             }
 
-            if(gridCell1.BlockItem is IBooster booster1 && gridCell2.BlockItem is IBooster booster2)
-            {
-                booster1.IsActivated = true;
-                booster2.IsActivated = true;
+            IBooster booster1 = gridCell1.BlockItem as IBooster;
+            IBooster booster2 = gridCell2.BlockItem as IBooster;
 
-                (swapBooster1, swapBooster2) = (booster1, booster2);
-            }
+            booster1.IsActivated = true;
+            booster2.IsActivated = true;
 
-            using (var listPool = ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
+            (swapBooster1, swapBooster2) = (booster1, booster2);
+
+            using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 positions.AddRange(_gridCellManager.GetActivePositions());
 
@@ -75,6 +78,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                         continue;
 
                     if (gridCell.GridPosition == gridCell1.GridPosition || gridCell.GridPosition == gridCell2.GridPosition)
+                        continue;
+
+                    if (gridCell.ItemType == ItemType.ColorBomb)
                         continue;
 
                     gridCellType = GetCellPositionType(positions[i]);
@@ -107,8 +113,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);
-
                 await UniTask.NextFrame(_token);
+
+                gridCell1.LockStates = LockStates.None;
+                gridCell2.LockStates = LockStates.None;
                 _checkGridTask.CheckRange(activeBounds);
             }
         }

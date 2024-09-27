@@ -56,9 +56,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             await UniTask.CompletedTask;
         }
 
-        public async UniTask WaitForBoardStop()
+        public async UniTask WaitAWhile()
         {
             await UniTask.Delay(_waitTimeAmount, false, PlayerLoopTiming.Update, _token);
+        }
+
+        public async UniTask WaitForBoardStop()
+        {
             await UniTask.WaitUntil(() => IsBoardStop(), PlayerLoopTiming.Update, _token);
         }
 
@@ -67,7 +71,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!_checkGridTask.CanCheck)
                 return false;
 
-            if (_checkGameBoardMovementTask.IsBoardLock)
+            if (!_checkGameBoardMovementTask.AllGridsUnlocked)
                 return false;
 
             if (_activateBoosterTask.ActiveBoosterCount > 0)

@@ -6,6 +6,14 @@ namespace GlobalScripts.Extensions
 {
     public static class CollectionExtension
     {
+        public static void AddRange<T>(this HashSet<T> hashSet, IEnumerable<T> collection)
+        {
+            foreach (T item in collection)
+            {
+                hashSet.Add(item);
+            }
+        }
+
         public static void Shuffle<T>(this List<T> list)
         {
             int count = list.Count;
@@ -13,9 +21,7 @@ namespace GlobalScripts.Extensions
             for (int i = 0; i < count - 1; i++)
             {
                 int randIndex = Random.Range(i + 1, count);
-                T temp = list[i];
-                list[i] = list[randIndex];
-                list[randIndex] = temp;
+                (list[i], list[randIndex]) = (list[randIndex], list[i]);
             }
         }
     }

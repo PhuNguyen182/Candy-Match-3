@@ -43,21 +43,21 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             IGridCell remainGridCell = null;
             IColorBooster actorBooster = null;
 
-            if (gridCell1.BlockItem is IColorBooster booster1 && gridCell2.BlockItem is IColorBooster booster2)
-            {
-                if(booster1.ColorBoosterType != BoosterType.Wrapped)
-                {
-                    actorBooster = booster1;
-                    actorGridCell = gridCell1;
-                    remainGridCell = gridCell2;
-                }
+            IColorBooster booster1 = gridCell1.BlockItem as IColorBooster;
+            IColorBooster booster2 = gridCell2.BlockItem as IColorBooster;
 
-                else
-                {
-                    actorBooster = booster2;
-                    actorGridCell = gridCell2;
-                    remainGridCell = gridCell1;
-                }
+            if (booster1.ColorBoosterType != BoosterType.Wrapped)
+            {
+                actorBooster = booster1;
+                actorGridCell = gridCell1;
+                remainGridCell = gridCell2;
+            }
+
+            else
+            {
+                actorBooster = booster2;
+                actorGridCell = gridCell2;
+                remainGridCell = gridCell1;
             }
 
             // Remove wrapped booster cell
@@ -85,6 +85,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     gridCell.LockStates = LockStates.Preparing;
             }
 
+            // Unlock this area to allow booster break these items (3x3 range around center of combo)
+            BoundsInt miniCheckBounds = checkPosition.GetBounds2D(1);
+            miniCheckBounds.ForEach2D(position =>
+            {
+                IGridCell gridCell = _gridCellManager.Get(position);
+                if (gridCell != null)
+                    gridCell.LockStates = LockStates.None;
+            });
+
             actorBooster.ChangeItemSprite(1);
             await actorBooster.PlayBoosterCombo(0, ComboBoosterType.StripedWrapped, true);
 
@@ -111,7 +120,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 ExpandRange(ref rowListPositions, Vector3Int.up);
 
                 // Lock this area to prevent outside items fall in to
-                BoundsInt miniCheckBounds = checkPosition.GetBounds2D(1);
                 miniCheckBounds.ForEach2D(position =>
                 {
                     IGridCell gridCell = _gridCellManager.Get(position);
@@ -136,7 +144,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             using (ListPool<UniTask>.Get(out var breakTasks))
             {
                 for (int i = 0; i < columnListPositions.Count; i++)
+                {
+                    IGridCell gridCell = _gridCellManager.Get(columnListPositions[i]);
+                    gridCell.LockStates = LockStates.None;
                     breakTasks.Add(_breakGridTask.BreakItem(columnListPositions[i]));
+                }
 
                 ShakeCamera();
                 SpawnTripleVertical(checkPosition);

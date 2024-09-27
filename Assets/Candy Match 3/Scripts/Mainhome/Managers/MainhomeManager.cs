@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,11 @@ namespace CandyMatch3.Scripts.Mainhome.Managers
         public void SetInputActive(bool isActive)
         {
             mainhomeInput.IsActived = isActive;
+        }
+
+        private void OnDestroy()
+        {
+            GC.Collect();
         }
     }
 }

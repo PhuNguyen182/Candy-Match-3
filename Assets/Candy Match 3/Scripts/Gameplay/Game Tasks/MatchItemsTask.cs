@@ -6,12 +6,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Messages;
-using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Extensions;
 using GlobalScripts.Comparers;
@@ -42,10 +42,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _adjacentSteps = new()
             {
-                new(1, 0),
-                new(0, 1),
-                new(-1, 0),
-                new(0, -1)
+                Vector3Int.up, Vector3Int.down, Vector3Int.left, Vector3Int.right
             };
 
             _cts = new();
@@ -63,11 +60,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if(CheckMatchAt(position))
             {
-                MatchResult matchResult;
-                bool isMatch = IsMatchable(position, out matchResult);
+                bool isMatch = IsMatchable(position, out MatchResult matchResult);
                 
                 if(isMatch)
-                    ProcessMatch(matchResult).Forget();
+                    ProcessNormalMatch(matchResult).Forget();
 
                 return isMatch;
             }
@@ -75,28 +71,89 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return false;
         }
 
-        public async UniTask<bool> Match(Vector3Int position)
+        public async UniTask ProcessRegionMatch(MatchRegionResult regionResult)
         {
-            MatchResult matchResult;
-            bool isMatch = IsMatchable(position, out matchResult);
+            MatchType matchType = regionResult.MatchType;
+            if (matchType == MatchType.None)
+                return;
 
-            if (isMatch)
+            CandyColor candyColor = regionResult.CandyColor;
+            using (ListPool<UniTask>.Get(out List<UniTask> matchTasks))
             {
-                await ProcessMatch(matchResult);
-            }
+                using (ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
+                {
+                    Vector3 matchPivot = _gridCellManager.Get(regionResult.PivotPosition).WorldPosition;
+                    using var boundsPool = HashSetPool<BoundsInt>.Get(out HashSet<BoundsInt> attackRanges);
+                    using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
 
-            return isMatch;
+                    foreach (Vector3Int position in regionResult.Positions)
+                    {
+                        boundPositions.Add(position);
+                        IGridCell gridCell = _gridCellManager.Get(position);
+                        IBlockItem blockItem = gridCell.BlockItem;
+                        gridCell.IsMatching = true;
+
+                        if (matchType != MatchType.Match3 && gridCell.GridPosition == regionResult.PivotPosition)
+                        {
+                            matchTasks.Add(_breakGridTask.AddBooster(gridCell, matchType, candyColor, bounds =>
+                            {
+                                attackRanges.Add(bounds);
+                            }));
+                        }
+
+                        else
+                        {
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchPivot, matchType, bounds =>
+                            {
+                                attackRanges.Add(bounds);
+                            }));
+                        }
+
+                        for (int j = 0; j < _adjacentSteps.Count; j++)
+                            adjacentPositions.Add(position + _adjacentSteps[j]);
+                    }
+
+                    foreach (Vector3Int adjacentPosition in adjacentPositions)
+                    {
+                        IGridCell gridCell = _gridCellManager.Get(adjacentPosition);
+                        matchTasks.Add(_breakGridTask.BreakAdjacent(gridCell));
+                    }
+
+                    int count = boundPositions.Count;
+                    boundPositions.Sort(_vector3IntComparer);
+
+                    Vector3Int min = boundPositions[0] + new Vector3Int(-1, -1);
+                    Vector3Int max = boundPositions[count - 1] + new Vector3Int(1, 1);
+
+                    boundPositions.Clear();
+                    boundPositions.Add(min);
+                    boundPositions.Add(max);
+
+                    await UniTask.WhenAll(matchTasks);
+                    BoundsInt checkMatchBounds = BoundsExtension.Encapsulate(boundPositions);
+
+                    _checkGridTask.CheckRange(checkMatchBounds);
+                    foreach (BoundsInt range in attackRanges)
+                    {
+                        if (range.size != Vector3Int.zero)
+                            _checkGridTask.CheckRange(range);
+                    }
+
+                    _complimentPublisher.Publish(new ComplimentMessage());
+                }
+            }
         }
 
-        private async UniTask ProcessMatch(MatchResult matchResult)
+        private async UniTask ProcessNormalMatch(MatchResult matchResult)
         {
             MatchType matchType = matchResult.MatchType;
             CandyColor candyColor = matchResult.CandyColor;
 
-            using (var matchListPool = ListPool<UniTask>.Get(out List<UniTask> matchTasks))
+            using (ListPool<UniTask>.Get(out List<UniTask> matchTasks))
             {
-                using (var boundListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
+                using (ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
                 {
+                    Vector3 matchPivot = _gridCellManager.Get(matchResult.Position).WorldPosition;
                     using var boundsPool = HashSetPool<BoundsInt>.Get(out HashSet<BoundsInt> attackRanges);
                     using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
 
@@ -119,7 +176,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                         else
                         {
-                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchResult.MatchSequence.Count, bounds =>
+                            matchTasks.Add(_breakGridTask.BreakMatchItem(gridCell, matchPivot, matchType, bounds =>
                             {
                                 attackRanges.Add(bounds);
                             }));
@@ -182,7 +239,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return _matchRule.CheckMatch(position, out matchResult);
         }
 
-        public bool CheckMatch(Vector3Int position, out int matchScore)
+        public bool CheckMatch(Vector3Int position, out MatchScore matchScore)
         {
             return _matchRule.CheckMatch(position, out matchScore);
         }

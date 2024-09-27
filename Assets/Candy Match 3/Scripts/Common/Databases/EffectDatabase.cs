@@ -44,5 +44,6 @@ namespace CandyMatch3.Scripts.Common.Databases
 
         [Header("Miscs")]
         [SerializeField] public ComplimentText Compliment;
+        [SerializeField] public GameObject ShuffleEffect;
     }
 }

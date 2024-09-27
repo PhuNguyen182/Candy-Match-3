@@ -77,7 +77,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             for (int i = 0; i < _ruledRandomFill.Count; i++)
             {
-                if (itemData.ID == i)
+                if (itemData.ID == i + 1)
                     return _ruledRandomFill[i].DataValue.Color;
             }
 
@@ -104,6 +104,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 Vector3Int gridPosition = blockPositions[i].Position;
                 _boardTilemap.SetTile(gridPosition, boardTile);
+            }
+        }
+
+        public void BuildShuffle(List<Vector3Int> positions)
+        {
+            for (int i = 0; i < positions.Count; i++)
+            {
+                Vector3Int position = positions[i];
+                CandyColor randomColor = GetRandomColorItem(position);
+                ItemType itemType = _itemManager.GetItemTypeFromColor(randomColor);
+                IGridCell gridCell = _gridCellManager.Get(positions[i]);
+                
+                if (gridCell.BlockItem is IItemTransform itemTransform)
+                    itemTransform.SwitchTo(itemType);
             }
         }
 
@@ -160,7 +174,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private CandyColor GetRandomColorItem(Vector3Int position)
         {
-            using(var listPool = HashSetPool<CandyColor>.Get(out HashSet<CandyColor> candyColors))
+            using(HashSetPool<CandyColor>.Get(out HashSet<CandyColor> candyColors))
             {
                 candyColors.UnionWith(_candyColors);
 

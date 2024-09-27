@@ -19,7 +19,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
     public class CheckTargetTask : IDisposable
     {
+        private readonly MatchRegionTask _matchRegionTask;
         private readonly TargetDatabase _targetDatabase;
+        private readonly ShuffleBoardTask _shuffleBoardTask;
         private readonly MainGamePanel _mainGamePanel;
 
         private readonly ISubscriber<BoardStopMessage> _boardStopSubscriber;
@@ -58,9 +60,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public CheckTargetTask(TargetDatabase targetDatabase, MainGamePanel mainGameScreen)
+        public CheckTargetTask(MatchRegionTask matchRegionTask, TargetDatabase targetDatabase
+            , ShuffleBoardTask shuffleBoardTask, MainGamePanel mainGameScreen)
         {
+            _matchRegionTask = matchRegionTask;
             _targetDatabase = targetDatabase;
+            _shuffleBoardTask = shuffleBoardTask;
             _mainGamePanel = mainGameScreen;
             _targetDatabase.Initialize();
 
@@ -229,11 +234,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!message.IsStopped)
                 return;
 
-            if (_endGameTask != null)
-            {
-                await _endGameTask.WaitForBoardStop();
-                CheckEndGame();
-            }
+            // Temp check match, must wait until all matches are solved
+            //int matchCount = await _matchRegionTask.MatchAllRegions();
+            //if (matchCount > 0)
+            //    return;
+
+            await _endGameTask.WaitAWhile();
+            await _endGameTask.WaitForBoardStop();
+            await _shuffleBoardTask.CheckShuffleBoard();
+            CheckEndGame();
+
+            Debug.Log("Board Has Stop");
         }
 
         private void InspectTargetInfo(AsyncMessage<MoveTargetData> message)
