@@ -101,8 +101,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             {
                 return new BoundsInt
                 {
-                    min = from + new Vector3Int(-2, -2),
-                    max = to + new Vector3Int(3, 3)
+                    min = from + new Vector3Int(-3, -3),
+                    max = to + new Vector3Int(4, 4)
                 };
             }
 
@@ -110,8 +110,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             {
                 return new BoundsInt
                 {
-                    min = to + new Vector3Int(-2, -2),
-                    max = from + new Vector3Int(3, 3)
+                    min = to + new Vector3Int(-3, -3),
+                    max = from + new Vector3Int(4, 4)
                 };
             }
 

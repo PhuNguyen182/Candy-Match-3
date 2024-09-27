@@ -44,7 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 foreach (Vector3Int position in activePositions)
                 {
                     IGridCell gridCell = _gridCellManager.Get(position);
-                    gridCell.CheckLockProperty.Subscribe(SetLockValue).AddTo(ref builder);
+                    gridCell.GridLockProperty.Subscribe(SetLockValue).AddTo(ref builder);
                 }
 
                 Observable<bool> lockedStates = LockProperty.Where(isGridLocked => isGridLocked);

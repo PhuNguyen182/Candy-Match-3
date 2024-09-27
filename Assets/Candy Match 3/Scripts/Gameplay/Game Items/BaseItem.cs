@@ -78,6 +78,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public virtual void ResetItem()
         {
             InitMessages();
+            IsLocking = false;
         }
 
         public virtual UniTask ItemBlast()
