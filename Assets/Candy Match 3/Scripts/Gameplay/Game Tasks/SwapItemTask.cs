@@ -75,9 +75,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             toItem.SetWorldPosition(fromCell.WorldPosition);
             fromItem.SetWorldPosition(toCell.WorldPosition);
 
-            fromCell.LockStates = LockStates.None;
-            toCell.LockStates = LockStates.None;
-
             if (isCollectible)
             {
                 IBlockItem collectItem;
@@ -102,6 +99,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 await collectible.Collect();
                 _breakGridTask.ReleaseGridCell(collectCell);
                 _checkGridTask.CheckAroundPosition(collectCell.GridPosition, 1);
+
+                fromCell.LockStates = LockStates.None;
+                toCell.LockStates = LockStates.None;
             }
 
             else
@@ -206,8 +206,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             toItem.SetWorldPosition(fromCell.WorldPosition);
             fromItem.SetWorldPosition(toCell.WorldPosition);
 
-            fromCell.LockStates = LockStates.None;
-            toCell.LockStates = LockStates.None;
 
             if (fromCell.IsCollectible)
             {
@@ -230,6 +228,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
             }
 
+            fromCell.LockStates = LockStates.None;
+            toCell.LockStates = LockStates.None;
             _matchItemsTask.CheckMatchInSwap(remainGrid.GridPosition);
         }
 
