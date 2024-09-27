@@ -97,13 +97,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 collectItem = collectCell.BlockItem;
                 _matchItemsTask.CheckMatchInSwap(remainCell.GridPosition);
+                ICollectible collectible = collectItem as ICollectible;
 
-                if (collectItem is ICollectible collectible)
-                {
-                    await collectible.Collect();
-                    _breakGridTask.ReleaseGridCell(collectCell);
-                    _checkGridTask.CheckAroundPosition(collectCell.GridPosition, 1);
-                }
+                await collectible.Collect();
+                _breakGridTask.ReleaseGridCell(collectCell);
+                _checkGridTask.CheckAroundPosition(collectCell.GridPosition, 1);
             }
 
             else

@@ -153,10 +153,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             _inGameBoosterTasks.InitBoosters(new()
             {
-                new() { Amount = 0, BoosterType = InGameBoosterType.Break },
-                new() { Amount = 0, BoosterType = InGameBoosterType.Blast },
-                new() { Amount = 0, BoosterType = InGameBoosterType.Swap },
-                new() { Amount = 0, BoosterType = InGameBoosterType.Colorful }
+                new() { Amount = 10, BoosterType = InGameBoosterType.Break },
+                new() { Amount = 10, BoosterType = InGameBoosterType.Blast },
+                new() { Amount = 10, BoosterType = InGameBoosterType.Swap },
+                new() { Amount = 10, BoosterType = InGameBoosterType.Colorful }
             });
         }
 
