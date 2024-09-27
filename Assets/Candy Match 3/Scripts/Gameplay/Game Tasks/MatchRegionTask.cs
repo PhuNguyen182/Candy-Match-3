@@ -52,9 +52,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     for (int i = 0; i < regions.Count; i++)
                     {
-                        using (MatchRegionResult result = GetMatchRegionResult(regions[i]))
+                        using (ListPool<MatchRegionResult>.Get(out var results))
                         {
-                            matchTasks.Add(_matchItemsTask.ProcessRegionMatch(result));
+                            results = GetMatchRegionResult(regions[i]);
+                            for (int j = 0; j < results.Count; j++)
+                            {
+                                using (results[j])
+                                {
+                                    matchTasks.Add(_matchItemsTask.ProcessRegionMatch(results[j]));
+                                }
+                            }
                         }
                     }
 
@@ -67,14 +74,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        private MatchRegionResult GetMatchRegionResult(MatchableRegion region)
+        private List<MatchRegionResult> GetMatchRegionResult(MatchableRegion region)
         {
             using (region)
             {
                 int maxExtendedCount = 0;
                 Direction mainDirection = Direction.None;
+                List<MatchRegionResult> results = new();
 
-                Vector3Int pivotPosition = Vector3Int.zero;
                 BoundsInt range = region.GetRegionBounds();
                 HashSet<Vector3Int> checkPositions = new();
 
@@ -86,25 +93,38 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     if (!region.IsMatchPivot(position))
                         continue;
 
-                    pivotPosition = position;
-                    break;
+                    region.AddPivot(position);
                 }
 
-                ExtendPosition(region, pivotPosition, ref maxExtendedCount, Direction.None
-                              , true, checkPositions, ref mainDirection);
-
-                checkPositions.Add(pivotPosition);
-                MatchType matchType = GetMatchType(checkPositions.Count, maxExtendedCount, mainDirection);
-
-                MatchRegionResult result = new()
+                int pivotCount = region.Pivotables.Count;
+                for (int i = 0; i < pivotCount; i++)
                 {
-                    MatchType = matchType,
-                    CandyColor = region.RegionColor,
-                    PivotPosition = pivotPosition,
-                    Positions = checkPositions
-                };
+                    Vector3Int pivot = region.TakePivot(true);
+                    if (!region.IsInRegion(pivot))
+                        continue;
 
-                return result;
+                    maxExtendedCount = 0;
+                    checkPositions.Clear();
+                    ExtendPosition(region, pivot, ref maxExtendedCount, Direction.None
+                                  , true, checkPositions, ref mainDirection);
+
+                    checkPositions.Add(pivot);
+                    MatchType matchType = GetMatchType(checkPositions.Count, maxExtendedCount, mainDirection);
+
+                    MatchRegionResult result = new()
+                    {
+                        MatchType = matchType,
+                        CandyColor = region.RegionColor,
+                        PivotPosition = pivot,
+                        Positions = new(checkPositions)
+                    };
+
+                    region.RemoveElement(pivot);
+                    region.RemoveRange(checkPositions);
+                    results.Add(result);
+                }
+
+                return results;
             }
         }
 

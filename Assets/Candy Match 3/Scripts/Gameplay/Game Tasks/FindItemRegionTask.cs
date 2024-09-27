@@ -55,7 +55,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             ClearRegions();
             HashSet<Vector3Int> matchPositions = new();
 
-            foreach(Vector3Int position in _findRegionPosition)
+            foreach(Vector3Int position in _gridCellManager.GetActivePositions())
             {
                 if (IsSelectedPosition(position))
                     continue;
