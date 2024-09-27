@@ -37,14 +37,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             using(ListPool<MatchableRegion>.Get(out List<MatchableRegion> regions))
             {
                 regions = _findItemRegionTask.CollectMatchableRegions();
-                int matchCount = regions.Count;
 
                 if (regions.Count <= 0)
                 {
                     _findItemRegionTask.Cleanup();
-                    return matchCount;
+                    return 0;
                 }
 
+                int count = 0;
                 _checkGridTask.CanCheck = false;
                 _findItemRegionTask.ClearCheckPositions();
 
@@ -59,6 +59,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                             {
                                 using (results[j])
                                 {
+                                    count = count + 1;
                                     matchTasks.Add(_matchItemsTask.ProcessRegionMatch(results[j]));
                                 }
                             }
@@ -70,7 +71,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 _findItemRegionTask.ClearRegions();
                 _checkGridTask.CanCheck = true;
-                return matchCount;
+                return count;
             }
         }
 
@@ -90,15 +91,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     if (!region.IsInRegion(position))
                         continue;
 
-                    if (!region.IsMatchPivot(position))
+                    if (!region.IsPivotable(position))
                         continue;
 
+                    // Collect all pivotable positions
                     region.AddPivot(position);
                 }
 
                 int pivotCount = region.Pivotables.Count;
                 for (int i = 0; i < pivotCount; i++)
                 {
+                    // In all pivotable check matchable regions can be splitted
                     Vector3Int pivot = region.TakePivot(true);
                     if (!region.IsInRegion(pivot))
                         continue;

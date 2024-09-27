@@ -1,6 +1,5 @@
 using R3;
 using System;
-using System.Text;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
@@ -225,10 +224,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!gridCell.HasItem)
                 return false;
 
-            if (!gridCell.BlockItem.IsMatchable || gridCell.IsMatching)
-                return false;
-
-            if (gridCell.IsLocked || gridCell.IsMoving)
+            if (!gridCell.BlockItem.IsMatchable)
                 return false;
 
             return true;

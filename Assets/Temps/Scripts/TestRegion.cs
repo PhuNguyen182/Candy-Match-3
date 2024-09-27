@@ -26,7 +26,7 @@ public class TestRegion : MonoBehaviour
             if (!region.IsInRegion(position))
                 continue;
 
-            if (!region.IsMatchPivot(position))
+            if (!region.IsPivotable(position))
                 continue;
 
             region.AddPivot(position);
