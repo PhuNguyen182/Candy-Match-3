@@ -292,10 +292,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (breakable.Break())
                 {
-                    await blockItem.ItemBlast();
+                    if (matchType == MatchType.Match3)
+                    {
+                        await blockItem.ItemBlast();
 
-                    if (blockItem is IItemEffect effect)
-                        effect.PlayMatchEffect();
+                        if (blockItem is IItemEffect effect)
+                            effect.PlayMatchEffect();
+                    }
+
+                    else
+                    {
+                        if(blockItem is IMatchAnimation matchAnimation)
+                        {
+                            float duration = Match3Constants.ItemMatchDelay;
+                            await matchAnimation.MatchTo(matchPivot, duration);
+                        }
+                    }
 
                     ReleaseGridCell(gridCell);
                 }

@@ -25,6 +25,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _activePositions;
         private List<Vector3Int> _shuffleableCells;
 
+        private const int MaxShuffleCount = 1000;
+
         public ShuffleBoardTask(GridCellManager gridCellManager, InputProcessTask inputProcessTask
             , DetectMoveTask detectMoveTask, SuggestTask suggestTask, FillBoardTask fillBoardTask)
         {
@@ -85,9 +87,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             int shuffleCount = 0;
             CollectShuffleableCell();
 
-            while (shuffleCount < 1000)
+            while (shuffleCount < MaxShuffleCount)
             {
-                ClearItemColor();
                 _fillBoardTask.BuildShuffle(_shuffleableCells);
                 _detectMoveTask.DetectPossibleMoves();
 
@@ -122,17 +123,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     continue;
 
                 _shuffleableCells.Add(_activePositions[i]);
-            }
-        }
-
-        private void ClearItemColor()
-        {
-            for (int i = 0; i < _shuffleableCells.Count; i++)
-            {
-                IGridCell gridCell = _gridCellManager.Get(_shuffleableCells[i]);
-
-                if (gridCell.BlockItem is IItemTransform itemTransform) // Temporary clear current color of the item
-                    itemTransform.SwitchTo(ItemType.None);
             }
         }
 

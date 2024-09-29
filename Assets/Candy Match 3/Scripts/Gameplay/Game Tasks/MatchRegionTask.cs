@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly FindItemRegionTask _findItemRegionTask;
         private readonly MatchItemsTask _matchItemsTask;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
         public MatchRegionTask(GridCellManager gridCellManager, FindItemRegionTask findItemRegionTask, MatchItemsTask matchItemsTask)
@@ -25,6 +28,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _gridCellManager = gridCellManager;
             _findItemRegionTask = findItemRegionTask;
             _matchItemsTask = matchItemsTask;
+
+            _cts = new();
+            _token = _cts.Token;
         }
 
         public void CheckMatchRegion(Vector3Int position)
@@ -36,6 +42,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             using(ListPool<MatchableRegion>.Get(out List<MatchableRegion> regions))
             {
+                await UniTask.WaitUntil(() => _findItemRegionTask.RegionCount <= 0
+                                        , PlayerLoopTiming.FixedUpdate, _token);
                 regions = _findItemRegionTask.CollectMatchableRegions();
 
                 if (regions.Count <= 0)
@@ -259,7 +267,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
-
+            _cts.Dispose();
         }
     }
 }

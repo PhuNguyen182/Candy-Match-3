@@ -1365,7 +1365,7 @@ MonoBehaviour:
   moveDuration: 0.5
   moveEase: 4
   defaultCameraSize: 7
-  defaultBackgroundScale: 0.75
+  defaultBackgroundScale: 0.7595
   mainCamera: {fileID: 820469714}
   cinemachineBrain: {fileID: 820469718}
   virtualCamera: {fileID: 1248341780}
@@ -3590,8 +3590,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1.5, z: 10}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7595, y: 0.7595, z: 0.7595}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 820469715}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

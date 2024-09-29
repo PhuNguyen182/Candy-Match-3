@@ -18,6 +18,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private HashSet<Vector3Int> _findRegionPosition;
         private List<MatchableRegion> _matchableRegions;
 
+        public int RegionCount => _matchableRegions.Count;
+
         public FindItemRegionTask(GridCellManager gridCellManager)
         {
             _gridCellManager = gridCellManager;
