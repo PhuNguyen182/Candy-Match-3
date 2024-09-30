@@ -43,7 +43,7 @@ namespace CandyMatch3.Scripts.LoadingScene
             await UniTask.NextFrame(_token);
             
             if(!MusicManager.Instance.IsMusicPlaying())
-                MusicManager.Instance.PlayBackgroundMusic(BackgroundMusicType.Gameplay, volume: 0.6f);
+                MusicManager.Instance.PlayBackgroundMusic(BackgroundMusicType.Mainhome, volume: 0.6f);
         }
 
         private async UniTask PlayGame()
