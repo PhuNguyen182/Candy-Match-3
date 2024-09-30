@@ -18,16 +18,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly GridCellManager _gridCellManager;
         private readonly FindItemRegionTask _findItemRegionTask;
         private readonly MatchItemsTask _matchItemsTask;
+        private readonly SuggestTask _suggestTask;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
-        public MatchRegionTask(GridCellManager gridCellManager, FindItemRegionTask findItemRegionTask, MatchItemsTask matchItemsTask)
+        public MatchRegionTask(GridCellManager gridCellManager, FindItemRegionTask findItemRegionTask, MatchItemsTask matchItemsTask, SuggestTask suggestTask)
         {
             _gridCellManager = gridCellManager;
             _findItemRegionTask = findItemRegionTask;
             _matchItemsTask = matchItemsTask;
+            _suggestTask = suggestTask;
 
             _cts = new();
             _token = _cts.Token;
@@ -42,6 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             using(ListPool<MatchableRegion>.Get(out List<MatchableRegion> regions))
             {
+                _suggestTask.Suggest(false);
                 await UniTask.WaitUntil(() => _findItemRegionTask.RegionCount <= 0
                                         , PlayerLoopTiming.FixedUpdate, _token);
                 regions = _findItemRegionTask.CollectMatchableRegions();

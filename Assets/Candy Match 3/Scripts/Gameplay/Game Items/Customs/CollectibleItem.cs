@@ -28,6 +28,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public override bool IsMoveable => true;
 
+        public override void ResetItem()
+        {
+            base.ResetItem();
+            itemAnimation.ResetItem();
+        }
+
         public UniTask BounceInDirection(Vector3 direction)
         {
             return itemAnimation.BounceMove(direction);

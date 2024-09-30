@@ -52,6 +52,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             base.ResetItem();
             SetMatchable(true);
+            itemAnimation.ResetItem();
             OnItemReset().Forget();
         }
 

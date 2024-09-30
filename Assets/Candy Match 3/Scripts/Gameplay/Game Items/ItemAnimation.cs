@@ -94,7 +94,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             _bounceMoveTween.Play();
 
             TimeSpan duration = TimeSpan.FromSeconds(_bounceMoveTween.Duration());
-            return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+            return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken)
+                          .ContinueWith(() => itemRenderer.transform.localPosition = Vector3.zero);
         }
 
         public void JumpDown(float amptitude)
@@ -181,6 +182,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public void Transform()
         {
             itemAnimator.SetTrigger(ItemAnimationHashKeys.TransformHash);
+        }
+
+        public void ResetItem()
+        {
+            itemRenderer.transform.localPosition = Vector3.zero;
         }
 
         private Tweener CreateMoveBounceTween(Vector3 position)

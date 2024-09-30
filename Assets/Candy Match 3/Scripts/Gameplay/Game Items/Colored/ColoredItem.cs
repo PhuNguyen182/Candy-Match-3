@@ -41,6 +41,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             base.ResetItem();
             IsLocking = false;
             SetMatchable(true);
+            itemAnimation.ResetItem();
             itemAnimation.DisappearOnMatch(false).Forget();
         }
 
