@@ -24,7 +24,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private Sprite[] verticalSprites;
 
         private bool _isMatchable;
-        private float _explodeTimer = 0;
         private bool _isBoardStop;
 
         private Sprite _normalSprite;
@@ -275,7 +274,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         private async UniTask OnItemReset()
         {
-            _explodeTimer = 0;
             IsNewCreated = true;
             IsActivated = false;
 

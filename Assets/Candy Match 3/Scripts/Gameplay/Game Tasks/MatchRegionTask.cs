@@ -45,6 +45,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             using(ListPool<MatchableRegion>.Get(out List<MatchableRegion> regions))
             {
                 _suggestTask.Suggest(false);
+                // Must wait until all matches are solved to check new matchs to prevent duplicate check match
                 await UniTask.WaitUntil(() => _findItemRegionTask.RegionCount <= 0
                                         , PlayerLoopTiming.FixedUpdate, _token);
                 regions = _findItemRegionTask.CollectMatchableRegions();
