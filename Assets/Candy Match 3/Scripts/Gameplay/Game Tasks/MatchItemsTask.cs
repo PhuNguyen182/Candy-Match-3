@@ -87,7 +87,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     foreach (Vector3Int position in regionResult.Positions)
                     {
-                        boundPositions.Add(position);
                         IGridCell gridCell = _gridCellManager.Get(position);
                         IBlockItem blockItem = gridCell.BlockItem;
 
@@ -120,10 +119,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     int count = boundPositions.Count;
                     boundPositions.Sort(_vector3IntComparer);
 
-                    Vector3Int min = boundPositions[0] + new Vector3Int(-1, -1);
-                    Vector3Int max = boundPositions[count - 1] + new Vector3Int(1, 1);
+                    Vector3Int min = regionResult.CheckArea.min;
+                    Vector3Int max = regionResult.CheckArea.max;
 
-                    boundPositions.Clear();
                     boundPositions.Add(min);
                     boundPositions.Add(max);
 

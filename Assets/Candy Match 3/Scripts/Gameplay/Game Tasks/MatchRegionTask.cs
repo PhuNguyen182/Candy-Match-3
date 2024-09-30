@@ -136,6 +136,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     region.RemoveElement(pivot);
                     region.RemoveRange(checkPositions);
+                    result.CheckArea = range;
                     results.Add(result);
                 }
 

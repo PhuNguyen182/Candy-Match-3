@@ -11,6 +11,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         public CandyColor CandyColor;
         public Vector3Int PivotPosition;
         public HashSet<Vector3Int> Positions;
+        public BoundsInt CheckArea;
 
         public void Dispose()
         {

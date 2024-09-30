@@ -116,6 +116,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _checkGameBoardMovementTask = new(_gridCellManager);
             _checkGameBoardMovementTask.AddTo(ref builder);
+            complimentTask.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
             _inGameBoosterTasks.SetCheckBoardMovementTask(_checkGameBoardMovementTask);
 
             _matchRegionTask = new(_gridCellManager, _findItemRegionTask, _matchItemsTask, _suggestTask);

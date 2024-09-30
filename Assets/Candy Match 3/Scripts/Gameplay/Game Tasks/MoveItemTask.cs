@@ -16,13 +16,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
 
-        private CheckGridTask _checkGridTask;
-
         private int _boardHeight;
-
-        private CancellationToken _token;
+        private CheckGridTask _checkGridTask;
         private CancellationTokenSource _tcs;
-
+        private CancellationToken _token;
         private IDisposable _disposable;
 
         public MoveItemTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
@@ -169,9 +166,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (checkCell.IsSpawner)
                     return false;
 
-                //if (!checkCell.CanContainItem)
-                //    return false;
-
                 if (!checkCell.CanMove)
                     return true;
 
@@ -214,18 +208,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (!gridCell.IsMoveable)
                 return false;
-
-            //IGridCell downCell = _gridCellManager.Get(gridCell.GridPosition + Vector3Int.down);
-            //if (downCell != null && downCell.CanSetItem)
-            //    return true;
-
-            //IGridCell leftSide = _gridCellManager.Get(gridCell.GridPosition + new Vector3Int(-1, -1));
-            //if (leftSide != null && leftSide.CanSetItem)
-            //    return true;
-
-            //IGridCell rightSide = _gridCellManager.Get(gridCell.GridPosition + new Vector3Int(1, -1));
-            //if (rightSide != null && rightSide.CanSetItem)
-            //    return true;
 
             return true;
         }
