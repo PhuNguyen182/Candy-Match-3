@@ -18,5 +18,10 @@ namespace CandyMatch3.Scripts.Common.Databases
         {
             SoundEffectCollection ??= soundEffectDatas.ToDictionary(key => key.SoundEffectType, value => value.SoundEffectClip);
         }
+
+        public AudioClip GetSoundEffect(SoundEffectType soundEffectType)
+        {
+            return SoundEffectCollection.TryGetValue(soundEffectType, out var clip) ? clip : null;
+        }
     }
 }
