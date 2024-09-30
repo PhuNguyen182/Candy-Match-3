@@ -73,10 +73,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 toGridCell = targetCell;
 
-                if (checkColumnIndex != 0 && !CheckLine(toGridCell.GridPosition, checkDirection))
+                if (checkColumnIndex != 0)
                 {
-                    checkColumnIndex = checkColumnIndex + 1;
-                    continue;
+                    if (!CheckLine(toGridCell.GridPosition, checkDirection))
+                    {
+                        checkColumnIndex = checkColumnIndex + 1;
+                        continue;
+                    }
                 }
 
                 checkColumnIndex = 0;
@@ -166,8 +169,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (checkCell.IsSpawner)
                     return false;
 
-                if (!checkCell.CanContainItem)
-                    return false;
+                //if (!checkCell.CanContainItem)
+                //    return false;
 
                 if (!checkCell.CanMove)
                     return true;
@@ -209,22 +212,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!gridCell.HasItem)
                 return false;
 
-            if (!gridCell.IsMoveable || gridCell.IsMoving)
+            if (!gridCell.IsMoveable)
                 return false;
 
-            IGridCell downCell = _gridCellManager.Get(gridCell.GridPosition + Vector3Int.down);
-            if (downCell != null && downCell.CanSetItem)
-                return true;
+            //IGridCell downCell = _gridCellManager.Get(gridCell.GridPosition + Vector3Int.down);
+            //if (downCell != null && downCell.CanSetItem)
+            //    return true;
 
-            IGridCell leftSide = _gridCellManager.Get(gridCell.GridPosition + new Vector3Int(-1, -1));
-            if (leftSide != null && leftSide.CanSetItem)
-                return true;
+            //IGridCell leftSide = _gridCellManager.Get(gridCell.GridPosition + new Vector3Int(-1, -1));
+            //if (leftSide != null && leftSide.CanSetItem)
+            //    return true;
 
-            IGridCell rightSide = _gridCellManager.Get(gridCell.GridPosition + new Vector3Int(1, -1));
-            if (rightSide != null && rightSide.CanSetItem)
-                return true;
+            //IGridCell rightSide = _gridCellManager.Get(gridCell.GridPosition + new Vector3Int(1, -1));
+            //if (rightSide != null && rightSide.CanSetItem)
+            //    return true;
 
-            return false;
+            return true;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

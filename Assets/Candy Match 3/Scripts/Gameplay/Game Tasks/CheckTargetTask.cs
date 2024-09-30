@@ -242,8 +242,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             await _endGameTask.WaitForBoardStop();
             await _shuffleBoardTask.CheckShuffleBoard();
             CheckEndGame();
-
-            Debug.Log("Board Has Stop");
         }
 
         private void InspectTargetInfo(AsyncMessage<MoveTargetData> message)

@@ -41,8 +41,11 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
 
         private void OnRayfireComplete(IGridCell gridCell)
         {
-            if (gridCell.BlockItem is IColorfulEffect colorful)
-                colorful.PlayColorfulEffect();
+            if (gridCell.GridStateful.CanContainItem)
+            {
+                if (gridCell.BlockItem is IColorfulEffect colorful)
+                    colorful.PlayColorfulEffect();
+            }
         }
     }
 }

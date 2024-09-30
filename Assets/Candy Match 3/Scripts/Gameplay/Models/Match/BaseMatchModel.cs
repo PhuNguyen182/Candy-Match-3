@@ -145,7 +145,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 if (gridCell == null)
                     break;
 
-                if (!gridCell.HasItem || gridCell.IsMoving || gridCell.IsLocked)
+                if (!gridCell.HasItem || gridCell.IsLocked)
                     break;
 
                 if (!gridCell.BlockItem.IsMatchable)
@@ -194,7 +194,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 if (gridCell == null)
                     break;
 
-                if (!gridCell.HasItem || gridCell.IsMoving || gridCell.IsLocked)
+                if (!gridCell.HasItem || gridCell.IsLocked)
                     break;
                 
                 if (!gridCell.BlockItem.IsMatchable)

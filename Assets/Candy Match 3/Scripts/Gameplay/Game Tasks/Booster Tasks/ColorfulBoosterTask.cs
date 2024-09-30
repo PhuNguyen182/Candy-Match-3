@@ -244,8 +244,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             if (targetGridCell != null && targetGridCell.HasItem)
             {
-                targetGridCell.BlockItem.IsLocking = true;
-                targetGridCell.BlockItem.SetMatchable(false);
+                if (targetGridCell.GridStateful.CanContainItem)
+                {
+                    targetGridCell.BlockItem.IsLocking = true;
+                    targetGridCell.BlockItem.SetMatchable(false);
+                }
+
                 await fireray.Fire(targetGridCell, position, delay);
             }
         }
