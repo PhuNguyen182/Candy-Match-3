@@ -60,9 +60,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if(CheckMatchAt(position))
             {
                 bool isMatch = IsMatchable(position, out MatchResult matchResult);
-                
-                if(isMatch)
-                    ProcessNormalMatch(matchResult).Forget();
+                if(isMatch) ProcessNormalMatch(matchResult).Forget();
 
                 return isMatch;
             }
