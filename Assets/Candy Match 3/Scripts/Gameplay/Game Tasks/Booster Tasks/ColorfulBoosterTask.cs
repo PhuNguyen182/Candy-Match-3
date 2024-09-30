@@ -237,11 +237,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private async UniTask FireItemCatchRay(Vector3Int targetPosition, Vector3 position, float delay)
         {
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
-            ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
-                                                       , Vector3.zero, Quaternion.identity);
-            targetGridCell.BlockItem.IsLocking = true;
-            targetGridCell.BlockItem.SetMatchable(false);
-            await fireray.Fire(targetGridCell, position, delay);
+            ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray
+                                                       , EffectContainer.Transform
+                                                       , Vector3.zero
+                                                       , Quaternion.identity);
+
+            if (targetGridCell != null && targetGridCell.HasItem)
+            {
+                targetGridCell.BlockItem.IsLocking = true;
+                targetGridCell.BlockItem.SetMatchable(false);
+                await fireray.Fire(targetGridCell, position, delay);
+            }
         }
 
         public void RemoveColor(CandyColor candyColor)

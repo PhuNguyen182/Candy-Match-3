@@ -90,7 +90,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         boundPositions.Add(position);
                         IGridCell gridCell = _gridCellManager.Get(position);
                         IBlockItem blockItem = gridCell.BlockItem;
-                        gridCell.IsMatching = true;
 
                         if (matchType != MatchType.Match3 && gridCell.GridPosition == regionResult.PivotPosition)
                         {
@@ -163,7 +162,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         boundPositions.Add(position);
                         IGridCell gridCell = _gridCellManager.Get(position);
                         IBlockItem blockItem = gridCell.BlockItem;
-                        gridCell.IsMatching = true;
 
                         if (matchType != MatchType.Match3 && gridCell.GridPosition == matchResult.Position)
                         {

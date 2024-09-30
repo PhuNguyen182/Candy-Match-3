@@ -97,9 +97,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 currentGrid = toGridCell;
             }
 
-            if (!currentGrid.IsMatching)
-                AnimateItemJumpDown(blockItem, outputMoveStep);
-                
+            AnimateItemJumpDown(blockItem, outputMoveStep);
             currentGrid.LockStates = LockStates.None;
             currentGrid.IsMoving = false;
 

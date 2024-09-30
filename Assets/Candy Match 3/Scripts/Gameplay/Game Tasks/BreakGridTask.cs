@@ -75,7 +75,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     {
                         if (booster.IsNewCreated)
                         {
-                            gridCell.IsMatching = false;
                             gridCell.LockStates = LockStates.None;
                             return;
                         }
@@ -139,7 +138,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     if (booster.IsNewCreated)
                     {
-                        gridCell.IsMatching = false;
                         gridCell.LockStates = LockStates.None;
                         return;
                     }
@@ -206,7 +204,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     if (booster.IsNewCreated)
                     {
-                        gridCell.IsMatching = false;
                         gridCell.LockStates = LockStates.None;
                         return;
                     }
@@ -246,7 +243,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell.BlockItem is IItemEffect effect)
                 effect.PlayStartEffect();
 
-            gridCell.IsMatching = false;
             gridCell.LockStates = LockStates.None;
         }
 
@@ -276,14 +272,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 if (booster.IsNewCreated)
                 {
-                    gridCell.IsMatching = false;
                     gridCell.LockStates = LockStates.None;
                     return;
                 }
 
                 await _activateBoosterTask.ActivateBooster(gridCell, true, true, false, onActive);
                 
-                gridCell.IsMatching = false;
                 gridCell.LockStates = LockStates.None;
                 return;
             }
@@ -313,7 +307,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
             }
 
-            gridCell.IsMatching = false;
             gridCell.LockStates = LockStates.None;
         }
 
