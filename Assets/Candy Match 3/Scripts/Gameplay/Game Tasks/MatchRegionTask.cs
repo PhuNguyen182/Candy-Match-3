@@ -98,7 +98,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 BoundsInt range = region.GetRegionBounds();
                 HashSet<Vector3Int> checkPositions = new();
 
-                foreach (Vector3Int position in range.Iterator2D(BoundsExtension.SortOrder.Descending))
+                var positions = range.Iterator2D(BoundsExtension.SortOrder.Descending
+                                                , BoundsExtension.AxisOrder.YX);
+                foreach (Vector3Int position in positions)
                 {
                     if (!region.IsInRegion(position))
                         continue;
