@@ -147,13 +147,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6c9408868f24a4ca0d167f1a0a03d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Interpolate: 30
   StartObject: {fileID: 0}
   StartPosition: {x: 0, y: 0, z: 0}
   EndObject: {fileID: 0}
   EndPosition: {x: 0, y: 0, z: 0}
   Generations: 2
-  Duration: 0.013
-  ChaosFactor: 0.13
+  Duration: 0.01
+  ChaosFactor: 0.45
   ManualMode: 0
   Rows: 6
   Columns: 1

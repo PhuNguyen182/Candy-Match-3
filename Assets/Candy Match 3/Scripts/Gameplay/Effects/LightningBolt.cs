@@ -43,6 +43,8 @@ namespace DigitalRuby.LightningBolt
     [RequireComponent(typeof(LineRenderer))]
     public class LightningBolt : MonoBehaviour, IUpdateHandler
     {
+        public float Interpolate = 10f;
+
         [Tooltip("The game object where the lightning will emit from. If null, StartPosition is used.")]
         public GameObject StartObject;
 
@@ -283,16 +285,25 @@ namespace DigitalRuby.LightningBolt
             }
 
             int index = 0;
-            lineRenderer.SetPosition(index++, segments[startIndex].Key);
+            InterpolatePosition(index, segments[startIndex].Key);
+            index = index + 1;
 
             for (int i = startIndex; i < segments.Count; i++)
             {
-                lineRenderer.SetPosition(index++, segments[i].Value);
+                InterpolatePosition(index, segments[i].Value);
+                index = index + 1;
             }
 
             segments.Clear();
 
             SelectOffsetFromAnimationMode();
+        }
+
+        private void InterpolatePosition(int index, Vector3 newPosition)
+        {
+            Vector3 currentPosition = lineRenderer.GetPosition(index);
+            Vector3 smoothedPosition = Vector3.Lerp(currentPosition, newPosition, Time.deltaTime * Interpolate);
+            lineRenderer.SetPosition(index, smoothedPosition);
         }
 
         private void Awake()
