@@ -130,6 +130,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             IItemAnimation fromAnimation = fromItem as IItemAnimation;
             IItemAnimation toAnimation = toItem as IItemAnimation;
 
+            if (!isSwapBack)
+            {
+                EffectManager.Instance.PlayItemSwapEffect(fromCell.WorldPosition);
+                EffectManager.Instance.PlayItemSwapEffect(toCell.WorldPosition);
+            }
+
             UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
             UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
             await UniTask.WhenAll(fromMoveTask, toMoveTask);
