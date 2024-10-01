@@ -117,7 +117,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     int count = boundPositions.Count;
                     boundPositions.Sort(_vector3IntComparer);
 
-                    Vector3Int min = regionResult.CheckArea.min;
+                    Vector3Int min = regionResult.CheckArea.min + new Vector3Int(-1, -1);
                     Vector3Int max = regionResult.CheckArea.max;
 
                     boundPositions.Add(min);

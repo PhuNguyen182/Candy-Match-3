@@ -89,7 +89,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _blastBoosterTask.SetCheckGridTask(checkGridTask);
         }
 
-        public void InitBoosters(List<InGameBoosterModel> boosterModels)
+        public void InitStartBooster()
+        {
+            InitBoosters(new()
+            {
+                new() { Amount = 1000, BoosterType = InGameBoosterType.Break },
+                new() { Amount = 1000, BoosterType = InGameBoosterType.Blast },
+                new() { Amount = 1000, BoosterType = InGameBoosterType.Swap },
+                new() { Amount = 1000, BoosterType = InGameBoosterType.Colorful }
+            });
+        }
+
+        private void InitBoosters(List<InGameBoosterModel> boosterModels)
         {
             _boosters ??= new();
 

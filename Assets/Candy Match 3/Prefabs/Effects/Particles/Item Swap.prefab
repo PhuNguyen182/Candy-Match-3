@@ -1054,7 +1054,7 @@ ParticleSystem:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.3
+          time: 0.2
           value: 1
           inSlope: 0
           outSlope: 0
