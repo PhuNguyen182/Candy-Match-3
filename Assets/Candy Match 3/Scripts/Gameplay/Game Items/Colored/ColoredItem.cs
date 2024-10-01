@@ -26,7 +26,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private GameObject colorfulEffect;
 
         private bool _isMatchable;
-        private GameObject _colorfulEffect;
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
         private IPublisher<AsyncMessage<MoveTargetData>> _moveToTargetPublisher;
 
@@ -42,6 +41,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             IsLocking = false;
             SetMatchable(true);
             itemAnimation.ResetItem();
+            colorfulEffect.gameObject.SetActive(false);
             itemAnimation.DisappearOnMatch(false).Forget();
         }
 
@@ -63,12 +63,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void ReleaseItem()
         {
-            if (_colorfulEffect != null)
-            {
-                SimplePool.Despawn(_colorfulEffect);
-                _colorfulEffect.transform.SetParent(EffectContainer.Transform);
-            }
-
+            colorfulEffect.gameObject.SetActive(false);
             itemAnimation.ToggleSuggest(false);
             MoveToTargetAndRelease().Forget();
             SimplePool.Despawn(this.gameObject);
@@ -178,6 +173,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayColorfulEffect()
         {
             itemAnimation.TriggerVibrate();
+            colorfulEffect.gameObject.SetActive(true);
         }
 
         public void Highlight(bool isActive)
