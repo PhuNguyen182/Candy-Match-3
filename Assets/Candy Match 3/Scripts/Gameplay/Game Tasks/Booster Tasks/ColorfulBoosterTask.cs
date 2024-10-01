@@ -76,6 +76,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 boosterCell.LockStates = LockStates.None;
                 _activateCount = _activateCount - 1;
+                _checkGridTask.CheckAroundPosition(boosterCell.GridPosition, 0);
 
                 if (_checkedCandyColors.Count <= 0 && _activateCount <= 0)
                     _checkGridTask.CanCheck = true;
@@ -132,6 +133,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 gridCell.LockStates = LockStates.None;
                 _activateCount = _activateCount - 1;
+                _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 0);
 
                 if (_checkedCandyColors.Count <= 0 && _activateCount <= 0)
                     _checkGridTask.CanCheck = true;
@@ -237,13 +239,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private async UniTask FireItemCatchRay(Vector3Int targetPosition, Vector3 position, float delay)
         {
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
-            ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray
-                                                       , EffectContainer.Transform
-                                                       , Vector3.zero
-                                                       , Quaternion.identity);
 
             if (targetGridCell != null && targetGridCell.HasItem)
             {
+                ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
+                                                           , Vector3.zero, Quaternion.identity);
                 if (targetGridCell.GridStateful.CanContainItem)
                 {
                     targetGridCell.BlockItem.IsLocking = true;

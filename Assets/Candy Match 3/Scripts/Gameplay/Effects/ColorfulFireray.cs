@@ -12,7 +12,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
 {
     public class ColorfulFireray : MonoBehaviour
     {
-        [SerializeField] private LightningBoltScript rayfire;
+        [SerializeField] private LightningBolt rayfire;
 
         private CancellationToken _token;
 

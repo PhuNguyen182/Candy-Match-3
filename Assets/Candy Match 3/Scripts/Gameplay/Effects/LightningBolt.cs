@@ -41,7 +41,7 @@ namespace DigitalRuby.LightningBolt
     /// Allows creation of simple lightning bolts
     /// </summary>
     [RequireComponent(typeof(LineRenderer))]
-    public class LightningBoltScript : MonoBehaviour, IUpdateHandler
+    public class LightningBolt : MonoBehaviour, IUpdateHandler
     {
         [Tooltip("The game object where the lightning will emit from. If null, StartPosition is used.")]
         public GameObject StartObject;
@@ -191,6 +191,12 @@ namespace DigitalRuby.LightningBolt
                 // halve the distance the lightning can deviate for each generation down
                 offsetAmount *= 0.5f;
             }
+        }
+
+        private void ResetLine()
+        {
+            lineRenderer.positionCount = 0;
+            lineRenderer.SetPositions(new Vector3[0]);
         }
 
         public void RandomVector(ref Vector3 start, ref Vector3 end, float offsetAmount, out Vector3 result)
@@ -377,6 +383,7 @@ namespace DigitalRuby.LightningBolt
 
         private void OnDisable()
         {
+            ResetLine();
             IsActive = false;
         }
 
