@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,17 +17,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private int _boardHeight;
         private CheckGridTask _checkGridTask;
-        private CancellationTokenSource _tcs;
-        private CancellationToken _token;
-        private IDisposable _disposable;
 
         public MoveItemTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
-
-            _tcs = new();
-            _token = _tcs.Token;
         }
 
         public async UniTask MoveItem(IGridCell moveGridCell)
@@ -52,7 +45,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     0 => new(0, -1),
                     1 => new(-1, -1),
                     2 => new(1, -1),
-                    _ => new(0, -1)
+                    _ => new(0, 0)
                 };
 
                 if (checkColumnIndex != 0)
@@ -198,16 +191,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public bool CheckMoveable(IGridCell gridCell)
         {
-            if (gridCell == null)
+            if (gridCell == null || !gridCell.HasItem)
                 return false;
 
-            if (gridCell.IsLocked)
-                return false;
-
-            if (!gridCell.HasItem)
-                return false;
-
-            if (!gridCell.IsMoveable)
+            if (gridCell.IsLocked || !gridCell.IsMoveable)
                 return false;
 
             return true;
@@ -220,7 +207,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
-            _tcs.Dispose();
+
         }
     }
 }
