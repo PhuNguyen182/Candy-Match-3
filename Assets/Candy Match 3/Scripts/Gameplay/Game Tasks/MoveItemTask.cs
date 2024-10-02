@@ -95,6 +95,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 startPosition = toPosition;
                 currentGrid = toGridCell;
+                currentGrid.IsMoving = false;
             }
 
             AnimateItemJumpDown(blockItem, outputMoveStep);
