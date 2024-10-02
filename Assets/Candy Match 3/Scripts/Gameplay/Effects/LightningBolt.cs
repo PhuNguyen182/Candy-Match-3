@@ -1,45 +1,17 @@
-﻿//
-// Lightning Bolt for Unity
-// (c) 2016 Digital Ruby, LLC
-// Source code may be used for personal or commercial projects.
-// Source code may NOT be redistributed or sold.
-// 
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using GlobalScripts.UpdateHandlerPattern;
 
-namespace DigitalRuby.LightningBolt
+namespace CandyMatch3.Scripts.Gameplay.Effects
 {
-    /// <summary>
-    /// Types of animations for lightning bolts
-    /// </summary>
     public enum LightningBoltAnimationMode
     {
-        /// <summary>
-        /// No animation
-        /// </summary>
         None,
-
-        /// <summary>
-        /// Pick a random frame
-        /// </summary>
         Random,
-
-        /// <summary>
-        /// Loop through each frame and restart at the beginning
-        /// </summary>
         Loop,
-
-        /// <summary>
-        /// Loop through each frame then go backwards to the beginning then forward, etc.
-        /// </summary>
         PingPong
     }
 
-    /// <summary>
-    /// Allows creation of simple lightning bolts
-    /// </summary>
     [RequireComponent(typeof(LineRenderer))]
     public class LightningBolt : MonoBehaviour, IUpdateHandler
     {
@@ -84,9 +56,6 @@ namespace DigitalRuby.LightningBolt
         [Tooltip("The animation mode for the lightning")]
         public LightningBoltAnimationMode AnimationMode = LightningBoltAnimationMode.PingPong;
 
-        /// <summary>
-        /// Assign your own random if you want to have the same lightning appearance
-        /// </summary>
         [HideInInspector]
         [System.NonSerialized]
         public System.Random RandomGenerator = new System.Random();
@@ -375,9 +344,6 @@ namespace DigitalRuby.LightningBolt
             UpdateLineRenderer();
         }
 
-        /// <summary>
-        /// Call this method if you change the material on the line renderer
-        /// </summary>
         public void UpdateFromMaterialChange()
         {
             size = new Vector2(1.0f / (float)Columns, 1.0f / (float)Rows);
