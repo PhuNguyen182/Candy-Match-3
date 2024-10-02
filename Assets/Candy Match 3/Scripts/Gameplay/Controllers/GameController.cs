@@ -39,13 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         [SerializeField] private Tilemap boardTilemap;
 
         [Header("Databases")]
-        [SerializeField] private ItemDatabase itemDatabase;
-        [SerializeField] private TileDatabase tileDatabase;
-        [SerializeField] private TargetDatabase targetDatabase;
-        [SerializeField] private EffectDatabase effectDatabase;
-        [SerializeField] private MiscCollection miscCollection;
-        [SerializeField] private InGameBoosterPackDatabase inGameBoosterPackDatabase;
-        [SerializeField] private StatefulSpriteDatabase statefulSpriteDatabase;
+        [SerializeField] private ScriptableDatabaseCollection scriptableDatabaseCollection;
 
         [Header("Containers")]
         [SerializeField] private Transform gridContainer;
@@ -102,10 +96,11 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _gridCellManager.AddTo(ref builder);
 
             _metaItemManager = new();
-            _factoryManager = new(_gridCellManager, statefulSpriteDatabase, itemDatabase, itemContainer);
+            _factoryManager = new(_gridCellManager, scriptableDatabaseCollection.StatefulSpriteDatabase
+                                  , scriptableDatabaseCollection.ItemDatabase, itemContainer);
             _itemManager = new(_gridCellManager, _metaItemManager, _factoryManager.ItemFactory);
 
-            _fillBoardTask = new(_gridCellManager, boardTilemap, tileDatabase, _itemManager);
+            _fillBoardTask = new(_gridCellManager, boardTilemap, scriptableDatabaseCollection.TileDatabase, _itemManager);
             _fillBoardTask.AddTo(ref builder);
 
             _breakGridTask = new(_gridCellManager, _metaItemManager, _itemManager);
@@ -127,8 +122,8 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _cameraShakeTask.AddTo(ref builder);
 
             _gameTaskManager = new(boardInput, _gridCellManager, _itemManager, _spawnItemTask, _matchItemsTask, _metaItemManager
-                                  , _breakGridTask, effectDatabase, mainGamePanel, endGameScreen, settingSidePanel, targetDatabase
-                                  , inGameBoosterPanel, inGameBoosterPackDatabase, _specialItemTasks, _complimentTask, _fillBoardTask);
+                                  , _breakGridTask, mainGamePanel, endGameScreen, settingSidePanel, inGameBoosterPanel, _specialItemTasks
+                                  , _complimentTask, _fillBoardTask, scriptableDatabaseCollection);
             _gameTaskManager.AddTo(ref builder);
 
             builder.RegisterTo(_destroyToken);
@@ -202,7 +197,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
                 _spawnItemTask.AddSpawnerPosition(levelModel.SpawnerBlockPositions[i]);
                 Vector3 spawnerPosition = ConvertGridToWorld(levelModel.SpawnerBlockPositions[i].Position + Vector3Int.up);
-                Instantiate(miscCollection.SpawnerMask, spawnerPosition, Quaternion.identity, miscContainer);
+                Instantiate(scriptableDatabaseCollection.MiscCollection.SpawnerMask, spawnerPosition, Quaternion.identity, miscContainer);
             }
 
             for (int i = 0; i < levelModel.CollectibleCheckBlockPositions.Count; i++)
@@ -211,7 +206,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 gridCell.IsCollectible = true;
 
                 Vector3 checkPosition = ConvertGridToWorld(levelModel.CollectibleCheckBlockPositions[i].Position);
-                Instantiate(miscCollection.CollectibleCheckSign, checkPosition, Quaternion.identity, miscContainer);
+                Instantiate(scriptableDatabaseCollection.MiscCollection.CollectibleCheckSign, checkPosition, Quaternion.identity, miscContainer);
             }
 
             // Build ruled random first, then build random later

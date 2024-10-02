@@ -1576,7 +1576,7 @@ SortingGroup:
   m_GameObject: {fileID: 1049017512}
   m_Enabled: 0
   m_SortingLayerID: -386444697
-  m_SortingLayer: 11
+  m_SortingLayer: 12
   m_SortingOrder: 1
   m_SortAtRoot: 0
 --- !u!225 &1099124836 stripped
@@ -1656,7 +1656,7 @@ SortingGroup:
   m_GameObject: {fileID: 1105668867}
   m_Enabled: 0
   m_SortingLayerID: -302537719
-  m_SortingLayer: 13
+  m_SortingLayer: 14
   m_SortingOrder: 1
   m_SortAtRoot: 0
 --- !u!1 &1107196258
@@ -3043,6 +3043,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1707640712}
   - component: {fileID: 1707640713}
+  - component: {fileID: 1707640717}
   - component: {fileID: 1707640714}
   - component: {fileID: 1707640715}
   - component: {fileID: 1707640716}
@@ -3085,13 +3086,7 @@ MonoBehaviour:
   inGameBoosterPanel: {fileID: 1592590830}
   settingSidePanel: {fileID: 56262343}
   boardTilemap: {fileID: 1227475531}
-  itemDatabase: {fileID: 11400000, guid: 38e4fde2c70af1d41b96215992c46be4, type: 2}
-  tileDatabase: {fileID: 11400000, guid: f6726b3f937ba334f8580c6528205f29, type: 2}
-  targetDatabase: {fileID: 11400000, guid: cc4452cd77bc01f459003b542c0b2e9c, type: 2}
-  effectDatabase: {fileID: 11400000, guid: 0b1e618e965f9b34396ea41173c93348, type: 2}
-  miscCollection: {fileID: 11400000, guid: 93595d0df17efe74eaaf9c489cc4fbfe, type: 2}
-  inGameBoosterPackDatabase: {fileID: 11400000, guid: 601fee2230d343f4fa74cf72649f5d42, type: 2}
-  statefulSpriteDatabase: {fileID: 11400000, guid: 87b5585516dc3ac4b9e1ef33a0d11e2f, type: 2}
+  scriptableDatabaseCollection: {fileID: 1707640717}
   gridContainer: {fileID: 1587950233}
   itemContainer: {fileID: 1130573929}
   miscContainer: {fileID: 2026068718}
@@ -3143,6 +3138,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useDesiredValue: 0
   desiredFramerate: 60
+--- !u!114 &1707640717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707640711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee20f53852f29654c96dc9ad076a432d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ItemDatabase: {fileID: 11400000, guid: 38e4fde2c70af1d41b96215992c46be4, type: 2}
+  TileDatabase: {fileID: 11400000, guid: f6726b3f937ba334f8580c6528205f29, type: 2}
+  TargetDatabase: {fileID: 11400000, guid: cc4452cd77bc01f459003b542c0b2e9c, type: 2}
+  EffectDatabase: {fileID: 11400000, guid: 0b1e618e965f9b34396ea41173c93348, type: 2}
+  MiscCollection: {fileID: 11400000, guid: 93595d0df17efe74eaaf9c489cc4fbfe, type: 2}
+  InGameBoosterPackDatabase: {fileID: 11400000, guid: 601fee2230d343f4fa74cf72649f5d42, type: 2}
+  StatefulSpriteDatabase: {fileID: 11400000, guid: 87b5585516dc3ac4b9e1ef33a0d11e2f, type: 2}
+  ExplodeEffectCollection: {fileID: 11400000, guid: 30e1336cf6368354193eacb5aba5be72, type: 2}
 --- !u!1 &1771177874
 GameObject:
   m_ObjectHideFlags: 0

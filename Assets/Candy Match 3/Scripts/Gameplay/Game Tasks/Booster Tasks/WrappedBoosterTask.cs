@@ -54,7 +54,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 using var brealListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
                 using var encapsulateListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> encapsulatePositions);
+
                 _explodeItemTask.Blast(position, 3).Forget();
+                _explodeItemTask.Explode(position, ExplodeType.SingleWrapped);
 
                 for (int i = 0; i < attackPositions.Count; i++)
                 {

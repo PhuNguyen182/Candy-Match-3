@@ -148,6 +148,11 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
                 SimplePool.Spawn(effect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
+        public ExplodeEffect PlayExplodeEffect(Vector3 position)
+        {
+            return SimplePool.Spawn(effectDatabase.ExplodeEffect, EffectContainer.Transform, position, Quaternion.identity);
+        }
+
         private async UniTask PreloadEffects()
         {
             SimplePool.PoolPreLoad(effectDatabase.SoundEffect.gameObject, 12, EffectContainer.Transform);
@@ -181,6 +186,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             await UniTask.NextFrame(_token);
 
             SimplePool.PoolPreLoad(effectDatabase.WrappedEffect, 3, EffectContainer.Transform);
+            SimplePool.PoolPreLoad(effectDatabase.ExplodeEffect.gameObject, 6, EffectContainer.Transform);
             SimplePool.PoolPreLoad(effectDatabase.ItemSwapEffect, 4, EffectContainer.Transform);
             SimplePool.PoolPreLoad(effectDatabase.BlastEffect, 10, EffectContainer.Transform);
         }

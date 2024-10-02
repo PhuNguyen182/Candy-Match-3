@@ -57,11 +57,15 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Distortion_Strength: 0.002
+    - _Distortion_Strength: 3
     - _EnableExternalAlpha: 0
     - _Float: 7.71
-    - _Propagation_Speed: 0
+    - _Magnitude: 0.65
+    - _Propagation_Speed: 2.5
+    - _Timer: 0
     - _Transparency: 0
+    - _Use_Timer: 0
+    - _Wave: 8
     - _refra: 0
     - _scale: 5
     m_Colors:
