@@ -54,12 +54,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public UniTask MatchTo(Vector3 toPosition, float duration)
         {
+            ChangeItemLayer(true);
             _matchTween ??= CreateMatchTween(toPosition, duration);
             _matchTween.ChangeValues(transform.position, toPosition, duration);
             _matchTween.Play();
 
             TimeSpan totalDuration = TimeSpan.FromSeconds(_matchTween.Duration());
-            return UniTask.Delay(totalDuration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+            return UniTask.Delay(totalDuration, false, PlayerLoopTiming.FixedUpdate, _destroyToken)
+                          .ContinueWith(() => ChangeItemLayer(false));
         }
 
         public UniTask MoveTo(Vector3 toPosition, float duration)

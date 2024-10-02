@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using DigitalRuby.LightningBolt;
+using CandyMatch3.Scripts.Common.Enums;
 using DG.Tweening;
 
 namespace CandyMatch3.Scripts.Gameplay.Effects
 {
     public class ColorfulFireray : MonoBehaviour
     {
-        [SerializeField] private LightningBolt rayfire;
+        [SerializeField] private LightningRayLine rayfire;
 
         private CancellationToken _token;
 
@@ -32,6 +32,13 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
 
             await UniTask.Delay(TimeSpan.FromSeconds(0.05f), false, PlayerLoopTiming.FixedUpdate, _token);
             SimplePool.Despawn(this.gameObject);
+        }
+
+        public void SetPhaseStep(int step) => rayfire.SetPhaseStep(step);
+
+        public void SetColor(CandyColor candyColor, bool isSpecial)
+        {
+            rayfire.SetColor(candyColor, isSpecial);
         }
 
         private void SetEndRayfirePosition(Vector3 position)

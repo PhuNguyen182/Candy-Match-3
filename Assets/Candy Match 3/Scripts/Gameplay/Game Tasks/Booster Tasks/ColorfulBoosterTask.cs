@@ -56,7 +56,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
-                    fireTasks.Add(FireItemCatchRay(colorPositions[i], startPosition, i * 0.02f));
+                    fireTasks.Add(FireItemCatchRay(i, colorPositions[i], startPosition, i * 0.02f));
                 }
 
                 await UniTask.WhenAll(fireTasks);
@@ -113,7 +113,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
-                    fireTasks.Add(FireItemCatchRay(colorPositions[i], startPosition, i * 0.02f));
+                    fireTasks.Add(FireItemCatchRay(i, colorPositions[i], startPosition, i * 0.02f));
                 }
 
                 await UniTask.WhenAll(fireTasks);
@@ -236,7 +236,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
         }
 
-        private async UniTask FireItemCatchRay(Vector3Int targetPosition, Vector3 position, float delay)
+        private async UniTask FireItemCatchRay(int index, Vector3Int targetPosition, Vector3 position, float delay)
         {
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
 
@@ -244,6 +244,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             {
                 ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                            , Vector3.zero, Quaternion.identity);
+                fireray.SetPhaseStep(index);
+                fireray.SetColor(targetGridCell.CandyColor, false);
                 if (targetGridCell.GridStateful.CanContainItem)
                 {
                     targetGridCell.BlockItem.IsLocking = true;
