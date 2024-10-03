@@ -45,7 +45,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 4fc8516ad9594bc4698dbb709fa3623d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -78,19 +78,21 @@ Material:
     - _DstBlend: 10
     - _EnableExternalAlpha: 0
     - _Height_Power: 6
+    - _Line_Tiling: 1.5
     - _QueueControl: 0
     - _QueueOffset: 0
     - _SrcBlend: 5
     - _Surface: 1
-    - _Thickness: 0.12
+    - _Thickness: 0.14
     - _Tiling: 0.5
     - _ZTest: 4
     - _ZWrite: 0
     - _ZWriteControl: 0
     m_Colors:
-    - _Color: {r: 3.85, g: 8.3, b: 9.2, a: 1}
+    - _Color: {r: 5.015175, g: 10.811935, b: 11.984314, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _Line_Color: {r: 4, g: 4, b: 4, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Speed: {r: -1, g: 0, b: 0, a: 0}
+    - _Speed: {r: -3, g: 0, b: 0, a: 0}
+    - _Texture_Tiling: {r: 1, g: 0.1666667, b: 0, a: 0}
   m_BuildTextureStacks: []
