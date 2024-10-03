@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using CandyMatch3.Scripts.Common.Enums;
 using DG.Tweening;
 
 namespace CandyMatch3.Scripts.Gameplay.Effects

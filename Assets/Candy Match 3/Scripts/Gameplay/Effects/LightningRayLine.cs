@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using GlobalScripts.UpdateHandlerPattern;
-using CandyMatch3.Scripts.Common.Enums;
 
 namespace CandyMatch3.Scripts.Gameplay.Effects
 {
@@ -12,15 +11,6 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
     {
         [SerializeField] private int segmentCount = 5;
         [SerializeField] private LineRenderer rayline;
-
-        [Header("Colors")]
-        [SerializeField] private Vector4 blueColor;
-        [SerializeField] private Vector4 greenColor;
-        [SerializeField] private Vector4 orangeColor;
-        [SerializeField] private Vector4 purpleColor;
-        [SerializeField] private Vector4 redColor;
-        [SerializeField] private Vector4 yellowColor;
-        [SerializeField] private Vector4 specialColor;
 
         [Header("Animation Modifier")]
         [SerializeField] private float ampllitude = 0.5f;
@@ -67,34 +57,6 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
         public void OnUpdate(float deltaTime)
         {
             UpdateLine();
-        }
-
-        public void SetColor(CandyColor candyColor, bool isSpecial)
-        {
-            Vector4 colorVector;
-
-            if (!isSpecial)
-            {
-                colorVector = candyColor switch
-                {
-                    CandyColor.Blue => blueColor,
-                    CandyColor.Green => greenColor,
-                    CandyColor.Orange => orangeColor,
-                    CandyColor.Purple => purpleColor,
-                    CandyColor.Red => redColor,
-                    CandyColor.Yellow => yellowColor,
-                    _ => new Vector4()
-                };
-            }
-
-            else
-                colorVector = specialColor;
-
-            Color color = new(colorVector.x, colorVector.y, colorVector.z, colorVector.w);
-
-            rayline.GetPropertyBlock(_propertyBlock);
-            _propertyBlock.SetColor(_colorProperty, color);
-            rayline.SetPropertyBlock(_propertyBlock);
         }
 
         public void SetPhaseStep(int phaseStep)
