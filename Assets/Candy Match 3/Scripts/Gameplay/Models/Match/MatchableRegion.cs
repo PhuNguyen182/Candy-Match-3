@@ -15,15 +15,41 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         public ItemType RegionType;
         public CandyColor RegionColor;
         public HashSet<Vector3Int> Elements;
+        public Queue<Vector3Int> Pivotables;
 
         public MatchableRegion()
         {
             Elements = new();
+            Pivotables = new();
+        }
+
+        public void AddPivot(Vector3Int pivot)
+        {
+            Pivotables ??= new();
+            Pivotables.Enqueue(pivot);
+        }
+
+        public Vector3Int TakePivot(bool isDequeue)
+        {
+            return isDequeue ? Pivotables.Dequeue() : Pivotables.Peek();
         }
 
         public bool IsInRegion(Vector3Int position)
         {
             return Elements.Contains(position);
+        }
+
+        public void RemoveElement(Vector3Int position)
+        {
+            Elements.Remove(position);
+        }
+
+        public void RemoveRange(HashSet<Vector3Int> range)
+        {
+            foreach (Vector3Int pos in range)
+            {
+                Elements.Remove(pos);
+            }
         }
 
         public List<Vector3Int> GetSortedElements()
@@ -39,7 +65,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
             return BoundsExtension.EncapsulateExpand(Elements);
         }
 
-        public bool IsMatchPivot(Vector3Int position)
+        public bool IsPivotable(Vector3Int position)
         {
             for (int i = 0; i < Match3Constants.AdjacentSteps.Count; i++)
             {
@@ -128,6 +154,7 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
         public void Dispose()
         {
             Elements?.Clear();
+            Pivotables?.Clear();
         }
     }
 }

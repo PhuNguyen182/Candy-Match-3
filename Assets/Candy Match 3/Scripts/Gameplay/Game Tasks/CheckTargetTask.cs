@@ -234,17 +234,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!message.IsStopped)
                 return;
 
-            // Temp check match, must wait until all matches are solved
-            //int matchCount = await _matchRegionTask.MatchAllRegions();
-            //if (matchCount > 0)
-            //    return;
+            int matchCount = await _matchRegionTask.MatchAllRegions();
+            if (matchCount > 0)
+                return;
 
             await _endGameTask.WaitAWhile();
             await _endGameTask.WaitForBoardStop();
             await _shuffleBoardTask.CheckShuffleBoard();
             CheckEndGame();
-
-            Debug.Log("Board Has Stop");
         }
 
         private void InspectTargetInfo(AsyncMessage<MoveTargetData> message)

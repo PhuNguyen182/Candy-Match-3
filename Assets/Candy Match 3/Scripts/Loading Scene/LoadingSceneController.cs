@@ -4,9 +4,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.LoadingScene.Settings;
 using GlobalScripts.SceneUtils;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.Audios;
 
 namespace CandyMatch3.Scripts.LoadingScene
 {
@@ -26,9 +28,22 @@ namespace CandyMatch3.Scripts.LoadingScene
             playButton.onClick.AddListener(() => PlayGame().Forget());
         }
 
+        private void Start()
+        {
+            PlayMusic().Forget();
+        }
+
         private void OpenSetting()
         {
             settingPopup.gameObject.SetActive(true);
+        }
+
+        private async UniTask PlayMusic()
+        {
+            await UniTask.NextFrame(_token);
+            
+            if(!MusicManager.Instance.IsMusicPlaying())
+                MusicManager.Instance.PlayBackgroundMusic(BackgroundMusicType.Mainhome, volume: 0.6f);
         }
 
         private async UniTask PlayGame()

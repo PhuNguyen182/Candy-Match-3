@@ -15,6 +15,7 @@ namespace GlobalScripts.Audios
         [SerializeField] private AudioSource sfxSource;
         [SerializeField] private AudioSource itemSource;
         [SerializeField] private SoundEffectDatabase effectDatabase;
+        [SerializeField] private MusicDatabase musicDatabase;
 
         public static event Action<float> OnMasterChange;
         public static event Action<float> OnMusicChange;
@@ -61,6 +62,7 @@ namespace GlobalScripts.Audios
         protected override void OnAwake()
         {
             effectDatabase.Initialize();
+            musicDatabase.Initialize();
         }
 
         private void Start()
@@ -74,7 +76,12 @@ namespace GlobalScripts.Audios
             SoundVolume += 0;
         }
 
-        public void PlayMusic(AudioClip musicClip, bool loop = false)
+        public bool IsMusicPlaying()
+        {
+            return musicSource.isPlaying;
+        }
+
+        public void PlayMusic(AudioClip musicClip, bool loop = false, float volume = 1f)
         {
             if (musicClip == null)
                 return;
@@ -82,6 +89,7 @@ namespace GlobalScripts.Audios
             musicSource.Stop();
             musicSource.loop = loop;
             musicSource.clip = musicClip;
+            musicSource.volume = volume;
             musicSource.Play();
         }
 
@@ -95,7 +103,7 @@ namespace GlobalScripts.Audios
 
         public void PlaySoundEffect(SoundEffectType soundEffect, float volumeScale = 1, bool loop = false)
         {
-            AudioClip sound = effectDatabase.SoundEffectCollection[soundEffect];
+            AudioClip sound = effectDatabase.GetSoundEffect(soundEffect);
 
             if (sound != null)
                 PlaySoundEffect(sound, volumeScale, loop);
@@ -119,16 +127,17 @@ namespace GlobalScripts.Audios
             sfxSource.PlayOneShot(soundClip, volumeScale);
         }
 
-        public void SetBackGroundMusic(AudioClip music, bool loop = true, float volume = 1)
+        public void PlayBackgroundMusic(BackgroundMusicType backgroundMusicType, bool loop = true, float volume = 1)
         {
-            if (music == null || musicSource == null)
-                return;
+            AudioClip bgm = musicDatabase.GetBackgroundMusic(backgroundMusicType);
 
+            if (bgm != null)
+                PlayMusic(bgm, loop, volume);
+        }
+
+        public void StopMusic()
+        {
             musicSource.Stop();
-            musicSource.loop = loop;
-            musicSource.volume = volume;
-            musicSource.clip = music;
-            musicSource.Play();
         }
 
         private void AdjustMasterVolume(float value)

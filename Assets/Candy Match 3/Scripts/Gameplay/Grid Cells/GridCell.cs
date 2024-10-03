@@ -34,9 +34,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
         public bool IsSpawner { get; set; }
         public bool CanPassThrough { get; set; }
-        public bool IsMatching { get; set; }
         public bool IsCollectible { get; set; }
-
         public bool IsMoving { get; set; }
 
         public ItemType ItemType => HasItem ? _blockItem.ItemType : ItemType.None;
@@ -48,6 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             {
                 _lockStates = value;
                 GridCellView.LockStates = _lockStates;
+
                 GridCellView.IsLocked = IsLocked;
                 GridLockProperty.Value = IsLocked;
             }
@@ -77,7 +76,6 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
         public void SetBlockItem(IBlockItem blockItem, bool isSnapped = true)
         {
-            IsMatching = false;
             _blockItem = blockItem;
             
             if (_blockItem != null)

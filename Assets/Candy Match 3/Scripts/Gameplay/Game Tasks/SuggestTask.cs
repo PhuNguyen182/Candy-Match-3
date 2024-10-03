@@ -47,7 +47,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _messageDisposable = messageBuilder.Build();
 
             IsActive = true;
-            //UpdateHandlerManager.Instance.AddUpdateBehaviour(this);
+            UpdateHandlerManager.Instance.AddUpdateBehaviour(this);
         }
 
         public void OnUpdate(float deltaTime)

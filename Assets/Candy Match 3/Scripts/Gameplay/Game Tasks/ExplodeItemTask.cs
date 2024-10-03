@@ -1,13 +1,16 @@
 using System;
-using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using GlobalScripts.Extensions;
+using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.Databases;
+using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
-using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Common.DataStructs;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
@@ -15,16 +18,28 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     public class ExplodeItemTask : IDisposable
     {
         private readonly GridCellManager _gridCellManager;
+        private readonly ExplodeEffectCollection _explodeEffectCollection;
 
-        private CancellationToken _token;
-        private CancellationTokenSource _cts;
-
-        public ExplodeItemTask(GridCellManager gridCellManager)
+        public ExplodeItemTask(GridCellManager gridCellManager, ExplodeEffectCollection explodeEffectCollection)
         {
             _gridCellManager = gridCellManager;
+            _explodeEffectCollection = explodeEffectCollection;
+        }
 
-            _cts = new();
-            _token = _cts.Token;
+        public void Explode(Vector3 position, ExplodeType explodeType)
+        {
+            ExplodeEffectData explodeData = explodeType switch
+            {
+                ExplodeType.SingleWrapped => _explodeEffectCollection.SingleWrappedExplode,
+                ExplodeType.DoubleWrapped => _explodeEffectCollection.DoubleWrappedExplode,
+                _ => default
+            };
+
+            ExplodeEffect explodeEffect = EffectManager.Instance.PlayExplodeEffect(position);
+            explodeEffect.PlayExplodeEffect(explodeData.DistortionStrength, explodeData.PropagationSpeed
+                                            , explodeData.Wave, explodeData.Magnitude);
+            explodeEffect.SetDuration(explodeData.Timer);
+            explodeEffect.SetScale(explodeData.Scale);
         }
 
         public async UniTask Blast(Vector3Int pivot, Vector3Int size)
@@ -86,7 +101,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
-            _cts.Dispose();
+            
         }
     }
 }

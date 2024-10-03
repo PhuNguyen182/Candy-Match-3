@@ -146,13 +146,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 for (int i = 0; i < columnListPositions.Count; i++)
                 {
                     IGridCell gridCell = _gridCellManager.Get(columnListPositions[i]);
-                    gridCell.LockStates = LockStates.None;
-                    breakTasks.Add(_breakGridTask.BreakItem(columnListPositions[i]));
+
+                    if (gridCell != null)
+                    {
+                        gridCell.LockStates = LockStates.None;
+                        breakTasks.Add(_breakGridTask.BreakItem(columnListPositions[i]));
+                    }
                 }
 
                 ShakeCamera();
                 SpawnTripleVertical(checkPosition);
-                await UniTask.WhenAll(breakTasks);
+                UniTask.WhenAll(breakTasks).Forget();
                 ExpandRange(ref columnListPositions, Vector3Int.right);
 
                 _breakGridTask.ReleaseGridCell(actorGridCell);
