@@ -100,6 +100,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             // Break Triple Rows
             using (ListPool<UniTask>.Get(out var breakTasks))
             {
+                EffectManager.Instance.PlaySoundEffect(SoundEffectType.WrappedStriped);
                 using var rowListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> rowListPositions);
                 AddTripleHorizontalLine(checkPosition, activeBounds, ref rowListPositions);
 
@@ -143,6 +144,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             // Break Triple Columns
             using (ListPool<UniTask>.Get(out var breakTasks))
             {
+                EffectManager.Instance.PlaySoundEffect(SoundEffectType.WrappedStriped);
+
                 for (int i = 0; i < columnListPositions.Count; i++)
                 {
                     IGridCell gridCell = _gridCellManager.Get(columnListPositions[i]);

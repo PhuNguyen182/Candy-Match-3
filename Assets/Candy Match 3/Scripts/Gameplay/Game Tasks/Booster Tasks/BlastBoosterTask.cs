@@ -9,6 +9,7 @@ using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
@@ -108,6 +109,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 Duration = 0.32f
             });
 
+            // Play same sound to wrapped candy
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyWrap);
             _explodeItemTask.Blast(position, 3).Forget();
         }
 

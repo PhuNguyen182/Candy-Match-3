@@ -20,7 +20,7 @@ MonoBehaviour:
   - SoundEffectType: 3
     SoundEffectClip: {fileID: 8300000, guid: f2ee79924bbe9684baa2e63436259ef8, type: 3}
   - SoundEffectType: 4
-    SoundEffectClip: {fileID: 8300000, guid: 25d460114338cde4e9ab4e42af0d3335, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: f45e0146900620c47889848d5560c278, type: 3}
   - SoundEffectType: 5
     SoundEffectClip: {fileID: 8300000, guid: ea487aa88e6b94b5f98bf5f1a8a78a66, type: 3}
   - SoundEffectType: 6
@@ -43,38 +43,38 @@ MonoBehaviour:
     SoundEffectClip: {fileID: 8300000, guid: 469c01a9973ac6847962965c280c7849, type: 3}
   - SoundEffectType: 15
     SoundEffectClip: {fileID: 8300000, guid: 5994527430a5c2049bef8e569f8c14fb, type: 3}
-  - SoundEffectType: 16
-    SoundEffectClip: {fileID: 8300000, guid: 8192c49bc08245c4697c384a5794ca62, type: 3}
-  - SoundEffectType: 17
-    SoundEffectClip: {fileID: 8300000, guid: 06bad3cef25a447d5aa580cc57b9ef73, type: 3}
-  - SoundEffectType: 18
-    SoundEffectClip: {fileID: 8300000, guid: f6fba64d1709b40ca8c8a4677fb132fc, type: 3}
-  - SoundEffectType: 19
-    SoundEffectClip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
-  - SoundEffectType: 20
-    SoundEffectClip: {fileID: 8300000, guid: 77af96134fd7cd74a8e8042b13d7cc7a, type: 3}
   - SoundEffectType: 21
-    SoundEffectClip: {fileID: 8300000, guid: 28c7d5dcd2278864c8c2523332d873b3, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: 8192c49bc08245c4697c384a5794ca62, type: 3}
   - SoundEffectType: 22
-    SoundEffectClip: {fileID: 8300000, guid: ae0b4c28fc79a3648a6fcd0d61e1f781, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: 06bad3cef25a447d5aa580cc57b9ef73, type: 3}
   - SoundEffectType: 23
-    SoundEffectClip: {fileID: 8300000, guid: 8dfb80fa04c4e48a0923d17ed767a859, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: f6fba64d1709b40ca8c8a4677fb132fc, type: 3}
   - SoundEffectType: 24
-    SoundEffectClip: {fileID: 8300000, guid: 27281ad828d8bd547b0a2d5edd70a48b, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
   - SoundEffectType: 25
-    SoundEffectClip: {fileID: 8300000, guid: 4e2d9f322c6a1af4eb6d6ac3d75b0170, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: 77af96134fd7cd74a8e8042b13d7cc7a, type: 3}
   - SoundEffectType: 26
-    SoundEffectClip: {fileID: 8300000, guid: 2f4ed2b2c996deb4c836898dc5e77786, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: 28c7d5dcd2278864c8c2523332d873b3, type: 3}
   - SoundEffectType: 27
-    SoundEffectClip: {fileID: 8300000, guid: da0d4a97cdc44f54ba7a492fa7fd4bba, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: ae0b4c28fc79a3648a6fcd0d61e1f781, type: 3}
   - SoundEffectType: 28
-    SoundEffectClip: {fileID: 8300000, guid: a19399c1056102547ad91af5947928e4, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: 8dfb80fa04c4e48a0923d17ed767a859, type: 3}
   - SoundEffectType: 29
-    SoundEffectClip: {fileID: 8300000, guid: d6c6034f97d068b478fe64297fe32035, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: 27281ad828d8bd547b0a2d5edd70a48b, type: 3}
   - SoundEffectType: 30
-    SoundEffectClip: {fileID: 8300000, guid: dd8162a3e9df954449d14d98cfbfb193, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: 4e2d9f322c6a1af4eb6d6ac3d75b0170, type: 3}
   - SoundEffectType: 31
-    SoundEffectClip: {fileID: 8300000, guid: 18e7625467947ca41a522ce8a6aa3b3e, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: 2f4ed2b2c996deb4c836898dc5e77786, type: 3}
+  - SoundEffectType: 32
+    SoundEffectClip: {fileID: 8300000, guid: da0d4a97cdc44f54ba7a492fa7fd4bba, type: 3}
+  - SoundEffectType: 33
+    SoundEffectClip: {fileID: 8300000, guid: a19399c1056102547ad91af5947928e4, type: 3}
+  - SoundEffectType: 34
+    SoundEffectClip: {fileID: 8300000, guid: d6c6034f97d068b478fe64297fe32035, type: 3}
+  - SoundEffectType: 35
+    SoundEffectClip: {fileID: 8300000, guid: dd8162a3e9df954449d14d98cfbfb193, type: 3}
+  - SoundEffectType: 36
+    SoundEffectClip: {fileID: 8300000, guid: 2f4ed2b2c996deb4c836898dc5e77786, type: 3}
   - SoundEffectType: 16
     SoundEffectClip: {fileID: 8300000, guid: 3efa70e2ff254744dbdbc4593fb2122b, type: 3}
   - SoundEffectType: 17
@@ -85,3 +85,9 @@ MonoBehaviour:
     SoundEffectClip: {fileID: 8300000, guid: f1c5c75ebd9b7bb469188878f6bbd355, type: 3}
   - SoundEffectType: 20
     SoundEffectClip: {fileID: 8300000, guid: 25ec2ae02c137d94f9c547b9135636f6, type: 3}
+  - SoundEffectType: 37
+    SoundEffectClip: {fileID: 8300000, guid: 3d7fc6acd82795c49ae3ef821fefa982, type: 3}
+  - SoundEffectType: 38
+    SoundEffectClip: {fileID: 8300000, guid: a545478f47e2ebe42a8dc27656f98f90, type: 3}
+  - SoundEffectType: 39
+    SoundEffectClip: {fileID: 8300000, guid: d29c256cf6e908e44aef41c797d4b467, type: 3}

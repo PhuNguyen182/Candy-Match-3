@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
@@ -43,6 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 Duration = 0.3f
             });
 
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.ItemHit);
             _explodeItemTask.Blast(position, 1).Forget();
         }
     } 
