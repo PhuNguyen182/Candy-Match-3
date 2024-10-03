@@ -46,54 +46,57 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public async UniTask PlaceAndActivate(IGridCell gridCell, IBlockItem colorBooster)
         {
-            IBooster activeBooster = null;
             CandyColor candyColor = colorBooster.CandyColor;
-
-            if (gridCell.BlockItem is IBooster booster)
-            {
-                activeBooster = booster;
-                activeBooster.IsActivated = true;
-            }
+            IBooster activeBooster = gridCell.BlockItem as IBooster;
+            gridCell.LockStates = LockStates.Preparing;
+            activeBooster.IsActivated = true;
 
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 positions.AddRange(_colorfulBoosterTask.FindPositionWithColor(candyColor));
-                using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
-
-                Vector3 startPosition = gridCell.WorldPosition;
-                for (int i = 0; i < positions.Count; i++)
+                using (ListPool<UniTask>.Get(out List<UniTask> fireTasks))
                 {
-                    fireTasks.Add(FireItemCatchRay(positions[i], startPosition, i * 0.02f, _errorPosition, candyColor));
+                    Vector3 startPosition = gridCell.WorldPosition;
+                    for (int i = 0; i < positions.Count; i++)
+                    {
+                        fireTasks.Add(FireItemCatchRay(i, positions[i], startPosition, i * 0.02f, _errorPosition, candyColor));
+                    }
+
+                    await UniTask.WhenAll(fireTasks);
                 }
 
-                await UniTask.WhenAll(fireTasks);
                 float delay = positions.Count * 0.02f;
-
                 TimeSpan duration = TimeSpan.FromSeconds(delay + 0.334f);
                 await UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _token);
 
                 activeBooster.Explode();
                 _breakGridTask.ReleaseGridCell(gridCell);
 
-                using var boosterTaskPool = ListPool<UniTask>.Get(out List<UniTask> boosterTasks);
-                for (int i = 0; i < positions.Count; i++)
+                using (ListPool<UniTask>.Get(out List<UniTask> boosterTasks))
                 {
-                    IGridCell boosterGridCell = _gridCellManager.Get(positions[i]);
-                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false, false, 0)); // ???
+                    for (int i = 0; i < positions.Count; i++)
+                    {
+                        IGridCell boosterGridCell = _gridCellManager.Get(positions[i]);
+                        boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false, false));
+                    }
+
+                    await UniTask.WhenAll(boosterTasks);
                 }
 
-                await UniTask.WhenAll(boosterTasks);
                 _colorfulBoosterTask.RemoveColor(candyColor);
                 _breakGridTask.ReleaseGridCell(gridCell);
+                gridCell.LockStates = LockStates.None;
             }
         }
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
         {
-            IBooster booster = default;
             CandyColor candyColor = gridCell1.CandyColor;
             Vector3Int colorPosition = gridCell1.GridPosition;
             Vector3Int boosterPosition = gridCell2.GridPosition;
+
+            gridCell1.LockStates = LockStates.Preparing;
+            gridCell2.LockStates = LockStates.Preparing;
 
             if (candyColor == CandyColor.None)
             {
@@ -103,51 +106,56 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             }
 
             IGridCell boosterCell = _gridCellManager.Get(boosterPosition);
-            if (boosterCell.BlockItem is IBooster boosterItem)
-            {
-                booster = boosterItem;
-                booster.IsActivated = true;
-            }
+            IBooster booster = boosterCell.BlockItem as IBooster;
+            booster.IsActivated = true;
 
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
                 positions.AddRange(_colorfulBoosterTask.FindPositionWithColor(candyColor));
-                using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
-
-                Vector3 startPosition = boosterCell.WorldPosition;
-                for (int i = 0; i < positions.Count; i++)
+                using (ListPool<UniTask>.Get(out List<UniTask> fireTasks))
                 {
-                    fireTasks.Add(FireItemCatchRay(positions[i], startPosition, i * 0.02f, colorPosition, candyColor));
+                    Vector3 startPosition = boosterCell.WorldPosition;
+                    for (int i = 0; i < positions.Count; i++)
+                    {
+                        fireTasks.Add(FireItemCatchRay(i, positions[i], startPosition, i * 0.02f, colorPosition, candyColor));
+                    }
+
+                    await UniTask.WhenAll(fireTasks);
                 }
 
-                await UniTask.WhenAll(fireTasks);
                 float delay = positions.Count * 0.02f;
-
                 TimeSpan duration = TimeSpan.FromSeconds(delay + 0.334f);
                 await UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _token);
 
                 booster.Explode();
                 _breakGridTask.ReleaseGridCell(boosterCell);
-                
-                using var boosterTaskPool = ListPool<UniTask>.Get(out List<UniTask> boosterTasks);
-                for (int i = 0; i < positions.Count; i++)
+
+                using (ListPool<UniTask>.Get(out List<UniTask> boosterTasks))
                 {
-                    IGridCell boosterGridCell = _gridCellManager.Get(positions[i]);
-                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false, false, 0));
+                    for (int i = 0; i < positions.Count; i++)
+                    {
+                        IGridCell boosterGridCell = _gridCellManager.Get(positions[i]);
+                        boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false, false));
+                    }
+
+                    await UniTask.WhenAll(boosterTasks);
                 }
 
-                await UniTask.WhenAll(boosterTasks);
                 _colorfulBoosterTask.RemoveColor(candyColor);
                 _breakGridTask.ReleaseGridCell(gridCell1);
                 _breakGridTask.ReleaseGridCell(gridCell2);
+
+                gridCell1.LockStates = LockStates.None;
+                gridCell2.LockStates = LockStates.None;
             }
         }
 
-        private async UniTask FireItemCatchRay(Vector3Int targetPosition, Vector3 position, float delay, Vector3Int originalColorPosition, CandyColor candyColor)
+        private async UniTask FireItemCatchRay(int index, Vector3Int targetPosition, Vector3 position, float delay, Vector3Int originalColorPosition, CandyColor candyColor)
         {
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                        , Vector3.zero, Quaternion.identity);
+            fireray.SetPhaseStep(index);
             await fireray.Fire(targetGridCell, position, delay);
             AddBooster(targetPosition, originalColorPosition, candyColor);
         }

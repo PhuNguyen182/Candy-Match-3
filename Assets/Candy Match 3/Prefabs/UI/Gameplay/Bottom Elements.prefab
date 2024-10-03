@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 2388104146412379683}
   - component: {fileID: 61381926568429406}
   - component: {fileID: 7614281523999819607}
+  - component: {fileID: 417333186312747256}
+  - component: {fileID: 5812944103111393748}
   m_Layer: 5
   m_Name: Lollipop Booster
   m_TagString: Untagged
@@ -165,6 +167,7 @@ MonoBehaviour:
   boosterCount: {fileID: 6746569242982580282}
   lockObject: {fileID: 7274090170461498483}
   addObject: {fileID: 5485073322469272545}
+  buttonCanvas: {fileID: 417333186312747256}
 --- !u!114 &7614281523999819607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,6 +183,46 @@ MonoBehaviour:
   button: {fileID: 7975153471832570438}
   volumeScale: 0.6
   clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
+--- !u!223 &417333186312747256
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198987091284966578}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: -257390011
+  m_SortingOrder: 2
+  m_TargetDisplay: 0
+--- !u!114 &5812944103111393748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1198987091284966578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 375
 --- !u!1 &1302125648180244728
 GameObject:
   m_ObjectHideFlags: 0
@@ -704,6 +747,8 @@ GameObject:
   - component: {fileID: 7107427060229416399}
   - component: {fileID: 68895690348284951}
   - component: {fileID: 1025425999770784639}
+  - component: {fileID: 6764584868691751333}
+  - component: {fileID: 770825557856818145}
   m_Layer: 5
   m_Name: Bomb Booster
   m_TagString: Untagged
@@ -854,6 +899,7 @@ MonoBehaviour:
   boosterCount: {fileID: 5652996986757799182}
   lockObject: {fileID: 2308795765679711367}
   addObject: {fileID: 2018052019433638015}
+  buttonCanvas: {fileID: 6764584868691751333}
 --- !u!114 &1025425999770784639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -869,6 +915,46 @@ MonoBehaviour:
   button: {fileID: 4238924347546927624}
   volumeScale: 0.6
   clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
+--- !u!223 &6764584868691751333
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2592948461100137916}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: -257390011
+  m_SortingOrder: 2
+  m_TargetDisplay: 0
+--- !u!114 &770825557856818145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2592948461100137916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 375
 --- !u!1 &2991952858807232442
 GameObject:
   m_ObjectHideFlags: 0
@@ -1536,7 +1622,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6882185561972116706}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1773,6 +1859,8 @@ GameObject:
   - component: {fileID: 5618862846207996398}
   - component: {fileID: 2859231979481159324}
   - component: {fileID: 4049915079352198880}
+  - component: {fileID: 2265751969001163963}
+  - component: {fileID: 6050247734814809030}
   m_Layer: 5
   m_Name: Swap Booster
   m_TagString: Untagged
@@ -1923,6 +2011,7 @@ MonoBehaviour:
   boosterCount: {fileID: 2674296645635448484}
   lockObject: {fileID: 8942355741140050040}
   addObject: {fileID: 1537300663377346159}
+  buttonCanvas: {fileID: 2265751969001163963}
 --- !u!114 &4049915079352198880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1938,6 +2027,46 @@ MonoBehaviour:
   button: {fileID: 6596975186401737014}
   volumeScale: 0.6
   clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
+--- !u!223 &2265751969001163963
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8222969097329732480}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: -257390011
+  m_SortingOrder: 2
+  m_TargetDisplay: 0
+--- !u!114 &6050247734814809030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8222969097329732480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 375
 --- !u!1 &8573442990080055083
 GameObject:
   m_ObjectHideFlags: 0
@@ -2169,6 +2298,8 @@ GameObject:
   - component: {fileID: 2386894989964904002}
   - component: {fileID: 1077523425800480323}
   - component: {fileID: 9041054425634660770}
+  - component: {fileID: 5716954558705221540}
+  - component: {fileID: 4746199926853870073}
   m_Layer: 5
   m_Name: Colorful Booster
   m_TagString: Untagged
@@ -2319,6 +2450,7 @@ MonoBehaviour:
   boosterCount: {fileID: 3917405903826599155}
   lockObject: {fileID: 2991952858807232442}
   addObject: {fileID: 3925527738218759637}
+  buttonCanvas: {fileID: 5716954558705221540}
 --- !u!114 &9041054425634660770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2334,3 +2466,43 @@ MonoBehaviour:
   button: {fileID: 520750290897738961}
   volumeScale: 0.6
   clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
+--- !u!223 &5716954558705221540
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9058192464946080612}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_VertexColorAlwaysGammaSpace: 1
+  m_AdditionalShaderChannelsFlag: 0
+  m_UpdateRectTransformForStandalone: 0
+  m_SortingLayerID: -257390011
+  m_SortingOrder: 2
+  m_TargetDisplay: 0
+--- !u!114 &4746199926853870073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9058192464946080612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 375

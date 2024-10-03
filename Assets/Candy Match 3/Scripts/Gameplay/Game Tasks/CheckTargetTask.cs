@@ -21,6 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly MatchRegionTask _matchRegionTask;
         private readonly TargetDatabase _targetDatabase;
+        private readonly ShuffleBoardTask _shuffleBoardTask;
         private readonly MainGamePanel _mainGamePanel;
 
         private readonly ISubscriber<BoardStopMessage> _boardStopSubscriber;
@@ -59,10 +60,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
-        public CheckTargetTask(MatchRegionTask matchRegionTask, TargetDatabase targetDatabase, MainGamePanel mainGameScreen)
+        public CheckTargetTask(MatchRegionTask matchRegionTask, TargetDatabase targetDatabase
+            , ShuffleBoardTask shuffleBoardTask, MainGamePanel mainGameScreen)
         {
             _matchRegionTask = matchRegionTask;
             _targetDatabase = targetDatabase;
+            _shuffleBoardTask = shuffleBoardTask;
             _mainGamePanel = mainGameScreen;
             _targetDatabase.Initialize();
 
@@ -231,13 +234,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!message.IsStopped)
                 return;
 
-            if (_endGameTask != null)
-            {
-                await _matchRegionTask.MatchAllRegions();
-                await _endGameTask.WaitAWhile();
-                await _endGameTask.WaitForBoardStop();
-                CheckEndGame();
-            }
+            int matchCount = await _matchRegionTask.MatchAllRegions();
+            if (matchCount > 0)
+                return;
+
+            await _endGameTask.WaitAWhile();
+            await _endGameTask.WaitForBoardStop();
+            await _shuffleBoardTask.CheckShuffleBoard();
+            CheckEndGame();
         }
 
         private void InspectTargetInfo(AsyncMessage<MoveTargetData> message)

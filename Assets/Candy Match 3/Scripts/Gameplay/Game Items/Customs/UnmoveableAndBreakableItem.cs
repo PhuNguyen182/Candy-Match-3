@@ -35,6 +35,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             base.ResetItem();
             _healthPoint = _maxHealthPoint;
             SetItemSpriteViaHealthPoint();
+            itemAnimation.ResetItem();
         }
 
         public override void InitMessages()

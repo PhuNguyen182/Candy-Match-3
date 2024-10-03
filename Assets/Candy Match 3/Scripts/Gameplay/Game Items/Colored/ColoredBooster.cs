@@ -17,6 +17,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private BoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
 
+        [Header("Effects")]
+        [SerializeField] private GameObject colorfulEffect;
+
         [Header("Colored Sprites")]
         [SerializeField] private Sprite[] normalSprites;
         [SerializeField] private Sprite[] wrappedSprites;
@@ -24,7 +27,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private Sprite[] verticalSprites;
 
         private bool _isMatchable;
-        private float _explodeTimer = 0;
         private bool _isBoardStop;
 
         private Sprite _normalSprite;
@@ -32,8 +34,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         private Sprite _verticalIcon;
 
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
-        private IPublisher<ActivateBoosterMessage> _activateBoosterPublisher;
-        private ISubscriber<BoardStopMessage> boardStopSubscriber;
+        private ISubscriber<BoardStopMessage> _boardStopSubscriber;
 
         public override bool IsMatchable => _isMatchable;
 
@@ -49,35 +50,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public bool IsActive { get; set; }
 
-        private void Update()
-        {
-            if (!IsActive)
-                return;
-
-            if (!_isBoardStop)
-            {
-                IsLocking = true;
-                _explodeTimer = 0;
-                return;
-            }
-
-            else
-            {
-                if (_explodeTimer < Match3Constants.ExplosionDelay)
-                {
-                    IsLocking = true;
-                    _explodeTimer += Time.deltaTime;
-
-                    if (_explodeTimer > Match3Constants.ExplosionDelay)
-                        TriggerBooster();
-                }
-            }
-        }
-
         public override void ResetItem()
         {
             base.ResetItem();
             SetMatchable(true);
+            itemAnimation.ResetItem();
+            colorfulEffect.gameObject.SetActive(false);
             OnItemReset().Forget();
         }
 
@@ -90,13 +68,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public override void InitMessages()
         {
             _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
-            _activateBoosterPublisher = GlobalMessagePipe.GetPublisher<ActivateBoosterMessage>();
             DisposableBagBuilder builder = DisposableBag.CreateBuilder();
-
-            boardStopSubscriber = GlobalMessagePipe.GetSubscriber<BoardStopMessage>();
-            boardStopSubscriber.Subscribe(message => _isBoardStop = message.IsStopped)
-                               .AddTo(builder);
-
+            _boardStopSubscriber = GlobalMessagePipe.GetSubscriber<BoardStopMessage>();
+            _boardStopSubscriber.Subscribe(SetBoardStopState).AddTo(builder);
             messageDisposable = builder.Build();
         }
 
@@ -202,6 +176,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             });
 
             itemAnimation.ToggleSuggest(false);
+            colorfulEffect.gameObject.SetActive(false);
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -228,6 +203,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
             return itemAnimation.SwapTo(position, duration, isMoveFirst);
+        }
+
+        private void SetBoardStopState(BoardStopMessage message)
+        {
+            _isBoardStop = message.IsStopped;
+            // To do: instead of taking board stop message, create new message contain item state of item locking and use it
         }
 
         private void SetTargetType()
@@ -265,6 +246,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayColorfulEffect()
         {
             itemAnimation.TriggerVibrate();
+            colorfulEffect.gameObject.SetActive(true);
         }
 
         public void PlayBoosterEffect(BoosterType boosterType)
@@ -298,23 +280,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         private async UniTask OnItemReset()
         {
-            _explodeTimer = 0;
-            IsLocking = false;
             IsNewCreated = true;
             IsActivated = false;
 
             TimeSpan delay = TimeSpan.FromSeconds(Match3Constants.ItemMatchDelay);
             await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, destroyToken);
             IsNewCreated = false;
-        }
-
-        private void TriggerBooster()
-        {
-            _activateBoosterPublisher.Publish(new ActivateBoosterMessage
-            {
-                Position = GridPosition,
-                Sender = this
-            });
         }
 
         public void Highlight(bool isActive)

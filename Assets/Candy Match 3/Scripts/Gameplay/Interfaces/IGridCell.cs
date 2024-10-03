@@ -19,7 +19,6 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public bool IsAvailable { get; }
         
         public bool IsMoving { get; set; }
-        public bool IsMatching { get; set; }
         public bool IsSpawner { get; set; }
         public bool CanPassThrough { get; set; }
         public bool IsCollectible { get; set; }
@@ -34,7 +33,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public IGridCellView GridCellView { get; }
         public IBlockItem BlockItem { get; }
 
-        public ReactiveProperty<bool> CheckLockProperty { get; }
+        public ReactiveProperty<bool> GridLockProperty { get; }
 
         public void SetGridID(int gridId);
         public void SetGridCellViewPosition();

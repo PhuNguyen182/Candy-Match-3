@@ -37,7 +37,6 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _builder.AddMessageBroker<CameraShakeMessage>();
             _builder.AddMessageBroker<AddInGameBoosterMessage>();
             _builder.AddMessageBroker<UseInGameBoosterMessage>();
-            _builder.AddMessageBroker<ActivateBoosterMessage>();
 
             _builder.AddMessageBroker<BoardStopMessage>();
             _builder.AddMessageBroker<BreakExpandableMessage>();

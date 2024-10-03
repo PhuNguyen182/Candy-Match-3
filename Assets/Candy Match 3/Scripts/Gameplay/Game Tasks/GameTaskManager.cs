@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.GridCells;
@@ -63,17 +62,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private IDisposable _disposable;
 
         public GameTaskManager(BoardInput boardInput, GridCellManager gridCellManager, ItemManager itemManager, SpawnItemTask spawnItemTask
-            , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, EffectDatabase effectDatabase
-            , MainGamePanel mainGamePanel, EndGameScreen endGameScreen, InGameSettingPanel settingSidePanel, TargetDatabase targetDatabase
-            , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase, SpecialItemTask specialItemTask
-            , ComplimentTask complimentTask, FillBoardTask fillBoardTask)
+            , MatchItemsTask matchItemsTask, MetaItemManager metaItemManager, BreakGridTask breakGridTask, MainGamePanel mainGamePanel
+            , EndGameScreen endGameScreen, InGameSettingPanel settingSidePanel, InGameBoosterPanel inGameBoosterPanel, SpecialItemTask specialItemTask
+            , ComplimentTask complimentTask, FillBoardTask fillBoardTask, ScriptableDatabaseCollection databaseCollection)
         {
             DisposableBuilder builder = Disposable.CreateBuilder();
 
             _gridCellManager = gridCellManager;
             _matchItemsTask = matchItemsTask;
 
-            _explodeItemTask = new(_gridCellManager);
+            _explodeItemTask = new(_gridCellManager, databaseCollection.ExplodeEffectCollection);
             _explodeItemTask.AddTo(ref builder);
 
             _detectMoveTask = new(_gridCellManager, _matchItemsTask);
@@ -93,18 +91,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _moveItemTask = new(_gridCellManager, _breakGridTask);
             _moveItemTask.AddTo(ref builder);
 
-            _activateBoosterTask = new(_gridCellManager, _breakGridTask, effectDatabase, _explodeItemTask);
+            _activateBoosterTask = new(_gridCellManager, _breakGridTask, databaseCollection.EffectDatabase, _explodeItemTask);
             _activateBoosterTask.AddTo(ref builder);
 
             _comboBoosterHandleTask = new(_gridCellManager, _breakGridTask, itemManager
-                                , _activateBoosterTask, effectDatabase, _explodeItemTask);
+                                , _activateBoosterTask, databaseCollection.EffectDatabase, _explodeItemTask);
             _comboBoosterHandleTask.AddTo(ref builder);
 
             _breakGridTask.SetActivateBoosterTask(_activateBoosterTask);
             _swapItemTask.SetComboBoosterHandler(_comboBoosterHandleTask);
 
-            _inGameBoosterTasks = new(_inputProcessor, _gridCellManager, _breakGridTask, _suggestTask, _explodeItemTask, _swapItemTask
-                            , _activateBoosterTask, _comboBoosterHandleTask, itemManager, inGameBoosterPanel, inGameBoosterPackDatabase);
+            _inGameBoosterTasks = new(_inputProcessor, _gridCellManager, _breakGridTask, _suggestTask, _explodeItemTask, _swapItemTask, settingSidePanel
+                            , _activateBoosterTask, _comboBoosterHandleTask, itemManager, inGameBoosterPanel, databaseCollection.InGameBoosterPackDatabase);
             _inGameBoosterTasks.AddTo(ref builder);
             _inputProcessor.SetInGameBoosterTasks(_inGameBoosterTasks);
 
@@ -116,15 +114,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             _checkGameBoardMovementTask = new(_gridCellManager);
             _checkGameBoardMovementTask.AddTo(ref builder);
+            complimentTask.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
             _inGameBoosterTasks.SetCheckBoardMovementTask(_checkGameBoardMovementTask);
 
-            _matchRegionTask = new(_gridCellManager, _findItemRegionTask, _matchItemsTask);
+            _matchRegionTask = new(_gridCellManager, _findItemRegionTask, _matchItemsTask, _suggestTask);
             _matchRegionTask.AddTo(ref builder);
 
             _shuffleBoardTask = new(_gridCellManager, _inputProcessor, _detectMoveTask, _suggestTask, fillBoardTask);
             _shuffleBoardTask.AddTo(ref builder);
 
-            _checkTargetTask = new(_matchRegionTask, targetDatabase, mainGamePanel);
+            _checkTargetTask = new(_matchRegionTask, databaseCollection.TargetDatabase, _shuffleBoardTask, mainGamePanel);
             _suggestTask.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
             _inputProcessor.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
 
@@ -151,13 +150,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void InitInGameBooster()
         {
-            _inGameBoosterTasks.InitBoosters(new()
-            {
-                new() { Amount = 0, BoosterType = InGameBoosterType.Break },
-                new() { Amount = 0, BoosterType = InGameBoosterType.Blast },
-                new() { Amount = 0, BoosterType = InGameBoosterType.Swap },
-                new() { Amount = 0, BoosterType = InGameBoosterType.Colorful }
-            });
+            _inGameBoosterTasks.InitStartBooster();
         }
 
         public void BuildBoardMovementCheck()

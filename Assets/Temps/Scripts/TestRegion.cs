@@ -17,7 +17,6 @@ public class TestRegion : MonoBehaviour
 
     public void TestPivot(MatchableRegion region)
     {
-        Vector3Int pivotPosition = Vector3Int.zero;
         BoundsInt range = region.GetRegionBounds();
         HashSet<Vector3Int> checkPositions = new();
         List<Vector3Int> poses = range.Iterator2D(BoundsExtension.SortOrder.Descending).ToList();
@@ -27,15 +26,13 @@ public class TestRegion : MonoBehaviour
             if (!region.IsInRegion(position))
                 continue;
 
-            if (!region.IsMatchPivot(position))
+            if (!region.IsPivotable(position))
                 continue;
 
-            pivotPosition = position;
-            break;
+            region.AddPivot(position);
         }
 
-        StartPosition = pivotPosition;
-        Debug.Log("Pivot" + pivotPosition);
+        StartPosition = region.TakePivot(false);
     }
 
     [Button]
@@ -48,12 +45,22 @@ public class TestRegion : MonoBehaviour
         HashSet<Vector3Int> extendPositions = new();
         TestPivot(region);
 
-        ExtendPosition(region, StartPosition, ref extendCount, Direction.None, true, extendPositions, ref _direction);
-
-        Debug.Log($"Max count: {extendCount} {_direction}");
-        foreach (var item in region.Elements)
+        int pivotCount = region.Pivotables.Count;
+        for (int i = 0; i < pivotCount; i++)
         {
-            Debug.Log(item);
+            Vector3Int pivot = region.TakePivot(true);
+            Debug.Log($"Pivot: {pivot}");
+            if (!region.IsInRegion(pivot))
+                continue;
+
+            ExtendPosition(region, pivot, ref extendCount, Direction.None, true, extendPositions, ref _direction);
+            foreach (var item in region.Elements)
+            {
+                Debug.Log(item);
+            }
+
+            region.RemoveElement(pivot);
+            region.RemoveRange(extendPositions);
         }
 
     }

@@ -13,6 +13,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         private BoundsInt _boardActiveBounds;
         private Dictionary<Vector3Int, IGridCell> _kpv;
 
+        public int PositionCount => _kpv.Count;
         public int BoardWidth => MaxPosition.x - MinPosition.x;
         public int BoardHeight => _boardActiveBounds.yMax - _boardActiveBounds.yMin;
 

@@ -54,12 +54,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public UniTask MatchTo(Vector3 toPosition, float duration)
         {
+            ChangeItemLayer(true);
             _matchTween ??= CreateMatchTween(toPosition, duration);
             _matchTween.ChangeValues(transform.position, toPosition, duration);
             _matchTween.Play();
 
             TimeSpan totalDuration = TimeSpan.FromSeconds(_matchTween.Duration());
-            return UniTask.Delay(totalDuration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+            return UniTask.Delay(totalDuration, false, PlayerLoopTiming.FixedUpdate, _destroyToken)
+                          .ContinueWith(() => ChangeItemLayer(false));
         }
 
         public UniTask MoveTo(Vector3 toPosition, float duration)
@@ -94,7 +96,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             _bounceMoveTween.Play();
 
             TimeSpan duration = TimeSpan.FromSeconds(_bounceMoveTween.Duration());
-            return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+            return UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken)
+                          .ContinueWith(() => itemRenderer.transform.localPosition = Vector3.zero);
         }
 
         public void JumpDown(float amptitude)
@@ -183,6 +186,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemAnimator.SetTrigger(ItemAnimationHashKeys.TransformHash);
         }
 
+        public void ResetItem()
+        {
+            itemRenderer.transform.localPosition = Vector3.zero;
+        }
+
         private Tweener CreateMoveBounceTween(Vector3 position)
         {
             return itemRenderer.transform.DOLocalMove(position, bounceDuration)
@@ -220,7 +228,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         private void PlayBoosterTrigger()
         {
-            if(isActiveAndEnabled)
+            if (isActiveAndEnabled)
                 _glowBoosterCoroutine = StartCoroutine(Highlight(boosterDuration, boosterEase, false));
         }
 

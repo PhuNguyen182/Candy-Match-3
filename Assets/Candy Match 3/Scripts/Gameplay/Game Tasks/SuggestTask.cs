@@ -52,7 +52,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void OnUpdate(float deltaTime)
         {
-            if (!_checkGameBoardMovementTask.IsBoardLock)
+            if (_checkGameBoardMovementTask.AllGridsUnlocked)
             {
                 _suggestTimer += Time.deltaTime;
                 if(_suggestTimer > SuggestDelay && !_suggestFlag)

@@ -61,8 +61,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             IItemAnimation toAnimation = toItem as IItemAnimation;
 
             UseSwapBooster();
-            fromCell.LockStates = LockStates.Swapping;
-            toCell.LockStates = LockStates.Swapping;
             bool isCollectible = CheckCollectible(fromCell, toCell);
 
             UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
@@ -74,9 +72,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             toItem.SetWorldPosition(fromCell.WorldPosition);
             fromItem.SetWorldPosition(toCell.WorldPosition);
-
-            fromCell.LockStates = LockStates.None;
-            toCell.LockStates = LockStates.None;
 
             if (isCollectible)
             {
@@ -97,13 +92,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 collectItem = collectCell.BlockItem;
                 _matchItemsTask.CheckMatchInSwap(remainCell.GridPosition);
+                ICollectible collectible = collectItem as ICollectible;
 
-                if (collectItem is ICollectible collectible)
-                {
-                    await collectible.Collect();
-                    _breakGridTask.ReleaseGridCell(collectCell);
-                    _checkGridTask.CheckAroundPosition(collectCell.GridPosition, 1);
-                }
+                await collectible.Collect();
+                _breakGridTask.ReleaseGridCell(collectCell);
+                _checkGridTask.CheckAroundPosition(collectCell.GridPosition, 1);
             }
 
             else
@@ -137,8 +130,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             IItemAnimation fromAnimation = fromItem as IItemAnimation;
             IItemAnimation toAnimation = toItem as IItemAnimation;
 
-            fromCell.LockStates = LockStates.Swapping;
-            toCell.LockStates = LockStates.Swapping;
+            if (!isSwapBack)
+            {
+                EffectManager.Instance.PlayItemSwapEffect(fromCell.WorldPosition);
+                EffectManager.Instance.PlayItemSwapEffect(toCell.WorldPosition);
+            }
 
             UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
             UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
@@ -176,9 +172,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             toItem.SetWorldPosition(fromCell.WorldPosition);
             fromItem.SetWorldPosition(toCell.WorldPosition);
 
-            fromCell.LockStates = LockStates.None;
-            toCell.LockStates = LockStates.None;
-
             await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
         }
 
@@ -189,9 +182,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             
             toItem.SetWorldPosition(fromCell.WorldPosition);
             fromItem.SetWorldPosition(toCell.WorldPosition);
-
-            fromCell.LockStates = LockStates.None;
-            toCell.LockStates = LockStates.None;
 
             await _comboBoosterHandleTask.CombineColorfulItemWithColorItem(fromCell, toCell);
         }
@@ -208,8 +198,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             toItem.SetWorldPosition(fromCell.WorldPosition);
             fromItem.SetWorldPosition(toCell.WorldPosition);
 
-            fromCell.LockStates = LockStates.None;
-            toCell.LockStates = LockStates.None;
 
             if (fromCell.IsCollectible)
             {
@@ -242,9 +230,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             toItem.SetWorldPosition(fromCell.WorldPosition);
             fromItem.SetWorldPosition(toCell.WorldPosition);
-
-            fromCell.LockStates = LockStates.None;
-            toCell.LockStates = LockStates.None;
 
             if (isSwapBack)
                 await CheckMatchOnSwap(fromCell, toCell);

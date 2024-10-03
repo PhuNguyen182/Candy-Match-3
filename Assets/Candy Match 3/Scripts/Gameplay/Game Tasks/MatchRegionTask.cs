@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,14 +18,21 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly GridCellManager _gridCellManager;
         private readonly FindItemRegionTask _findItemRegionTask;
         private readonly MatchItemsTask _matchItemsTask;
+        private readonly SuggestTask _suggestTask;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
-        public MatchRegionTask(GridCellManager gridCellManager, FindItemRegionTask findItemRegionTask, MatchItemsTask matchItemsTask)
+        public MatchRegionTask(GridCellManager gridCellManager, FindItemRegionTask findItemRegionTask, MatchItemsTask matchItemsTask, SuggestTask suggestTask)
         {
             _gridCellManager = gridCellManager;
             _findItemRegionTask = findItemRegionTask;
             _matchItemsTask = matchItemsTask;
+            _suggestTask = suggestTask;
+
+            _cts = new();
+            _token = _cts.Token;
         }
 
         public void CheckMatchRegion(Vector3Int position)
@@ -32,18 +40,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _findItemRegionTask.CheckMatchRegion(position);
         }
 
-        public async UniTask MatchAllRegions()
+        public async UniTask<int> MatchAllRegions()
         {
             using(ListPool<MatchableRegion>.Get(out List<MatchableRegion> regions))
             {
+                _suggestTask.Suggest(false);
+                // Must wait until all matches are solved to check new matchs to prevent duplicate check match
+                await UniTask.WaitUntil(() => _findItemRegionTask.RegionCount <= 0
+                                        , PlayerLoopTiming.FixedUpdate, _token);
                 regions = _findItemRegionTask.CollectMatchableRegions();
 
                 if (regions.Count <= 0)
                 {
                     _findItemRegionTask.Cleanup();
-                    return;
+                    return 0;
                 }
 
+                int count = 0;
                 _checkGridTask.CanCheck = false;
                 _findItemRegionTask.ClearCheckPositions();
 
@@ -51,9 +64,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     for (int i = 0; i < regions.Count; i++)
                     {
-                        using (MatchRegionResult result = GetMatchRegionResult(regions[i]))
+                        using (ListPool<MatchRegionResult>.Get(out var results))
                         {
-                            matchTasks.Add(_matchItemsTask.ProcessRegionMatch(result));
+                            results = GetMatchRegionResult(regions[i]);
+                            for (int j = 0; j < results.Count; j++)
+                            {
+                                using (results[j])
+                                {
+                                    count = count + 1;
+                                    matchTasks.Add(_matchItemsTask.ProcessRegionMatch(results[j]));
+                                }
+                            }
                         }
                     }
 
@@ -62,47 +83,66 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 _findItemRegionTask.ClearRegions();
                 _checkGridTask.CanCheck = true;
+                return count;
             }
         }
 
-        private MatchRegionResult GetMatchRegionResult(MatchableRegion region)
+        private List<MatchRegionResult> GetMatchRegionResult(MatchableRegion region)
         {
             using (region)
             {
                 int maxExtendedCount = 0;
                 Direction mainDirection = Direction.None;
+                List<MatchRegionResult> results = new();
 
-                Vector3Int pivotPosition = Vector3Int.zero;
                 BoundsInt range = region.GetRegionBounds();
                 HashSet<Vector3Int> checkPositions = new();
 
-                foreach (Vector3Int position in range.Iterator2D(BoundsExtension.SortOrder.Descending))
+                var positions = range.Iterator2D(BoundsExtension.SortOrder.Descending
+                                                , BoundsExtension.AxisOrder.YX);
+                foreach (Vector3Int position in positions)
                 {
                     if (!region.IsInRegion(position))
                         continue;
 
-                    if (!region.IsMatchPivot(position))
+                    if (!region.IsPivotable(position))
                         continue;
 
-                    pivotPosition = position;
-                    break;
+                    // Collect all pivotable positions
+                    region.AddPivot(position);
                 }
 
-                ExtendPosition(region, pivotPosition, ref maxExtendedCount, Direction.None
-                              , true, checkPositions, ref mainDirection);
-
-                checkPositions.Add(pivotPosition);
-                MatchType matchType = GetMatchType(checkPositions.Count, maxExtendedCount, mainDirection);
-
-                MatchRegionResult result = new()
+                int pivotCount = region.Pivotables.Count;
+                for (int i = 0; i < pivotCount; i++)
                 {
-                    MatchType = matchType,
-                    CandyColor = region.RegionColor,
-                    PivotPosition = pivotPosition,
-                    Positions = checkPositions
-                };
+                    // In all pivotable check matchable regions can be splitted
+                    Vector3Int pivot = region.TakePivot(true);
+                    if (!region.IsInRegion(pivot))
+                        continue;
 
-                return result;
+                    maxExtendedCount = 0;
+                    checkPositions.Clear();
+                    ExtendPosition(region, pivot, ref maxExtendedCount, Direction.None
+                                  , true, checkPositions, ref mainDirection);
+
+                    checkPositions.Add(pivot);
+                    MatchType matchType = GetMatchType(checkPositions.Count, maxExtendedCount, mainDirection);
+
+                    MatchRegionResult result = new()
+                    {
+                        MatchType = matchType,
+                        CandyColor = region.RegionColor,
+                        PivotPosition = pivot,
+                        Positions = new(checkPositions)
+                    };
+
+                    region.RemoveElement(pivot);
+                    region.RemoveRange(checkPositions);
+                    result.CheckArea = range;
+                    results.Add(result);
+                }
+
+                return results;
             }
         }
 
@@ -234,7 +274,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
-
+            _cts.Dispose();
         }
     }
 }

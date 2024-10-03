@@ -18,10 +18,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly GridCellManager _gridCellManager;
         private readonly IPublisher<BoardStopMessage> _boardStopMessage;
 
+        private int _gridLockedCount = 0;
         private TimeSpan _gridLockThrottle;
-        private IDisposable _gridLockDisposable;
+        private IDisposable _disposable;
 
-        public bool IsBoardLock { get; private set; }
+        public bool AllGridsUnlocked { get; private set; }
         public Observable<bool> LockObservable { get; private set; }
         public ReactiveProperty<bool> LockProperty { get; private set; }
 
@@ -43,47 +44,66 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 foreach (Vector3Int position in activePositions)
                 {
                     IGridCell gridCell = _gridCellManager.Get(position);
-                    gridCell.CheckLockProperty
-                            .Subscribe(SetLockValue)
-                            .AddTo(ref builder);
+                    gridCell.GridLockProperty.Subscribe(SetLockValue).AddTo(ref builder);
                 }
 
-                Observable<bool> lockStates = LockProperty.Where(isGridLocked => isGridLocked);
-                Observable<bool> unlockStates = LockProperty.Where(isGridLocked => !isGridLocked)
-                                                            .Debounce(_gridLockThrottle);
+                Observable<bool> lockedStates = LockProperty.Where(isGridLocked => isGridLocked);
+                Observable<bool> unlockedStates = LockProperty.Where(isGridLocked => !isGridLocked)
+                                                              .Debounce(_gridLockThrottle);
 
-                LockObservable = Observable.Merge(lockStates, unlockStates);
-                LockObservable.Where(isLocked => isLocked).Take(1)
-                              .Subscribe(value => SendBoardStopMessage(false))
+                LockObservable = Observable.Merge(lockedStates, unlockedStates);
+                LockObservable.Where(isGridLocked => isGridLocked)
+                              .Subscribe(_ => SendBoardStopMessage(false))
                               .AddTo(ref builder);
 
-                LockObservable.Subscribe(isBoardLock =>
+                LockObservable.Subscribe(isGridLocked =>
                               {
-                                  if (!isBoardLock)
+                                  if (!isGridLocked)
                                       SendBoardStopMessage(true);
                               }).AddTo(ref builder);
 
-                _gridLockDisposable = builder.Build();
+                _disposable = builder.Build();
             }
         }
 
-        public void SendBoardStopMessage(bool isBoardLock)
+        public void SendBoardStopMessage(bool isStopped)
         {
-            _boardStopMessage.Publish(new BoardStopMessage
+            if (isStopped)
             {
-                IsStopped = isBoardLock
-            });
+                bool isBoardStop = _gridCellManager.PositionCount == _gridLockedCount;
+
+                if (isBoardStop)
+                {
+                    AllGridsUnlocked = true;
+                    _boardStopMessage.Publish(new BoardStopMessage
+                    {
+                        IsStopped = true
+                    });
+                }
+
+                else AllGridsUnlocked = false;
+            }
+
+            else
+            {
+                AllGridsUnlocked = false;
+                _boardStopMessage.Publish(new BoardStopMessage
+                {
+                    IsStopped = false
+                });
+            }
         }
 
         private void SetLockValue(bool isLocked)
         {
-            IsBoardLock = isLocked;
+            int step = isLocked ? -1 : 1;
             LockProperty.Value = isLocked;
+            _gridLockedCount = _gridLockedCount + step;
         }
 
         public void Dispose()
         {
-            _gridLockDisposable?.Dispose();
+            _disposable?.Dispose();
         }
     }
 }

@@ -10,4 +10,11 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
         public SoundEffectType SoundEffectType;
         public AudioClip SoundEffectClip;
     }
+
+    [Serializable]
+    public struct MusicData
+    {
+        public BackgroundMusicType BackgroundMusicType;
+        public AudioClip BackgroundMusicClip;
+    }
 }
