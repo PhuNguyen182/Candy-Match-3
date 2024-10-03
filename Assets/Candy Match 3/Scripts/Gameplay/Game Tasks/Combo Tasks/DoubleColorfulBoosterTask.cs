@@ -140,7 +140,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                        , Vector3.zero, Quaternion.identity);
             fireray.SetPhaseStep(index);
-            fireray.SetColor(CandyColor.None, true);
             await fireray.Fire(targetGridCell, position, delay);
             await _breakGridTask.BreakItem(targetPosition);
         }

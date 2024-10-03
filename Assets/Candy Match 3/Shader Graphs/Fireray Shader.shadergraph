@@ -1981,7 +1981,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "7b270e70ebf346f4855a5faae5efb0c7",
     "m_Id": 0,
-    "m_DisplayName": "Tiling",
+    "m_DisplayName": "Line Tiling",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -3288,10 +3288,10 @@
     "m_Guid": {
         "m_GuidSerialized": "e42964b3-48ce-4b44-a1cb-5e2e31eeed2e"
     },
-    "m_Name": "Tiling",
+    "m_Name": "Line Tiling",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "Tiling",
-    "m_DefaultReferenceName": "_Tiling",
+    "m_RefNameGeneratedByDisplayName": "Line Tiling",
+    "m_DefaultReferenceName": "_Line_Tiling",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,

@@ -245,7 +245,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
                                                            , Vector3.zero, Quaternion.identity);
                 fireray.SetPhaseStep(index);
-                fireray.SetColor(targetGridCell.CandyColor, false);
                 if (targetGridCell.GridStateful.CanContainItem)
                 {
                     targetGridCell.BlockItem.IsLocking = true;

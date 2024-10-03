@@ -36,11 +36,6 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
 
         public void SetPhaseStep(int step) => rayfire.SetPhaseStep(step);
 
-        public void SetColor(CandyColor candyColor, bool isSpecial)
-        {
-            rayfire.SetColor(candyColor, isSpecial);
-        }
-
         private void SetEndRayfirePosition(Vector3 position)
         {
             rayfire.EndPosition = position;
