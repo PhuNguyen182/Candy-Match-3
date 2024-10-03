@@ -10,6 +10,7 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Gameplay.Strategies;
@@ -28,6 +29,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly BlastBoosterTask _blastBoosterTask;
         private readonly PlaceBoosterTask _placeBoosterTask;
         private readonly InGameBoosterPanel _inGameBoosterPanel;
+        private readonly InGameSettingPanel _inGameSettingPanel;
         private readonly InGameBoosterPackDatabase _inGameBoosterPackDatabase;
         private readonly SwapItemTask _swapItemTask;
         private readonly SuggestTask _suggestTask;
@@ -38,6 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly ISubscriber<UseInGameBoosterMessage> _useBoosterSubscriber;
         private Dictionary<InGameBoosterType, ReactiveProperty<int>> _boosters;
 
+        private BoosterButton _usingBoosterButton;
         private IDisposable _messageDisposable;
         private IDisposable _boosterDisposable;
         private IDisposable _disposable;
@@ -46,7 +49,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         public InGameBoosterType CurrentBooster { get; private set; }
 
         public InGameBoosterTasks(InputProcessTask inputProcessTask, GridCellManager gridCellManager, BreakGridTask breakGridTask
-            , SuggestTask suggestTask, ExplodeItemTask explodeItemTask , SwapItemTask swapItemTask
+            , SuggestTask suggestTask, ExplodeItemTask explodeItemTask , SwapItemTask swapItemTask, InGameSettingPanel inGameSettingPanel
             , ActivateBoosterTask activateBoosterTask, ComboBoosterHandleTask comboBoosterHandleTask, ItemManager itemManager
             , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase)
         {
@@ -59,6 +62,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                                     , comboBoosterHandleTask.ColorfulStripedBoosterTask
                                     , comboBoosterHandleTask.ColorfulWrappedBoosterTask);
 
+            _inGameSettingPanel = inGameSettingPanel;
             _inGameBoosterPanel = inGameBoosterPanel;
             _inGameBoosterPackDatabase = inGameBoosterPackDatabase;
 
@@ -126,7 +130,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     boosterAmount.Subscribe(value => boosterButton.SetBoosterCount(value));
                     IDisposable d1 = boosterButton.OnClickObserver.Where(value => (boosterAmount.Value > 0 || value.IsFree) 
                                                   && !value.IsActive && _inputProcessTask.IsActive && _checkGameBoardMovementTask.AllGridsUnlocked)
-                                                  .Subscribe(value => EnableBooster(booster.BoosterType));
+                                                  .Subscribe(value => EnableBooster(booster.BoosterType, boosterButton));
 
                     IDisposable d2 = boosterButton.OnClickObserver.Where(value => boosterAmount.Value <= 0 && !value.IsFree && !value.IsActive 
                                                   && _inputProcessTask.IsActive && _checkGameBoardMovementTask.AllGridsUnlocked)
@@ -194,6 +198,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 return;
 
             IsBoosterUsed = false;
+            if (_usingBoosterButton != null)
+            {
+                _usingBoosterButton.SetButtonUsageState(IsBoosterUsed);
+                _inGameSettingPanel.SetButtonSettingParent(!IsBoosterUsed, _inGameBoosterPanel.SettingButtonContainer);
+            }
+            
             _boosters[message.BoosterType].Value--;
             CurrentBooster = InGameBoosterType.None;
 
@@ -206,14 +216,29 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _boosters[message.BoosterType].Value += message.Amount;
         }
 
-        private void EnableBooster(InGameBoosterType boosterType)
+        private void EnableBooster(InGameBoosterType boosterType, BoosterButton boosterButton)
         {
-            IsBoosterUsed = true;
-            CurrentBooster = boosterType;
+            if (!IsBoosterUsed)
+            {
+                IsBoosterUsed = true;
+                CurrentBooster = boosterType;
 
-            SetSuggestActive(false);
-            _inGameBoosterPanel.ShowBoosterMessage(boosterType);
-            _inGameBoosterPanel.SetBoosterPanelActive(true).Forget();
+                SetSuggestActive(false);
+                _inGameBoosterPanel.ShowBoosterMessage(boosterType);
+                _inGameBoosterPanel.SetBoosterPanelActive(true).Forget();
+            }
+
+            else
+            {
+                IsBoosterUsed = false;
+                CurrentBooster = InGameBoosterType.None;
+                SetSuggestActive(true);
+                _inGameBoosterPanel.SetBoosterPanelActive(false).Forget();
+            }
+
+            _usingBoosterButton = boosterButton;
+            _usingBoosterButton.SetButtonUsageState(IsBoosterUsed);
+            _inGameSettingPanel.SetButtonSettingParent(!IsBoosterUsed, _inGameBoosterPanel.SettingButtonContainer);
         }
 
         private async UniTask ShowBuyBoosterPopup(InGameBoosterType boosterType)

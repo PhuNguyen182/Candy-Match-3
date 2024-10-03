@@ -15,6 +15,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [SerializeField] private TMP_Text boosterCount;
         [SerializeField] private GameObject lockObject;
         [SerializeField] private GameObject addObject;
+        [SerializeField] private Canvas buttonCanvas;
 
         private int _count;
         private bool _isFree;
@@ -24,13 +25,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         public InGameBoosterType BoosterType => boosterType;
 
         public Observable<(bool IsActive, bool IsFree)> OnClickObserver
-            => boosterButton.OnClickAsObservable()
-                            .Where(_ => !_isLocked)
+            => boosterButton.OnClickAsObservable().Where(_ => !_isLocked)
                             .Select(_ => (_isActive, _isFree));
 
-        private void Awake()
+        public void SetButtonUsageState(bool isUsing)
         {
-            
+            SetButtonUIOverride(isUsing);
+        }
+
+        public void SetButtonUIOverride(bool isOverride)
+        {
+            buttonCanvas.overrideSorting = isOverride;
         }
 
         public void SetBoosterCount(int count)
