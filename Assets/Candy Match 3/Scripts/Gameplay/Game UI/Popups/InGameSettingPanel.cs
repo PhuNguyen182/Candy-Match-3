@@ -62,7 +62,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
                 panelGroup.gameObject.SetActive(true);
                 background.ShowBackground(true);
 
-                await UniTask.Delay(TimeSpan.FromSeconds(0.834f), cancellationToken: _token);
+                await UniTask.Delay(TimeSpan.FromSeconds(0.917f), cancellationToken: _token);
                 panelGroup.interactable = true;
                 settingButton.interactable = true;
             }
@@ -123,7 +123,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         private async UniTask CloseAnimation()
         {
             animator.SetTrigger(_closeHash);
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5f), cancellationToken: _token);
+            await UniTask.Delay(TimeSpan.FromSeconds(0.8f), cancellationToken: _token);
         }
 
         private void UpdateButtons()
