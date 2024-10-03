@@ -55,12 +55,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         public InGameBoosterTasks(InputProcessTask inputProcessTask, GridCellManager gridCellManager, BreakGridTask breakGridTask
             , SuggestTask suggestTask, ExplodeItemTask explodeItemTask , SwapItemTask swapItemTask, InGameSettingPanel inGameSettingPanel
             , ActivateBoosterTask activateBoosterTask, ComboBoosterHandleTask comboBoosterHandleTask, ItemManager itemManager
-            , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase)
+            , InGameBoosterPanel inGameBoosterPanel, InGameBoosterPackDatabase inGameBoosterPackDatabase, EffectDatabase effectDatabase)
         {
             _suggestTask = suggestTask;
             _swapItemTask = swapItemTask;
             _inputProcessTask = inputProcessTask;
-            _breakBoosterTask = new(breakGridTask, explodeItemTask);
+
+            _breakBoosterTask = new(gridCellManager, breakGridTask, explodeItemTask
+                                    , effectDatabase.LollipopHammer);
+
             _blastBoosterTask = new(gridCellManager, breakGridTask, explodeItemTask);
             _placeBoosterTask = new(gridCellManager, breakGridTask, activateBoosterTask, itemManager
                                     , comboBoosterHandleTask.ColorfulStripedBoosterTask
@@ -82,6 +85,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _token = _cts.Token;
 
             var builder = Disposable.CreateBuilder();
+            _breakBoosterTask.AddTo(ref builder);
             _blastBoosterTask.AddTo(ref builder);
             _placeBoosterTask.AddTo(ref builder);
             _disposable = builder.Build();
