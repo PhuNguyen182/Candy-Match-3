@@ -19,6 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly ReactiveProperty<int> _complimentCounter;
         private readonly ISubscriber<ComplimentMessage> _complimentSubscriber;
 
+        private CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private IDisposable _messageDisposable;
         private IDisposable _disposable;
 
@@ -28,26 +29,27 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             _complimentCounter = new();
             _delay = TimeSpan.FromSeconds(1f);
-            _throttle = TimeSpan.FromSeconds(0.5f);
+            _throttle = TimeSpan.FromSeconds(0.334f);
             _characterEmotion = characterEmotion;
 
             var messageBuilder = MessagePipe.DisposableBag.CreateBuilder();
 
             _complimentSubscriber = GlobalMessagePipe.GetSubscriber<ComplimentMessage>();
-            _complimentSubscriber.Subscribe(_ => AddCounter())
-                                 .AddTo(messageBuilder);
-
+            _complimentSubscriber.Subscribe(_ => AddCounter()).AddTo(messageBuilder);
             _messageDisposable = messageBuilder.Build();
 
             var builder = Disposable.CreateBuilder();
-
-            _complimentCounter.Pairwise().Where(pair => pair.Previous != pair.Current)
-                              .Debounce(_throttle)
-                              .Delay(_delay)
+            _complimentCounter.Pairwise().Where(ComplimentPredicate)
+                              .Debounce(_throttle).Delay(_delay)
                               .Subscribe(pair => OnCounterEnd(pair.Current))
                               .AddTo(ref builder);
 
             _disposable = builder.Build();
+        }
+
+        public void SetCheckGameBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
+        {
+            _checkGameBoardMovementTask = checkGameBoardMovementTask;
         }
 
         private void AddCounter()
@@ -55,9 +57,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _complimentCounter.Value = _complimentCounter.Value + 1;
         }
 
+        private bool ComplimentPredicate((int Previous, int Current) pair)
+        {
+            return pair.Previous != pair.Current;
+        }
+
         private void OnCounterEnd(int count)
         {
             if (IsEndGame)
+                return;
+
+            if (!_checkGameBoardMovementTask.AllGridsUnlocked)
                 return;
 
             if (count == 0)

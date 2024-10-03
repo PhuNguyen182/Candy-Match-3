@@ -23,6 +23,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
         public override void ReleaseItem()
         {
             base.ReleaseItem();
+            itemAnimation.ResetItem();
             IsActivated = false;
         }
 

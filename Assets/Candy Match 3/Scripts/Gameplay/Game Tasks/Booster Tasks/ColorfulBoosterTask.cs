@@ -56,7 +56,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
-                    fireTasks.Add(FireItemCatchRay(colorPositions[i], startPosition, i * 0.02f));
+                    fireTasks.Add(FireItemCatchRay(i, colorPositions[i], startPosition, i * 0.02f));
                 }
 
                 await UniTask.WhenAll(fireTasks);
@@ -76,6 +76,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 boosterCell.LockStates = LockStates.None;
                 _activateCount = _activateCount - 1;
+                _checkGridTask.CheckAroundPosition(boosterCell.GridPosition, 0);
 
                 if (_checkedCandyColors.Count <= 0 && _activateCount <= 0)
                     _checkGridTask.CanCheck = true;
@@ -112,7 +113,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
-                    fireTasks.Add(FireItemCatchRay(colorPositions[i], startPosition, i * 0.02f));
+                    fireTasks.Add(FireItemCatchRay(i, colorPositions[i], startPosition, i * 0.02f));
                 }
 
                 await UniTask.WhenAll(fireTasks);
@@ -132,6 +133,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 gridCell.LockStates = LockStates.None;
                 _activateCount = _activateCount - 1;
+                _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 0);
 
                 if (_checkedCandyColors.Count <= 0 && _activateCount <= 0)
                     _checkGridTask.CanCheck = true;
@@ -234,14 +236,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
         }
 
-        private async UniTask FireItemCatchRay(Vector3Int targetPosition, Vector3 position, float delay)
+        private async UniTask FireItemCatchRay(int index, Vector3Int targetPosition, Vector3 position, float delay)
         {
             IGridCell targetGridCell = _gridCellManager.Get(targetPosition);
-            ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
-                                                       , Vector3.zero, Quaternion.identity);
-            targetGridCell.BlockItem.IsLocking = true;
-            targetGridCell.BlockItem.SetMatchable(false);
-            await fireray.Fire(targetGridCell, position, delay);
+
+            if (targetGridCell != null && targetGridCell.HasItem)
+            {
+                ColorfulFireray fireray = SimplePool.Spawn(_colorfulFireray, EffectContainer.Transform
+                                                           , Vector3.zero, Quaternion.identity);
+                fireray.SetPhaseStep(index);
+                if (targetGridCell.GridStateful.CanContainItem)
+                {
+                    targetGridCell.BlockItem.IsLocking = true;
+                    targetGridCell.BlockItem.SetMatchable(false);
+                }
+
+                await fireray.Fire(targetGridCell, position, delay);
+            }
         }
 
         public void RemoveColor(CandyColor candyColor)

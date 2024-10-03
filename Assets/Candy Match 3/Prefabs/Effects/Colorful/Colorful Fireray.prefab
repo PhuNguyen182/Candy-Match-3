@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3940653306006658191}
   - component: {fileID: 1047846092906051721}
-  - component: {fileID: 8425937973016908103}
+  - component: {fileID: 5900156996370724665}
   m_Layer: 0
   m_Name: Lightning
   m_TagString: Untagged
@@ -54,7 +54,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6f90661dfc7c93a409d3c75f080c0dbc, type: 2}
+  - {fileID: 2100000, guid: 76acab71d5dc2b04399a4eafe92ddeb0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -78,7 +78,7 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.4
+    widthMultiplier: 0.17
     widthCurve:
       serializedVersion: 2
       m_Curve:
@@ -135,7 +135,7 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &8425937973016908103
+--- !u!114 &5900156996370724665
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,20 +144,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 3107589019749078799}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a6c9408868f24a4ca0d167f1a0a03d0, type: 3}
+  m_Script: {fileID: 11500000, guid: e6defa2b434b9ed4e94e56bec760a976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartObject: {fileID: 0}
-  StartPosition: {x: 0, y: 0, z: 0}
-  EndObject: {fileID: 0}
-  EndPosition: {x: 0, y: 0, z: 0}
-  Generations: 2
-  Duration: 0.013
-  ChaosFactor: 0.13
-  ManualMode: 0
-  Rows: 6
-  Columns: 1
-  AnimationMode: 3
+  segmentCount: 3
+  rayline: {fileID: 1047846092906051721}
+  blueColor: {x: 0.23, y: 4.2, z: 6.5, w: 1}
+  greenColor: {x: 0.23, y: 6.5, z: 0.75, w: 1}
+  orangeColor: {x: 6.5, y: 2.35, z: 0.24, w: 1}
+  purpleColor: {x: 4.68, y: 0.72, z: 6.5, w: 1}
+  redColor: {x: 6.5, y: 0.21, z: 0.3, w: 1}
+  yellowColor: {x: 6.5, y: 5.63, z: 0.27, w: 1}
+  specialColor: {x: 3.85, y: 8.3, z: 9.2, w: 1}
+  ampllitude: 0.115
+  originalPhase: 45
+  angularFrequency: 90
+  rotateSpeed: 15
 --- !u!1 &3689754844382074901
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,4 +205,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d51781eb55b66984fbac82bc70fddfab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayfire: {fileID: 8425937973016908103}
+  rayfire: {fileID: 5900156996370724665}

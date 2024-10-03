@@ -180,6 +180,7 @@ MonoBehaviour:
   sfxSource: {fileID: 6833917109913662526}
   itemSource: {fileID: 1974911027388513976}
   effectDatabase: {fileID: 11400000, guid: 05db13d91da92a1498b14b0d55577ebc, type: 2}
+  musicDatabase: {fileID: 11400000, guid: c1170791045690844918d1899a7ae826, type: 2}
 --- !u!1 &6433042252606230343
 GameObject:
   m_ObjectHideFlags: 0

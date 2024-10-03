@@ -17,6 +17,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private BoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
 
+        [Header("Effects")]
+        [SerializeField] private GameObject colorfulEffect;
+
         [Header("Colored Sprites")]
         [SerializeField] private Sprite[] normalSprites;
         [SerializeField] private Sprite[] wrappedSprites;
@@ -24,7 +27,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private Sprite[] verticalSprites;
 
         private bool _isMatchable;
-        private float _explodeTimer = 0;
         private bool _isBoardStop;
 
         private Sprite _normalSprite;
@@ -52,6 +54,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             base.ResetItem();
             SetMatchable(true);
+            itemAnimation.ResetItem();
+            colorfulEffect.gameObject.SetActive(false);
             OnItemReset().Forget();
         }
 
@@ -172,6 +176,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             });
 
             itemAnimation.ToggleSuggest(false);
+            colorfulEffect.gameObject.SetActive(false);
             SimplePool.Despawn(this.gameObject);
         }
 
@@ -241,6 +246,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayColorfulEffect()
         {
             itemAnimation.TriggerVibrate();
+            colorfulEffect.gameObject.SetActive(true);
         }
 
         public void PlayBoosterEffect(BoosterType boosterType)
@@ -274,7 +280,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         private async UniTask OnItemReset()
         {
-            _explodeTimer = 0;
             IsNewCreated = true;
             IsActivated = false;
 

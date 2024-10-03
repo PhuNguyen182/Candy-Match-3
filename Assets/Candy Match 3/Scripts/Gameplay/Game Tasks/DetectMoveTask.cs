@@ -141,6 +141,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!fromGridCell.HasItem || !toGridCell.HasItem)
                 return false;
 
+            if (!fromGridCell.IsMoveable || !toGridCell.IsMoveable)
+                return false;
+
             IBlockItem fromItem = fromGridCell.BlockItem;
             IBlockItem toItem = toGridCell.BlockItem;
 

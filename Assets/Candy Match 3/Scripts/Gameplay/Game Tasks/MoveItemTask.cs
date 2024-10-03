@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,22 +15,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
 
-        private CheckGridTask _checkGridTask;
-
         private int _boardHeight;
-
-        private CancellationToken _token;
-        private CancellationTokenSource _tcs;
-
-        private IDisposable _disposable;
+        private CheckGridTask _checkGridTask;
 
         public MoveItemTask(GridCellManager gridCellManager, BreakGridTask breakGridTask)
         {
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
-
-            _tcs = new();
-            _token = _tcs.Token;
         }
 
         public async UniTask MoveItem(IGridCell moveGridCell)
@@ -55,7 +45,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     0 => new(0, -1),
                     1 => new(-1, -1),
                     2 => new(1, -1),
-                    _ => new(0, -1)
+                    _ => new(0, 0)
                 };
 
                 if (checkColumnIndex != 0)
@@ -73,10 +63,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 toGridCell = targetCell;
 
-                if (checkColumnIndex != 0 && !CheckLine(toGridCell.GridPosition, checkDirection))
+                if (checkColumnIndex != 0)
                 {
-                    checkColumnIndex = checkColumnIndex + 1;
-                    continue;
+                    if (!CheckLine(toGridCell.GridPosition, checkDirection))
+                    {
+                        checkColumnIndex = checkColumnIndex + 1;
+                        continue;
+                    }
                 }
 
                 checkColumnIndex = 0;
@@ -95,11 +88,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 startPosition = toPosition;
                 currentGrid = toGridCell;
+                currentGrid.IsMoving = false;
             }
 
-            if (!currentGrid.IsMatching)
-                AnimateItemJumpDown(blockItem, outputMoveStep);
-                
+            AnimateItemJumpDown(blockItem, outputMoveStep);
             currentGrid.LockStates = LockStates.None;
             currentGrid.IsMoving = false;
 
@@ -168,9 +160,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (checkCell.IsSpawner)
                     return false;
 
-                if (!checkCell.CanContainItem)
-                    return false;
-
                 if (!checkCell.CanMove)
                     return true;
 
@@ -202,31 +191,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public bool CheckMoveable(IGridCell gridCell)
         {
-            if (gridCell == null)
+            if (gridCell == null || !gridCell.HasItem)
                 return false;
 
-            if (gridCell.IsLocked)
+            if (gridCell.IsLocked || !gridCell.IsMoveable)
                 return false;
 
-            if (!gridCell.HasItem)
-                return false;
-
-            if (!gridCell.IsMoveable || gridCell.IsMoving)
-                return false;
-
-            IGridCell downCell = _gridCellManager.Get(gridCell.GridPosition + Vector3Int.down);
-            if (downCell != null && downCell.CanSetItem)
-                return true;
-
-            IGridCell leftSide = _gridCellManager.Get(gridCell.GridPosition + new Vector3Int(-1, -1));
-            if (leftSide != null && leftSide.CanSetItem)
-                return true;
-
-            IGridCell rightSide = _gridCellManager.Get(gridCell.GridPosition + new Vector3Int(1, -1));
-            if (rightSide != null && rightSide.CanSetItem)
-                return true;
-
-            return false;
+            return true;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
@@ -236,7 +207,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void Dispose()
         {
-            _tcs.Dispose();
+
         }
     }
 }

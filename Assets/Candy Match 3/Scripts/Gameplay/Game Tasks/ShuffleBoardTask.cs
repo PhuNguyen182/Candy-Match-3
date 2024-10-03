@@ -25,6 +25,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _activePositions;
         private List<Vector3Int> _shuffleableCells;
 
+        private const int MaxRetryTime = 1000;
+        private const float ItemTransformDelay = 0.0075f;
+
         public ShuffleBoardTask(GridCellManager gridCellManager, InputProcessTask inputProcessTask
             , DetectMoveTask detectMoveTask, SuggestTask suggestTask, FillBoardTask fillBoardTask)
         {
@@ -63,8 +66,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (_detectMoveTask.HasPossibleMove())
                 return;
 
-            bool canShuffle = TryShuffle();
-            if (canShuffle)
+            bool isShuffleable = TryShuffle();
+            if (isShuffleable)
                 TransformItems(true).Forget();
         }
 
@@ -85,9 +88,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             int shuffleCount = 0;
             CollectShuffleableCell();
 
-            while (shuffleCount < 1000)
+            while (shuffleCount < MaxRetryTime)
             {
-                ClearItemColor();
                 _fillBoardTask.BuildShuffle(_shuffleableCells);
                 _detectMoveTask.DetectPossibleMoves();
 
@@ -118,21 +120,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (!gridCell.BlockItem.IsMatchable)
                     continue;
 
+                if (!gridCell.IsMoveable)
+                    continue;
+
                 if (gridCell.BlockItem is IBooster)
                     continue;
 
                 _shuffleableCells.Add(_activePositions[i]);
-            }
-        }
-
-        private void ClearItemColor()
-        {
-            for (int i = 0; i < _shuffleableCells.Count; i++)
-            {
-                IGridCell gridCell = _gridCellManager.Get(_shuffleableCells[i]);
-
-                if (gridCell.BlockItem is IItemTransform itemTransform) // Temporary clear current color of the item
-                    itemTransform.SwitchTo(ItemType.None);
             }
         }
 
@@ -157,7 +151,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     {
                         IGridCell gridCell = _gridCellManager.Get(_shuffleableCells[i]);
                         IItemTransform itemTransform = gridCell.BlockItem as IItemTransform;
-                        transformTasks.Add(itemTransform.Transform(i * 0.0075f));
+                        transformTasks.Add(itemTransform.Transform(i * ItemTransformDelay));
                     }
 
                     await UniTask.WhenAll(transformTasks);

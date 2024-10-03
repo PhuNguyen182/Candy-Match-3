@@ -67,7 +67,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 Vector3Int checkPosition = gridCell2.GridPosition;
                 positions.AddRange(attackRange.Iterator2D());
+
                 _explodeItemTask.Blast(checkPosition, affectRange).Forget();
+                _explodeItemTask.Explode(checkPosition, ExplodeType.DoubleWrapped);
 
                 using (ListPool<UniTask>.Get(out List<UniTask> breakTasks))
                 {

@@ -95,8 +95,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void CheckAroundPosition(Vector3Int position, int range)
         {
-            BoundsInt checkRange = position.GetBounds2D(range);
-            AddRangeToCheck(checkRange);
+            if (range != 0)
+            {
+                BoundsInt checkRange = position.GetBounds2D(range);
+                AddRangeToCheck(checkRange);
+            }
+
+            else
+                _checkPositions.Add(position);
         }
 
         public void Dispose()

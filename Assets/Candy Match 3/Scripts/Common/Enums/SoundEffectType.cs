@@ -3,6 +3,14 @@ using System;
 namespace CandyMatch3.Scripts.Common.Enums
 {
     [Serializable]
+    public enum BackgroundMusicType
+    {
+        None = 0,
+        Mainhome = 1,
+        Gameplay = 2
+    }
+
+    [Serializable]
     public enum SoundEffectType
     {
         None = 0,

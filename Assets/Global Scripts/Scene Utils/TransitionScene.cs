@@ -4,6 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Common.Enums;
+using GlobalScripts.Audios;
 
 namespace GlobalScripts.SceneUtils
 {
@@ -48,8 +50,24 @@ namespace GlobalScripts.SceneUtils
             {
                 await UniTask.Delay(TimeSpan.FromSeconds(2.5f), cancellationToken: _token);
                 await SceneLoader.LoadScene(nextSceneName);
+
+                MusicManager.Instance.StopMusic();
+                BackgroundMusicType bgm = GetMusicBySceneName(nextSceneName);
+                MusicManager.Instance.PlayBackgroundMusic(bgm, volume: 0.6f);
+
                 SceneBridge.Bridge = null;
             }
+        }
+
+        private BackgroundMusicType GetMusicBySceneName(string sceneName)
+        {
+            if (string.CompareOrdinal(sceneName, SceneConstants.Mainhome) == 0)
+                return BackgroundMusicType.Mainhome;
+            
+            if (string.CompareOrdinal(sceneName, SceneConstants.Gameplay) == 0)
+                return BackgroundMusicType.Gameplay;
+
+            return BackgroundMusicType.None;
         }
     }
 }

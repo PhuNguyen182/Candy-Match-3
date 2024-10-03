@@ -145,10 +145,10 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 if (gridCell == null)
                     break;
 
-                if (!gridCell.HasItem || gridCell.IsMoving || gridCell.IsLocked)
+                if (!gridCell.HasItem || gridCell.IsLocked)
                     break;
 
-                if (!gridCell.BlockItem.IsMatchable || gridCell.IsMatching)
+                if (!gridCell.BlockItem.IsMatchable)
                     break;
 
                 if (gridCell.BlockItem.CandyColor != candyColor)
@@ -194,10 +194,10 @@ namespace CandyMatch3.Scripts.Gameplay.Models.Match
                 if (gridCell == null)
                     break;
 
-                if (!gridCell.HasItem || gridCell.IsMoving || gridCell.IsLocked)
+                if (!gridCell.HasItem || gridCell.IsLocked)
                     break;
                 
-                if (!gridCell.BlockItem.IsMatchable || gridCell.IsMatching)
+                if (!gridCell.BlockItem.IsMatchable)
                     break;
 
                 if (gridCell.BlockItem.CandyColor != candyColor)

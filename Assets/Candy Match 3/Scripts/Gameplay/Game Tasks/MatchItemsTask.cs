@@ -1,6 +1,5 @@
 using R3;
 using System;
-using System.Text;
 using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,9 +60,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if(CheckMatchAt(position))
             {
                 bool isMatch = IsMatchable(position, out MatchResult matchResult);
-                
-                if(isMatch)
-                    ProcessNormalMatch(matchResult).Forget();
+                if(isMatch) ProcessNormalMatch(matchResult).Forget();
 
                 return isMatch;
             }
@@ -88,10 +85,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                     foreach (Vector3Int position in regionResult.Positions)
                     {
-                        boundPositions.Add(position);
                         IGridCell gridCell = _gridCellManager.Get(position);
                         IBlockItem blockItem = gridCell.BlockItem;
-                        gridCell.IsMatching = true;
 
                         if (matchType != MatchType.Match3 && gridCell.GridPosition == regionResult.PivotPosition)
                         {
@@ -122,10 +117,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     int count = boundPositions.Count;
                     boundPositions.Sort(_vector3IntComparer);
 
-                    Vector3Int min = boundPositions[0] + new Vector3Int(-1, -1);
-                    Vector3Int max = boundPositions[count - 1] + new Vector3Int(1, 1);
+                    Vector3Int min = regionResult.CheckArea.min + new Vector3Int(-1, -1);
+                    Vector3Int max = regionResult.CheckArea.max;
 
-                    boundPositions.Clear();
                     boundPositions.Add(min);
                     boundPositions.Add(max);
 
@@ -164,7 +158,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         boundPositions.Add(position);
                         IGridCell gridCell = _gridCellManager.Get(position);
                         IBlockItem blockItem = gridCell.BlockItem;
-                        gridCell.IsMatching = true;
 
                         if (matchType != MatchType.Match3 && gridCell.GridPosition == matchResult.Position)
                         {
@@ -225,10 +218,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!gridCell.HasItem)
                 return false;
 
-            if (!gridCell.BlockItem.IsMatchable || gridCell.IsMatching)
-                return false;
-
-            if (gridCell.IsLocked || gridCell.IsMoving)
+            if (!gridCell.BlockItem.IsMatchable)
                 return false;
 
             return true;

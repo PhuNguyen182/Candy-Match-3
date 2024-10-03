@@ -16,8 +16,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [SerializeField] private BoosterButton blastBooster;
         [SerializeField] private BoosterButton swapBooster;
         [SerializeField] private BoosterButton colorfulBooster;
-        
+
         [Space(10)]
+        [SerializeField] private Transform settingButtonContainer;
         [SerializeField] private InGameBoosterMessage inGameBoosterMessage;
 
         [Space(10)]
@@ -30,6 +31,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         private const string ColorfulBoosterMessage = "Remove all items that have same color you choose";
 
         private List<BoosterButton> _boosterButtons;
+        public Transform SettingButtonContainer => settingButtonContainer;
 
         public List<BoosterButton> BoosterButtons
         {
