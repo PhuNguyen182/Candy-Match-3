@@ -1,6 +1,7 @@
 using R3;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,7 +41,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly ISubscriber<UseInGameBoosterMessage> _useBoosterSubscriber;
         private Dictionary<InGameBoosterType, ReactiveProperty<int>> _boosters;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
         private BoosterButton _usingBoosterButton;
+
         private IDisposable _messageDisposable;
         private IDisposable _boosterDisposable;
         private IDisposable _disposable;
@@ -71,8 +75,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _addBoosterSubscriber.Subscribe(AddBooster).AddTo(messageBuilder);
 
             _useBoosterSubscriber = GlobalMessagePipe.GetSubscriber<UseInGameBoosterMessage>();
-            _useBoosterSubscriber.Subscribe(AfterUseBooster).AddTo(messageBuilder);
+            _useBoosterSubscriber.Subscribe(_ => AfterUseBooster(_).Forget()).AddTo(messageBuilder);
             _messageDisposable = messageBuilder.Build();
+
+            _cts = new();
+            _token = _cts.Token;
 
             var builder = Disposable.CreateBuilder();
             _blastBoosterTask.AddTo(ref builder);
@@ -192,23 +199,23 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             return _placeBoosterTask.Activate(position);
         }
 
-        private void AfterUseBooster(UseInGameBoosterMessage message)
+        private async UniTask AfterUseBooster(UseInGameBoosterMessage message)
         {
             if (!IsBoosterUsed)
                 return;
 
             IsBoosterUsed = false;
-            if (_usingBoosterButton != null)
-            {
-                _usingBoosterButton.SetButtonUsageState(IsBoosterUsed);
-                _inGameSettingPanel.SetButtonSettingParent(!IsBoosterUsed, _inGameBoosterPanel.SettingButtonContainer);
-            }
-            
             _boosters[message.BoosterType].Value--;
             CurrentBooster = InGameBoosterType.None;
 
             SetSuggestActive(true);
-            _inGameBoosterPanel.SetBoosterPanelActive(false).Forget();
+            await _inGameBoosterPanel.SetBoosterPanelActive(false);
+            
+            if (_usingBoosterButton != null)
+            {
+                await SwitchSettingAndBoosterButton();
+                _usingBoosterButton = null;
+            }
         }
 
         private void AddBooster(AddInGameBoosterMessage message)
@@ -237,6 +244,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
 
             _usingBoosterButton = boosterButton;
+            SwitchSettingAndBoosterButton().Forget();
+        }
+
+        private async UniTask SwitchSettingAndBoosterButton()
+        {
+            if(!IsBoosterUsed)
+                await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
+
             _usingBoosterButton.SetButtonUsageState(IsBoosterUsed);
             _inGameSettingPanel.SetButtonSettingParent(!IsBoosterUsed, _inGameBoosterPanel.SettingButtonContainer);
         }
@@ -287,6 +302,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void Dispose()
         {
+            _cts.Dispose();
             _disposable.Dispose();
             _boosterDisposable?.Dispose();
             _messageDisposable.Dispose();
