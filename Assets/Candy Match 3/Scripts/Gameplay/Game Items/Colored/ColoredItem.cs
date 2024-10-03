@@ -63,6 +63,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void ReleaseItem()
         {
+            base.ReleaseItem();
             colorfulEffect.gameObject.SetActive(false);
             itemAnimation.ToggleSuggest(false);
             MoveToTargetAndRelease().Forget();

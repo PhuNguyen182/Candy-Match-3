@@ -76,6 +76,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public override void ReleaseItem()
         {
+            base.ReleaseItem();
             MoveToTargetAndRelease().Forget();
             SimplePool.Despawn(this.gameObject);
         }

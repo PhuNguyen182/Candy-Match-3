@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using GlobalScripts.Effects.Tweens;
+using CandyMatch3.Scripts.Common.SingleConfigs;
 using Cysharp.Threading.Tasks;
 using TMPro;
 
@@ -37,6 +38,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             nextButton.onClick.AddListener(() => OnNextClicked().Forget());
             scoreTween.BindInt(_reactiveScore, ShowScore);
             _reactiveScore.Value = 0;
+        }
+
+        private void Start()
+        {
+            UpdateLevel();
         }
 
         public UniTask ShowWinGame()
@@ -76,9 +82,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
             canvasGroup.interactable = true;
         }
 
-        public void UpdateLevel()
+        private void UpdateLevel()
         {
-            //levelText.text = "Current Level in Game Data";
+            int level = PlayGameConfig.Current.Level;
+            levelText.text = $"Level {level}";
         }
 
         private void ShowScore(int score)

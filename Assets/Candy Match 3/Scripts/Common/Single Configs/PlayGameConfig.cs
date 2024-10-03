@@ -7,6 +7,7 @@ namespace CandyMatch3.Scripts.Common.SingleConfigs
 {
     public class PlayGameConfig : BaseSingleConfig<PlayGameConfig>
     {
+        public int Level;
         public bool IsTestMode;
         public LevelModel LevelModel;
     }

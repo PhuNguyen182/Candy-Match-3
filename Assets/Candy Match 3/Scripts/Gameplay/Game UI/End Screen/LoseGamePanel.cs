@@ -8,12 +8,14 @@ using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Common.DataStructs;
 using TMPro;
+using CandyMatch3.Scripts.Common.SingleConfigs;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 {
     public class LoseGamePanel : MonoBehaviour
     {
         [SerializeField] private TMP_Text scoreText;
+        [SerializeField] private TMP_Text levelText;
         [SerializeField] private Button continueButton;
         [SerializeField] private Animator popupAnimator;
         [SerializeField] private TargetElement targetElement;
@@ -29,6 +31,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         {
             _token = this.GetCancellationTokenOnDestroy();
             continueButton.onClick.AddListener(() => OnContinueClicked().Forget());
+        }
+
+        private void Start()
+        {
+            UpdateLevel();
         }
 
         public UniTask ShowLosePanel()
@@ -60,6 +67,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
                 target.UpdateTargetCount(targetStats);
                 _remainTargets.Add(target);
             }
+        }
+
+        private void UpdateLevel()
+        {
+            int level = PlayGameConfig.Current.Level;
+            levelText.text = $"Level {level}";
         }
 
         private void ClearRemainTargets()

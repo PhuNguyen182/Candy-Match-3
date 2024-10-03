@@ -9,6 +9,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
     public interface IBlockItem
     {
         public int ItemID { get; }
+        public int Score { get; }
         public bool IsMoveable { get; }
         public bool IsMatchable { get; }
         public bool Replacable { get; }
