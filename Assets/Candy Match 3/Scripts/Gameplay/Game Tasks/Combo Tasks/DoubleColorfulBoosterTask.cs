@@ -92,6 +92,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                         evenPositions.Add(positions[i]);
                 }
 
+                PlayEffect();
                 using var oddBreakListPool = ListPool<UniTask>.Get(out List<UniTask> oddBreakTasks);
                 using var evenBreakListPool = ListPool<UniTask>.Get(out List<UniTask> evenBreakTasks);
 
@@ -142,6 +143,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             fireray.SetPhaseStep(index);
             await fireray.Fire(targetGridCell, position, delay);
             await _breakGridTask.BreakItem(targetPosition);
+        }
+
+        private void PlayEffect()
+        {
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.ColorfulCastItems);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.ColorfulFirerayCluster);
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

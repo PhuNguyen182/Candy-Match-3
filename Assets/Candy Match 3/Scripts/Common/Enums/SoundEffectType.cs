@@ -43,6 +43,11 @@ namespace CandyMatch3.Scripts.Common.Enums
         #region Booster
         ColorBomb,
         LineVerticalHorizontal,
+        BoosterAppear,
+        ColorfulCastItems,
+        ColorfulFirerayCluster,
+        ComboBooster,
+        Shuffle,
         #endregion
 
         #region Game Target

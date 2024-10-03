@@ -75,3 +75,13 @@ MonoBehaviour:
     SoundEffectClip: {fileID: 8300000, guid: dd8162a3e9df954449d14d98cfbfb193, type: 3}
   - SoundEffectType: 31
     SoundEffectClip: {fileID: 8300000, guid: 18e7625467947ca41a522ce8a6aa3b3e, type: 3}
+  - SoundEffectType: 16
+    SoundEffectClip: {fileID: 8300000, guid: 3efa70e2ff254744dbdbc4593fb2122b, type: 3}
+  - SoundEffectType: 17
+    SoundEffectClip: {fileID: 8300000, guid: e91562641a7043a4a973aa4209cd83c8, type: 3}
+  - SoundEffectType: 18
+    SoundEffectClip: {fileID: 8300000, guid: df0e8ba13eb55734aaa728efaf3b2c8d, type: 3}
+  - SoundEffectType: 19
+    SoundEffectClip: {fileID: 8300000, guid: f1c5c75ebd9b7bb469188878f6bbd355, type: 3}
+  - SoundEffectType: 20
+    SoundEffectClip: {fileID: 8300000, guid: 25ec2ae02c137d94f9c547b9135636f6, type: 3}

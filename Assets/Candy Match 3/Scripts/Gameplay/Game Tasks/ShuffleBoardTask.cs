@@ -147,6 +147,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 using (ListPool<UniTask>.Get(out List<UniTask> transformTasks))
                 {
                     EffectManager.Instance.PlayShuffleEffect();
+                    EffectManager.Instance.PlaySoundEffect(SoundEffectType.Shuffle);
+
                     for (int i = 0; i < _shuffleableCells.Count; i++)
                     {
                         IGridCell gridCell = _gridCellManager.Get(_shuffleableCells[i]);

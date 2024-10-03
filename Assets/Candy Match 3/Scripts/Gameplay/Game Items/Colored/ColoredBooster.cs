@@ -257,7 +257,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayStartEffect()
         {
             EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
-            EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAward);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAppear);
         }
 
         public void PlayMatchEffect()
@@ -275,7 +275,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayReplaceEffect()
         {
             EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
-            EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAward);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAppear);
         }
 
         private async UniTask OnItemReset()
