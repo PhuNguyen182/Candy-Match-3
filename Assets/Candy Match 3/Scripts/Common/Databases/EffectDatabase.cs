@@ -43,6 +43,7 @@ namespace CandyMatch3.Scripts.Common.Databases
         [SerializeField] public GameObject SyrupEffect;
 
         [Header("Other Effects")]
+        [SerializeField] public GameObject BombBooster;
         [SerializeField] public GameObject LollipopHammer;
         [SerializeField] public GameObject ItemSwapEffect;
         [SerializeField] public ExplodeEffect ExplodeEffect;

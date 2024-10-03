@@ -60,11 +60,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _suggestTask = suggestTask;
             _swapItemTask = swapItemTask;
             _inputProcessTask = inputProcessTask;
-
             _breakBoosterTask = new(gridCellManager, breakGridTask, explodeItemTask
                                     , effectDatabase.LollipopHammer);
-
-            _blastBoosterTask = new(gridCellManager, breakGridTask, explodeItemTask);
+            _blastBoosterTask = new(gridCellManager, breakGridTask, explodeItemTask
+                                    , effectDatabase.BombBooster);
             _placeBoosterTask = new(gridCellManager, breakGridTask, activateBoosterTask, itemManager
                                     , comboBoosterHandleTask.ColorfulStripedBoosterTask
                                     , comboBoosterHandleTask.ColorfulWrappedBoosterTask);

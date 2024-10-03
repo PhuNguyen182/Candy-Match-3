@@ -34,6 +34,7 @@ MonoBehaviour:
   IceEffect: {fileID: 1957330277183174, guid: 2a647ce8a56c048dbb12d60a24d534bf, type: 3}
   HoneyEffect: {fileID: 1957330277183174, guid: 28523f5a3ce774d7b81dfe2d4253b417, type: 3}
   SyrupEffect: {fileID: 1957330277183174, guid: 7240fdedc3da540d1a329219624fdff9, type: 3}
+  BombBooster: {fileID: 1514466811555514062, guid: 929bf030078be1e4b8e5dca3e463b780, type: 3}
   LollipopHammer: {fileID: 4220203578301827261, guid: bb532a54f48598642bbd121b99cb02f7, type: 3}
   ItemSwapEffect: {fileID: 2736360671627910954, guid: b06295de2fb32e44d9740028f633208f, type: 3}
   ExplodeEffect: {fileID: -7334224625011683346, guid: e37750b6e623b434c8aed4fc7c452f1b, type: 3}
