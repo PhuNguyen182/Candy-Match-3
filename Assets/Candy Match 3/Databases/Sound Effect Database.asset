@@ -74,7 +74,7 @@ MonoBehaviour:
   - SoundEffectType: 35
     SoundEffectClip: {fileID: 8300000, guid: dd8162a3e9df954449d14d98cfbfb193, type: 3}
   - SoundEffectType: 36
-    SoundEffectClip: {fileID: 8300000, guid: 2f4ed2b2c996deb4c836898dc5e77786, type: 3}
+    SoundEffectClip: {fileID: 8300000, guid: 18e7625467947ca41a522ce8a6aa3b3e, type: 3}
   - SoundEffectType: 16
     SoundEffectClip: {fileID: 8300000, guid: 3efa70e2ff254744dbdbc4593fb2122b, type: 3}
   - SoundEffectType: 17

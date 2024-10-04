@@ -9,6 +9,7 @@ using GlobalScripts.Effects.Tweens;
 using CandyMatch3.Scripts.Common.SingleConfigs;
 using Cysharp.Threading.Tasks;
 using TMPro;
+using System.Data;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 {
@@ -42,6 +43,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         private void Start()
         {
+            UpdateStars(3).Forget();
             UpdateLevel();
         }
 
@@ -66,7 +68,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
             for (int i = 0; i < stars.Length; i++)
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(0.15f), cancellationToken: _token);
+                await UniTask.Delay(TimeSpan.FromSeconds(0.1f), cancellationToken: _token);
 
                 bool isActive = i + 1 <= star;
                 stars[i].SetActive(isActive);
@@ -75,8 +77,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         private async UniTask UpdateScore()
         {
-            _reactiveScore.Value = _score;
             await UniTask.Delay(TimeSpan.FromSeconds(0.4f), cancellationToken: _token);
+            _reactiveScore.Value = _score;
             await UpdateStars(_stars);
 
             canvasGroup.interactable = true;
