@@ -21,6 +21,7 @@ using Cysharp.Threading.Tasks;
 using GlobalScripts.Audios;
 using Newtonsoft.Json;
 using TMPro;
+using static Cinemachine.DocumentationSortingAttribute;
 
 namespace CandyMatch3.Scripts.Mainhome.UI.Popups
 {
@@ -40,6 +41,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         [Space(10)]
         [SerializeField] private GameObject[] stars;
 
+        private int _level;
         private CancellationToken _token;
         private readonly int _closeHash = Animator.StringToHash("Close");
 
@@ -67,6 +69,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         public async UniTask SetLevelInfo(LevelBoxData level)
         {
             ShowStars(level.Stars);
+            _level = level.Level;
             levelText.text = $"Level {level.Level}";
             string levelData = await LevelPlayInfo.GetLevelData(level.Level);
 
@@ -105,6 +108,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
 
                 PlayGameConfig.Current = new()
                 {
+                    Level = _level,
                     IsTestMode = false,
                     LevelModel = _levelModel
                 };

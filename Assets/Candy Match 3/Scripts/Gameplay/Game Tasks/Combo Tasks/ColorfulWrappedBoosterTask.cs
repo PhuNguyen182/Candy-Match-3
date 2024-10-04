@@ -53,6 +53,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
+                PlayEffect();
                 positions.AddRange(_colorfulBoosterTask.FindPositionWithColor(candyColor));
                 using (ListPool<UniTask>.Get(out List<UniTask> fireTasks))
                 {
@@ -111,6 +112,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
+                PlayEffect();
                 positions.AddRange(_colorfulBoosterTask.FindPositionWithColor(candyColor));
                 using (ListPool<UniTask>.Get(out List<UniTask> fireTasks))
                 {
@@ -191,6 +193,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 colorBooster.TriggerNextStage(2);
                 effect.PlayStartEffect();
             }
+        }
+
+        private void PlayEffect()
+        {
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.ColorfulCastItems);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.ColorfulFirerayCluster);
         }
 
         public void Dispose()

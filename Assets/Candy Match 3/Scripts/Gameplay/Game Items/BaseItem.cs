@@ -5,7 +5,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems
 {
@@ -17,11 +19,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         [SerializeField] protected TargetEnum targetType = TargetEnum.None;
         [SerializeField] protected ItemGraphics itemGraphics;
 
+        protected IPublisher<AddScoreMessage> _addScorePublisher;
+
         protected CancellationToken destroyToken;
         protected IDisposable messageDisposable;
 
         public int ItemID => itemId;
         public bool IsLocking { get; set; }
+
+        public virtual int Score => 10;
 
         public abstract bool Replacable { get; }
 
@@ -38,6 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public Vector3 WorldPosition => transform.position;
 
         public Vector3Int GridPosition { get; set; }
+
 
         private void Awake()
         {
@@ -69,11 +76,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public virtual void SetMatchable(bool isMatchable) { }
 
-        protected void InitCommonMessages() { }
+        protected void InitCommonMessages() 
+        {
+            _addScorePublisher = GlobalMessagePipe.GetPublisher<AddScoreMessage>();
+        }
 
         public virtual void InitMessages() { }
 
-        public virtual void ReleaseItem() { }
+        public virtual void ReleaseItem() 
+        {
+            PublishScore();
+        }
 
         public virtual void ResetItem()
         {
@@ -110,6 +123,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public void SetItemID(int itemId)
         {
             this.itemId = itemId;
+        }
+
+        protected void PublishScore()
+        {
+            _addScorePublisher.Publish(new AddScoreMessage
+            {
+                Score = Score
+            });
         }
 
         private string GetColor()

@@ -63,6 +63,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void ReleaseItem()
         {
+            base.ReleaseItem();
             colorfulEffect.gameObject.SetActive(false);
             itemAnimation.ToggleSuggest(false);
             MoveToTargetAndRelease().Forget();
@@ -154,14 +155,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public void PlayMatchEffect()
         {
-            EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
         }
 
         public void PlayBreakEffect()
         {
             EffectManager.Instance.SpawnBlastEffect(WorldPosition);
-            EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
             EffectManager.Instance.SpawnColorEffect(candyColor, WorldPosition);
         }
 

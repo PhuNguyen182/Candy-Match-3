@@ -9,6 +9,7 @@ using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using GlobalScripts.Extensions;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
@@ -20,6 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly ExplodeItemTask _explodeItemTask;
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
+        private readonly GameObject _blastObject;
 
         private readonly IPublisher<CameraShakeMessage> _cameraShakePublisher;
         private readonly IPublisher<UseInGameBoosterMessage> _useInGameBoosterPublisher;
@@ -28,11 +30,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
 
-        public BlastBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ExplodeItemTask explodeItemTask)
+        public BlastBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ExplodeItemTask explodeItemTask, GameObject blastEffect)
         {
             _explodeItemTask = explodeItemTask;
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
+            _blastObject = blastEffect;
 
             _cts = new();
             _token = _cts.Token;
@@ -108,6 +111,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 Duration = 0.32f
             });
 
+            // Play same sound to wrapped candy
+            Vector3 blastPosition = _gridCellManager.Get(position).WorldPosition;
+            SimplePool.Spawn(_blastObject, EffectContainer.Transform, blastPosition, Quaternion.identity);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyWrap);
             _explodeItemTask.Blast(position, 3).Forget();
         }
 

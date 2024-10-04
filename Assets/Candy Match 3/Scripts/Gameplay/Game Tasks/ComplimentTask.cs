@@ -91,6 +91,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 _characterEmotion.ShowHappyState();
                 EffectManager.Instance.ShowCompliment(compliment);
+                EffectManager.Instance.PlaySoundEffect(SoundEffectType.ComplimentText);
             }
 
             _complimentCounter.Value = 0;

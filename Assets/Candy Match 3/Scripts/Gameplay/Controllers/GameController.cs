@@ -11,7 +11,6 @@ using CandyMatch3.Scripts.Common.Factories;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Strategies;
-using CandyMatch3.Scripts.LevelDesign.Databases;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
@@ -57,11 +56,13 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
         private MetaItemManager _metaItemManager;
         private GridCellManager _gridCellManager;
         private FillBoardTask _fillBoardTask;
+
         private BreakGridTask _breakGridTask;
         private MatchItemsTask _matchItemsTask;
         private SpawnItemTask _spawnItemTask;
         private SpecialItemTask _specialItemTasks;
         private CameraShakeTask _cameraShakeTask;
+
         private GameTaskManager _gameTaskManager;
         private MessageBrokerController _messageBrokerController;
 
