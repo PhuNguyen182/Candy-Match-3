@@ -116,14 +116,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell.GridStateful is IBreakable stateBreakable)
             {
                 Vector3Int position = gridCell.GridPosition;
+                bool isLockedState = gridCell.GridStateful.IsLocked;
+
                 if (stateBreakable.Break())
                 {
                     _checkGridTask.CheckMatchAtPosition(position);
                     gridCell.SetGridStateful(new AvailableState());
                 }
 
-                _checkGridTask.CheckAroundPosition(position, 1);
-                return;
+                if (isLockedState) return;
             }
 
             if (!gridCell.HasItem)
@@ -258,8 +259,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     gridCell.SetGridStateful(new AvailableState());
                 }
 
-                if (isLockedState)
-                    return;
+                if (isLockedState) return;
             }
 
             if (gridCell.IsLocked)

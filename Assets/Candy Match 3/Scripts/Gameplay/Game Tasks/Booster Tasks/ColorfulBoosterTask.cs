@@ -163,7 +163,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         if (gridCell.CandyColor != color || gridCell.IsLocked)
                             continue;
 
-                        if (!gridCell.BlockItem.IsMatchable)
+                        if (!gridCell.BlockItem.IsMatchable || gridCell.BlockItem.IsLocking)
                             continue;
 
                         foundPositions.Add(positions[i]);
@@ -194,7 +194,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         if (gridCell.CandyColor == CandyColor.None || gridCell.IsLocked)
                             continue;
 
-                        if (!gridCell.BlockItem.IsMatchable)
+                        if (!gridCell.BlockItem.IsMatchable || gridCell.BlockItem.IsLocking)
                             continue;
 
                         // Prevent duplicate color detection

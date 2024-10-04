@@ -155,7 +155,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 IGridCell checkCell = _gridCellManager.Get(checkPosition + directionUnit * index);
                 if (checkCell == null)
-                    return false;
+                    return true;
 
                 if (checkCell.IsSpawner)
                     return false;

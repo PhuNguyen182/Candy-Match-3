@@ -10,6 +10,7 @@ using CandyMatch3.Scripts.LevelDesign.CustomTiles.TopTiles;
 using CandyMatch3.Scripts.LevelDesign.CustomTiles;
 using CandyMatch3.Scripts.Gameplay.Models;
 using Newtonsoft.Json;
+using CandyMatch3.Scripts.LevelDesign.CustomTiles.BoardTiles;
 
 namespace CandyMatch3.Scripts.LevelDesign.LevelBuilders
 {
@@ -127,13 +128,21 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilders
             var boardPositions = boardTilemap.cellBounds.Iterator2D();
             foreach (Vector3Int position in boardPositions)
             {
+                BoardTile boardTile = boardTilemap.GetTile<BoardTile>(position);
+                if (boardTile == null)
+                    continue;
+
                 gridInformation.SetPositionProperty(position, BoardConstants.BoardTileValidate, 1);
             }
 
             var spawnerPositions = spawnerTilemap.cellBounds.Iterator2D();
             foreach (Vector3Int position in spawnerPositions)
             {
-                gridInformation.SetPositionProperty(position + Vector3Int.up, BoardConstants.SpawnerTileValidate, 1);
+                SpawnerTile spawnerTile = spawnerTilemap.GetTile<SpawnerTile>(position);
+                if (spawnerTile == null)
+                    continue;
+
+                gridInformation.SetPositionProperty(position, BoardConstants.SpawnerTileValidate, 1);
             }
         }
 

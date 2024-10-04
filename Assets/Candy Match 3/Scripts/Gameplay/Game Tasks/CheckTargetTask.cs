@@ -235,9 +235,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (matchCount > 0)
                 return;
 
-            await _endGameTask.WaitAWhile();
+            await _endGameTask.WaitAWhile(0.3f);
             await _endGameTask.WaitForBoardStop();
             await _shuffleBoardTask.CheckShuffleBoard();
+            await _endGameTask.WaitAWhile(0.5f);
             CheckEndGame();
         }
 
