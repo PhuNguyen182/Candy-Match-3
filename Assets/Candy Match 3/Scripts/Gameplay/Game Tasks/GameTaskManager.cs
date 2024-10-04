@@ -84,7 +84,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _startGameTask.AddTo(ref builder);
 
             _breakGridTask = breakGridTask;
-            _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask, _breakGridTask);
+            _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask, _breakGridTask, databaseCollection.EffectDatabase);
+            _swapItemTask.AddTo(ref builder);
+
             _inputProcessor = new(boardInput, _gridCellManager, _swapItemTask);
             _inputProcessor.AddTo(ref builder);
 
