@@ -9,6 +9,7 @@ public class TestRotate : MonoBehaviour
     public Transform PointA;
     public Transform PointB;
     public LineRenderer Line;
+    public ParticleSystem particle;
 
     private List<Transform> _points = new();
 
@@ -19,6 +20,12 @@ public class TestRotate : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            particle.Stop();
+            particle.Play();
+        }
+
         AlignContinuous();
     }
 

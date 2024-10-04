@@ -1,36 +1,50 @@
+using System;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Common.Messages;
+using CandyMatch3.Scripts.Gameplay.Miscs;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
-    public class SwapItemTask
+    public class SwapItemTask : IDisposable
     {
         private readonly BreakGridTask _breakGridTask;
         private readonly GridCellManager _gridCellManager;
         private readonly MatchItemsTask _matchItemsTask;
         private readonly SuggestTask _suggestTask;
+        private readonly SwitchHand _switchHand;
 
         private readonly IPublisher<DecreaseMoveMessage> _decreaseMovePublisher;
         private readonly IPublisher<UseInGameBoosterMessage> _useInGameBoosterPublisher;
 
+        private CancellationToken _token;
+        private CancellationTokenSource _cts;
         private ComboBoosterHandleTask _comboBoosterHandleTask;
         private CheckGridTask _checkGridTask;
 
-        public SwapItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask, SuggestTask suggestTask, BreakGridTask breakGridTask)
+        private const float SwapDuration = 0.1f;
+        private const float HandDelay = 0.5834f;
+
+        public SwapItemTask(GridCellManager gridCellManager, MatchItemsTask matchItemsTask, SuggestTask suggestTask, BreakGridTask breakGridTask, EffectDatabase effectDatabase)
         {
             _breakGridTask = breakGridTask;
             _gridCellManager = gridCellManager;
             _matchItemsTask = matchItemsTask;
             _suggestTask = suggestTask;
+            _switchHand = effectDatabase.SwitchHand;
+
+            _cts = new();
+            _token = _cts.Token;
 
             _decreaseMovePublisher = GlobalMessagePipe.GetPublisher<DecreaseMoveMessage>();
             _useInGameBoosterPublisher = GlobalMessagePipe.GetPublisher<UseInGameBoosterMessage>();
@@ -62,9 +76,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             UseSwapBooster();
             bool isCollectible = CheckCollectible(fromCell, toCell);
+            var switchHand = SimplePool.Spawn(_switchHand, EffectContainer.Transform, fromCell.WorldPosition, Quaternion.identity);
+            await UniTask.Delay(TimeSpan.FromSeconds(HandDelay), cancellationToken: _token);
+            switchHand.Switch(toPosition - fromPosition);
 
-            UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
-            UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
+            UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, SwapDuration, true);
+            UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, SwapDuration, false);
             await UniTask.WhenAll(fromMoveTask, toMoveTask);
 
             fromCell.SetBlockItem(toItem);
@@ -136,8 +153,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 EffectManager.Instance.PlayItemSwapEffect(toCell.WorldPosition);
             }
 
-            UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, 0.1f, true);
-            UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, 0.1f, false);
+            UniTask fromMoveTask = fromAnimation.SwapTo(toCell.WorldPosition, SwapDuration, true);
+            UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, SwapDuration, false);
             await UniTask.WhenAll(fromMoveTask, toMoveTask);
 
             if (_comboBoosterHandleTask.IsComboBooster(fromCell, toCell))
@@ -286,6 +303,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
             _checkGridTask = checkGridTask;
+        }
+
+        public void Dispose()
+        {
+            _cts.Dispose();
         }
     }
 }

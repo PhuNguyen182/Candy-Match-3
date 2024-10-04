@@ -144,9 +144,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private async UniTask SwapForward(Vector3Int checkPosition, Vector3 moveDirection)
         {
+            IsActive = false;
             Vector3Int swapDirection = GetSwapDirection(moveDirection);
             Vector3Int swapToPosition = checkPosition + swapDirection;
             await _inGameBoosterTasks.ActivateSwapBooster(checkPosition, swapToPosition);
+            IsActive = true;
         }
 
         private async UniTask SwapItem(Vector3Int checkPosition, Vector3 moveDirection)
