@@ -263,6 +263,7 @@ GameObject:
   - component: {fileID: 8000351221521560450}
   - component: {fileID: 3178695824477389797}
   - component: {fileID: 1335353725640981331}
+  - component: {fileID: 911442465989172921}
   m_Layer: 0
   m_Name: Marshmallow
   m_TagString: Untagged
@@ -309,7 +310,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 11e8dae1392bf8b4b98961c2b4e74258, type: 3}
   - {fileID: 21300000, guid: 2e7e91b6ad122b240b5b7a6d783eaa41, type: 3}
   effectTypes: 1d0000001e000000
-  itemAnimation: {fileID: 0}
+  itemAnimation: {fileID: 911442465989172921}
   breakSound: 8
 --- !u!114 &1335353725640981331
 MonoBehaviour:
@@ -326,7 +327,59 @@ MonoBehaviour:
   itemAnimator: {fileID: 0}
   bottomState: {fileID: 7188986963255857579}
   itemRenderer: {fileID: 4227587760381049442}
+  alternateRenderer: {fileID: 0}
   topState: {fileID: 7950347959534339169}
+--- !u!114 &911442465989172921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7738104629961438617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9558d9deeff5a4492fbf48ac285830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemAnimator: {fileID: 0}
+  itemGraphics: {fileID: 1335353725640981331}
+  itemRenderer: {fileID: 4227587760381049442}
+  matchItemEase: 0
+  fallenCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  movingCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  bounceDuration: 0.3
+  bounceEase: 6
+  glowLightDuration: 1
+  highlightDuration: 1
+  boosterDuration: 1
+  highlightEase:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  glowlightEase:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  boosterEase:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8055802597235397602
 GameObject:
   m_ObjectHideFlags: 0

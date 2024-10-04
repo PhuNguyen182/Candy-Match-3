@@ -342,6 +342,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     ReleaseGridCell(gridCell);
                 }
 
+                _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
                 gridCell.LockStates = LockStates.None;
             }
         }

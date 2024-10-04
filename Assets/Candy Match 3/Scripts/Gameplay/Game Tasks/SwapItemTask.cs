@@ -172,7 +172,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             else if (CheckCollectible(fromCell, toCell))
             {
                 DecreaseMove();
-                await SwapCollectible(fromCell, toCell, fromItem, toItem);
+                await SwapCollectible(fromCell, toCell, fromItem, toItem, isSwapBack);
             }
 
             else
@@ -203,7 +203,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             await _comboBoosterHandleTask.CombineColorfulItemWithColorItem(fromCell, toCell);
         }
 
-        private async UniTask SwapCollectible(IGridCell fromCell, IGridCell toCell, IBlockItem fromItem, IBlockItem toItem)
+        private async UniTask SwapCollectible(IGridCell fromCell, IGridCell toCell, IBlockItem fromItem, IBlockItem toItem, bool isSwapBack)
         {
             IGridCell currentGrid;
             IGridCell remainGrid;
@@ -215,6 +215,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             toItem.SetWorldPosition(fromCell.WorldPosition);
             fromItem.SetWorldPosition(toCell.WorldPosition);
 
+            if(fromItem is not ICollectible && toItem is not ICollectible)
+            {
+                if(isSwapBack)
+                    await CheckMatchOnSwap(fromCell, toCell);
+                return;
+            }
 
             if (fromCell.IsCollectible)
             {
