@@ -43,6 +43,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             using (ListPool<UniTask>.Get(out List<UniTask> breakTasks))
             {
+                EffectManager.Instance.PlaySoundEffect(SoundEffectType.CrossLineBooster);
                 using var rowListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> rowListPositions);
                 using var columnListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> columnListPositions);
 

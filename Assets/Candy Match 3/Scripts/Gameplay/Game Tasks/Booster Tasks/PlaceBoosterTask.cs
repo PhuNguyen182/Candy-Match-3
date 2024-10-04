@@ -13,6 +13,7 @@ using CandyMatch3.Scripts.Common.CustomData;
 using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
+using CandyMatch3.Scripts.Gameplay.Effects;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -64,6 +65,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             gridCell.LockStates = LockStates.Replacing;
             CandyColor candyColor = blockItem.CandyColor;
 
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAppear);
             _useInGameBoosterPublisher.Publish(new UseInGameBoosterMessage
             {
                 BoosterType = InGameBoosterType.Colorful

@@ -84,7 +84,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _startGameTask.AddTo(ref builder);
 
             _breakGridTask = breakGridTask;
-            _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask, _breakGridTask);
+            _swapItemTask = new(_gridCellManager, _matchItemsTask, _suggestTask, _breakGridTask, databaseCollection.EffectDatabase);
+            _swapItemTask.AddTo(ref builder);
+
             _inputProcessor = new(boardInput, _gridCellManager, _swapItemTask);
             _inputProcessor.AddTo(ref builder);
 
@@ -101,8 +103,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _breakGridTask.SetActivateBoosterTask(_activateBoosterTask);
             _swapItemTask.SetComboBoosterHandler(_comboBoosterHandleTask);
 
-            _inGameBoosterTasks = new(_inputProcessor, _gridCellManager, _breakGridTask, _suggestTask, _explodeItemTask, _swapItemTask, settingSidePanel
-                            , _activateBoosterTask, _comboBoosterHandleTask, itemManager, inGameBoosterPanel, databaseCollection.InGameBoosterPackDatabase);
+            _inGameBoosterTasks = new(_inputProcessor, _gridCellManager, _breakGridTask, _suggestTask, _explodeItemTask, _swapItemTask
+                                    , settingSidePanel, _activateBoosterTask, _comboBoosterHandleTask, itemManager, inGameBoosterPanel
+                                    , databaseCollection.InGameBoosterPackDatabase, databaseCollection.EffectDatabase);
             _inGameBoosterTasks.AddTo(ref builder);
             _inputProcessor.SetInGameBoosterTasks(_inGameBoosterTasks);
 

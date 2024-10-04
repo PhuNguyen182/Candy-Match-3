@@ -53,6 +53,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
                 using var breakTaskPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
+                PlayEffect();
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
@@ -110,6 +111,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
                 using var breakTaskPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
+                PlayEffect();
 
                 for (int i = 0; i < colorPositions.Count; i++)
                 {
@@ -253,6 +255,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 await fireray.Fire(targetGridCell, position, delay);
             }
+        }
+
+        private void PlayEffect()
+        {
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.ColorfulCastItems);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.ColorfulFirerayCluster);
         }
 
         public void RemoveColor(CandyColor candyColor)

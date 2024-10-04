@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Common.Messages;
@@ -71,6 +72,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 _explodeItemTask.Blast(checkPosition, affectRange).Forget();
                 _explodeItemTask.Explode(checkPosition, ExplodeType.DoubleWrapped);
 
+                EffectManager.Instance.PlaySoundEffect(SoundEffectType.ComboBooster);
                 using (ListPool<UniTask>.Get(out List<UniTask> breakTasks))
                 {
                     for (int i = 0; i < positions.Count; i++)
@@ -80,7 +82,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                     ShakeCamera();
                     await UniTask.WhenAll(breakTasks);
-
                     await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 }
 

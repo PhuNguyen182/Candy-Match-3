@@ -33,6 +33,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
             _builder.AddMessageBroker<DecreaseMoveMessage>();
             _builder.AddMessageBroker<DecreaseTargetMessage>();
             _builder.AddMessageBroker<AsyncMessage<MoveTargetData>>();
+            _builder.AddMessageBroker<AddScoreMessage>();
 
             _builder.AddMessageBroker<CameraShakeMessage>();
             _builder.AddMessageBroker<AddInGameBoosterMessage>();

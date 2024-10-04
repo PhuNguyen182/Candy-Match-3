@@ -24,6 +24,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly ShuffleBoardTask _shuffleBoardTask;
         private readonly MainGamePanel _mainGamePanel;
 
+        private readonly ISubscriber<AddScoreMessage> _addScoreSubscriber;
         private readonly ISubscriber<BoardStopMessage> _boardStopSubscriber;
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
         private readonly ISubscriber<AsyncMessage<MoveTargetData>> _moveToTargetSubscriber;
@@ -72,11 +73,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _moveToTargetTasks = new();
 
             var builder = MessagePipe.DisposableBag.CreateBuilder();
+            _addScoreSubscriber = GlobalMessagePipe.GetSubscriber<AddScoreMessage>();
             _boardStopSubscriber = GlobalMessagePipe.GetSubscriber<BoardStopMessage>();
             _decreaseMoveSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseMoveMessage>();
             _moveToTargetSubscriber = GlobalMessagePipe.GetSubscriber<AsyncMessage<MoveTargetData>>();
             _decreaseTargetSubscriber = GlobalMessagePipe.GetSubscriber<DecreaseTargetMessage>();
 
+            _addScoreSubscriber.Subscribe(AddScore).AddTo(builder);
             _decreaseMoveSubscriber.Subscribe(DecreaseMove).AddTo(builder);
             _moveToTargetSubscriber.Subscribe(InspectTargetInfo).AddTo(builder);
             _decreaseTargetSubscriber.Subscribe(DecreaseTarget).AddTo(builder);
@@ -154,12 +157,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 UpdateAll();
                 OnEndGame?.Invoke(EndResult.Lose);
             }
-        }
-
-        public void AddScore(int score)
-        {
-            _score = _score + score;
-            _mainGamePanel.UpdateScore(_score);
         }
 
         public void UpdateAll()
@@ -262,6 +259,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 MessageBrokerUtils<MoveTargetData>.SendBackMessage(message, moveTargetData);
             }
+        }
+
+        private void AddScore(AddScoreMessage message)
+        {
+            _score = _score + message.Score;
+            _mainGamePanel.UpdateScore(_score);
         }
 
         private void DecreaseMove(DecreaseMoveMessage message)

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
@@ -27,6 +29,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 
         public override void Explode()
         {
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.ColorBomb);
             SimplePool.Spawn(colorfulEffect, EffectContainer.Transform, WorldPosition, Quaternion.identity);
         }
 

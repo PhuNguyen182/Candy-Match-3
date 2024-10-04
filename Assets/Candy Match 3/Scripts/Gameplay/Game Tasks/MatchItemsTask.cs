@@ -8,6 +8,7 @@ using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.Models.Match;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Constants;
@@ -79,6 +80,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 using (ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
                 {
+                    EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
                     Vector3 matchPivot = _gridCellManager.Get(regionResult.PivotPosition).WorldPosition;
                     using var boundsPool = HashSetPool<BoundsInt>.Get(out HashSet<BoundsInt> attackRanges);
                     using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
@@ -147,6 +149,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 using (ListPool<Vector3Int>.Get(out List<Vector3Int> boundPositions))
                 {
+                    EffectManager.Instance.PlaySoundEffect(SoundEffectType.CandyMatch);
                     Vector3 matchPivot = _gridCellManager.Get(matchResult.Position).WorldPosition;
                     using var boundsPool = HashSetPool<BoundsInt>.Get(out HashSet<BoundsInt> attackRanges);
                     using var matchAdjacent = HashSetPool<Vector3Int>.Get(out HashSet<Vector3Int> adjacentPositions);
