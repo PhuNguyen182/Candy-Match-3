@@ -43,7 +43,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         private void Start()
         {
-            UpdateStars(3).Forget();
             UpdateLevel();
         }
 
