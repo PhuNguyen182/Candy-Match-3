@@ -46,8 +46,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public override void ResetItem()
         {
             base.ResetItem();
-            IsActive = false;
+            IsActive = true;
             IsLocking = false;
+
             SetMatchable(true);
             itemAnimation.ResetItem();
             colorfulEffect.gameObject.SetActive(false);

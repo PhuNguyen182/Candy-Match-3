@@ -60,6 +60,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             base.ResetItem();
             IsActive = true;
+
             SetMatchable(true);
             itemAnimation.ResetItem();
             colorfulEffect.gameObject.SetActive(false);
