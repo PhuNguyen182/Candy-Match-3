@@ -148,22 +148,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (_moveCount >= 0 && remainCount <= 0)
             {
-                UpdateAll();
+                UpdateAll(true);
                 OnEndGame?.Invoke(EndResult.Win);
             }
 
             else if(_moveCount == 0 && remainCount > 0)
             {
-                UpdateAll();
+                UpdateAll(true);
                 OnEndGame?.Invoke(EndResult.Lose);
             }
         }
 
-        public void UpdateAll()
+        public void UpdateAll(bool isEndGame)
         {
             foreach (var target in _targetCollections)
             {
-                UpdateTarget(target.Key, false);
+                UpdateTarget(target.Key, false, isEndGame);
             }
         }
 
@@ -172,7 +172,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _moveCount = _moveCount + move;
             UpdateMove();
             CheckEndGame();
-            UpdateAll();
+            UpdateAll(false);
         }
 
         public void SetEndGameTask(EndGameTask endGameTask)
@@ -185,7 +185,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _mainGamePanel.UpdateMove(_moveCount);
         }
 
-        private void UpdateTarget(TargetEnum targetType, bool isDecrease)
+        private void UpdateTarget(TargetEnum targetType, bool isDecrease, bool isEndGame)
         {
             if (_targetCounts.TryGetValue(targetType, out var target))
             {
@@ -200,7 +200,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     Amount = target,
                     IsCompleted = target <= 0,
-                    IsFailed = target > 0 && _moveCount <= 0
+                    IsFailed = isEndGame ? false : target > 0 && _moveCount <= 0
                 });
 
                 if (isDecrease)
@@ -217,13 +217,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 var moveTask = task.ContinueWith(() =>
                 {
-                    UpdateTarget(message.TargetType, true);
+                    UpdateTarget(message.TargetType, true, false);
                     _moveToTargetTasks.Remove(task);
                 });
             }
 
             else
-                UpdateTarget(message.TargetType, true);
+                UpdateTarget(message.TargetType, true, false);
         }
 
         private async UniTask CheckEndGameOnStop(BoardStopMessage message)

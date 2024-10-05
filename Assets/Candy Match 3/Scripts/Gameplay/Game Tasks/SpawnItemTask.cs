@@ -78,6 +78,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
 
             await _moveItemTask.MoveItem(gridCell);
+            _moveItemTask.OnItemStopMove(gridCell);
         }
 
         public bool CheckSpawnable(IGridCell gridCell)

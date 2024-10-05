@@ -14,6 +14,7 @@ using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Utils;
 using UnityEngine.Pool;
+using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -54,14 +55,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (gridCell.GridStateful is IBreakable stateBreakable)
             {
+                bool isLockedState = gridCell.GridStateful.IsLocked;
+
                 if (stateBreakable.Break())
                 {
                     _checkGridTask.CheckMatchAtPosition(position);
                     gridCell.SetGridStateful(new AvailableState());
                 }
 
-                _checkGridTask.CheckAroundPosition(position, 1);
-                return;
+                if (isLockedState)
+                {
+                    _checkGridTask.CheckAroundPosition(position, 1);
+                    return;
+                }
             }
 
             if (gridCell.HasItem)
@@ -124,7 +130,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     gridCell.SetGridStateful(new AvailableState());
                 }
 
-                if (isLockedState) return;
+                if (isLockedState)
+                {
+                    _checkGridTask.CheckAroundPosition(position, 1);
+                    return;
+                }
             }
 
             if (!gridCell.HasItem)
@@ -193,7 +203,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 }
 
                 if (isLockedState)
+                {
+                    _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
                     return;
+                }
             }
 
             if (gridCell.IsLocked)
@@ -262,7 +275,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     gridCell.SetGridStateful(new AvailableState());
                 }
 
-                if (isLockedState) return;
+                if (isLockedState)
+                {
+                    _checkGridTask.CheckAroundPosition(position, 1);
+                    return;
+                }
             }
 
             if (gridCell.IsLocked)

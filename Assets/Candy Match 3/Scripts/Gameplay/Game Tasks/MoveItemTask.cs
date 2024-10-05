@@ -104,20 +104,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     await collectible.Collect();
                     _breakGridTask.ReleaseGridCell(currentGrid);
                     currentGrid.LockStates = LockStates.None;
-                    _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
                 }
+
+                OnItemStopMove(currentGrid);
             }
 
             else
             {
                 if (outputMoveStep > 0)
-                {
-                    _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
-                    _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
-                }
-
-                else
-                    _checkGridTask.CheckMatchAtPosition(currentGrid.GridPosition);
+                    OnItemStopMove(currentGrid);
             }
         }
 
@@ -187,6 +182,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return false;
 
             return gridCell.CanSetItem;
+        }
+
+        public void OnItemStopMove(IGridCell gridCell)
+        {
+            _checkGridTask.CheckMatchAtPosition(gridCell.GridPosition);
+            _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
         }
 
         public bool CheckMoveable(IGridCell gridCell)

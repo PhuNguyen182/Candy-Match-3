@@ -8,6 +8,7 @@ using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Common.Constants;
+using GlobalScripts.UpdateHandlerPattern;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Utils;
 using MessagePipe;
@@ -15,7 +16,7 @@ using MessagePipe;
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
     public class ColoredItem : BaseItem, ISetColor, IItemAnimation, IBreakable
-        , IItemEffect, IColorfulEffect, IItemSuggest, IItemTransform, IMatchAnimation
+        , IItemEffect, IColorfulEffect, IItemSuggest, IItemTransform, IMatchAnimation, IFixedUpdateHandler
     {
         [SerializeField] private ItemAnimation itemAnimation;
 
@@ -35,9 +36,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override bool IsMoveable => !IsLocking;
 
+        public bool IsActive { get; set; }
+
+        public void OnFixedUpdate()
+        {
+            
+        }
+
         public override void ResetItem()
         {
             base.ResetItem();
+            IsActive = false;
             IsLocking = false;
             SetMatchable(true);
             itemAnimation.ResetItem();
