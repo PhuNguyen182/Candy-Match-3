@@ -260,6 +260,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 MessageBrokerUtils<MoveTargetData>.SendBackMessage(message, moveTargetData);
             }
+
+            else
+                MessageBrokerUtils<MoveTargetData>.SendBackMessage(message, default);
         }
 
         private void AddScore(AddScoreMessage message)
