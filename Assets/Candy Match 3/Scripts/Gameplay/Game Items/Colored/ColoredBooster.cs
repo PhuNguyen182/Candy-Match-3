@@ -7,13 +7,12 @@ using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Messages;
-using GlobalScripts.UpdateHandlerPattern;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 {
-    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IColorfulEffect, IItemSuggest, IFixedUpdateHandler
+    public class ColoredBooster : BaseItem, ISetColor, IColorBooster, IItemAnimation, IItemEffect, IColorfulEffect, IItemSuggest
     {
         [SerializeField] private BoosterType colorBoosterType;
         [SerializeField] private ItemAnimation itemAnimation;
@@ -49,18 +48,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public BoosterType ColorBoosterType => colorBoosterType;
 
-        public bool IsActive { get; set; }
-
-        public void OnFixedUpdate()
-        {
-
-        }
-
         public override void ResetItem()
         {
             base.ResetItem();
-            IsActive = true;
-
             SetMatchable(true);
             itemAnimation.ResetItem();
             colorfulEffect.gameObject.SetActive(false);
@@ -308,7 +298,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void OnDisappear()
         {
-            IsActive = false;
             _isBoardStop = false;
         }
     }

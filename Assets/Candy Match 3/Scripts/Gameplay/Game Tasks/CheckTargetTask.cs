@@ -200,7 +200,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 {
                     Amount = target,
                     IsCompleted = target <= 0,
-                    IsFailed = isEndGame ? false : target > 0 && _moveCount <= 0
+                    IsFailed = isEndGame ? target > 0 && _moveCount <= 0 : false
                 });
 
                 if (isDecrease)

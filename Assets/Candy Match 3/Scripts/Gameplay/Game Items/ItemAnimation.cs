@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Common.Constants;
+using GlobalScripts.UpdateHandlerPattern;
 using DG.Tweening;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems
 {
-    public class ItemAnimation : MonoBehaviour
+    public class ItemAnimation : MonoBehaviour, IFixedUpdateHandler
     {
         [SerializeField] private Animator itemAnimator;
         [SerializeField] private ItemGraphics itemGraphics;
@@ -46,10 +47,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public Animator ItemAnimator => itemAnimator;
 
+        public bool IsActive { get; set; }
+
         private void Awake()
         {
             _originalSortingOrder = itemRenderer.sortingOrder;
             _destroyToken = this.GetCancellationTokenOnDestroy();
+        }
+
+        public void OnFixedUpdate()
+        {
+            
         }
 
         public UniTask MatchTo(Vector3 toPosition, float duration)

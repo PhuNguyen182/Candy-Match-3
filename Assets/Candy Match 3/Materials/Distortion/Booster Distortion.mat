@@ -64,7 +64,7 @@ Material:
     - _Propagation_Speed: 2.5
     - _Timer: 0
     - _Transparency: 0
-    - _Use_Timer: 1
+    - _Use_Timer: 0
     - _Wave: 8
     - _refra: 0
     - _scale: 5

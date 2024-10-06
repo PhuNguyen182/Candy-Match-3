@@ -5,13 +5,12 @@ using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.Effects;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.Messages;
-using GlobalScripts.UpdateHandlerPattern;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 {
-    public class MoveableAndBreakableItem : BaseItem, ISetHealthPoint, IAdjcentBreakable, IItemAnimation, IItemEffect, IFixedUpdateHandler
+    public class MoveableAndBreakableItem : BaseItem, ISetHealthPoint, IAdjcentBreakable, IItemAnimation, IItemEffect
     {
         [SerializeField] private Sprite[] itemHealthStates;
         [SerializeField] private ItemAnimation itemAnimation;
@@ -30,17 +29,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public int MaxHealthPoint => _maxHealthPoint;
 
-        public bool IsActive { get; set; }
-
-        public void OnFixedUpdate()
-        {
-            
-        }
-
         public override void ResetItem()
         {
             base.ResetItem();
-            IsActive = true;
             _healthPoint = _maxHealthPoint;
             SetItemSpriteViaHealthPoint();
             itemAnimation.ResetItem();
@@ -59,7 +50,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
         public override void ReleaseItem()
         {
             base.ReleaseItem();
-            IsActive = false;
             _decreaseTargetPublisher.Publish(new DecreaseTargetMessage
             {
                 TargetType = targetType,
