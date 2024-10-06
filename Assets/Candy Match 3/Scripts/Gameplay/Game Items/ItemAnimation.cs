@@ -136,17 +136,22 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public async UniTask PlayStripedWrapped()
         {
             PlayGlowLightEffect();
+            ChangeVisibleMask(true);
             ChangeItemLayer(true, 3);
+
             itemAnimator.ResetTrigger(ItemAnimationHashKeys.ComboStripedWrappedHash);
             itemAnimator.SetTrigger(ItemAnimationHashKeys.ComboStripedWrappedHash);
             TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ComboStripedWrappedDelay);
             await UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+
+            ChangeVisibleMask(false);
             ChangeItemLayer(false);
         }
 
         public async UniTask PlayDoubleWrapped(int direction, bool isFirst)
         {
             PlayGlowLightEffect();
+            ChangeVisibleMask(true);
             ChangeItemLayer(true, 3);
             itemAnimator.SetBool(ItemAnimationHashKeys.IsFirstHash, isFirst);
             itemAnimator.SetInteger(ItemAnimationHashKeys.DirectionHash, direction);
@@ -154,6 +159,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
             TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ComboDoubleWrappedDelay);
             await UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
+            ChangeVisibleMask(false);
             ChangeItemLayer(false);
         }
 
