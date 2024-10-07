@@ -277,6 +277,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (isLockedState)
                 {
+                    _checkGridTask.CheckMatchAtPosition(position);
                     _checkGridTask.CheckAroundPosition(position, 1);
                     return;
                 }

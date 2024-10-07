@@ -12,6 +12,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
     {
         private BoundsInt _boardActiveBounds;
         private Dictionary<Vector3Int, IGridCell> _kpv;
+        private List<Vector3Int> _spawnerPositions;
 
         public int PositionCount => _kpv.Count;
         public int BoardWidth => MaxPosition.x - MinPosition.x;
@@ -19,6 +20,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
         public Vector3Int MinPosition => _boardActiveBounds.min;
         public Vector3Int MaxPosition => _boardActiveBounds.max - Vector3Int.one;
+        public List<Vector3Int> SpawnerPositions => _spawnerPositions;
 
         public Func<Vector3Int, Vector3> ConvertGridToWorldFunction { get; }
         public Func<Vector3, Vector3Int> ConvertWorldToGridFunction { get; }
@@ -29,6 +31,12 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
 
             ConvertGridToWorldFunction = convertGridToWorldFunction;
             ConvertWorldToGridFunction = convertWorldToGridFunction;
+        }
+
+        public void BuildSpawner(Vector3Int position)
+        {
+            _spawnerPositions ??= new();
+            _spawnerPositions.Add(position);
         }
 
         public BoundsInt GetActiveBounds()

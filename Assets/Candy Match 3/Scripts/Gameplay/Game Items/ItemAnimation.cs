@@ -143,8 +143,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemAnimator.SetTrigger(ItemAnimationHashKeys.ComboStripedWrappedHash);
             TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ComboStripedWrappedDelay);
             await UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
-
-            ChangeVisibleMask(false);
             ChangeItemLayer(false);
         }
 
@@ -159,7 +157,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
             TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ComboDoubleWrappedDelay);
             await UniTask.Delay(duration, false, PlayerLoopTiming.FixedUpdate, _destroyToken);
-            ChangeVisibleMask(false);
             ChangeItemLayer(false);
         }
 
@@ -289,6 +286,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private void OnDisable()
         {
             StopAllEffects();
+            ChangeVisibleMask(false);
             itemRenderer.transform.localPosition = Vector3.zero;
         }
 

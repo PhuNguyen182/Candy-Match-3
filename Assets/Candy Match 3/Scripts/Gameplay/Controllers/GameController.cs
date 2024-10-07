@@ -196,6 +196,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
                 IGridCell gridCell = _gridCellManager.Get(levelModel.SpawnerBlockPositions[i].Position);
                 gridCell.IsSpawner = true;
 
+                _gridCellManager.BuildSpawner(gridCell.GridPosition);
                 _spawnItemTask.AddSpawnerPosition(levelModel.SpawnerBlockPositions[i]);
                 Vector3 spawnerPosition = ConvertGridToWorld(levelModel.SpawnerBlockPositions[i].Position + Vector3Int.up);
                 Instantiate(scriptableDatabaseCollection.MiscCollection.SpawnerMask, spawnerPosition, Quaternion.identity, miscContainer);
