@@ -244,6 +244,7 @@ namespace CandyMatch3.Scripts.Gameplay.Controllers
 
         private void OnDestroy()
         {
+            SimplePool.ClearPool();
             GC.Collect();
         }
     }
