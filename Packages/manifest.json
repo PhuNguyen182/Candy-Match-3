@@ -16,6 +16,7 @@
     "com.unity.profiling.core": "1.0.2",
     "com.unity.render-pipelines.universal": "14.0.11",
     "com.unity.test-framework": "1.1.33",
+    "com.unity.testtools.codecoverage": "1.2.6",
     "com.unity.textmeshpro": "3.0.9",
     "com.unity.ugui": "1.0.0",
     "games.corundum.stateless-for-unity": "5.11.3",

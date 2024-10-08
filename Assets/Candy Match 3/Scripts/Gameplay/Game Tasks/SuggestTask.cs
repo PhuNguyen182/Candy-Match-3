@@ -20,7 +20,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly MatchItemsTask _matchItemsTask;
         private readonly ISubscriber<DecreaseMoveMessage> _decreaseMoveSubscriber;
 
-        private const float SuggestDelay = 4f;
+        private const float SuggestDelay = 3f;
         private const float SuggestInterval = 6f;
         private const float SuggestCooldown = 10f;
 

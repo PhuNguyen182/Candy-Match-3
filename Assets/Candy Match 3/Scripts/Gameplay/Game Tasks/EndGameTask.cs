@@ -16,8 +16,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
         private readonly EndGameScreen _endGameScreen;
-        private readonly TimeSpan _waitTimeAmount;
 
+        private TimeSpan _waitTimeAmount;
         private CancellationToken _token;
         private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
@@ -56,8 +56,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             await UniTask.CompletedTask;
         }
 
-        public async UniTask WaitAWhile()
+        public async UniTask WaitAWhile(float time)
         {
+            _waitTimeAmount = TimeSpan.FromSeconds(time);
             await UniTask.Delay(_waitTimeAmount, false, PlayerLoopTiming.Update, _token);
         }
 

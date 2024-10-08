@@ -161,23 +161,26 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 DecreaseMove();
                 await SwapComboBooster(fromCell, toCell, fromItem, toItem);
+                return;
             }
 
             else if (_comboBoosterHandleTask.IsSwapToColorful(fromCell, toCell))
             {
                 DecreaseMove();
                 await SwapToColorful(fromCell, toCell, fromItem, toItem);
+                return;
             }
 
             else if (CheckCollectible(fromCell, toCell))
             {
-                DecreaseMove();
-                await SwapCollectible(fromCell, toCell, fromItem, toItem);
+                await SwapCollectible(fromCell, toCell, fromItem, toItem, isSwapBack);
+                return;
             }
 
             else
             {
                 await SwapItems(fromCell, toCell, fromItem, toItem, isSwapBack);
+                return;
             }
         }
 
@@ -203,7 +206,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             await _comboBoosterHandleTask.CombineColorfulItemWithColorItem(fromCell, toCell);
         }
 
-        private async UniTask SwapCollectible(IGridCell fromCell, IGridCell toCell, IBlockItem fromItem, IBlockItem toItem)
+        private async UniTask SwapCollectible(IGridCell fromCell, IGridCell toCell, IBlockItem fromItem, IBlockItem toItem, bool isSwapBack)
         {
             IGridCell currentGrid;
             IGridCell remainGrid;
@@ -215,7 +218,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             toItem.SetWorldPosition(fromCell.WorldPosition);
             fromItem.SetWorldPosition(toCell.WorldPosition);
 
+            if(fromItem is not ICollectible && toItem is not ICollectible)
+            {
+                if(isSwapBack)
+                    await CheckMatchOnSwap(fromCell, toCell);
+                return;
+            }
 
+            DecreaseMove();
             if (fromCell.IsCollectible)
             {
                 currentGrid = fromCell;
@@ -260,26 +270,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private async UniTask CheckMatchOnSwap(IGridCell fromCell, IGridCell toCell)
         {
             bool isMatchedTo = _matchItemsTask.CheckMatchInSwap(toCell.GridPosition);
+            bool isMatchedFrom = _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
 
-            if (!isMatchedTo)
+            if (!isMatchedTo && !isMatchedFrom)
             {
-                bool isMatchedFrom = _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
-
-                if (!isMatchedFrom)
-                {
-                    fromCell.LockStates = toCell.LockStates = LockStates.None;
-                    await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
-                    EffectManager.Instance.PlaySoundEffect(SoundEffectType.Error);
-                }
-
-                else DecreaseMove();
+                fromCell.LockStates = toCell.LockStates = LockStates.None;
+                await SwapItem(toCell.GridPosition, fromCell.GridPosition, false);
+                EffectManager.Instance.PlaySoundEffect(SoundEffectType.Error);
             }
 
-            else
-            {
-                DecreaseMove();
-                _matchItemsTask.CheckMatchInSwap(fromCell.GridPosition);
-            }
+            else DecreaseMove();
         }
 
         private void UseSwapBooster()

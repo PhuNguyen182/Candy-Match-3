@@ -185,6 +185,9 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             SimplePool.PoolPreLoad(effectDatabase.StripedVertical, 3, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
 
+            SimplePool.PoolPreLoad(targetObject.gameObject, 25, EffectContainer.Transform);
+            await UniTask.NextFrame(_token);
+
             SimplePool.PoolPreLoad(effectDatabase.WrappedEffect, 3, EffectContainer.Transform);
             SimplePool.PoolPreLoad(effectDatabase.ExplodeEffect.gameObject, 6, EffectContainer.Transform);
             SimplePool.PoolPreLoad(effectDatabase.ItemSwapEffect, 4, EffectContainer.Transform);

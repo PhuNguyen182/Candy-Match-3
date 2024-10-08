@@ -118,7 +118,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 gridCell1.LockStates = LockStates.None;
                 gridCell2.LockStates = LockStates.None;
-                _checkGridTask.CheckRange(activeBounds);
+                CheckGrids(_gridCellManager.SpawnerPositions);
+            }
+        }
+
+        private void CheckGrids(List<Vector3Int> positions)
+        {
+            // Only check at spawner positions, no need to check all board
+            for (int i = 0; i < positions.Count; i++)
+            {
+                _checkGridTask.CheckAroundPosition(positions[i], 0);
             }
         }
 

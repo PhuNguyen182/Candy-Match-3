@@ -91,7 +91,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             MoveTargetData data = new MoveTargetData { TargetType = targetType };
             MoveTargetData target = await MessageBrokerUtils<MoveTargetData>
                                           .PublishAsyncMessage(_moveToTargetPublisher, data);
-            if (!target.IsCompleted)
+
+            if (!target.IsCompleted && target.TargetType == targetType)
             {
                 var flyObject = EffectManager.Instance.SpawnFlyCompletedTarget(targetType, transform.position);
                 flyObject.transform.localScale = Vector3.one;
