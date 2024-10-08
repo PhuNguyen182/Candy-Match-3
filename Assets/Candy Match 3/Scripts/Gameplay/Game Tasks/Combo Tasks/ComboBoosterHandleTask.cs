@@ -19,6 +19,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
+        private readonly SuggestTask _suggestTask;
 
         private readonly DoubleStripedBoosterTask _doubleStripedBoosterTask;
         private readonly StripedWrappedBoosterTask _stripedWrappedBoosterTask;
@@ -34,12 +35,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         public ColorfulWrappedBoosterTask ColorfulWrappedBoosterTask => _colorfulWrappedBoosterTask;
 
         public ComboBoosterHandleTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ItemManager itemManager
-            , ActivateBoosterTask activateBoosterTask, EffectDatabase effectDatabase, ExplodeItemTask explodeItemTask)
+            , ActivateBoosterTask activateBoosterTask, EffectDatabase effectDatabase, ExplodeItemTask explodeItemTask, SuggestTask suggestTask)
         {
             _itemManager = itemManager;
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
             _activateBoosterTask = activateBoosterTask;
+            _suggestTask = suggestTask;
 
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -68,7 +70,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public async UniTask HandleComboBooster(IGridCell gridCell1, IGridCell gridCell2)
         {
+            _suggestTask.Suggest(false);
             _checkGridTask.CanCheck = false;
+
             if (IsDoubleStripedCombo(gridCell1, gridCell2))
                 await _doubleStripedBoosterTask.Activate(gridCell1, gridCell2);
 
@@ -159,15 +163,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             return blockItem1.ItemType == ItemType.ColorBomb && blockItem2.ItemType == ItemType.ColorBomb;
         }
 
-        private bool IsColorfulWithColorItem(IGridCell gridCell1, IGridCell gridCell2)
-        {
-            IBlockItem blockItem1 = gridCell1.BlockItem;
-            IBlockItem blockItem2 = gridCell2.BlockItem;
-
-            return (blockItem1.CandyColor != CandyColor.None && blockItem2.ItemType == ItemType.ColorBomb)
-                || (blockItem2.CandyColor != CandyColor.None && blockItem1.ItemType == ItemType.ColorBomb);
-        }
-
         private bool IsStripedBooster(IBlockItem blockItem)
         {
             if (blockItem is IColorBooster colorBooster)
@@ -191,17 +186,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             IBlockItem blockItem2 = gridCell2.BlockItem;
 
             if (blockItem1 is IBooster && blockItem2 is IBooster)
-                return true;
-
-            return false;
-        }
-
-        public bool IsColorBoosters(IGridCell gridCell1, IGridCell gridCell2)
-        {
-            IBlockItem blockItem1 = gridCell1.BlockItem;
-            IBlockItem blockItem2 = gridCell2.BlockItem;
-
-            if (blockItem1 is IColorBooster && blockItem2 is IColorBooster)
                 return true;
 
             return false;

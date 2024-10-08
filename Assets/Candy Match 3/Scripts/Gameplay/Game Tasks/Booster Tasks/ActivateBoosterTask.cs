@@ -21,6 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly HorizontalStripedBoosterTask _horizontalBoosterTask;
         private readonly VerticalStripedBoosterTask _verticalBoosterTask;
         private readonly WrappedBoosterTask _wrappedBoosterTask;
+        private readonly SuggestTask _suggestTask;
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
@@ -30,10 +31,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         public ColorfulBoosterTask ColorfulBoosterTask => _colorfulBoosterTask;
 
         public ActivateBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask
-            , EffectDatabase effectDatabase, ExplodeItemTask explodeItemTask)
+            , EffectDatabase effectDatabase, ExplodeItemTask explodeItemTask, SuggestTask suggestTask)
         {
             _breakGridTask = breakGridTask;
             _gridCellManager = gridCellManager;
+            _suggestTask = suggestTask;
             DisposableBuilder builder = Disposable.CreateBuilder();
 
             _colorfulBoosterTask = new(gridCellManager, breakGridTask, effectDatabase.ColorfulFireray);
@@ -64,6 +66,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             if (booster.IsActivated)
                 return;
 
+            _suggestTask.Suggest(false);
             booster.IsActivated = true;
             ActiveBoosterCount = ActiveBoosterCount + 1;
             gridCell.LockStates = LockStates.Breaking;
