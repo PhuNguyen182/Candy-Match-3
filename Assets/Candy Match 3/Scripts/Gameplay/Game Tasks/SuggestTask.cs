@@ -55,18 +55,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (_checkGameBoardMovementTask.AllGridsUnlocked)
             {
                 _suggestTimer += Time.deltaTime;
-                if(_suggestTimer > SuggestDelay && !_suggestFlag)
+                if (_suggestTimer > SuggestDelay && !_suggestFlag)
                 {
                     Suggest(true);
                     _suggestFlag = true;
                 }
 
-                else if(_suggestTimer > SuggestInterval && _suggestTimer <= SuggestCooldown)
+                else if (_suggestTimer > SuggestInterval && _suggestTimer <= SuggestCooldown)
                 {
                     Suggest(false);
                 }
 
-                else if(_suggestTimer > SuggestCooldown)
+                else if (_suggestTimer > SuggestCooldown)
                 {
                     ClearTimer();
                 }
@@ -164,10 +164,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (availableSuggest.IsSwapWithBooster)
             {
-                availableSuggest.Positions = new() 
-                { 
-                    originalPosition, 
-                    switchedPosition 
+                availableSuggest.Positions = new()
+                {
+                    originalPosition,
+                    switchedPosition
                 };
 
                 return availableSuggest;
@@ -177,7 +177,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 IGridCell gridCell1 = _gridCellManager.Get(originalPosition);
                 IGridCell gridCell2 = _gridCellManager.Get(switchedPosition);
-                
+
                 MatchResult matchResult;
                 _detectMoveTask.PseudoSwapItems(gridCell1, gridCell2);
 

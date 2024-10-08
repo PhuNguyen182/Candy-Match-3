@@ -41,14 +41,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 DisposableBuilder builder = Disposable.CreateBuilder();
                 activePositions.AddRange(_gridCellManager.GetActivePositions());
 
-                foreach (Vector3Int position in activePositions)
+                foreach (IGridCell gridCell in _gridCellManager.GridCells)
                 {
-                    IGridCell gridCell = _gridCellManager.Get(position);
-                    gridCell.GridLockProperty.Subscribe(SetLockValue).AddTo(ref builder);
+                    gridCell.GridLockProperty
+                            .Subscribe(SetLockValue)
+                            .AddTo(ref builder);
                 }
 
                 UnlockedProperty.Debounce(_gridLockThrottle)
-                                .Subscribe(_ => SendBoardStopMessage(_))
+                                .Subscribe(SendBoardStopMessage)
                                 .AddTo(ref builder);
 
                 _disposable = builder.Build();
