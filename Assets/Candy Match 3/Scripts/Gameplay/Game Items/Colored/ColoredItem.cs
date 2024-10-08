@@ -39,6 +39,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         {
             base.ResetItem();
             IsLocking = false;
+
             SetMatchable(true);
             itemAnimation.ResetItem();
             colorfulEffect.gameObject.SetActive(false);
@@ -75,7 +76,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             MoveTargetData data = new MoveTargetData { TargetType = targetType };
             MoveTargetData target = await MessageBrokerUtils<MoveTargetData>
                                           .PublishAsyncMessage(_moveToTargetPublisher, data);
-            if (!target.IsCompleted)
+
+            if (!target.IsCompleted && target.TargetType == targetType)
             {
                 var flyObject = EffectManager.Instance.SpawnFlyCompletedTarget(targetType, transform.position);
                 flyObject.transform.localScale = Vector3.one;

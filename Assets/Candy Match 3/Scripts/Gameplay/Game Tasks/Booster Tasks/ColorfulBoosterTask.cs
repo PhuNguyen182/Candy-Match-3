@@ -75,9 +75,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 _breakGridTask.ReleaseGridCell(boosterCell);
                 RemoveColor(candyColor);
 
-                boosterCell.LockStates = LockStates.None;
                 _activateCount = _activateCount - 1;
-                _checkGridTask.CheckAroundPosition(boosterCell.GridPosition, 0);
+                boosterCell.LockStates = LockStates.None;
+                _checkGridTask.CheckAroundPosition(boosterCell.GridPosition, 1);
 
                 if (_checkedCandyColors.Count <= 0 && _activateCount <= 0)
                     _checkGridTask.CanCheck = true;
@@ -133,9 +133,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 _breakGridTask.ReleaseGridCell(gridCell);
                 RemoveColor(checkColor);
 
-                gridCell.LockStates = LockStates.None;
                 _activateCount = _activateCount - 1;
-                _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 0);
+                gridCell.LockStates = LockStates.None;
+                _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
 
                 if (_checkedCandyColors.Count <= 0 && _activateCount <= 0)
                     _checkGridTask.CanCheck = true;
@@ -163,7 +163,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         if (gridCell.CandyColor != color || gridCell.IsLocked)
                             continue;
 
-                        if (!gridCell.BlockItem.IsMatchable)
+                        if (!gridCell.BlockItem.IsMatchable || gridCell.BlockItem.IsLocking)
                             continue;
 
                         foundPositions.Add(positions[i]);
@@ -194,7 +194,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                         if (gridCell.CandyColor == CandyColor.None || gridCell.IsLocked)
                             continue;
 
-                        if (!gridCell.BlockItem.IsMatchable)
+                        if (!gridCell.BlockItem.IsMatchable || gridCell.BlockItem.IsLocking)
                             continue;
 
                         // Prevent duplicate color detection

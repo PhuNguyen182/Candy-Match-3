@@ -48,8 +48,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public BoosterType ColorBoosterType => colorBoosterType;
 
-        public bool IsActive { get; set; }
-
         public override void ResetItem()
         {
             base.ResetItem();
@@ -61,7 +59,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void SetMatchable(bool isMatchable)
         {
-            IsActive = !isMatchable;
             _isMatchable = isMatchable;
         }
 
@@ -301,7 +298,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override void OnDisappear()
         {
-            IsActive = false;
             _isBoardStop = false;
         }
     }
