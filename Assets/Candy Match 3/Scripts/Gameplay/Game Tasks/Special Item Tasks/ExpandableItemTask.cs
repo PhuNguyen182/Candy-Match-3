@@ -171,7 +171,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.SpecialItemTasks
                 Vector3Int checkPosition = position + _adjacentSteps[i];
                 IGridCell checkGridCell = _gridCellManager.Get(checkPosition);
 
-                if (checkGridCell == null || !checkGridCell.HasItem)
+                if (checkGridCell == null || !checkGridCell.HasItem || !checkGridCell.IsAvailable)
                     continue;
 
                 if (checkGridCell.IsLocked || !checkGridCell.BlockItem.Replacable)

@@ -11,7 +11,9 @@ using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Gameplay.Effects;
+using CandyMatch3.Scripts.Common.Messages;
 using Cysharp.Threading.Tasks;
+using MessagePipe;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -19,15 +21,30 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
     {
         private readonly GridCellManager _gridCellManager;
         private readonly ExplodeEffectCollection _explodeEffectCollection;
+        private readonly ISubscriber<UseInGameBoosterMessage> _useInGameBoosterSubscriber;
+
+        private bool _anyInGameBoosterUse;
+        private IDisposable _disposable;
 
         public ExplodeItemTask(GridCellManager gridCellManager, ExplodeEffectCollection explodeEffectCollection)
         {
             _gridCellManager = gridCellManager;
             _explodeEffectCollection = explodeEffectCollection;
+
+            var builder = DisposableBag.CreateBuilder();
+            _useInGameBoosterSubscriber = GlobalMessagePipe.GetSubscriber<UseInGameBoosterMessage>();
+            _useInGameBoosterSubscriber.Subscribe(_ => OnInGameBoosterUsed()).AddTo(builder);
+            _disposable = builder.Build();
         }
 
         public void Explode(Vector3 position, ExplodeType explodeType)
         {
+            if (_anyInGameBoosterUse)
+            {
+                _anyInGameBoosterUse = false;
+                return;
+            }
+
             ExplodeEffectData explodeData = explodeType switch
             {
                 ExplodeType.SingleWrapped => _explodeEffectCollection.SingleWrappedExplode,
@@ -99,9 +116,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return distance;
         }
 
+        private void OnInGameBoosterUsed()
+        {
+            _anyInGameBoosterUse = true;
+        }
+
         public void Dispose()
         {
-            
+            _disposable.Dispose();
         }
     }
 }

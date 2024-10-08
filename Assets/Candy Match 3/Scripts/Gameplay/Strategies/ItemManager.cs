@@ -145,6 +145,36 @@ namespace CandyMatch3.Scripts.Gameplay.Strategies
             return (booster, boosterColor);
         }
 
+        public BoosterType GetBoosterType(ItemType itemType)
+        {
+            BoosterType boosterType = itemType switch
+            {
+                ItemType.BlueWrapped => BoosterType.Wrapped,
+                ItemType.GreenWrapped => BoosterType.Wrapped,
+                ItemType.OrangeWrapped => BoosterType.Wrapped,
+                ItemType.PurpleWrapped => BoosterType.Wrapped,
+                ItemType.RedWrapped => BoosterType.Wrapped,
+                ItemType.YellowWrapped => BoosterType.Wrapped,
+
+                ItemType.BlueHorizontal => BoosterType.Horizontal,
+                ItemType.GreenHorizontal => BoosterType.Horizontal,
+                ItemType.OrangeHorizontal => BoosterType.Horizontal,
+                ItemType.PurpleHorizontal => BoosterType.Horizontal,
+                ItemType.RedHorizontal => BoosterType.Horizontal,
+                ItemType.YellowHorizontal => BoosterType.Horizontal,
+
+                ItemType.BlueVertical => BoosterType.Horizontal,
+                ItemType.GreenVertical => BoosterType.Horizontal,
+                ItemType.OrangeVertical => BoosterType.Horizontal,
+                ItemType.PurpleVertical => BoosterType.Horizontal,
+                ItemType.RedVertical => BoosterType.Horizontal,
+                ItemType.YellowVertical => BoosterType.Horizontal,
+                _ => BoosterType.None
+            };
+
+            return boosterType;
+        }
+
         private ItemType GetWrapped(CandyColor candyColor)
         {
             ItemType itemType = candyColor switch

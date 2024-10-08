@@ -11,6 +11,7 @@ using CandyMatch3.Scripts.Common.CustomData;
 using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
+using GlobalScripts.Utils;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -48,19 +49,45 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask Spawn(Vector3Int position)
         {
-            if (!_spawnerPoints.ContainsKey(position))
-                return;
+            if (!_spawnerPoints.ContainsKey(position)) return;
 
             int id = _spawnerPoints[position];
+            BlockItemPosition blockItemPosition;
             WeightedSpawnRule spawnRule = _spawnRules[id];
-            BlockItemData itemData = spawnRule.GetRandomItemData(_itemManager);
-            
-            IBlockItem blockItem = _itemManager.Create(new BlockItemPosition
-            {
-                Position = position,
-                ItemData = itemData
-            });
 
+            BlockItemData itemData = spawnRule.GetRandomItemData(_itemManager);
+            BoosterType boosterType = _itemManager.GetBoosterType(itemData.ItemType);
+
+            if (boosterType != BoosterType.None) // Check this item is booster or not
+            {
+                CandyColor candyColor = itemData.ItemColor;
+                byte[] boosterProperty = new byte[] { (byte)candyColor, (byte)boosterType, 0, 0 };
+                int state = NumericUtils.BytesToInt(boosterProperty);
+
+                blockItemPosition = new()
+                {
+                    Position = position,
+                    ItemData = new BlockItemData
+                    {
+                        ID = 0,
+                        HealthPoint = 1,
+                        ItemType = itemData.ItemType,
+                        ItemColor = candyColor,
+                        PrimaryState = state
+                    }
+                };
+            }
+
+            else
+            {
+                blockItemPosition = new()
+                {
+                    Position = position,
+                    ItemData = itemData
+                };
+            }
+
+            IBlockItem blockItem = _itemManager.Create(blockItemPosition);
             IGridCell gridCell = _gridCellManager.Get(position);
             Vector3Int upGridPosition = position + Vector3Int.up;
             
@@ -78,6 +105,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
 
             await _moveItemTask.MoveItem(gridCell);
+            _moveItemTask.OnItemStopMove(gridCell);
         }
 
         public bool CheckSpawnable(IGridCell gridCell)

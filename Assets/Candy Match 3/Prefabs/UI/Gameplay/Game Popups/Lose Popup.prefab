@@ -6205,6 +6205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 8295709681972044216}
+  levelText: {fileID: 5345631866083736744}
   continueButton: {fileID: 1922733731372855735}
   popupAnimator: {fileID: 95619169385117928}
   targetElement: {fileID: 1218582540558817976, guid: 418a627759b45554f9ffe37c5af33e2d, type: 3}

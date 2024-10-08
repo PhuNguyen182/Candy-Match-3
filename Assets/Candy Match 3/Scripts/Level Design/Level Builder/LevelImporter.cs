@@ -245,6 +245,8 @@ namespace CandyMatch3.Scripts.LevelDesign.LevelBuilders
                 int healthPoint = blockPositions[i].ItemData.HealthPoint;
                 StatefulGroupType groupType = blockPositions[i].ItemData.GroupType;
                 StatefulTile statefulTile = _tileDatabase.GetStatefulTile(id, groupType, healthPoint);
+                Vector3Int position = blockPositions[i].Position;
+                tilemap.SetTile(position, statefulTile);
             }
 
             return this;

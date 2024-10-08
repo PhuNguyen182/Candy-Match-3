@@ -5,11 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using CandyMatch3.Scripts.Common.Constants;
+using GlobalScripts.UpdateHandlerPattern;
 using DG.Tweening;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems
 {
-    public class ItemAnimation : MonoBehaviour
+    public class ItemAnimation : MonoBehaviour, IFixedUpdateHandler
     {
         [SerializeField] private Animator itemAnimator;
         [SerializeField] private ItemGraphics itemGraphics;
@@ -46,10 +47,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public Animator ItemAnimator => itemAnimator;
 
+        public bool IsActive { get; set; }
+
         private void Awake()
         {
             _originalSortingOrder = itemRenderer.sortingOrder;
             _destroyToken = this.GetCancellationTokenOnDestroy();
+        }
+
+        public void OnFixedUpdate()
+        {
+            
         }
 
         public UniTask MatchTo(Vector3 toPosition, float duration)
@@ -128,7 +136,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public async UniTask PlayStripedWrapped()
         {
             PlayGlowLightEffect();
+            ChangeVisibleMask(true);
             ChangeItemLayer(true, 3);
+
             itemAnimator.ResetTrigger(ItemAnimationHashKeys.ComboStripedWrappedHash);
             itemAnimator.SetTrigger(ItemAnimationHashKeys.ComboStripedWrappedHash);
             TimeSpan duration = TimeSpan.FromSeconds(Match3Constants.ComboStripedWrappedDelay);
@@ -139,6 +149,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         public async UniTask PlayDoubleWrapped(int direction, bool isFirst)
         {
             PlayGlowLightEffect();
+            ChangeVisibleMask(true);
             ChangeItemLayer(true, 3);
             itemAnimator.SetBool(ItemAnimationHashKeys.IsFirstHash, isFirst);
             itemAnimator.SetInteger(ItemAnimationHashKeys.DirectionHash, direction);
@@ -275,6 +286,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
         private void OnDisable()
         {
             StopAllEffects();
+            ChangeVisibleMask(false);
             itemRenderer.transform.localPosition = Vector3.zero;
         }
 

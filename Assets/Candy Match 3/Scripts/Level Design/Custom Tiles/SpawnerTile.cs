@@ -13,7 +13,7 @@ namespace CandyMatch3.Scripts.LevelDesign.CustomTiles
         {
             int boardProperty = gridInformation.GetPositionProperty(position, BoardConstants.BoardTileValidate, 0);
             int upBoardProperty = gridInformation.GetPositionProperty(position + Vector3Int.up, BoardConstants.BoardTileValidate, 0);
-            int spawnerProperty = gridInformation.GetPositionProperty(position + Vector3Int.up, BoardConstants.SpawnerTileValidate, 0);
+            int spawnerProperty = gridInformation.GetPositionProperty(position, BoardConstants.SpawnerTileValidate, 0);
             
             return boardProperty == 1 && upBoardProperty != 1 && spawnerProperty == 1;
         }
