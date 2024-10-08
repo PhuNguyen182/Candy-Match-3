@@ -13,10 +13,14 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
         [SerializeField] private LineRenderer rayline;
 
         [Header("Animation Modifier")]
-        [SerializeField] private float ampllitude = 0.5f;
+        [SerializeField] private float amplitude = 0.5f;
         [SerializeField] private float originalPhase = 45;
         [SerializeField] private float angularFrequency = 90;
         [SerializeField] private float rotateSpeed = 1;
+
+        [Header("Amplitudes")]
+        [SerializeField] private float minAmplitude = 0.115f;
+        [SerializeField] private float maxAmplitude = 0.165f;
 
         public Vector3 StartPosition { get; set; }
         public Vector3 EndPosition { get; set; }
@@ -64,6 +68,11 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             _additionPhi = originalPhase * phaseStep * Mathf.Deg2Rad;
         }
 
+        public void SetAmplitudeInterpolation(float interpolation)
+        {
+            amplitude = Mathf.Lerp(minAmplitude, maxAmplitude, interpolation);
+        }
+
         private void AlignOnStart()
         {
             _direction = EndPosition - StartPosition;
@@ -90,7 +99,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             for (int i = 1; i <= segmentCount; i++)
             {
                 _segmentPosition = StartPosition + _segmentLength * i;
-                _varianceVector = Vector3.up * ampllitude * Mathf.Sin(_omega * Time.time * rotateSpeed + (i * _phi + _additionPhi));
+                _varianceVector = Vector3.up * amplitude * Mathf.Sin(_omega * Time.time * rotateSpeed + (i * _phi + _additionPhi));
 
                 _rotateAngle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
                 _varianceVector = Quaternion.Euler(0, 0, _rotateAngle) * _varianceVector;

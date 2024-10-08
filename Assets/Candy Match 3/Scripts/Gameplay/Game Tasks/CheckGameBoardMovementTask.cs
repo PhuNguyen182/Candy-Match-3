@@ -4,7 +4,6 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -23,7 +22,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private IDisposable _disposable;
 
         public bool AllGridsUnlocked { get; private set; }
-        public Observable<bool> UnlockedObservable { get; private set; }
         public ReactiveProperty<bool> UnlockedProperty { get; private set; }
 
         public CheckGameBoardMovementTask(GridCellManager gridCellManager)
@@ -36,24 +34,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public void BuildCheckBoard()
         {
-            using (ListPool<Vector3Int>.Get(out List<Vector3Int> activePositions))
-            {
-                DisposableBuilder builder = Disposable.CreateBuilder();
-                activePositions.AddRange(_gridCellManager.GetActivePositions());
+            DisposableBuilder builder = Disposable.CreateBuilder();
 
-                foreach (IGridCell gridCell in _gridCellManager.GridCells)
-                {
-                    gridCell.GridLockProperty
-                            .Subscribe(SetLockValue)
-                            .AddTo(ref builder);
-                }
+            foreach (IGridCell gridCell in _gridCellManager.GridCells)
+                gridCell.GridLockProperty.Subscribe(SetLockValue).AddTo(ref builder);
 
-                UnlockedProperty.Debounce(_gridLockThrottle)
-                                .Subscribe(SendBoardStopMessage)
-                                .AddTo(ref builder);
-
-                _disposable = builder.Build();
-            }
+            UnlockedProperty.Debounce(_gridLockThrottle).Subscribe(SendBoardStopMessage).AddTo(ref builder);
+            _disposable = builder.Build();
         }
 
         public void SendBoardStopMessage(bool isUnlocked)

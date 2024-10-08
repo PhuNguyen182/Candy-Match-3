@@ -149,17 +149,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   segmentCount: 3
   rayline: {fileID: 1047846092906051721}
-  blueColor: {x: 0.23, y: 4.2, z: 6.5, w: 1}
-  greenColor: {x: 0.23, y: 6.5, z: 0.75, w: 1}
-  orangeColor: {x: 6.5, y: 2.35, z: 0.24, w: 1}
-  purpleColor: {x: 4.68, y: 0.72, z: 6.5, w: 1}
-  redColor: {x: 6.5, y: 0.21, z: 0.3, w: 1}
-  yellowColor: {x: 6.5, y: 5.63, z: 0.27, w: 1}
-  specialColor: {x: 3.85, y: 8.3, z: 9.2, w: 1}
-  ampllitude: 0.115
+  amplitude: 0.1175
   originalPhase: 45
   angularFrequency: 90
-  rotateSpeed: 15
+  rotateSpeed: 17.5
+  minAmplitude: 0.115
+  maxAmplitude: 0.2
 --- !u!1 &3689754844382074901
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ using UnityEngine;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
+using CandyMatch3.Scripts.Gameplay.Statefuls;
 using CandyMatch3.Scripts.Common.Databases;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
@@ -25,6 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         private CancellationToken _token;
         private CancellationTokenSource _cts;
+        private CheckGridTask _checkGridTask;
         private IDisposable _disposable;
 
         public int ActiveBoosterCount { get; private set; }
@@ -68,6 +70,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             _suggestTask.Suggest(false);
             booster.IsActivated = true;
+
+            // Break stateful first if available
+            if (gridCell.GridStateful is IBreakable stateBreakable)
+            {
+                bool isLockedState = gridCell.GridStateful.IsLocked;
+
+                if (stateBreakable.Break())
+                {
+                    _checkGridTask.CheckMatchAtPosition(position);
+                    gridCell.SetGridStateful(new AvailableState());
+                }
+            }
+
             ActiveBoosterCount = ActiveBoosterCount + 1;
             gridCell.LockStates = LockStates.Breaking;
 
@@ -77,6 +92,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             if (blockItem is IColorBooster colorBooster)
             {
                 BoosterType colorBoosterType = colorBooster.ColorBoosterType;
+
                 switch (colorBoosterType)
                 {
                     case BoosterType.Horizontal:
@@ -102,6 +118,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
         {
+            _checkGridTask = checkGridTask;
             _colorfulBoosterTask.SetCheckGridTask(checkGridTask);
             _horizontalBoosterTask.SetCheckGridTask(checkGridTask);
             _verticalBoosterTask.SetCheckGridTask(checkGridTask);
