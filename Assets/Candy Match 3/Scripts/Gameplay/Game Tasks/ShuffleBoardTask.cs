@@ -22,6 +22,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly SuggestTask _suggestTask;
         private readonly FillBoardTask _fillBoardTask;
 
+        private bool _hasChecked = false; // This variable is a flag to prevent duplicate check
         private List<Vector3Int> _activePositions;
         private List<Vector3Int> _shuffleableCells;
         private CheckGameBoardMovementTask _checkGameBoardMovementTask;
@@ -54,21 +55,28 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask CheckShuffleBoard()
         {
-            if (!_checkGameBoardMovementTask.AllGridsUnlocked)
+            if (_hasChecked || !_checkGameBoardMovementTask.AllGridsUnlocked)
                 return;
 
+            _hasChecked = true;
             _detectMoveTask.DetectPossibleMoves();
+
             if (_detectMoveTask.HasPossibleMove())
+            {
+                _hasChecked = false;
                 return;
+            }
 
             SetSuggestActive(false);
             _inputProcessTask.IsActive = false;
+
             var popup = await ShufflePopup.CreateFromAddress(CommonPopupPaths.ShufflePopupPath);
             await popup.ClosePopup();
             await Shuffle(false);
 
             SetSuggestActive(true);
             _inputProcessTask.IsActive = true;
+            _hasChecked = false;
         }
 
         public void Shuffle()
@@ -121,16 +129,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (!gridCell.HasItem)
                     continue;
 
-                if (gridCell.CandyColor == CandyColor.None)
-                    continue;
-
-                if (!gridCell.BlockItem.IsMatchable)
-                    continue;
-
-                if (!gridCell.IsMoveable)
-                    continue;
-
                 if (gridCell.BlockItem is IBooster)
+                    continue;
+
+                if (!gridCell.BlockItem.IsMatchable || !gridCell.IsMoveable)
                     continue;
 
                 _shuffleableCells.Add(_activePositions[i]);
