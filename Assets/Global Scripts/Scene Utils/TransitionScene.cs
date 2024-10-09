@@ -51,7 +51,7 @@ namespace GlobalScripts.SceneUtils
             string nextSceneName = SceneBridge.Bridge;
             if (!string.IsNullOrEmpty(nextSceneName))
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(2.5f), cancellationToken: _token);
+                await UniTask.Delay(TimeSpan.FromSeconds(1.5f), cancellationToken: _token);
                 darkCurtain.SetTrigger(_outHash);
 
                 await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);

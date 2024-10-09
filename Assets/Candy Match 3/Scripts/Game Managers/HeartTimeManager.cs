@@ -40,15 +40,9 @@ namespace CandyMatch3.Scripts.GameManagers
                     else
                     {
                         _savedHeartTime = _savedHeartTime.AddSeconds(_heartCooldown);
+                        GameDataManager.Instance.SaveHeartTime(_savedHeartTime);
                     }
                 }
-            }
-
-            else
-            {
-                _savedHeartTime = DateTime.Now;
-                GameDataManager.Instance.SetResource(GameResourceType.Life, _maxHeart);
-                GameDataManager.Instance.SaveHeartTime(_savedHeartTime);
             }
         }
 
@@ -61,7 +55,9 @@ namespace CandyMatch3.Scripts.GameManagers
             {
                 TimeSpan cooldown = TimeSpan.FromSeconds(_heartCooldown);
                 diff = diff.Subtract(cooldown);
-                GameDataManager.Instance.EarnResource(GameResourceType.Life, 1);
+
+                if(diff.TotalSeconds > 0)
+                    GameDataManager.Instance.EarnResource(GameResourceType.Life, 1);
 
                 if (GameDataManager.Instance.GetResource(GameResourceType.Life) >= _maxHeart)
                 {

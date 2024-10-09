@@ -9,6 +9,7 @@ using CandyMatch3.Scripts.GameData;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Common.Databases;
+using CandyMatch3.Scripts.GameData.Constants;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.CustomData;
 using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
@@ -113,6 +114,9 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
                 };
 
                 GameDataManager.Instance.SpendResource(GameResourceType.Life, 1);
+                if(lives >= GameDataConstants.MaxLives)
+                    GameDataManager.Instance.SaveHeartTime(DateTime.Now);
+                
                 await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
                 await SceneBridge.LoadNextScene(SceneConstants.Gameplay);
             }
