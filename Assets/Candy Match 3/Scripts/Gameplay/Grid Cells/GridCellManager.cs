@@ -21,6 +21,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public Vector3Int MinPosition => _boardActiveBounds.min;
         public Vector3Int MaxPosition => _boardActiveBounds.max - Vector3Int.one;
         public List<Vector3Int> SpawnerPositions => _spawnerPositions;
+        public IEnumerable<IGridCell> GridCells => _kpv.Values;
 
         public Func<Vector3Int, Vector3> ConvertGridToWorldFunction { get; }
         public Func<Vector3, Vector3Int> ConvertWorldToGridFunction { get; }

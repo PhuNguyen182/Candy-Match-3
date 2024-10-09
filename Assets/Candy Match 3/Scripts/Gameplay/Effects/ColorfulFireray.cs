@@ -24,8 +24,10 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
         {
             rayfire.StartPosition = startPosition;
             rayfire.EndPosition = startPosition;
+            Vector3 destination = targetCell.WorldPosition;
+            float distance = (destination - startPosition).magnitude;
 
-            await DOVirtual.Vector3(startPosition, targetCell.WorldPosition, 0.5f, SetEndRayfirePosition)
+            await DOVirtual.Vector3(startPosition, destination, 0.5f, pos => SetEndRayfirePosition(pos, destination, distance))
                            .OnComplete(() => OnRayfireComplete(targetCell)).SetDelay(delay)
                            .AwaitForComplete(TweenCancelBehaviour.KillWithCompleteCallback, _token);
 
@@ -35,9 +37,11 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
 
         public void SetPhaseStep(int step) => rayfire.SetPhaseStep(step);
 
-        private void SetEndRayfirePosition(Vector3 position)
+        private void SetEndRayfirePosition(Vector3 position, Vector3 destination, float distance)
         {
             rayfire.EndPosition = position;
+            float magnitude = (destination - position).magnitude;
+            rayfire.SetAmplitudeInterpolation((distance - magnitude) / distance);
         }
 
         private void OnRayfireComplete(IGridCell gridCell)

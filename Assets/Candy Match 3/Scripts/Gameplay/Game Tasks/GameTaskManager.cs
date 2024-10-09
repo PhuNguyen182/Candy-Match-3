@@ -96,8 +96,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _activateBoosterTask = new(_gridCellManager, _breakGridTask, databaseCollection.EffectDatabase, _explodeItemTask);
             _activateBoosterTask.AddTo(ref builder);
 
-            _comboBoosterHandleTask = new(_gridCellManager, _breakGridTask, itemManager
-                                , _activateBoosterTask, databaseCollection.EffectDatabase, _explodeItemTask);
+            _comboBoosterHandleTask = new(_gridCellManager, _breakGridTask, itemManager, _activateBoosterTask
+                                         , databaseCollection.EffectDatabase, _explodeItemTask);
             _comboBoosterHandleTask.AddTo(ref builder);
 
             _breakGridTask.SetActivateBoosterTask(_activateBoosterTask);
@@ -124,11 +124,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _matchRegionTask.AddTo(ref builder);
 
             _shuffleBoardTask = new(_gridCellManager, _inputProcessor, _detectMoveTask, _suggestTask, fillBoardTask);
+            _shuffleBoardTask.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
             _shuffleBoardTask.AddTo(ref builder);
 
-            _checkTargetTask = new(_matchRegionTask, databaseCollection.TargetDatabase, _shuffleBoardTask, mainGamePanel);
+            _checkTargetTask = new(_matchRegionTask, databaseCollection.TargetDatabase, _shuffleBoardTask, _inputProcessor, mainGamePanel);
             _suggestTask.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
-            _inputProcessor.SetCheckGameBoardMovementTask(_checkGameBoardMovementTask);
 
             _endGameTask = new(_checkTargetTask, _checkGameBoardMovementTask, _activateBoosterTask, endGameScreen);
             _endGameTask.AddTo(ref builder);

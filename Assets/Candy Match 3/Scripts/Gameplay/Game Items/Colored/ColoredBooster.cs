@@ -21,20 +21,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         [SerializeField] private GameObject colorfulEffect;
 
         [Header("Colored Sprites")]
-        [SerializeField] private Sprite[] normalSprites;
         [SerializeField] private Sprite[] wrappedSprites;
         [SerializeField] private Sprite[] horizontalSprites;
         [SerializeField] private Sprite[] verticalSprites;
 
         private bool _isMatchable;
-        private bool _isBoardStop;
-
-        private Sprite _normalSprite;
         private Sprite _horizontalIcon;
         private Sprite _verticalIcon;
 
         private IPublisher<DecreaseTargetMessage> _decreaseTargetPublisher;
-        private ISubscriber<BoardStopMessage> _boardStopSubscriber;
 
         public override bool IsMatchable => _isMatchable;
 
@@ -65,10 +60,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public override void InitMessages()
         {
             _decreaseTargetPublisher = GlobalMessagePipe.GetPublisher<DecreaseTargetMessage>();
-            DisposableBagBuilder builder = DisposableBag.CreateBuilder();
-            _boardStopSubscriber = GlobalMessagePipe.GetSubscriber<BoardStopMessage>();
-            _boardStopSubscriber.Subscribe(SetBoardStopState).AddTo(builder);
-            messageDisposable = builder.Build();
         }
 
         public override async UniTask ItemBlast()
@@ -104,7 +95,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
                 _ => null
             };
 
-            _normalSprite = normalSprites[colorIndex];
             _horizontalIcon = horizontalSprites[colorIndex];
             _verticalIcon = verticalSprites[colorIndex];
 
@@ -202,12 +192,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             return itemAnimation.SwapTo(position, duration, isMoveFirst);
         }
 
-        private void SetBoardStopState(BoardStopMessage message)
-        {
-            _isBoardStop = message.IsStopped;
-            // To do: instead of taking board stop message, create new message contain item state of item locking and use it
-        }
-
         private void SetTargetType()
         {
             targetType = itemType switch
@@ -246,10 +230,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             colorfulEffect.gameObject.SetActive(true);
         }
 
-        public void PlayBoosterEffect(BoosterType boosterType)
-        {
-            
-        }
+        public void PlayBoosterEffect(BoosterType boosterType) { }
 
         public void PlayStartEffect()
         {
@@ -290,15 +271,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public void TriggerNextStage(int stage = 0)
         {
-            if(stage == 3)
-                itemGraphics.SetItemSprite(_normalSprite);
-            
             itemAnimation.TriggerVibrate(stage);
-        }
-
-        public override void OnDisappear()
-        {
-            _isBoardStop = false;
         }
     }
 }

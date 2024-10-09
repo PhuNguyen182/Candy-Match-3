@@ -11,9 +11,9 @@ using CandyMatch3.Scripts.Gameplay.Interfaces;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
 using CandyMatch3.Scripts.Common.CustomData;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using CandyMatch3.Scripts.Gameplay.Effects;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {
@@ -51,14 +51,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         {
             IGridCell gridCell = _gridCellManager.Get(position);
 
-            if (gridCell == null)
-                return;
-
-            if (!gridCell.HasItem || gridCell.IsLocked)
+            if (gridCell == null || !gridCell.HasItem || gridCell.IsLocked)
                 return;
 
             IBlockItem blockItem = gridCell.BlockItem;
-            if (!blockItem.IsMatchable)
+            if (!blockItem.IsMatchable && blockItem.ItemType != ItemType.ColorBomb)
                 return;
 
             IColorBooster colorBooster = null;
@@ -103,7 +100,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
 
             else
-                await _activateBoosterTask.ColorfulBoosterTask.ActivateWithColor(gridCell, candyColor);
+            {
+                if(blockItem.ItemType == ItemType.ColorBomb)
+                    await _activateBoosterTask.ColorfulBoosterTask.Activate(position);
+                
+                else
+                    await _activateBoosterTask.ColorfulBoosterTask.ActivateWithColor(gridCell, candyColor);
+            }
         }
 
         public void Dispose()

@@ -52,8 +52,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 return;
 
             PlayEffect(position);
-            _breakGridTask.ReleaseGridCell(gridCell);
-
             _useInGameBoosterPublisher.Publish(new UseInGameBoosterMessage
             {
                 BoosterType = InGameBoosterType.Blast
@@ -70,9 +68,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
                 for (int i = 0; i < attackPositions.Count; i++)
                 {
-                    if (attackPositions[i] == position)
-                        continue;
-
                     encapsulatePositions.Add(attackPositions[i]);
                     breakTasks.Add(BreakItem(attackPositions[i]));
                 }

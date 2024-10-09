@@ -4,7 +4,6 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Gameplay.Interfaces;
@@ -23,82 +22,52 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private IDisposable _disposable;
 
         public bool AllGridsUnlocked { get; private set; }
-        public Observable<bool> LockObservable { get; private set; }
-        public ReactiveProperty<bool> LockProperty { get; private set; }
+        public ReactiveProperty<bool> UnlockedProperty { get; private set; }
 
         public CheckGameBoardMovementTask(GridCellManager gridCellManager)
         {
+            UnlockedProperty = new();
             _gridCellManager = gridCellManager;
             _gridLockThrottle = TimeSpan.FromSeconds(Match3Constants.RegionMatchDelay);
             _boardStopMessage = GlobalMessagePipe.GetPublisher<BoardStopMessage>();
-            LockProperty = new();
         }
 
         public void BuildCheckBoard()
         {
-            using (ListPool<Vector3Int>.Get(out List<Vector3Int> activePositions))
-            {
-                DisposableBuilder builder = Disposable.CreateBuilder();
-                activePositions.AddRange(_gridCellManager.GetActivePositions());
+            DisposableBuilder builder = Disposable.CreateBuilder();
 
-                foreach (Vector3Int position in activePositions)
-                {
-                    IGridCell gridCell = _gridCellManager.Get(position);
-                    gridCell.GridLockProperty.Subscribe(SetLockValue).AddTo(ref builder);
-                }
+            foreach (IGridCell gridCell in _gridCellManager.GridCells)
+                gridCell.GridLockProperty.Subscribe(SetUnlockValue).AddTo(ref builder);
 
-                Observable<bool> lockedStates = LockProperty.Where(isGridLocked => isGridLocked);
-                Observable<bool> unlockedStates = LockProperty.Where(isGridLocked => !isGridLocked)
-                                                              .Debounce(_gridLockThrottle);
+            UnlockedProperty.Subscribe(SetUnlockState).AddTo(ref builder);
+            UnlockedProperty.Debounce(_gridLockThrottle).Subscribe(SendBoardStopMessage).AddTo(ref builder);
 
-                LockObservable = Observable.Merge(lockedStates, unlockedStates);
-                LockObservable.Where(isGridLocked => isGridLocked)
-                              .Subscribe(_ => SendBoardStopMessage(false))
-                              .AddTo(ref builder);
-
-                LockObservable.Subscribe(isGridLocked =>
-                              {
-                                  if (!isGridLocked)
-                                      SendBoardStopMessage(true);
-                              }).AddTo(ref builder);
-
-                _disposable = builder.Build();
-            }
+            _disposable = builder.Build();
         }
 
-        public void SendBoardStopMessage(bool isStopped)
+        private void SendBoardStopMessage(bool isUnlocked)
         {
-            if (isStopped)
+            _boardStopMessage.Publish(new BoardStopMessage
             {
-                bool isBoardStop = _gridCellManager.PositionCount == _gridLockedCount;
-
-                if (isBoardStop)
-                {
-                    AllGridsUnlocked = true;
-                    _boardStopMessage.Publish(new BoardStopMessage
-                    {
-                        IsStopped = true
-                    });
-                }
-
-                else AllGridsUnlocked = false;
-            }
-
-            else
-            {
-                AllGridsUnlocked = false;
-                _boardStopMessage.Publish(new BoardStopMessage
-                {
-                    IsStopped = false
-                });
-            }
+                IsStopped = isUnlocked
+            });
         }
 
-        private void SetLockValue(bool isLocked)
+        private void SetUnlockState(bool isUnlock)
+        {
+            AllGridsUnlocked = isUnlock;
+        }
+
+        private void SetUnlockValue(bool isLocked)
         {
             int step = isLocked ? -1 : 1;
-            LockProperty.Value = isLocked;
             _gridLockedCount = _gridLockedCount + step;
+            UnlockedProperty.Value = IsAllGridsUnlocked();
+        }
+
+        private bool IsAllGridsUnlocked()
+        {
+            return _gridCellManager.PositionCount == _gridLockedCount;
         }
 
         public void Dispose()
