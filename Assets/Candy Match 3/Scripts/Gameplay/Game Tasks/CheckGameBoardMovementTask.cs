@@ -46,7 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void SendBoardStopMessage(bool isUnlocked)
         {
             AllGridsUnlocked = isUnlocked;
-            if (isUnlocked) Debug.Log("Stopped!");
+            
             _boardStopMessage.Publish(new BoardStopMessage
             {
                 IsStopped = isUnlocked

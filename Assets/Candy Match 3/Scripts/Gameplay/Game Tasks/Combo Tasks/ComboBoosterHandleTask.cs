@@ -19,7 +19,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private readonly GridCellManager _gridCellManager;
         private readonly BreakGridTask _breakGridTask;
         private readonly ActivateBoosterTask _activateBoosterTask;
-        private readonly SuggestTask _suggestTask;
 
         private readonly DoubleStripedBoosterTask _doubleStripedBoosterTask;
         private readonly StripedWrappedBoosterTask _stripedWrappedBoosterTask;
@@ -35,13 +34,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         public ColorfulWrappedBoosterTask ColorfulWrappedBoosterTask => _colorfulWrappedBoosterTask;
 
         public ComboBoosterHandleTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ItemManager itemManager
-            , ActivateBoosterTask activateBoosterTask, EffectDatabase effectDatabase, ExplodeItemTask explodeItemTask, SuggestTask suggestTask)
+            , ActivateBoosterTask activateBoosterTask, EffectDatabase effectDatabase, ExplodeItemTask explodeItemTask)
         {
             _itemManager = itemManager;
             _gridCellManager = gridCellManager;
             _breakGridTask = breakGridTask;
             _activateBoosterTask = activateBoosterTask;
-            _suggestTask = suggestTask;
 
             DisposableBuilder builder = Disposable.CreateBuilder();
 
@@ -70,7 +68,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
         public async UniTask HandleComboBooster(IGridCell gridCell1, IGridCell gridCell2)
         {
-            SetSuggestActive(false);
             _checkGridTask.CanCheck = false;
 
             if (IsDoubleStripedCombo(gridCell1, gridCell2))
@@ -92,7 +89,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 await _doubleColorfulBoosterTask.Activate(gridCell1, gridCell2);
             
             _checkGridTask.CanCheck = true;
-            SetSuggestActive(true);
         }
 
         public async UniTask CombineColorfulItemWithColorItem(IGridCell gridCell1, IGridCell gridCell2)
@@ -208,14 +204,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _stripedWrappedBoosterTask.SetCheckGridTask(_checkGridTask);
             _doubleWrappedBoosterTask.SetCheckGridTask(_checkGridTask);
             _doubleColorfulBoosterTask.SetCheckGridTask(_checkGridTask);
-        }
-
-        private void SetSuggestActive(bool active)
-        {
-            if (!active)
-                _suggestTask.Suggest(false);
-
-            _suggestTask.IsActive = active;
         }
 
         public void Dispose()

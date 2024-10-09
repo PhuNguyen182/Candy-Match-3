@@ -28,8 +28,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public ComplimentTask(CharacterEmotion characterEmotion)
         {
             _complimentCounter = new();
-            _delay = TimeSpan.FromSeconds(1f);
-            _throttle = TimeSpan.FromSeconds(0.334f);
+            _delay = TimeSpan.FromSeconds(0.5f);
+            _throttle = TimeSpan.FromSeconds(0.167f);
             _characterEmotion = characterEmotion;
 
             var messageBuilder = MessagePipe.DisposableBag.CreateBuilder();
@@ -59,16 +59,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private bool ComplimentPredicate((int Previous, int Current) pair)
         {
-            return pair.Previous != pair.Current;
+            return pair.Previous != pair.Current && !IsEndGame && _checkGameBoardMovementTask.AllGridsUnlocked;
         }
 
         private void OnCounterEnd(int count)
         {
-            if (IsEndGame)
-                return;
-
-            if (!_checkGameBoardMovementTask.AllGridsUnlocked)
-                return;
+            if (IsEndGame) return;
 
             if (count == 0)
             {
@@ -80,12 +76,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 3 => ComplimentEnum.Good,
                 5 => ComplimentEnum.Yummy,
-                8 => ComplimentEnum.Super,
+                >= 8 => ComplimentEnum.Super,
                 _ => ComplimentEnum.None
             };
-
-            if (count > 8)
-                compliment = ComplimentEnum.Super;
 
             if (compliment != ComplimentEnum.None)
             {

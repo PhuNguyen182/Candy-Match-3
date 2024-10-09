@@ -26,7 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private List<Vector3Int> _shuffleableCells;
 
         private const int MaxRetryTime = 1000;
-        private const float ItemTransformDelay = 0.0075f;
+        private const float ItemTransformDelay = 0.01f;
 
         public ShuffleBoardTask(GridCellManager gridCellManager, InputProcessTask inputProcessTask
             , DetectMoveTask detectMoveTask, SuggestTask suggestTask, FillBoardTask fillBoardTask)
@@ -73,14 +73,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask Shuffle(bool immediately)
         {
-            _suggestTask.ClearSuggest();
-            _suggestTask.IsActive = false;
+            SetSuggestActive(false);
             bool canShuffle = TryShuffle();
 
             if (canShuffle)
                 await TransformItems(immediately);
 
-            _suggestTask.IsActive = true;
+            SetSuggestActive(true);
         }
 
         private bool TryShuffle()
@@ -164,6 +163,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private void PreloadPopup()
         {
             ShufflePopup.PreloadFromAddress(CommonPopupPaths.ShufflePopupPath).Forget();
+        }
+
+        private void SetSuggestActive(bool active)
+        {
+            if (!active)
+            {
+                _suggestTask.Suggest(false);
+                _suggestTask.ClearSuggest();
+            }
+
+            _suggestTask.IsActive = active;
         }
 
         public void Dispose()

@@ -52,12 +52,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask SwapForward(Vector3Int fromPosition, Vector3Int toPosition)
         {
-            _suggestTask.Suggest(false);
+            SetSuggestActive(false);
             IGridCell fromCell = _gridCellManager.Get(fromPosition);
             IGridCell toCell = _gridCellManager.Get(toPosition);
 
             if (!IsSwappable(fromCell, toCell))
+            {
+                SetSuggestActive(true);
                 return;
+            }
 
             IBlockItem fromItem = fromCell.BlockItem;
             IBlockItem toItem = toCell.BlockItem;
@@ -112,16 +115,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _matchItemsTask.CheckMatchInSwap(fromPosition);
                 _matchItemsTask.CheckMatchInSwap(toPosition);
             }
+
+            SetSuggestActive(true);
         }
 
         public async UniTask SwapItem(Vector3Int fromPosition, Vector3Int toPosition, bool isSwapBack)
         {
-            _suggestTask.Suggest(false);
             IGridCell fromCell = _gridCellManager.Get(fromPosition);
             IGridCell toCell = _gridCellManager.Get(toPosition);
 
             if (!IsSwappable(fromCell, toCell))
+            {
+                SetSuggestActive(true);
                 return;
+            }
 
             IBlockItem fromItem = fromCell.BlockItem;
             IBlockItem toItem = toCell.BlockItem;
@@ -139,6 +146,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             UniTask toMoveTask = toAnimation.SwapTo(fromCell.WorldPosition, SwapDuration, false);
             await UniTask.WhenAll(fromMoveTask, toMoveTask);
 
+            SetSuggestActive(false);
             if (_comboBoosterHandleTask.IsComboBooster(fromCell, toCell))
             {
                 DecreaseMove(); // If 2 item are boosters
@@ -170,12 +178,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             SwapGrid(fromCell, toCell, fromItem, toItem);
             await _comboBoosterHandleTask.HandleComboBooster(fromCell, toCell);
+            SetSuggestActive(true);
         }
 
         private async UniTask SwapToColorful(IGridCell fromCell, IGridCell toCell, IBlockItem fromItem, IBlockItem toItem)
         {
             SwapGrid(fromCell, toCell, fromItem, toItem);
             await _comboBoosterHandleTask.CombineColorfulItemWithColorItem(fromCell, toCell);
+            SetSuggestActive(true);
         }
 
         private async UniTask SwapCollectible(IGridCell fromCell, IGridCell toCell, IBlockItem fromItem, IBlockItem toItem, bool isSwapBack)
@@ -214,6 +224,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 _checkGridTask.CheckAroundPosition(currentGrid.GridPosition, 1);
             }
 
+            SetSuggestActive(true);
             _matchItemsTask.CheckMatchInSwap(remainGrid.GridPosition);
         }
 
@@ -223,6 +234,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (isSwapBack)
                 await CheckMatchOnSwap(fromCell, toCell);
+
+            SetSuggestActive(true);
         }
 
         private bool CheckCollectible(IGridCell fromCell, IGridCell toCell)
@@ -274,6 +287,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 BoosterType = InGameBoosterType.Swap
             });
+        }
+
+        private void SetSuggestActive(bool active)
+        {
+            if (!active)
+            {
+                _suggestTask.Suggest(false);
+                _suggestTask.ClearSuggest();
+            }
+
+            _suggestTask.IsActive = active;
         }
 
         private void DecreaseMove()

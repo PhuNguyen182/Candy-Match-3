@@ -44,7 +44,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             using(ListPool<MatchableRegion>.Get(out List<MatchableRegion> regions))
             {
-                _suggestTask.Suggest(false);
+                SetSuggestActive(false);
                 // Must wait until all matches are solved to check new matchs to prevent duplicate check match
                 await UniTask.WaitUntil(() => _findItemRegionTask.RegionCount <= 0
                                         , PlayerLoopTiming.FixedUpdate, _token);
@@ -53,6 +53,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (regions.Count <= 0)
                 {
                     _findItemRegionTask.Cleanup();
+                    SetSuggestActive(true);
                     return 0;
                 }
 
@@ -83,6 +84,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 _findItemRegionTask.ClearRegions();
                 _checkGridTask.CanCheck = true;
+                SetSuggestActive(true);
                 return count;
             }
         }
@@ -265,6 +267,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
 
             return matchType;
+        }
+
+        private void SetSuggestActive(bool active)
+        {
+            if (!active)
+            {
+                _suggestTask.Suggest(false);
+                _suggestTask.ClearSuggest();
+            }
+
+            _suggestTask.IsActive = active;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
