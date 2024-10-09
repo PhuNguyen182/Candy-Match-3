@@ -61,11 +61,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (_detectMoveTask.HasPossibleMove())
                 return;
 
+            SetSuggestActive(false);
             _inputProcessTask.IsActive = false;
             var popup = await ShufflePopup.CreateFromAddress(CommonPopupPaths.ShufflePopupPath);
             await popup.ClosePopup();
             await Shuffle(false);
 
+            SetSuggestActive(true);
             _inputProcessTask.IsActive = true;
         }
 
@@ -82,13 +84,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask Shuffle(bool immediately)
         {
-            SetSuggestActive(false);
             bool canShuffle = TryShuffle();
 
             if (canShuffle)
                 await TransformItems(immediately);
-
-            SetSuggestActive(true);
         }
 
         private bool TryShuffle()
