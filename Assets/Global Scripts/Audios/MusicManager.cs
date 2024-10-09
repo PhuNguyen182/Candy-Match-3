@@ -10,12 +10,14 @@ namespace GlobalScripts.Audios
 {
     public class MusicManager : Singleton<MusicManager>
     {
+        [SerializeField] private bool playSequence;
         [SerializeField] private AudioMixer audioMixer;
         [SerializeField] private AudioSource musicSource;
         [SerializeField] private AudioSource sfxSource;
         [SerializeField] private AudioSource itemSource;
         [SerializeField] private SoundEffectDatabase effectDatabase;
         [SerializeField] private MusicDatabase musicDatabase;
+        [SerializeField] private PlaySequenceMusic sequenceMusicPlayer;
 
         public static event Action<float> OnMasterChange;
         public static event Action<float> OnMusicChange;
@@ -74,6 +76,11 @@ namespace GlobalScripts.Audios
             MasterVolume += 0;
             MusicVolume += 0;
             SoundVolume += 0;
+
+#if UNITY_EDITOR
+            if (playSequence)
+                sequenceMusicPlayer.PlayMusicSequence();
+#endif
         }
 
         public bool IsMusicPlaying()
