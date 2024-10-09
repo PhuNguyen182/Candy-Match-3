@@ -56,8 +56,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _token = _cts.Token;
         }
 
-        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck
-            , bool isCreateBooster, Action<BoundsInt> onActivate = null)
+        public async UniTask ActivateBooster(IGridCell gridCell, bool useDelay, bool doNotCheck, Action<BoundsInt> onActivate = null)
         {
             Vector3Int position = gridCell.GridPosition;
             IBlockItem blockItem = gridCell.BlockItem;
@@ -67,10 +66,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 return;
 
             booster.IsActivated = true;
+            UniTask boosterTask = UniTask.CompletedTask;
 
-            // Break stateful first if available
             if (gridCell.GridStateful is IBreakable stateBreakable)
             {
+                // Break stateful first if available
                 bool isLockedState = gridCell.GridStateful.IsLocked;
 
                 if (stateBreakable.Break())
@@ -89,28 +89,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             if (blockItem is IColorBooster colorBooster)
             {
                 BoosterType colorBoosterType = colorBooster.ColorBoosterType;
-
-                switch (colorBoosterType)
+                boosterTask = colorBoosterType switch
                 {
-                    case BoosterType.Horizontal:
-                        await _horizontalBoosterTask.Activate(gridCell, useDelay, doNotCheck, onActivate);
-                        break;
-                    case BoosterType.Vertical:
-                        await _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck, onActivate);
-                        break;
-                    case BoosterType.Wrapped:
-                        await _wrappedBoosterTask.Activate(gridCell, useDelay, doNotCheck, isCreateBooster, onActivate);
-                        break;
-                }
+                    BoosterType.Horizontal => _horizontalBoosterTask.Activate(gridCell, useDelay, doNotCheck, onActivate),
+                    BoosterType.Vertical => _verticalBoosterTask.Activate(gridCell, useDelay, doNotCheck, onActivate),
+                    BoosterType.Wrapped => _wrappedBoosterTask.Activate(gridCell, useDelay, doNotCheck, onActivate),
+                    _ => UniTask.CompletedTask
+                };
+
+                await boosterTask.ContinueWith(() => ActiveBoosterCount = ActiveBoosterCount - 1);
             }
 
             else if (blockItem.ItemType == ItemType.ColorBomb)
             {
-                await _colorfulBoosterTask.Activate(position);
+                boosterTask = _colorfulBoosterTask.Activate(position);
+                await boosterTask.ContinueWith(() => ActiveBoosterCount = ActiveBoosterCount - 1);
             }
 
             gridCell.LockStates = LockStates.None;
-            ActiveBoosterCount = ActiveBoosterCount - 1;
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)

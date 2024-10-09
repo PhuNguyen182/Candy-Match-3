@@ -40,7 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
         }
 
-        public async UniTask Activate(IGridCell gridCell, bool useDelay, bool doNotCheck, bool isCreateBooster, Action<BoundsInt> attackRange)
+        public async UniTask Activate(IGridCell gridCell, bool useDelay, bool doNotCheck, Action<BoundsInt> attackRange)
         {
             Vector3Int position = gridCell.GridPosition;
             IBlockItem blockItem = gridCell.BlockItem;
