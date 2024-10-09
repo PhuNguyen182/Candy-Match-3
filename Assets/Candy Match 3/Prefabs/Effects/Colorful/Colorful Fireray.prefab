@@ -152,9 +152,9 @@ MonoBehaviour:
   amplitude: 0.1175
   originalPhase: 45
   angularFrequency: 90
-  rotateSpeed: 17.5
+  rotateSpeed: 15
   minAmplitude: 0.115
-  maxAmplitude: 0.2
+  maxAmplitude: 0.125
 --- !u!1 &3689754844382074901
 GameObject:
   m_ObjectHideFlags: 0
