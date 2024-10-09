@@ -113,6 +113,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
                 };
 
                 GameDataManager.Instance.SpendResource(GameResourceType.Life, 1);
+                await UniTask.Delay(TimeSpan.FromSeconds(0.3f), cancellationToken: _token);
                 await SceneBridge.LoadNextScene(SceneConstants.Gameplay);
             }
 
