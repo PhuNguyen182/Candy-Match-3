@@ -51,9 +51,11 @@ namespace GlobalScripts.SceneUtils
                 await UniTask.Delay(TimeSpan.FromSeconds(2.5f), cancellationToken: _token);
                 await SceneLoader.LoadScene(nextSceneName);
 
+#if !UNITY_EDITOR
                 MusicManager.Instance.StopMusic();
                 BackgroundMusicType bgm = GetMusicBySceneName(nextSceneName);
                 MusicManager.Instance.PlayBackgroundMusic(bgm, volume: 0.6f);
+#endif
 
                 SceneBridge.Bridge = null;
             }
