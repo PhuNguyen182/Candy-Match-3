@@ -23,7 +23,7 @@ namespace CandyMatch3.Scripts.GameData.LevelProgresses
 
         public LevelProgressNodeData GetLevelProgress(int level)
         {
-            return LevelProgresses.AsParallel().FirstOrDefault(x => x.DataValue.Level == level);
+            return LevelProgresses.FirstOrDefault(x => x.DataValue.Level == level);
         }
 
         public bool IsLevelComplete(int level)
@@ -33,7 +33,7 @@ namespace CandyMatch3.Scripts.GameData.LevelProgresses
 
         public void Append(LevelProgressNode progress)
         {
-            if (LevelProgresses.AsParallel().Any(p => p.DataValue.Level == progress.Level))
+            if (LevelProgresses.Any(p => p.DataValue.Level == progress.Level))
             {
                 LevelProgressNodeData levelProgress = GetLevelProgress(progress.Level);
 

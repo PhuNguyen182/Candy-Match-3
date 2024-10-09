@@ -21,7 +21,6 @@ using Cysharp.Threading.Tasks;
 using GlobalScripts.Audios;
 using Newtonsoft.Json;
 using TMPro;
-using static Cinemachine.DocumentationSortingAttribute;
 
 namespace CandyMatch3.Scripts.Mainhome.UI.Popups
 {
@@ -101,7 +100,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         {
             int lives = GameDataManager.Instance.GetResource(GameResourceType.Life);
 
-            if (lives <= 0)
+            if (lives > 0)
             {
                 if (_levelModel == null)
                     return;

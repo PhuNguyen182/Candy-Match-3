@@ -5,13 +5,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.GameData;
+using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Mainhome.UI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Common.DataStructs;
-using CandyMatch3.Scripts.Common.Constants;
-using CandyMatch3.Scripts.GameData;
+using CandyMatch3.Scripts.Mainhome.Managers;
 using Cysharp.Threading.Tasks;
+
+#if UNITY_EDITOR
 using Sirenix.OdinInspector;
+#endif
 
 namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
 {
@@ -35,6 +39,8 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
 
         private void Awake()
         {
+            mainCamera ??= Camera.main;
+
             PreloadPopups();
             InitProgressLevel();
         }
@@ -45,6 +51,7 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
             StartGamePopup.PreloadFromAddress(CommonPopupPaths.StartGamePopupPath).Forget();
         }
 
+#if UNITY_EDITOR
         [Button]
         public void FetchBodePaths()
         {
@@ -60,6 +67,7 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
                 }
             }
         }
+#endif
 
         public LevelNodeButton GetLevelNode(int level)
         {
@@ -124,6 +132,13 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
                 });
             }
         }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            mainCamera ??= Camera.main;
+        }
+#endif
 
         private void OnDestroy()
         {
