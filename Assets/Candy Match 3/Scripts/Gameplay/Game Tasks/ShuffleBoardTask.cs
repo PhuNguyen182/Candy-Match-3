@@ -24,6 +24,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private List<Vector3Int> _activePositions;
         private List<Vector3Int> _shuffleableCells;
+        private CheckGameBoardMovementTask _checkGameBoardMovementTask;
 
         private const int MaxRetryTime = 1000;
         private const float ItemTransformDelay = 0.01f;
@@ -46,8 +47,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _activePositions = _gridCellManager.GetActivePositions().ToList();
         }
 
+        public void SetCheckGameBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
+        {
+            _checkGameBoardMovementTask = checkGameBoardMovementTask;
+        }
+
         public async UniTask CheckShuffleBoard()
         {
+            await UniTask.WaitUntil(() => _checkGameBoardMovementTask.AllGridsUnlocked);
+
             _detectMoveTask.DetectPossibleMoves();
             if (_detectMoveTask.HasPossibleMove())
                 return;

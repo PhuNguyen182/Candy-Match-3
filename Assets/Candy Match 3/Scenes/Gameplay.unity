@@ -963,7 +963,6 @@ GameObject:
   - component: {fileID: 559979018}
   - component: {fileID: 559979017}
   - component: {fileID: 559979016}
-  - component: {fileID: 559979015}
   m_Layer: 5
   m_Name: Effect Canvas
   m_TagString: Untagged
@@ -971,23 +970,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &559979015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 559979014}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 119
 --- !u!114 &559979016
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1032,7 +1014,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: -1
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -257390011
-  m_SortingOrder: 4
+  m_SortingOrder: 3
   m_TargetDisplay: 0
 --- !u!224 &559979018
 RectTransform:
@@ -2975,7 +2957,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1680593876}
-  - component: {fileID: 1680593878}
   - component: {fileID: 1680593877}
   m_Layer: 5
   m_Name: Effect Container
@@ -3016,29 +2997,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isAwakeInit: 1
---- !u!223 &1680593878
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1680593875}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 1
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 1129346501
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1707640711
 GameObject:
   m_ObjectHideFlags: 0
@@ -3544,7 +3502,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: -1
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: -257390011
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_TargetDisplay: 0
 --- !u!224 &2100070805
 RectTransform:

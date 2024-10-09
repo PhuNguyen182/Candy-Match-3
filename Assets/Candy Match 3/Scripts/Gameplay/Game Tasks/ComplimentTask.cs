@@ -40,7 +40,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             var builder = Disposable.CreateBuilder();
             _complimentCounter.Pairwise().Where(ComplimentPredicate)
-                              .Debounce(_throttle).Delay(_delay)
+                              .Debounce(_throttle)
+                              .TakeWhile(_ => !IsEndGame && _checkGameBoardMovementTask.AllGridsUnlocked)
+                              .Delay(_delay)
                               .Subscribe(pair => OnCounterEnd(pair.Current))
                               .AddTo(ref builder);
 
@@ -59,7 +61,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private bool ComplimentPredicate((int Previous, int Current) pair)
         {
-            return pair.Previous != pair.Current && !IsEndGame && _checkGameBoardMovementTask.AllGridsUnlocked;
+            return pair.Previous != pair.Current;
         }
 
         private void OnCounterEnd(int count)
