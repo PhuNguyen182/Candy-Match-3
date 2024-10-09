@@ -7,6 +7,10 @@ namespace CandyMatch3.Scripts.Common.Enums
     {
         None = 0,
         Coin = 1,
-        Life = 2
+        Life = 2,
+        BreakHammer = 3,
+        BlasterBomb = 4,
+        SwitchHand = 5,
+        Colorful = 6
     }
 }
