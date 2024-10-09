@@ -68,7 +68,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             if (booster.IsActivated)
                 return;
 
-            _suggestTask.Suggest(false);
+            SetSuggestActive(false);
             booster.IsActivated = true;
 
             // Break stateful first if available
@@ -114,6 +114,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             gridCell.LockStates = LockStates.None;
             ActiveBoosterCount = ActiveBoosterCount - 1;
+            SetSuggestActive(true);
         }
 
         public void SetCheckGridTask(CheckGridTask checkGridTask)
@@ -123,6 +124,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _horizontalBoosterTask.SetCheckGridTask(checkGridTask);
             _verticalBoosterTask.SetCheckGridTask(checkGridTask);
             _wrappedBoosterTask.SetCheckGridTask(checkGridTask);
+        }
+
+        private void SetSuggestActive(bool active)
+        {
+            if (!active)
+                _suggestTask.Suggest(false);
+
+            _suggestTask.IsActive = active;
         }
 
         public void Dispose()

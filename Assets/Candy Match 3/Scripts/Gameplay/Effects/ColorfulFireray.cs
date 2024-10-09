@@ -13,11 +13,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
     {
         [SerializeField] private LightningRayLine rayfire;
 
-        private float _elapsedTime = 0;
         private CancellationToken _token;
-
-        private const float MaxDistance = 11.538f;
-        private const float MaxSqrDistance = 133.1361f;
 
         private void Awake()
         {
@@ -26,7 +22,6 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
 
         public async UniTask Fire(IGridCell targetCell, Vector3 startPosition, float delay)
         {
-            _elapsedTime = 0;
             rayfire.StartPosition = startPosition;
             rayfire.EndPosition = startPosition;
             Vector3 destination = targetCell.WorldPosition;
