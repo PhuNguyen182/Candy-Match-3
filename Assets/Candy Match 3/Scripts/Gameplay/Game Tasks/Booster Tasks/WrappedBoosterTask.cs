@@ -40,7 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _cameraShakePublisher = GlobalMessagePipe.GetPublisher<CameraShakeMessage>();
         }
 
-        public async UniTask Activate(IGridCell gridCell, bool useDelay, bool doNotCheck, bool isCreateBooster, Action<BoundsInt> attackRange)
+        public async UniTask Activate(IGridCell gridCell, bool useDelay, bool doNotCheck, Action<BoundsInt> attackRange)
         {
             Vector3Int position = gridCell.GridPosition;
             IBlockItem blockItem = gridCell.BlockItem;
@@ -53,7 +53,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 int count = attackPositions.Count;
 
                 using var brealListPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);
-                using var encapsulateListPool = ListPool<Vector3Int>.Get(out List<Vector3Int> encapsulatePositions);
 
                 _explodeItemTask.Blast(position, 3).Forget();
                 _explodeItemTask.Explode(position, ExplodeType.SingleWrapped);
@@ -63,22 +62,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                     if (attackPositions[i] == position)
                         continue;
 
-                    encapsulatePositions.Add(attackPositions[i]);
                     breakTasks.Add(BreakItem(attackPositions[i]));
                 }
 
                 ShakeCamera();
                 await UniTask.WhenAll(breakTasks);
-
                 await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
-                Vector3Int min = attackPositions[0] + new Vector3Int(-1, -1);
-                Vector3Int max = attackPositions[count - 1] + new Vector3Int(1, 1);
-
-                encapsulatePositions.Clear();
-                encapsulatePositions.Add(min);
-                encapsulatePositions.Add(max);
-
-                _attackRange = BoundsExtension.Encapsulate(encapsulatePositions);
+                _attackRange = position.GetBounds2D(3);
                 attackRange?.Invoke(_attackRange);
 
                 if (useDelay)

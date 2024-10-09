@@ -78,7 +78,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     for (int i = 0; i < positions.Count; i++)
                     {
                         IGridCell boosterGridCell = _gridCellManager.Get(positions[i]);
-                        boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false, false));
+                        boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false));
                     }
 
                     await UniTask.WhenAll(boosterTasks);
@@ -107,7 +107,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             }
 
             IGridCell boosterCell = _gridCellManager.Get(boosterPosition);
+            IGridCell colorBoosterCell = _gridCellManager.Get(colorPosition);
+
             IBooster booster = boosterCell.BlockItem as IBooster;
+            IColorBooster colorBooster = colorBoosterCell.BlockItem as IColorBooster;
+            colorBooster.TriggerNextStage(2);
             booster.IsActivated = true;
 
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
@@ -137,9 +141,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                     for (int i = 0; i < positions.Count; i++)
                     {
                         IGridCell boosterGridCell = _gridCellManager.Get(positions[i]);
-                        boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false, false));
+                        boosterTasks.Add(_activateBoosterTask.ActivateBooster(boosterGridCell, false, false));
                     }
 
+                    boosterTasks.Add(_activateBoosterTask.ActivateBooster(colorBoosterCell, false, false));
                     await UniTask.WhenAll(boosterTasks);
                 }
 
@@ -171,21 +176,25 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             if (originalColorPosition == checkPosition)
                 return;
 
-            int state = NumericUtils.BytesToInt(boosterProperty);
             IGridCell gridCell = _gridCellManager.Get(checkPosition);
-            _breakGridTask.ReleaseGridCell(gridCell);
 
-            _itemManager.Add(new BlockItemPosition
+            if (gridCell.BlockItem is not IBooster)
             {
-                Position = checkPosition,
-                ItemData = new BlockItemData
+                _breakGridTask.ReleaseGridCell(gridCell);
+                int state = NumericUtils.BytesToInt(boosterProperty);
+
+                _itemManager.Add(new BlockItemPosition
                 {
-                    HealthPoint = 1,
-                    ItemType = itemType,
-                    ItemColor = candyColor,
-                    PrimaryState = state
-                }
-            });
+                    Position = checkPosition,
+                    ItemData = new BlockItemData
+                    {
+                        HealthPoint = 1,
+                        ItemType = itemType,
+                        ItemColor = candyColor,
+                        PrimaryState = state
+                    }
+                });
+            }
 
             IBlockItem blockItem = gridCell.BlockItem;
             if (blockItem is IColorBooster colorBooster && blockItem is IItemEffect effect)

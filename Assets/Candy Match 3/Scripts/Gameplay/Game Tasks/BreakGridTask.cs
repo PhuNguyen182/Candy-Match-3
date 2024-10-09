@@ -14,7 +14,6 @@ using CandyMatch3.Scripts.Common.Constants;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Utils;
 using UnityEngine.Pool;
-using UnityEngine.UIElements;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks
 {
@@ -86,7 +85,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         return;
                     }
 
-                    await _activateBoosterTask.ActivateBooster(gridCell, true, false, false);
+                    await _activateBoosterTask.ActivateBooster(gridCell, true, false);
                     gridCell.LockStates = LockStates.None;
                     return;
                 }
@@ -154,7 +153,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
                 }
 
-                await _activateBoosterTask.ActivateBooster(gridCell, true, false, false);
+                await _activateBoosterTask.ActivateBooster(gridCell, true, false);
                 gridCell.LockStates = LockStates.None;
                 return;
             }
@@ -225,7 +224,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         return;
                     }
 
-                    await _activateBoosterTask.ActivateBooster(gridCell, true, true, true, onActive);
+                    await _activateBoosterTask.ActivateBooster(gridCell, true, true, onActive);
                 }
 
                 else if (blockItem is IBreakable breakable)
@@ -297,7 +296,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
                 }
 
-                await _activateBoosterTask.ActivateBooster(gridCell, true, true, false, onActive);
+                await _activateBoosterTask.ActivateBooster(gridCell, true, true, onActive);
                 
                 gridCell.LockStates = LockStates.None;
                 return;

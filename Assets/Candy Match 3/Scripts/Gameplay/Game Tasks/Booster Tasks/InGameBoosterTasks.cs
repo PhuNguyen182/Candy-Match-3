@@ -35,10 +35,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private readonly SwapItemTask _swapItemTask;
         private readonly SuggestTask _suggestTask;
 
-        private CheckGridTask _checkGridTask;
-        private CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private readonly ISubscriber<AddInGameBoosterMessage> _addBoosterSubscriber;
         private readonly ISubscriber<UseInGameBoosterMessage> _useBoosterSubscriber;
+
+        private CheckGridTask _checkGridTask;
+        private CheckGameBoardMovementTask _checkGameBoardMovementTask;
         private Dictionary<InGameBoosterType, ReactiveProperty<int>> _boosters;
 
         private CancellationToken _token;
@@ -309,6 +310,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             _disposable.Dispose();
             _boosterDisposable?.Dispose();
             _messageDisposable.Dispose();
+            _boosters.Clear();
 
             ShopPopup.Release();
             InGameBoosterPopup.Release();

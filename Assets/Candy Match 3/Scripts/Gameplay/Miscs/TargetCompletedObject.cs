@@ -33,7 +33,8 @@ namespace CandyMatch3.Scripts.Gameplay.Miscs
         public async UniTask MoveToTarget(Vector3 destination, float duration)
         {
             Vector3 toPosition = destination;
-            _moveToTargetSequence = CreateMoveToTargetTween(toPosition, 1.1f, 0.9f, duration, upEase, easeX, easeY, easeScale);
+            float delay = Random.Range(0, 0.05f);
+            _moveToTargetSequence = CreateMoveToTargetTween(toPosition, 1.1f, 0.9f, duration, upEase, easeX, easeY, easeScale).SetDelay(delay);
 
             await _moveToTargetSequence.AwaitForComplete(TweenCancelBehaviour.Complete)
                                        .ContinueWith(() => SimplePool.Despawn(this.gameObject));
