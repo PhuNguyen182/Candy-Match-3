@@ -37,23 +37,28 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             DisposableBuilder builder = Disposable.CreateBuilder();
 
             foreach (IGridCell gridCell in _gridCellManager.GridCells)
-                gridCell.GridLockProperty.Subscribe(SetLockValue).AddTo(ref builder);
+                gridCell.GridLockProperty.Subscribe(SetUnlockValue).AddTo(ref builder);
 
+            UnlockedProperty.Subscribe(SetUnlockState).AddTo(ref builder);
             UnlockedProperty.Debounce(_gridLockThrottle).Subscribe(SendBoardStopMessage).AddTo(ref builder);
+
             _disposable = builder.Build();
         }
 
-        public void SendBoardStopMessage(bool isUnlocked)
+        private void SendBoardStopMessage(bool isUnlocked)
         {
-            AllGridsUnlocked = isUnlocked;
-            
             _boardStopMessage.Publish(new BoardStopMessage
             {
                 IsStopped = isUnlocked
             });
         }
 
-        private void SetLockValue(bool isLocked)
+        private void SetUnlockState(bool isUnlock)
+        {
+            AllGridsUnlocked = isUnlock;
+        }
+
+        private void SetUnlockValue(bool isLocked)
         {
             int step = isLocked ? -1 : 1;
             _gridLockedCount = _gridLockedCount + step;

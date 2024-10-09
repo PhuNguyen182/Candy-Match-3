@@ -54,7 +54,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask CheckShuffleBoard()
         {
-            await UniTask.WaitUntil(() => _checkGameBoardMovementTask.AllGridsUnlocked);
+            if (!_checkGameBoardMovementTask.AllGridsUnlocked)
+                return;
 
             _detectMoveTask.DetectPossibleMoves();
             if (_detectMoveTask.HasPossibleMove())

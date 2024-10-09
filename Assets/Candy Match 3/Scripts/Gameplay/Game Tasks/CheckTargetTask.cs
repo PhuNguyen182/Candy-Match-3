@@ -152,7 +152,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 UpdateAll(true);
                 _inputProcessTask.IsActive = false;
-                await _endGameTask.WaitAWhile(0.3f);
+                await _endGameTask.WaitAWhile(0.2f);
                 OnEndGame?.Invoke(EndResult.Win);
             }
 
@@ -160,7 +160,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 UpdateAll(true);
                 _inputProcessTask.IsActive = false;
-                await _endGameTask.WaitAWhile(0.3f);
+                await _endGameTask.WaitAWhile(0.2f);
                 OnEndGame?.Invoke(EndResult.Lose);
             }
         }
