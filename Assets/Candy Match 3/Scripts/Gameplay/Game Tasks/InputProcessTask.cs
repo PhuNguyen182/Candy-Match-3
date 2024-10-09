@@ -21,12 +21,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly GridCellManager _gridCellManager;
         private readonly SwapItemTask _swapItemTask;
         private readonly ISubscriber<BoardStopMessage> _boardStopSubscriber;
+        private InGameBoosterTasks _inGameBoosterTasks;
 
         private bool _isSwapped = false;
         private bool _isBoardStopped = false;
-
-        private CheckGameBoardMovementTask _checkGameBoardMovement;
-        private InGameBoosterTasks _inGameBoosterTasks;
 
         private Vector2 _movePosition;
         private Vector3 _selectedPosition;
@@ -71,11 +69,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         public void SetInGameBoosterTasks(InGameBoosterTasks inGameBoosterTasks)
         {
             _inGameBoosterTasks = inGameBoosterTasks;
-        }
-
-        public void SetCheckGameBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
-        {
-            _checkGameBoardMovement = checkGameBoardMovementTask;
         }
 
         private void OnPress()

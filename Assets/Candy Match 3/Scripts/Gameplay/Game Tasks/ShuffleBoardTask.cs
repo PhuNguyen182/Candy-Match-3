@@ -22,11 +22,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly SuggestTask _suggestTask;
         private readonly FillBoardTask _fillBoardTask;
 
+        private bool _hasChecked = false; // This variable is a flag to prevent duplicate check
         private List<Vector3Int> _activePositions;
         private List<Vector3Int> _shuffleableCells;
+        private CheckGameBoardMovementTask _checkGameBoardMovementTask;
 
         private const int MaxRetryTime = 1000;
-        private const float ItemTransformDelay = 0.0075f;
+        private const float ItemTransformDelay = 0.0125f;
 
         public ShuffleBoardTask(GridCellManager gridCellManager, InputProcessTask inputProcessTask
             , DetectMoveTask detectMoveTask, SuggestTask suggestTask, FillBoardTask fillBoardTask)
@@ -46,18 +48,35 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _activePositions = _gridCellManager.GetActivePositions().ToList();
         }
 
+        public void SetCheckGameBoardMovementTask(CheckGameBoardMovementTask checkGameBoardMovementTask)
+        {
+            _checkGameBoardMovementTask = checkGameBoardMovementTask;
+        }
+
         public async UniTask CheckShuffleBoard()
         {
-            _detectMoveTask.DetectPossibleMoves();
-            if (_detectMoveTask.HasPossibleMove())
+            if (_hasChecked || !_checkGameBoardMovementTask.AllGridsUnlocked)
                 return;
 
+            _hasChecked = true;
+            _detectMoveTask.DetectPossibleMoves();
+
+            if (_detectMoveTask.HasPossibleMove())
+            {
+                _hasChecked = false;
+                return;
+            }
+
+            SetSuggestActive(false);
             _inputProcessTask.IsActive = false;
+
             var popup = await ShufflePopup.CreateFromAddress(CommonPopupPaths.ShufflePopupPath);
             await popup.ClosePopup();
             await Shuffle(false);
 
+            SetSuggestActive(true);
             _inputProcessTask.IsActive = true;
+            _hasChecked = false;
         }
 
         public void Shuffle()
@@ -73,14 +92,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         public async UniTask Shuffle(bool immediately)
         {
-            _suggestTask.ClearSuggest();
-            _suggestTask.IsActive = false;
             bool canShuffle = TryShuffle();
 
             if (canShuffle)
                 await TransformItems(immediately);
-
-            _suggestTask.IsActive = true;
         }
 
         private bool TryShuffle()
@@ -114,16 +129,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 if (!gridCell.HasItem)
                     continue;
 
-                if (gridCell.CandyColor == CandyColor.None)
-                    continue;
-
-                if (!gridCell.BlockItem.IsMatchable)
-                    continue;
-
-                if (!gridCell.IsMoveable)
-                    continue;
-
                 if (gridCell.BlockItem is IBooster)
+                    continue;
+
+                if (!gridCell.BlockItem.IsMatchable || !gridCell.IsMoveable)
                     continue;
 
                 _shuffleableCells.Add(_activePositions[i]);
@@ -164,6 +173,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private void PreloadPopup()
         {
             ShufflePopup.PreloadFromAddress(CommonPopupPaths.ShufflePopupPath).Forget();
+        }
+
+        private void SetSuggestActive(bool active)
+        {
+            if (!active)
+            {
+                _suggestTask.Suggest(false);
+                _suggestTask.ClearSuggest();
+            }
+
+            _suggestTask.IsActive = active;
         }
 
         public void Dispose()

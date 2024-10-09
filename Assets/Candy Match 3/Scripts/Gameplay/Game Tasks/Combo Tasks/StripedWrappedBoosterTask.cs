@@ -40,8 +40,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
         {
             IGridCell actorGridCell = null;
-            IGridCell remainGridCell = null;
-            IColorBooster actorBooster = null;
+            IGridCell remainGridCell = null; // This item should be remove
+            IColorBooster actorBooster = null; // This item is used to act combo effect
 
             IColorBooster booster1 = gridCell1.BlockItem as IColorBooster;
             IColorBooster booster2 = gridCell2.BlockItem as IColorBooster;
@@ -86,8 +86,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             }
 
             // Unlock this area to allow booster break these items (3x3 range around center of combo)
-            BoundsInt miniCheckBounds = checkPosition.GetBounds2D(1);
-            miniCheckBounds.ForEach2D(position =>
+            BoundsInt centerRange = checkPosition.GetBounds2D(1);
+            centerRange.ForEach2D(position =>
             {
                 IGridCell gridCell = _gridCellManager.Get(position);
                 if (gridCell != null)
@@ -97,7 +97,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             actorBooster.ChangeItemSprite(1);
             await actorBooster.PlayBoosterCombo(0, ComboBoosterType.StripedWrapped, true);
 
-            // Break Triple Rows
+            #region Break Triple Rows
             using (ListPool<UniTask>.Get(out var breakTasks))
             {
                 EffectManager.Instance.PlaySoundEffect(SoundEffectType.WrappedStriped);
@@ -121,7 +121,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 ExpandRange(ref rowListPositions, Vector3Int.up);
 
                 // Lock this area to prevent outside items fall in to
-                miniCheckBounds.ForEach2D(position =>
+                centerRange.ForEach2D(position =>
                 {
                     IGridCell gridCell = _gridCellManager.Get(position);
                     if (gridCell != null)
@@ -132,16 +132,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 _checkGridTask.CheckRange(horizontalCheckBounds);
             }
+            #endregion
 
-            // Wait a moment and enable check grid task to allow other items fall down
+            #region Wait a moment and enable check grid task to allow other items fall down
             _checkGridTask.CanCheck = true;
             await UniTask.DelayFrame(18, PlayerLoopTiming.FixedUpdate, _token);
             _checkGridTask.CanCheck = false;
 
             actorBooster.ChangeItemSprite(2);
             await actorBooster.PlayBoosterCombo(0, ComboBoosterType.StripedWrapped, true);
+            #endregion
 
-            // Break Triple Columns
+            #region Break Triple Columns
             using (ListPool<UniTask>.Get(out var breakTasks))
             {
                 EffectManager.Instance.PlaySoundEffect(SoundEffectType.WrappedStriped);
@@ -169,6 +171,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 _checkGridTask.CheckRange(verticalCheckBounds);
             }
+            #endregion
+
+            #region Check center range again
+            centerRange.ForEach2D(position =>
+                {
+                    IGridCell gridCell = _gridCellManager.Get(position);
+                    if (gridCell != null)
+                        gridCell.LockStates = LockStates.None;
+                });
+
+            _checkGridTask.CheckRange(centerRange);
+            #endregion
         }
 
         // This function is use to expand check range

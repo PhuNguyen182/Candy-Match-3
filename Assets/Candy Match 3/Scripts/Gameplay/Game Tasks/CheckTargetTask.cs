@@ -22,6 +22,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly MatchRegionTask _matchRegionTask;
         private readonly TargetDatabase _targetDatabase;
         private readonly ShuffleBoardTask _shuffleBoardTask;
+        private readonly InputProcessTask _inputProcessTask;
         private readonly MainGamePanel _mainGamePanel;
 
         private readonly ISubscriber<AddScoreMessage> _addScoreSubscriber;
@@ -62,11 +63,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         }
 
         public CheckTargetTask(MatchRegionTask matchRegionTask, TargetDatabase targetDatabase
-            , ShuffleBoardTask shuffleBoardTask, MainGamePanel mainGameScreen)
+            , ShuffleBoardTask shuffleBoardTask, InputProcessTask inputProcessTask, MainGamePanel mainGameScreen)
         {
             _matchRegionTask = matchRegionTask;
             _targetDatabase = targetDatabase;
             _shuffleBoardTask = shuffleBoardTask;
+            _inputProcessTask = inputProcessTask;
             _mainGamePanel = mainGameScreen;
             _targetDatabase.Initialize();
 
@@ -137,7 +139,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return _moveToTargetTasks.Count <= 0;
         }
 
-        public void CheckEndGame()
+        public async UniTask CheckEndGame()
         {
             int remainCount = 0;
             foreach (var targetCount in _targetCounts)
@@ -149,12 +151,16 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (_moveCount >= 0 && remainCount <= 0)
             {
                 UpdateAll(true);
+                _inputProcessTask.IsActive = false;
+                await _endGameTask.WaitAWhile(0.2f);
                 OnEndGame?.Invoke(EndResult.Win);
             }
 
             else if(_moveCount == 0 && remainCount > 0)
             {
                 UpdateAll(true);
+                _inputProcessTask.IsActive = false;
+                await _endGameTask.WaitAWhile(0.2f);
                 OnEndGame?.Invoke(EndResult.Lose);
             }
         }
@@ -171,7 +177,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             _moveCount = _moveCount + move;
             UpdateMove();
-            CheckEndGame();
+            CheckEndGame().Forget();
             UpdateAll(false);
         }
 
@@ -231,15 +237,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (!message.IsStopped)
                 return;
 
+            _inputProcessTask.IsActive = false;
             int matchCount = await _matchRegionTask.MatchAllRegions();
+            
             if (matchCount > 0)
                 return;
 
-            await _endGameTask.WaitAWhile(0.5f);
+            await _endGameTask.WaitAWhile(0.3f);
             await _endGameTask.WaitForBoardStop();
             await _endGameTask.WaitAWhile(0.3f);
             await _shuffleBoardTask.CheckShuffleBoard();
-            CheckEndGame();
+
+            _inputProcessTask.IsActive = true;
+            await CheckEndGame();
         }
 
         private void InspectTargetInfo(AsyncMessage<MoveTargetData> message)
