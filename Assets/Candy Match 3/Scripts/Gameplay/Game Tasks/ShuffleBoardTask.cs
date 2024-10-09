@@ -28,7 +28,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private CheckGameBoardMovementTask _checkGameBoardMovementTask;
 
         private const int MaxRetryTime = 1000;
-        private const float ItemTransformDelay = 0.01f;
+        private const float ItemTransformDelay = 0.0125f;
 
         public ShuffleBoardTask(GridCellManager gridCellManager, InputProcessTask inputProcessTask
             , DetectMoveTask detectMoveTask, SuggestTask suggestTask, FillBoardTask fillBoardTask)
