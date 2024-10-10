@@ -106,8 +106,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
                 }
 
                 booster.IsActivated = true;
-                await booster.Activate();
-
                 await UniTask.DelayFrame(3, PlayerLoopTiming.FixedUpdate, _token);
                 using var fireListPool = ListPool<UniTask>.Get(out List<UniTask> fireTasks);
                 using var breakTaskPool = ListPool<UniTask>.Get(out List<UniTask> breakTasks);

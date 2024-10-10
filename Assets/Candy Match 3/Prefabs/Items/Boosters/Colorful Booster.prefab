@@ -225,6 +225,7 @@ MonoBehaviour:
   itemGraphics: {fileID: 6427079796887392978}
   itemAnimation: {fileID: 6187872535067072444}
   colorfulEffect: {fileID: 1582325896820010, guid: 12fcde19099ed46baac08392ce7e4eed, type: 3}
+  chargingEffect: {fileID: 3239327919606733882, guid: 8df91a7b08f7e5f4db36315421f5951c, type: 3}
 --- !u!114 &6427079796887392978
 MonoBehaviour:
   m_ObjectHideFlags: 0
