@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
+using CandyMatch3.Scripts.Common.SingleConfigs;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Common.DataStructs;
 using TMPro;
-using CandyMatch3.Scripts.Common.SingleConfigs;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 {

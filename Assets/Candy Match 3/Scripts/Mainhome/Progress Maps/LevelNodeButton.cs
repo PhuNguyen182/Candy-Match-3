@@ -70,6 +70,7 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
 
         public void SetStarState(int star, bool isRecentWin)
         {
+            _levelStars = star;
             levelNodeStar.UpdateStars(star, isRecentWin);
             buttonImage.sprite = enablePinkState;
         }

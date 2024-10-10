@@ -49,7 +49,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             CandyColor candyColor = colorBooster.CandyColor;
             IBooster activeBooster = gridCell.BlockItem as IBooster;
             gridCell.LockStates = LockStates.Preparing;
+
             activeBooster.IsActivated = true;
+            await activeBooster.Activate();
 
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {
@@ -112,7 +114,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             IBooster booster = boosterCell.BlockItem as IBooster;
             IColorBooster colorBooster = colorBoosterCell.BlockItem as IColorBooster;
             colorBooster.TriggerNextStage(2);
+            
             booster.IsActivated = true;
+            await booster.Activate();
 
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> positions))
             {

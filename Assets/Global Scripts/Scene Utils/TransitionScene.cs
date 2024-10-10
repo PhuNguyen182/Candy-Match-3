@@ -27,7 +27,10 @@ namespace GlobalScripts.SceneUtils
 
     public class TransitionScene : MonoBehaviour
     {
+        [SerializeField] private Animator darkCurtain;
+
         private CancellationToken _token;
+        private readonly int _outHash = Animator.StringToHash("Out");
 
         private void Awake()
         {
@@ -48,13 +51,16 @@ namespace GlobalScripts.SceneUtils
             string nextSceneName = SceneBridge.Bridge;
             if (!string.IsNullOrEmpty(nextSceneName))
             {
-                await UniTask.Delay(TimeSpan.FromSeconds(2.5f), cancellationToken: _token);
+                await UniTask.Delay(TimeSpan.FromSeconds(1.5f), cancellationToken: _token);
+                darkCurtain.SetTrigger(_outHash);
+
+                await UniTask.Delay(TimeSpan.FromSeconds(1f), cancellationToken: _token);
                 await SceneLoader.LoadScene(nextSceneName);
 
 #if !UNITY_EDITOR
-                MusicManager.Instance.StopMusic();
-                BackgroundMusicType bgm = GetMusicBySceneName(nextSceneName);
-                MusicManager.Instance.PlayBackgroundMusic(bgm, volume: 0.6f);
+                //MusicManager.Instance.StopMusic();
+                //BackgroundMusicType bgm = GetMusicBySceneName(nextSceneName);
+                //MusicManager.Instance.PlayBackgroundMusic(bgm, volume: 0.6f);
 #endif
 
                 SceneBridge.Bridge = null;

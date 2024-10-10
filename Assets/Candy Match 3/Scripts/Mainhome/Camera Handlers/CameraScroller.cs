@@ -29,7 +29,7 @@ namespace CandyMatch3.Scripts.Mainhome.CameraHandlers
         private CancellationToken _token;
         private Bounds _lookCameraBounds;
 
-        private const float defaultCameraRatio = 9f / 16f;
+        private const float DefaultCameraRatio = 9f / 16f;
 
         public bool IsDraggable { get; set; }
 
@@ -103,7 +103,7 @@ namespace CandyMatch3.Scripts.Mainhome.CameraHandlers
         private void CalculateCameraView()
         {
             float cameraRatio = lookCamera.aspect;
-            float newSize = defaultCameraSize * defaultCameraRatio / cameraRatio;
+            float newSize = defaultCameraSize * DefaultCameraRatio / cameraRatio;
             lookCamera.orthographicSize = newSize;
         }
 

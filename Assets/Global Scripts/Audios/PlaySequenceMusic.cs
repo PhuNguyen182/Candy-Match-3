@@ -10,7 +10,6 @@ namespace GlobalScripts.Audios
 {
     public class PlaySequenceMusic : MonoBehaviour
     {
-#if UNITY_EDITOR
         [SerializeField] private bool shuffle;
         [SerializeField] private float delayStart = 1.5f;
         [SerializeField] private float trackInterval = 0.5f;
@@ -49,6 +48,5 @@ namespace GlobalScripts.Audios
                 await UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken: _token);
             }
         }
-#endif
     }
 }

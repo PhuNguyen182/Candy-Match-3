@@ -13,6 +13,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [SerializeField] private InGameBoosterType boosterType;
         [SerializeField] private Button boosterButton;
         [SerializeField] private TMP_Text boosterCount;
+        [SerializeField] private GameObject boosterCounter;
         [SerializeField] private GameObject lockObject;
         [SerializeField] private GameObject addObject;
         [SerializeField] private Canvas buttonCanvas;
@@ -42,7 +43,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         {
             _count = count;
             boosterCount.text = $"{count}";
-            boosterCount.gameObject.SetActive(count > 0);
+            boosterCounter.SetActive(count > 0);
             addObject.gameObject.SetActive(count <= 0);
         }
 
