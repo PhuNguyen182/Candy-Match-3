@@ -126,6 +126,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (!IsSwappable(fromCell, toCell))
             {
+                Vector3Int direction = toPosition - fromPosition;
+
+                Nudge(fromCell, direction);
                 SetSuggestActive(true);
                 return;
             }
@@ -236,6 +239,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 await CheckMatchOnSwap(fromCell, toCell);
 
             SetSuggestActive(true);
+        }
+
+        private void Nudge(IGridCell gridCell, Vector3Int direction)
+        {
+            if (!gridCell.HasItem || !gridCell.IsMoveable)
+                return;
+
+            if (gridCell.BlockItem is IItemAnimation animation)
+                animation.Nudge(direction);
         }
 
         private bool CheckCollectible(IGridCell fromCell, IGridCell toCell)

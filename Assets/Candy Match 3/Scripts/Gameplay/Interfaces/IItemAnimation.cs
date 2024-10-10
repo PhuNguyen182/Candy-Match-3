@@ -12,5 +12,6 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
         public UniTask MoveTo(Vector3 position, float duration);
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst);
         public void JumpDown(float amptitude);
+        public void Nudge(Vector3Int direction);
     }
 }

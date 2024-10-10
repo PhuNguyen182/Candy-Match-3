@@ -69,6 +69,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
             itemAnimation.JumpDown(amptitude);
         }
 
+        public void Nudge(Vector3Int direction)
+        {
+            itemAnimation.Nudge(direction);
+        }
+
         public UniTask MoveTo(Vector3 position, float duration)
         {
             return itemAnimation.MoveTo(position, duration);
