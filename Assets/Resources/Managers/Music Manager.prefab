@@ -200,8 +200,9 @@ MonoBehaviour:
   delayStart: 1.5
   trackInterval: 0.5
   musicCollection:
-  - {fileID: 8300000, guid: e706ad71194e0ca4ebc30e8d78970429, type: 3}
+  - {fileID: 8300000, guid: f2dccee64c75b564a931a60b086e0cc3, type: 3}
   - {fileID: 8300000, guid: 336ff731f83608549aa8705cb1deba43, type: 3}
+  - {fileID: 8300000, guid: 20294a0e699c8704ba8e8f2f09abe9f0, type: 3}
   - {fileID: 8300000, guid: e4401aa7a5cef354d83c5fa4b8f7a745, type: 3}
   - {fileID: 8300000, guid: 8c20b2f58e24dd64ab8371cea1d0cc2a, type: 3}
   - {fileID: 8300000, guid: d1b3b65f02ca9ec45a9fecda6fafc7e8, type: 3}

@@ -118,7 +118,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
                 gridCell1.LockStates = LockStates.None;
                 gridCell2.LockStates = LockStates.None;
-                CheckGrids(_gridCellManager.SpawnerPositions);
+                _checkGridTask.CheckRange(_gridCellManager.GetActiveBounds());
             }
         }
 

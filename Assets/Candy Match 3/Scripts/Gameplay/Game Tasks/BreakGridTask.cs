@@ -184,10 +184,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                         await UniTask.WhenAll(breakTasks);
                     }
                 }
-
-                gridCell.LockStates = LockStates.None;
-                _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
             }
+
+            gridCell.LockStates = LockStates.None;
+            _checkGridTask.CheckAroundPosition(gridCell.GridPosition, 1);
         }
 
         public async UniTask AddBooster(IGridCell gridCell, MatchType matchType, CandyColor candyColor, Action<BoundsInt> onActive = null)
