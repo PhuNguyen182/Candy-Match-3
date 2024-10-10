@@ -308,6 +308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainhomeInput: {fileID: 1175848228}
   mainUIManager: {fileID: 1320990081}
+  cameraScroller: {fileID: 1551158467}
 --- !u!4 &521228446
 Transform:
   m_ObjectHideFlags: 0
@@ -1017,6 +1018,7 @@ GameObject:
   - component: {fileID: 907387144}
   - component: {fileID: 907387143}
   - component: {fileID: 907387142}
+  - component: {fileID: 907387146}
   m_Layer: 5
   m_Name: Back Button
   m_TagString: Untagged
@@ -1146,6 +1148,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 907387140}
   m_CullTransparentMesh: 1
+--- !u!114 &907387146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 907387140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7e2814f92062054cbc17e34315424f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 907387143}
+  volumeScale: 0.6
+  clip: {fileID: 8300000, guid: fb2e28a8bf409774784c3072531fb2f3, type: 3}
 --- !u!1 &1125121161
 GameObject:
   m_ObjectHideFlags: 0
@@ -1276,7 +1293,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1297229456}
   - component: {fileID: 1297229455}
-  - component: {fileID: 1297229454}
   - component: {fileID: 1297229453}
   m_Layer: 0
   m_Name: Input Observer Camera
@@ -1329,14 +1345,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!81 &1297229454
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1297229452}
-  m_Enabled: 1
 --- !u!20 &1297229455
 Camera:
   m_ObjectHideFlags: 0

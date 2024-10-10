@@ -12,11 +12,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
     {
         [Header("Effects")]
         [SerializeField] private GameObject colorfulEffect;
+        [SerializeField] private GameObject chargingEffect;
 
-        private GameObject _effect;
+        private GameObject _chargeEffect;
 
         public override async UniTask Activate()
         {
+            _chargeEffect = SimplePool.Spawn(chargingEffect, transform, transform.position, Quaternion.identity);
             await UniTask.CompletedTask;
         }
 
@@ -29,6 +31,12 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 
         public override void Explode()
         {
+            if (_chargeEffect != null)
+            {
+                _chargeEffect.transform.SetParent(EffectContainer.Transform);
+                SimplePool.Despawn(_chargeEffect);
+            }
+
             EffectManager.Instance.PlaySoundEffect(SoundEffectType.ColorBomb);
             SimplePool.Spawn(colorfulEffect, EffectContainer.Transform, WorldPosition, Quaternion.identity);
         }

@@ -13,7 +13,7 @@ namespace CandyMatch3.Scripts.Common.Constants
         public const float ExplodeAmplitude = 1.75f;
         public const float ItemMatchDelay = 0.166f;
         public const float ItemMatchMove = 0.208334f;
-        public const float RegionMatchDelay = 0.167f;
+        public const float RegionMatchDelay = 0.0134f;
 
         public const float BaseItemMoveSpeed = 9f;
         public const float FallenAccelaration = 1.618f;

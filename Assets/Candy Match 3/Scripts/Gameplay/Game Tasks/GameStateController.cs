@@ -6,9 +6,11 @@ using UnityEngine;
 using GlobalScripts.SceneUtils;
 using CandyMatch3.Scripts.GameData;
 using CandyMatch3.Scripts.Common.Enums;
+using CandyMatch3.Scripts.Common.SingleConfigs;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.MainScreen;
 using CandyMatch3.Scripts.Gameplay.GameUI.EndScreen;
+using CandyMatch3.Scripts.GameData.LevelProgresses;
 using CandyMatch3.Scripts.Gameplay.Models;
 using Cysharp.Threading.Tasks;
 using Stateless;
@@ -44,13 +46,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private readonly StateMachine<State, Trigger> _gameStateMachine;
         private readonly StateMachine<State, Trigger>.TriggerWithParameters<EndResult> _endGameTrigger;
-        private LevelModel _levelModel;
 
         private const int DefaultContinueMove = 5;
         private const int DefaultContinuePrice = 300;
 
+        private bool _levelIncreased = false;
         private CancellationToken _token;
         private CancellationTokenSource _cts;
+        private LevelModel _levelModel;
 
         public GameStateController(InputProcessTask inputProcessTask, CheckTargetTask checkTargetTask, StartGameTask startGameTask, ComplimentTask complimentTask
             , EndGameTask endGameTask, EndGameScreen endGameScreen, SuggestTask suggestTask, InGameSettingPanel settingSidePanel)
@@ -151,6 +154,36 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
             if (result == EndResult.Win)
             {
+                if (!PlayGameConfig.Current.IsTestMode)
+                {
+                    int stars = _checkTargetTask.Stars;
+                    int level = PlayGameConfig.Current.Level;
+                    int currentLevel = GameDataManager.Instance.GetCurrentLevel();
+
+                    // Save current win level immediately
+                    if(level == currentLevel)
+                    {
+                        _levelIncreased = true;
+                        GameDataManager.Instance.SetLevel(level + 1);
+                    }
+                    
+                    GameDataManager.Instance.EarnResource(GameResourceType.Life, 1);
+                    GameDataManager.Instance.AddLevelProgress(new LevelProgressNode
+                    {
+                        Level = level,
+                        Stars = stars
+                    });
+
+                    // Preset back home config
+                    BackHomeConfig.Current = new BackHomeConfig
+                    {
+                        Level = level,
+                        Stars = stars,
+                        EndResult = result,
+                        LevelIncreased = _levelIncreased,
+                    };
+                }
+
                 await _endGameTask.OnWinGame();
                 await _endGameScreen.ShowWinGame();
                 QuitGame(result);
@@ -203,14 +236,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private void QuitGame(EndResult result)
         {
-            if(result == EndResult.Win)
-                GameDataManager.Instance.EarnResource(GameResourceType.Life, 1);
+            int stars = _checkTargetTask.Stars;
+            int level = PlayGameConfig.Current.Level;
 
-#if UNITY_EDITOR
-            Debug.Log($"End result: {result}");
-#endif
+            BackHomeConfig.Current = new BackHomeConfig
+            {
+                EndResult = result,
+                LevelIncreased = _levelIncreased,
+                Level = level,
+                Stars = stars,
+            };
+
             _endGameScreen.ShowBackground(false);
-
             if (_gameStateMachine.CanFire(Trigger.Quit))
             {
                 _gameStateMachine.Fire(Trigger.Quit);
@@ -219,9 +256,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private async UniTask OnQuitGame()
         {
-#if UNITY_EDITOR
-            Debug.Log("Quit Level!");
-#endif
+            PlayGameConfig.Current = null;
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
             await SceneBridge.LoadNextScene(SceneConstants.Mainhome);
         }
