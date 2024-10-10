@@ -43,34 +43,38 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
         private async UniTask OpenLifePopup()
         {
             if (_heart >= 5)
-            {
-                var alert = await AlertPopup.CreateFromAddress(CommonPopupPaths.AlertPopupPath);
-                alert.SetMessage("Your lives is full!\nLet's play game!");
-                alert.OnClose = () =>
-                {
-                    OpenPlayGamePopup().Forget();
-                };
-            }
-            
+                await OnFullLives();
+
             else
-                BuyLivesPopup.CreateFromAddress(CommonPopupPaths.LivesPopupPath).Forget();
+            {
+                if (_lifeTime.TotalSeconds <= 1.5f)
+                    await OnFullLives();
+                
+                else
+                    BuyLivesPopup.CreateFromAddress(CommonPopupPaths.LivesPopupPath).Forget();
+            }
+        }
+
+        private async UniTask OnFullLives()
+        {
+            var alert = await AlertPopup.CreateFromAddress(CommonPopupPaths.AlertPopupPath);
+            alert.SetMessage("Your lives is full!\nLet's play game!");
+            alert.OnClose = () =>
+            {
+                OpenPlayGamePopup().Forget();
+            };
         }
 
         private async UniTask OpenPlayGamePopup()
         {
             int level = GameDataManager.Instance.GetCurrentLevel();
-            var levelNode = GameDataManager.Instance.GetLevelProgress(level);
-        
-            if (levelNode.Level > 0)
+            var startGamePopup = await StartGamePopup.CreateFromAddress(CommonPopupPaths.StartGamePopupPath);
+
+            await startGamePopup.SetLevelInfo(new LevelBoxData
             {
-                int stars = levelNode.Stars;
-                var startGamePopup = await StartGamePopup.CreateFromAddress(CommonPopupPaths.StartGamePopupPath);
-                await startGamePopup.SetLevelInfo(new LevelBoxData
-                {
-                    Level = level,
-                    Stars = stars
-                });
-            }
+                Level = level,
+                Stars = 0
+            });
         }
 
         private void UpdateLives()
@@ -85,15 +89,11 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
         private void UpdateTime(int heart, TimeSpan time)
         {
             if (heart >= 5)
-            {
                 timeCounter.text = "Full";
-            }
 
             else
-            {
                 timeCounter.text = time.TotalSeconds > 3600 ? $"{time.Hours:D2}:{time.Minutes:D2}:{time.Seconds:D2}"
                                                             : $"{time.Minutes:D2}:{time.Seconds:D2}";
-            }
         }
 
         private void UpdateLives(int lives)

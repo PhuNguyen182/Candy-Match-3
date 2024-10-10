@@ -7,7 +7,9 @@ using UnityEngine.UI;
 using CandyMatch3.Scripts.GameData;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.GameData.Constants;
 using CandyMatch3.Scripts.Gameplay.GameUI.Miscs;
+using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Mainhome.Managers;
 using CandyMatch3.Scripts.Mainhome.UI.Shops;
 using CandyMatch3.Scripts.GameManagers;
@@ -27,8 +29,10 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         [Space(10)]
         [SerializeField] private Button closeButton;
         [SerializeField] private Button purchaseButton;
+        [SerializeField] private Button playButton;
         [SerializeField] private TMP_Text timeText;
         [SerializeField] private TMP_Text priceText;
+        [SerializeField] private TMP_Text messageText;
 
         [Space(10)]
         [SerializeField] private GameObject timerObject;
@@ -37,7 +41,10 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         private int _livesCount;
         private TimeSpan _timeCounter;
         private CancellationToken _token;
+
         private readonly int _closeHash = Animator.StringToHash("Close");
+        private const string PlayMessage = "Your <color=#D44081>lives</color> are full now!";
+        private const string BuyMessage = "Refill a <color=#FFFF9B>full set</color> of lives";
 
         protected override void OnAwake()
         {
@@ -45,6 +52,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
 
             purchaseButton.onClick.AddListener(() => Purchase().Forget());
             closeButton.onClick.AddListener(() => CloseAsync().Forget());
+            playButton.onClick.AddListener(() => OpenPlayGamePopup().Forget());
         }
 
         protected override void DoAppear()
@@ -82,6 +90,10 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
 
         private void UpdateHeart(int heart)
         {
+            playButton.gameObject.SetActive(heart >= GameDataConstants.MaxLives);
+            purchaseButton.gameObject.SetActive(heart < GameDataConstants.MaxLives);
+            messageText.text = heart >= GameDataConstants.MaxLives ? PlayMessage : BuyMessage;
+
             for (int i = 0; i < heartIcons.Length; i++)
             {
                 bool active = i + 1 <= heart;
@@ -96,6 +108,19 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
 
             else
                 timeText.text = $"{time.Minutes:D2}:{time.Seconds:D2}";
+        }
+
+        private async UniTask OpenPlayGamePopup()
+        {
+            await CloseAsync();
+            int level = GameDataManager.Instance.GetCurrentLevel();
+            var startGamePopup = await StartGamePopup.CreateFromAddress(CommonPopupPaths.StartGamePopupPath);
+
+            await startGamePopup.SetLevelInfo(new LevelBoxData
+            {
+                Level = level,
+                Stars = 0
+            });
         }
 
         private async UniTask Purchase()
