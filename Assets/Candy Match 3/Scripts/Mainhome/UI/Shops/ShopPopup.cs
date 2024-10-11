@@ -59,7 +59,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
         protected override void DoAppear()
         {
             if (!IsPreload)
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
 
             MainhomeManager.Instance?.SetInputActive(false);
             background.ShowBackground(true);
@@ -97,7 +97,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
         private void PlayPurchaseEffect()
         {
             coinEffect.Play();
-            MusicManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
+            AudioManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
         }
 
         protected override void DoDisappear()
@@ -108,7 +108,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Shops
             MainhomeManager.Instance?.SetInputActive(true);
 
             if (!IsPreload)
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
         }
     }
 }

@@ -58,7 +58,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         protected override void DoAppear()
         {
             if (!IsPreload)
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
 
             priceText.text = $"{price}";
             MainhomeManager.Instance?.SetInputActive(false);
@@ -154,7 +154,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
             MainhomeManager.Instance?.SetInputActive(true);
 
             if (!IsPreload)
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
         }
     }
 }

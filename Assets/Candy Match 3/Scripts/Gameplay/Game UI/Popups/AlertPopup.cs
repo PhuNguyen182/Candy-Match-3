@@ -36,7 +36,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         protected override void DoAppear()
         {
             if (!IsPreload)
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
             
             background.ShowBackground(true);
             MainhomeManager.Instance?.SetInputActive(false);
@@ -60,7 +60,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
             MainhomeManager.Instance?.SetInputActive(true);
 
             if (!IsPreload)
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
 
             OnClose?.Invoke();
             OnClose = null;

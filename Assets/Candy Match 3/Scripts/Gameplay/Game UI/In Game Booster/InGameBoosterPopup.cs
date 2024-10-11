@@ -97,7 +97,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         protected override void DoAppear()
         {
             if (!IsPreload)
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
 
             int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
             _reactiveCoin.Value = coin; // Show the current value of coin in game data
@@ -131,7 +131,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             if (coin >= price)
             {
                 coinEffect.Play();
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
                 GameDataManager.Instance.SpendResource(GameResourceType.Coin, price);
                 GameDataManager.Instance.EarnResource(_currentInfo.ResourceType, _boosterPack.Amount);
 
@@ -184,7 +184,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             await UniTask.Delay(TimeSpan.FromSeconds(closeClip.length), cancellationToken: _token);
 
             if (!IsPreload)
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
 
             base.DoClose();
             UnblockInput?.Invoke();
