@@ -128,7 +128,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 Vector3Int direction = toPosition - fromPosition;
 
-                Nudge(fromCell, direction);
+                Nudge(fromCell, toPosition, direction);
                 SetSuggestActive(true);
                 return;
             }
@@ -241,12 +241,19 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             SetSuggestActive(true);
         }
 
-        private void Nudge(IGridCell gridCell, Vector3Int direction)
+        private void Nudge(IGridCell fromGridCell, Vector3Int toPosition, Vector3Int direction)
         {
-            if (!gridCell.HasItem || !gridCell.IsMoveable)
+            if (!fromGridCell.HasItem || !fromGridCell.IsMoveable)
                 return;
 
-            if (gridCell.BlockItem is IItemAnimation animation)
+            if (_gridCellManager.IsPositionInsideBoard(toPosition))
+            {
+                IGridCell gridCell = _gridCellManager.Get(toPosition);
+                if(!gridCell.HasItem)
+                    return;
+            }
+
+            if (fromGridCell.BlockItem is IItemAnimation animation)
                 animation.Nudge(direction);
         }
 
