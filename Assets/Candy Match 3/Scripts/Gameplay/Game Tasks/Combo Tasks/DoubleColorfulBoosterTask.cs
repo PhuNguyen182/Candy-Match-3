@@ -1,3 +1,4 @@
+using R3;
 using System;
 using System.Threading;
 using System.Collections;
@@ -21,6 +22,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
         private CancellationToken _token;
         private CancellationTokenSource _cts;
         private CheckGridTask _checkGridTask;
+        
+        public ReactiveProperty<bool> AcitvateProperty { get; }
 
         public DoubleColorfulBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ColorfulFireray colorfulFireray)
         {
@@ -30,10 +33,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
 
             _cts = new();
             _token = _cts.Token;
+
+            AcitvateProperty = new(false);
         }
 
         public async UniTask Activate(IGridCell gridCell1, IGridCell gridCell2)
         {
+            AcitvateProperty.Value = true;
             Vector3 oddStartPosition, evenStartPosition;
             BoundsInt activeBounds = _gridCellManager.GetActiveBounds();
 
@@ -120,6 +126,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                 gridCell1.LockStates = LockStates.None;
                 gridCell2.LockStates = LockStates.None;
                 _checkGridTask.CheckRange(_gridCellManager.GetActiveBounds());
+                AcitvateProperty.Value = false;
             }
         }
 
