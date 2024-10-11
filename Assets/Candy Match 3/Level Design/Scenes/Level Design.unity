@@ -3179,7 +3179,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileDatabase: {fileID: 11400000, guid: f6726b3f937ba334f8580c6528205f29, type: 2}
   gridInformation: {fileID: 1640025282}
-  targetMove: 300
+  targetMove: 500
   scoreRule:
     MaxScore: 3200
     Star1Score: 900
