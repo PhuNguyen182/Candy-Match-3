@@ -172,6 +172,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
             _hasBeenSuggested = isActive;
             ChangeVisibleMask(isActive);
+            itemAnimator.ResetTrigger(ItemAnimationHashKeys.NudgeHash);
             itemAnimator.SetBool(ItemAnimationHashKeys.SuggestHash, isActive);
 
             if (isActive)

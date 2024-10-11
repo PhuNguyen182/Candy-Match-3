@@ -253,6 +253,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return;
             }
 
+            if (fromGridCell.BlockItem is IItemSuggest suggest)
+                if (suggest.IsSuggesting)
+                    return;
+
             if (fromGridCell.BlockItem is IItemAnimation animation)
                 animation.Nudge(direction);
         }

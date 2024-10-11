@@ -194,6 +194,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell == null || !gridCell.HasItem || isSwapped)
                 return;
 
+            if (gridCell.BlockItem is IItemSuggest suggest)
+                if (suggest.IsSuggesting)
+                    return;
+
             if (gridCell.BlockItem is IItemAnimation animation)
             {
                 if (!gridCell.IsLocked)

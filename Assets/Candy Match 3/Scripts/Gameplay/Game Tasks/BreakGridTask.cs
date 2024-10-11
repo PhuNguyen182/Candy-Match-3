@@ -11,6 +11,7 @@ using CandyMatch3.Scripts.Gameplay.Strategies;
 using CandyMatch3.Scripts.Common.CustomData;
 using CandyMatch3.Scripts.Gameplay.Statefuls;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Gameplay.Effects;
 using Cysharp.Threading.Tasks;
 using GlobalScripts.Utils;
 using UnityEngine.Pool;
@@ -257,7 +258,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             await UniTask.Delay(delay, false, PlayerLoopTiming.FixedUpdate, _token);
 
             if (gridCell.BlockItem is IItemEffect effect)
+            {
                 effect.PlayStartEffect();
+                EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAppear);
+            }
 
             gridCell.LockStates = LockStates.None;
         }

@@ -41,6 +41,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public bool IsNewCreated { get; set; }
 
+        public bool IsSuggesting { get; set; }
+
         public BoosterType ColorBoosterType => colorBoosterType;
 
         public override void ResetItem()
@@ -240,7 +242,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayStartEffect()
         {
             EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
-            EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAppear);
         }
 
         public void PlayMatchEffect()
@@ -256,7 +257,6 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
         public void PlayReplaceEffect()
         {
             EffectManager.Instance.SpawnNewCreatedEffect(WorldPosition);
-            EffectManager.Instance.PlaySoundEffect(SoundEffectType.BoosterAppear);
         }
 
         private async UniTask OnItemReset()
@@ -271,6 +271,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public void Highlight(bool isActive)
         {
+            IsSuggesting = isActive;
             itemAnimation.ToggleSuggest(isActive);
         }
 
