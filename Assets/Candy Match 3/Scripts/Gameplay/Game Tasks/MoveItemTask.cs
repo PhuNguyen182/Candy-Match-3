@@ -157,7 +157,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return true;
 
                 if (checkCell.IsSpawner)
-                    return !checkCell.IsLocked;
+                    return !checkCell.IsLocked && !checkCell.IsMoveable;
 
                 if (checkCell.IsMoving)
                     return false;
@@ -176,7 +176,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell == null)
                 return false;
 
-            if (!gridCell.CanContainItem)
+            if (!gridCell.CanContainItem || gridCell.IsSpawner)
                 return false;
 
             if (gridCell.IsLocked)
