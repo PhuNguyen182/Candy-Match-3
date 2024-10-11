@@ -23,5 +23,9 @@ namespace CandyMatch3.Scripts.Common.Constants
         
         public static readonly int IsFirstHash = Animator.StringToHash("IsFirst");
         public static readonly int DirectionHash = Animator.StringToHash("Direction");
+
+        public static readonly int NudgeHash = Animator.StringToHash("Nudge");
+        public static readonly int NudgeXHash = Animator.StringToHash("NudgeX");
+        public static readonly int NudgeYHash = Animator.StringToHash("NudgeY");
     }
 }

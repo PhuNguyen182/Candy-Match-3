@@ -55,5 +55,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
         {
             return itemAnimation.SwapTo(position, duration, isMoveFirst);
         }
+
+        public void Nudge(Vector3Int direction)
+        {
+            itemAnimation.Nudge(direction);
+        }
     }
 }

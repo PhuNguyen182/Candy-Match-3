@@ -81,6 +81,11 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
             }
         }
 
+        public bool IsPositionInsideBoard(Vector3Int position)
+        {
+            return _kpv.ContainsKey(position);
+        }
+
         public void SetBoardActiveArea(Tilemap boardArea)
         {
             boardArea.CompressBounds();

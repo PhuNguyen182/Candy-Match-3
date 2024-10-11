@@ -63,6 +63,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
             _doubleColorfulBoosterTask = new(_gridCellManager, _breakGridTask, effectDatabase.ColorfulFireray);
             _doubleColorfulBoosterTask.AddTo(ref builder);
 
+            _doubleColorfulBoosterTask.AcitvateProperty.Subscribe(activate =>
+            {
+                _activateBoosterTask.ColorfulBoosterTask.CanActivate = !activate;
+            }).AddTo(ref builder);
+
             _disposable = builder.Build();
         }
 

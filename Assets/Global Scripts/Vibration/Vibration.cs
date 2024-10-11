@@ -32,6 +32,7 @@ namespace GlobalScripts.Vibrations
 #endif
         }
 
+#if !UNITY_EDITOR && UNITY_ANDROID
         public static void Vibrate()
         {
             if (!IsHaptics)
@@ -81,13 +82,14 @@ namespace GlobalScripts.Vibrations
                 vibrator.Call("cancel");
             }
         }
+#endif
 
         private static bool IsAndroidPlatform()
         {
-#if UNITY_EDITOR
-            return false;
-#elif UNITY_ANDROID
+#if UNITY_ANDROID
         return true;
+#else
+            return false;
 #endif
         }
 
