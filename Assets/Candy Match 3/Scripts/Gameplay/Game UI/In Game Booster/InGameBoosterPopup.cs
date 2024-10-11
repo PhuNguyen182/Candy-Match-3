@@ -26,6 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [Serializable]
         public struct InGameBoosterBoxInfo
         {
+            public GameResourceType ResourceType;
             public InGameBoosterType BoosterType;
             public string BoosterName;
             public string Description;
@@ -57,6 +58,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
 
         private CancellationToken _token;
         private InGameBoosterPack _boosterPack;
+        private InGameBoosterBoxInfo _currentInfo;
         private IPublisher<AddInGameBoosterMessage> _addInGameBoosterPublisher;
 
         private readonly int _closeHash = Animator.StringToHash("Close");
@@ -111,8 +113,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         public void SetBoosterInfo(InGameBoosterType boosterType)
         {
             this.boosterType = boosterType;
-            InGameBoosterBoxInfo info = PopupInfoCollection[boosterType];
-            SetPopupInfo(info);
+            _currentInfo = PopupInfoCollection[boosterType];
+            SetPopupInfo(_currentInfo);
         }
 
         private void UpdateCoin()
@@ -131,6 +133,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
                 coinEffect.Play();
                 MusicManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
                 GameDataManager.Instance.SpendResource(GameResourceType.Coin, price);
+                GameDataManager.Instance.EarnResource(_currentInfo.ResourceType, _boosterPack.Amount);
 
                 _addInGameBoosterPublisher.Publish(new AddInGameBoosterMessage
                 {

@@ -5441,7 +5441,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1129346501
-  m_SortingLayer: 12
+  m_SortingLayer: 13
   m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -6276,19 +6276,23 @@ MonoBehaviour:
   closeButton: {fileID: 2125197163096070039}
   purchaseButton: {fileID: 3175513715200399979}
   inGameBoosterBoxInfos:
-  - BoosterType: 1
+  - ResourceType: 3
+    BoosterType: 1
     BoosterName: Lollipop
     Description: Break any item on the board
     Icon: {fileID: 21300000, guid: 517655ccfe847484da4dc1427a5f6822, type: 3}
-  - BoosterType: 2
+  - ResourceType: 4
+    BoosterType: 2
     BoosterName: Bomb
     Description: Destroys a wide range of items
     Icon: {fileID: 21300000, guid: 4cbbb67a233814f89b4815ce526c0b4f, type: 3}
-  - BoosterType: 3
+  - ResourceType: 5
+    BoosterType: 3
     BoosterName: Swap Item
     Description: Swap any item you want
     Icon: {fileID: 21300000, guid: 3f1769a7d6b1a4440a7860282a29e6c4, type: 3}
-  - BoosterType: 4
+  - ResourceType: 6
+    BoosterType: 4
     BoosterName: Colorful Bomb
     Description: Clear all items that have the same color as the item you select
     Icon: {fileID: 21300000, guid: ce9190a4692584a8b8dffd62eebea014, type: 3}
@@ -11359,7 +11363,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1129346501
-  m_SortingLayer: 12
+  m_SortingLayer: 13
   m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
