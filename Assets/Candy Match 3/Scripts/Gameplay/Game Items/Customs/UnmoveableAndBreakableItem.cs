@@ -138,5 +138,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
         {
             
         }
+
+        public void Nudge(Vector3Int direction)
+        {
+            
+        }
     }
 }

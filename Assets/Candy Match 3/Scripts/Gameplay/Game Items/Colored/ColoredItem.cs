@@ -35,11 +35,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public override bool IsMoveable => !IsLocking;
 
+        public bool IsSuggesting { get; set; }
+
         public override void ResetItem()
         {
             base.ResetItem();
-            IsLocking = false;
-
             SetMatchable(true);
             itemAnimation.ResetItem();
             colorfulEffect.gameObject.SetActive(false);
@@ -145,6 +145,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
             itemAnimation.JumpDown(amptitude);
         }
 
+        public void Nudge(Vector3Int direction)
+        {
+            itemAnimation.Nudge(direction);
+        }
+
         public UniTask SwapTo(Vector3 position, float duration, bool isMoveFirst)
         {
             return itemAnimation.SwapTo(position, duration, isMoveFirst);
@@ -179,6 +184,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Colored
 
         public void Highlight(bool isActive)
         {
+            IsSuggesting = isActive;
             itemAnimation.ToggleSuggest(isActive);
         }
 

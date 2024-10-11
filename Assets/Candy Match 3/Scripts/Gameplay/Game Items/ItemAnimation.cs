@@ -10,7 +10,7 @@ using DG.Tweening;
 
 namespace CandyMatch3.Scripts.Gameplay.GameItems
 {
-    public class ItemAnimation : MonoBehaviour, IFixedUpdateHandler
+    public class ItemAnimation : MonoBehaviour
     {
         [SerializeField] private Animator itemAnimator;
         [SerializeField] private ItemGraphics itemGraphics;
@@ -47,17 +47,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
         public Animator ItemAnimator => itemAnimator;
 
-        public bool IsActive { get; set; }
-
         private void Awake()
         {
             _originalSortingOrder = itemRenderer.sortingOrder;
             _destroyToken = this.GetCancellationTokenOnDestroy();
-        }
-
-        public void OnFixedUpdate()
-        {
-            
         }
 
         public UniTask MatchTo(Vector3 toPosition, float duration)
@@ -116,6 +109,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
             itemAnimator.SetTrigger(ItemAnimationHashKeys.JumpDownHash);
         }
 
+        public void Nudge(Vector3Int direction)
+        {
+            itemAnimator.SetTrigger(ItemAnimationHashKeys.NudgeHash);
+            itemAnimator.SetFloat(ItemAnimationHashKeys.NudgeXHash, direction.x);
+            itemAnimator.SetFloat(ItemAnimationHashKeys.NudgeYHash, direction.y);
+        }
+
         public void TriggerVibrate(int stage = 0)
         {
             PlayBoosterTrigger();
@@ -172,6 +172,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems
 
             _hasBeenSuggested = isActive;
             ChangeVisibleMask(isActive);
+            itemAnimator.ResetTrigger(ItemAnimationHashKeys.NudgeHash);
             itemAnimator.SetBool(ItemAnimationHashKeys.SuggestHash, isActive);
 
             if (isActive)

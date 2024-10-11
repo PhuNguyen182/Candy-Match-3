@@ -20,6 +20,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private readonly BoardInput _boardInput;
         private readonly GridCellManager _gridCellManager;
         private readonly SwapItemTask _swapItemTask;
+
         private readonly ISubscriber<BoardStopMessage> _boardStopSubscriber;
         private InGameBoosterTasks _inGameBoosterTasks;
 
@@ -192,6 +193,10 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         {
             if (gridCell == null || !gridCell.HasItem || isSwapped)
                 return;
+
+            if (gridCell.BlockItem is IItemSuggest suggest)
+                if (suggest.IsSuggesting)
+                    return;
 
             if (gridCell.BlockItem is IItemAnimation animation)
             {

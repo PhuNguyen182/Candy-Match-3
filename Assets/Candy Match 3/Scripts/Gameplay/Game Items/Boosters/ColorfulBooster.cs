@@ -16,6 +16,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 
         private GameObject _chargeEffect;
 
+        public bool IsSuggesting { get; set; }
+
         public override async UniTask Activate()
         {
             _chargeEffect = SimplePool.Spawn(chargingEffect, transform, transform.position, Quaternion.identity);
@@ -43,6 +45,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Boosters
 
         public void Highlight(bool isActive)
         {
+            IsSuggesting = isActive;
             itemAnimation.ToggleSuggest(isActive);
         }
 
