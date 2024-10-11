@@ -77,10 +77,10 @@ namespace GlobalScripts.Audios
             MusicVolume += 0;
             SoundVolume += 0;
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
             if (playSequence)
                 sequenceMusicPlayer.PlayMusicSequence();
-#endif
+//#endif
         }
 
         public bool IsMusicPlaying()

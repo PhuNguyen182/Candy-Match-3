@@ -17,7 +17,9 @@ namespace GlobalScripts.Audios
         {
             toggle.onValueChanged.AddListener(isOn =>
             {
+#if !UNITY_EDITOR && UNITY_ANDROID
                 Vibration.Vibrate(80);
+#endif
                 MusicManager.Instance.PlaySoundEffect(clip, volumeScale);
             });
         }

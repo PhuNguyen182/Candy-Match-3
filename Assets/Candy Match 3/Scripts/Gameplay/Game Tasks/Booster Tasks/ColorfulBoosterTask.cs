@@ -25,6 +25,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
         private CheckGridTask _checkGridTask;
         private HashSet<CandyColor> _checkedCandyColors;
 
+        public bool CanActivate { get; set; }
+
         public ColorfulBoosterTask(GridCellManager gridCellManager, BreakGridTask breakGridTask, ColorfulFireray colorfulFireray)
         {
             _gridCellManager = gridCellManager;
@@ -38,12 +40,20 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public async UniTask ActivateWithColor(IGridCell boosterCell, CandyColor candyColor)
         {
+            IBooster booster = boosterCell.BlockItem as IBooster;
+
+            if (!CanActivate)
+            {
+                booster.Explode();
+                _breakGridTask.ReleaseGridCell(boosterCell);
+                return;
+            }
+
             _checkGridTask.CanCheck = false;
             _activateCount = _activateCount + 1;
 
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
-                IBooster booster = boosterCell.BlockItem as IBooster;
                 Vector3 startPosition = boosterCell.WorldPosition;
                 colorPositions = FindPositionWithColor(candyColor);
 
@@ -86,16 +96,24 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public async UniTask Activate(Vector3Int checkPosition)
         {
+            IGridCell gridCell = _gridCellManager.Get(checkPosition);
+            IBooster booster = gridCell.BlockItem as IBooster;
+
+            if (!CanActivate)
+            {
+                booster.Explode();
+                _breakGridTask.ReleaseGridCell(gridCell);
+                return;
+            }
+
             _activateCount = _activateCount + 1;
             CandyColor checkColor = CandyColor.None;
 
-            IGridCell gridCell = _gridCellManager.Get(checkPosition);
             gridCell.LockStates = LockStates.Preparing;
             _checkGridTask.CanCheck = false;
 
             using (ListPool<Vector3Int>.Get(out List<Vector3Int> colorPositions))
             {
-                IBooster booster = gridCell.BlockItem as IBooster;
                 Vector3 startPosition = gridCell.WorldPosition;
                 colorPositions = FindMostFrequentColor();
 
