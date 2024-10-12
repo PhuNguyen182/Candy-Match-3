@@ -1,7 +1,8 @@
-using UnityEngine;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using System.Linq;
+using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Hellmade.Sound
 {
@@ -59,25 +60,11 @@ namespace Hellmade.Sound
 
         private static bool initialized = false;
 
-        private static EazySoundManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = (EazySoundManager)FindObjectOfType(typeof(EazySoundManager));
-                    if (instance == null)
-                    {
-                        // Create gameObject and add component
-                        instance = (new GameObject("EazySoundManager")).AddComponent<EazySoundManager>();
-                    }
-                }
-                return instance;
-            }
-        }
+        private static EazySoundManager Instance => instance;
 
-        static EazySoundManager()
+        private void Awake()
         {
+            instance = this;
             Instance.Init();
         }
 
@@ -187,22 +174,28 @@ namespace Hellmade.Sound
         /// <param name="audioDict">The audio dictionary to update</param>
         private static void UpdateAllAudio(Dictionary<int, Audio> audioDict)
         {
+            if (audioDict.Count <= 0)
+                return;
+
             // Go through all audios and update them
-            List<int> keys = new List<int>(audioDict.Keys);
-            foreach (int key in keys)
+            using (ListPool<int>.Get(out var keys))
             {
-                Audio audio = audioDict[key];
-                audio.Update();
-
-                // Remove it if it is no longer active (playing)
-                if (!audio.IsPlaying && !audio.Paused)
+                keys = new(audioDict.Keys);
+                foreach (int key in keys)
                 {
-                    Destroy(audio.AudioSource);
+                    Audio audio = audioDict[key];
+                    audio.Update();
 
-                    // Add it to the audio pool in case it needs to be referenced in the future
-                    audioPool.Add(key, audio);
-                    audio.Pooled = true;
-                    audioDict.Remove(key);
+                    // Remove it if it is no longer active (playing)
+                    if (!audio.IsPlaying && !audio.Paused)
+                    {
+                        Destroy(audio.AudioSource);
+
+                        // Add it to the audio pool in case it needs to be referenced in the future
+                        audioPool.Add(key, audio);
+                        audio.Pooled = true;
+                        audioDict.Remove(key);
+                    }
                 }
             }
         }
@@ -213,26 +206,32 @@ namespace Hellmade.Sound
         /// <param name="audioDict">The audio dictionary whose non-persistant audios are getting removed</param>
         private static void RemoveNonPersistAudio(Dictionary<int, Audio> audioDict)
         {
-            // Go through all audios and remove them if they should not persist through scenes
-            List<int> keys = new List<int>(audioDict.Keys);
-            foreach (int key in keys)
-            {
-                Audio audio = audioDict[key];
-                if (!audio.Persist && audio.Activated)
-                {
-                    Destroy(audio.AudioSource);
-                    audioDict.Remove(key);
-                }
-            }
+            if (audioDict.Count <= 0)
+                return;
 
-            // Go through all audios in the audio pool and remove them if they should not persist through scenes
-            keys = new List<int>(audioPool.Keys);
-            foreach (int key in keys)
+            // Go through all audios and remove them if they should not persist through scenes
+            using (ListPool<int>.Get(out var keys))
             {
-                Audio audio = audioPool[key];
-                if (!audio.Persist && audio.Activated)
+                keys = new(audioDict.Keys);
+                foreach (int key in keys)
                 {
-                    audioPool.Remove(key);
+                    Audio audio = audioDict[key];
+                    if (!audio.Persist && audio.Activated)
+                    {
+                        Destroy(audio.AudioSource);
+                        audioDict.Remove(key);
+                    }
+                }
+
+                // Go through all audios in the audio pool and remove them if they should not persist through scenes
+                keys = new List<int>(audioPool.Keys);
+                foreach (int key in keys)
+                {
+                    Audio audio = audioPool[key];
+                    if (!audio.Persist && audio.Activated)
+                    {
+                        audioPool.Remove(key);
+                    }
                 }
             }
         }
