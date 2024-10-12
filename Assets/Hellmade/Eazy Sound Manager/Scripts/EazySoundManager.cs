@@ -90,7 +90,7 @@ namespace Hellmade.Sound
                 IgnoreDuplicateUISounds = false;
 
                 initialized = true;
-                //DontDestroyOnLoad(this);
+                DontDestroyOnLoad(this);
             }
         }
 
