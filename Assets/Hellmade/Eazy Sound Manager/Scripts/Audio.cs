@@ -375,21 +375,24 @@ namespace Hellmade.Sound
         /// </summary>
         private void CreateAudiosource()
         {
-            AudioSource = SourceTransform.gameObject.AddComponent<AudioSource>() as AudioSource;
-            AudioSource.clip = Clip;
-            AudioSource.loop = Loop;
-            AudioSource.mute = Mute;
-            AudioSource.volume = Volume;
-            AudioSource.priority = Priority;
-            AudioSource.pitch = Pitch;
-            AudioSource.panStereo = StereoPan;
-            AudioSource.spatialBlend = SpatialBlend;
-            AudioSource.reverbZoneMix = ReverbZoneMix;
-            AudioSource.dopplerLevel = DopplerLevel;
-            AudioSource.spread = Spread;
-            AudioSource.rolloffMode = RolloffMode;
-            AudioSource.maxDistance = Max3DDistance;
-            AudioSource.minDistance = Min3DDistance;
+            if (SourceTransform != null)
+            {
+                AudioSource = SourceTransform.gameObject.AddComponent<AudioSource>();
+                AudioSource.clip = Clip;
+                AudioSource.loop = Loop;
+                AudioSource.mute = Mute;
+                AudioSource.volume = Volume;
+                AudioSource.priority = Priority;
+                AudioSource.pitch = Pitch;
+                AudioSource.panStereo = StereoPan;
+                AudioSource.spatialBlend = SpatialBlend;
+                AudioSource.reverbZoneMix = ReverbZoneMix;
+                AudioSource.dopplerLevel = DopplerLevel;
+                AudioSource.spread = Spread;
+                AudioSource.rolloffMode = RolloffMode;
+                AudioSource.maxDistance = Max3DDistance;
+                AudioSource.minDistance = Min3DDistance;
+            }
         }
 
         /// <summary>
@@ -425,12 +428,15 @@ namespace Hellmade.Sound
                 CreateAudiosource();
             }
 
-            AudioSource.Play();
-            IsPlaying = true;
+            if (AudioSource != null)
+            {
+                AudioSource.Play();
+                IsPlaying = true;
 
-            fadeInterpolater = 0f;
-            onFadeStartVolume = this.Volume;
-            targetVolume = volume;
+                fadeInterpolater = 0f;
+                onFadeStartVolume = this.Volume;
+                targetVolume = volume; 
+            }
         }
 
         /// <summary>

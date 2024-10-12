@@ -25,6 +25,7 @@ namespace CandyMatch3.Scripts.Gameplay.GridCells
         public int GridID => _gridId;
         public bool HasItem => _blockItem != null;
         public bool CanMove => !_gridStateful.IsLocked;
+        public bool CanSpawn => !HasItem && IsSpawner;
         public bool IsLocked => LockStates != LockStates.None;
         public bool IsItemLocked => HasItem ? _blockItem.IsLocking : false;
         public bool IsAvailable => _gridStateful != null && _gridStateful.IsAvailable;

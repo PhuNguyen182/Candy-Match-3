@@ -157,7 +157,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                     return true;
 
                 if (checkCell.IsSpawner)
-                    return !checkCell.IsLocked && !checkCell.IsMoveable;
+                {
+                    if (_checkGridTask.CheckSpawnableLite(checkCell))
+                        return false;
+                    
+                    else
+                        return !checkCell.IsLocked && !checkCell.IsMoveable;
+                }
 
                 if (checkCell.IsMoving)
                     return false;
