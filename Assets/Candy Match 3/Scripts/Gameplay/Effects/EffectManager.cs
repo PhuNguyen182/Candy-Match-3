@@ -24,13 +24,13 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
         {
             Instance = this;
             _token = this.GetCancellationTokenOnDestroy();
-            EazySoundManager.IgnoreDuplicateSounds = true;
         }
 
         private void Start()
         {
             PreloadEffects().Forget();
             soundEffectDatabase.Initialize();
+            EazySoundManager.IgnoreDuplicateSounds = true;
         }
 
         public void PlaySoundEffect(SoundEffectType soundEffect)
