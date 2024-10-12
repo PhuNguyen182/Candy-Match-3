@@ -6,7 +6,7 @@ using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.Miscs;
 using Cysharp.Threading.Tasks;
-using GlobalScripts.Effects;
+using Hellmade.Sound;
 
 namespace CandyMatch3.Scripts.Gameplay.Effects
 {
@@ -24,6 +24,7 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
         {
             Instance = this;
             _token = this.GetCancellationTokenOnDestroy();
+            EazySoundManager.IgnoreDuplicateSounds = true;
         }
 
         private void Start()
@@ -35,10 +36,15 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
         public void PlaySoundEffect(SoundEffectType soundEffect)
         {
             AudioClip sound = soundEffectDatabase.SoundEffectCollection[soundEffect];
-            ItemSoundEffect itemSoundEffect = SimplePool.Spawn(effectDatabase.SoundEffect
-                                                               , EffectContainer.Transform
-                                                               , Vector3.zero, Quaternion.identity);
-            itemSoundEffect.PlaySound(sound);
+            Audio audio = EazySoundManager.GetAudio(sound);
+            
+            if(audio == null)
+            {
+                int audioId = EazySoundManager.PrepareSound(sound, 1);
+                audio = EazySoundManager.GetAudio(audioId);
+            }
+
+            audio.Play();
         }
 
         public void PlayItemSwapEffect(Vector3 position)
