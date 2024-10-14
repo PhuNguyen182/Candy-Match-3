@@ -15,7 +15,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameInput
 
         private PlayerInput _playerInput;
 
-        public Vector3 WorldMoudePosition { get; private set; }
+        public Vector3 WorldPointerPosition { get; private set; }
         public Vector3 ScreenMousePosition { get; private set; }
 
         public bool IsDragging { get; private set; }
@@ -62,13 +62,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameInput
             {
                 ScreenMousePosition = context.ReadValue<Vector2>();
                 Vector2 worldMouse = mainCamera.ScreenToWorldPoint(ScreenMousePosition);
-                WorldMoudePosition = worldMouse; // Use Vector2 to eliminate z component
+                WorldPointerPosition = worldMouse; // Use Vector2 to eliminate z component
             }
         }
 
         public GridCellView GetGridCellView()
         {
-            Collider2D gridCollider = Physics2D.OverlapPoint(WorldMoudePosition, gridCellLayer);
+            Collider2D gridCollider = Physics2D.OverlapPoint(WorldPointerPosition, gridCellLayer);
 
             if (gridCollider != null && gridCollider.TryGetComponent<GridCellView>(out var gridCellView))
             {
