@@ -681,6 +681,7 @@ MonoBehaviour:
   targetDatabase: {fileID: 11400000, guid: cc4452cd77bc01f459003b542c0b2e9c, type: 2}
   background: {fileID: 3617382294980263778}
   targetContainer: {fileID: 437456537684745923}
+  canvasGroup: {fileID: 5190943135031811611}
   levelText: {fileID: 4264712233801779497}
   playButton: {fileID: 3068364462820696483}
   closeButton: {fileID: 1433195208005327749}
@@ -999,6 +1000,7 @@ GameObject:
   - component: {fileID: 1717842617487024610}
   - component: {fileID: 8417879061231054622}
   - component: {fileID: 2999096155455804080}
+  - component: {fileID: 5190943135031811611}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -1064,6 +1066,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &5190943135031811611
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5309130405877303629}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &5986417571127669358
 GameObject:
   m_ObjectHideFlags: 0

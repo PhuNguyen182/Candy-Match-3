@@ -50,6 +50,17 @@ namespace CandyMatch3.Scripts.GameData.GameResources
                 resource.Amount = resource.Amount + amount;
                 ResourceCollection[resourceType] = resource;
             }
+
+            else
+            {
+                ResourceData resource = new ResourceData
+                {
+                    ID = resourceType,
+                    Amount = amount
+                };
+
+                ResourceCollection.Add(resourceType, resource);
+            }
         }
 
         public void SpendResource(GameResourceType resourceType, int amount)

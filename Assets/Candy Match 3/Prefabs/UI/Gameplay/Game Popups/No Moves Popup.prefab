@@ -497,9 +497,11 @@ MonoBehaviour:
   moveMessage: {fileID: 797365171623103639}
   moveText: {fileID: 6065288499401057094}
   currentCoin: {fileID: 4407710210663194727}
+  canvasGroup: {fileID: 3106760325528675805}
   coinEffect: {fileID: 198891299770808678}
   coinTween: {fileID: 1541101016100272739}
   resouceResponder: {fileID: 3108586794644969392}
+  background: {fileID: 0}
   popupAnimator: {fileID: 95978050838256696}
   quitPopup: {fileID: 0}
 --- !u!114 &1541101016100272739
@@ -11101,7 +11103,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1129346501
-  m_SortingLayer: 12
+  m_SortingLayer: 13
   m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -13259,6 +13261,7 @@ GameObject:
   - component: {fileID: 4638799561087683747}
   - component: {fileID: 1331433696165379523}
   - component: {fileID: 3986358890601860503}
+  - component: {fileID: 3106760325528675805}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -13334,6 +13337,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &3106760325528675805
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6957082382958150917}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7155988206231645957
 GameObject:
   m_ObjectHideFlags: 0

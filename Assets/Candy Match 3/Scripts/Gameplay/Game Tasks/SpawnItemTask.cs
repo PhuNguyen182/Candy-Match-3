@@ -125,6 +125,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             return true;
         }
 
+        public bool CheckSpawnableLite(IGridCell gridCell)
+        {
+            if (!gridCell.CanContainItem)
+                return false;
+
+            if (gridCell.HasItem || gridCell.IsLocked)
+                return false;
+
+            return true;
+        }
+
         public void SetMoveItemTask(MoveItemTask moveItemTask)
         {
             _moveItemTask = moveItemTask;

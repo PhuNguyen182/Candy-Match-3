@@ -14,6 +14,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
         [SerializeField] private Button quitButton;
         [SerializeField] private Button closeButton;
         [SerializeField] private Animator popupAnimator;
+        [SerializeField] private CanvasGroup canvasGroup;
 
         private CancellationToken _token;
         private readonly int _closeHash = Animator.StringToHash("Close");
@@ -32,8 +33,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
             quitButton.onClick.AddListener(() => Quit().Forget());
         }
 
+        private void OnEnable()
+        {
+            canvasGroup.interactable = true;
+        }
+
         private async UniTask Continue()
         {
+            canvasGroup.interactable = false;
+
             await Close();
             OnContinueAddMove?.Invoke();
             OnContinuePlaying?.Invoke();
@@ -42,8 +50,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 
         private async UniTask Quit()
         {
-            await Close();
+            canvasGroup.interactable = true;
 
+            await Close();
             if (OnPlayerContinueQuit != null)
                 OnPlayerContinueQuit.Invoke();
 

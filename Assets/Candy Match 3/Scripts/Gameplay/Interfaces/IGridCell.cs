@@ -10,6 +10,7 @@ namespace CandyMatch3.Scripts.Gameplay.Interfaces
     {
         public int GridID { get; }
         public bool CanMove { get; }
+        public bool CanSpawn { get; }
         public bool HasItem { get; }
         public bool IsLocked { get; }
         public bool IsItemLocked { get; }

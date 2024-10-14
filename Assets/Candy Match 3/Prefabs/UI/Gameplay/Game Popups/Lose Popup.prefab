@@ -6210,6 +6210,7 @@ MonoBehaviour:
   popupAnimator: {fileID: 95619169385117928}
   targetElement: {fileID: 1218582540558817976, guid: 418a627759b45554f9ffe37c5af33e2d, type: 3}
   targetContainer: {fileID: 224434242681983394}
+  canvasGroup: {fileID: 5827423474706267980}
 --- !u!1 &1796185225086614
 GameObject:
   m_ObjectHideFlags: 0
@@ -22328,6 +22329,7 @@ GameObject:
   - component: {fileID: 1095700954304315736}
   - component: {fileID: 356876682438629847}
   - component: {fileID: 572044340952189355}
+  - component: {fileID: 5827423474706267980}
   m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
@@ -22394,6 +22396,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &5827423474706267980
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7039862020122416535}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &8641478236954640217
 GameObject:
   m_ObjectHideFlags: 0

@@ -7378,7 +7378,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1129346501
-  m_SortingLayer: 12
+  m_SortingLayer: 13
   m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -8445,6 +8445,7 @@ GameObject:
   - component: {fileID: 8948590824916310368}
   - component: {fileID: 7842154901389488257}
   - component: {fileID: 5835228478318610884}
+  - component: {fileID: 6604026656745525105}
   m_Layer: 5
   m_Name: Shop Popup
   m_TagString: Untagged
@@ -8507,6 +8508,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 0.3
   ease: 6
+--- !u!225 &6604026656745525105
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3704797002908744079}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3763830543248293023
 GameObject:
   m_ObjectHideFlags: 0
@@ -16702,7 +16715,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1129346501
-  m_SortingLayer: 12
+  m_SortingLayer: 13
   m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -17768,6 +17781,7 @@ MonoBehaviour:
   isAnim: 1
   closeButton: {fileID: 5922554675151284521}
   currentCoinText: {fileID: 5350897404598762619}
+  canvasGroup: {fileID: 6604026656745525105}
   animator: {fileID: 7842154901389488257}
   coinEffect: {fileID: 8347610891002258453}
   coinTween: {fileID: 5835228478318610884}

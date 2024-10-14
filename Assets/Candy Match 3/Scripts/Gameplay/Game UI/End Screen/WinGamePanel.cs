@@ -9,7 +9,6 @@ using GlobalScripts.Effects.Tweens;
 using CandyMatch3.Scripts.Common.SingleConfigs;
 using Cysharp.Threading.Tasks;
 using TMPro;
-using System.Data;
 
 namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 {
@@ -103,6 +102,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         private async UniTask CloseAnimation()
         {
+            canvasGroup.interactable = false;
             popupAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
         }
