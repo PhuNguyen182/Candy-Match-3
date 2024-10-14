@@ -20,6 +20,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         [SerializeField] private Animator popupAnimator;
         [SerializeField] private TargetElement targetElement;
         [SerializeField] private Transform targetContainer;
+        [SerializeField] private CanvasGroup canvasGroup;
 
         private readonly int _closeHash = Animator.StringToHash("Close");
 
@@ -31,6 +32,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         {
             _token = this.GetCancellationTokenOnDestroy();
             continueButton.onClick.AddListener(() => OnContinueClicked().Forget());
+        }
+
+        private void OnEnable()
+        {
+            canvasGroup.interactable = true;
         }
 
         private void Start()
@@ -95,6 +101,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         private async UniTask Close()
         {
+            canvasGroup.interactable = false;
             popupAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
         }

@@ -6,11 +6,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.GameData;
 using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Common.SingleConfigs;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
@@ -20,8 +22,6 @@ using CandyMatch3.Scripts.Common.Messages;
 using CandyMatch3.Scripts.Common.Enums;
 using Cysharp.Threading.Tasks;
 using MessagePipe;
-using CandyMatch3.Scripts.Common.SingleConfigs;
-using CandyMatch3.Scripts.GameData;
 
 namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 {

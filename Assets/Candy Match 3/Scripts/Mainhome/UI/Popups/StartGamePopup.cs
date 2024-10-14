@@ -32,6 +32,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         [SerializeField] private TargetDatabase targetDatabase;
         [SerializeField] private FadeBackground background;
         [SerializeField] private Transform targetContainer;
+        [SerializeField] private CanvasGroup canvasGroup;
 
         [Space(10)]
         [SerializeField] private TMP_Text levelText;
@@ -105,7 +106,6 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
             {
                 if (_levelModel == null)
                     return;
-
                 PlayGameConfig.Current = new()
                 {
                     Level = _level,
@@ -113,6 +113,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
                     LevelModel = _levelModel
                 };
 
+                canvasGroup.interactable = false;
                 GameDataManager.Instance.SpendResource(GameResourceType.Life, 1);
                 if(lives >= GameDataConstants.MaxLives)
                     GameDataManager.Instance.SaveHeartTime(DateTime.Now);

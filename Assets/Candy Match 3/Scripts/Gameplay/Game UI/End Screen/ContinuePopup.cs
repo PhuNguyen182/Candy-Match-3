@@ -31,6 +31,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
         [SerializeField] private TMP_Text currentCoin;
 
         [Space(10)]
+        [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private ParticleSystem coinEffect;
         [SerializeField] private TweenValueEffect coinTween;
         [SerializeField] private UpdateResouceResponder resouceResponder;
@@ -59,6 +60,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         private void OnEnable()
         {
+            canvasGroup.interactable = true;
             _currentCoin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
             _reactiveCoin.Value = _currentCoin;
         }
@@ -152,6 +154,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.EndScreen
 
         private async UniTask CloseAnimation()
         {
+            canvasGroup.interactable = false;
             popupAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
         }

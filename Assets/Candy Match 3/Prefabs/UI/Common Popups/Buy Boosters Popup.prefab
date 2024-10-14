@@ -6267,6 +6267,7 @@ MonoBehaviour:
   boosterType: 0
   coinEffect: {fileID: 6293666561785511460}
   resouceResponder: {fileID: 7677369529175664112}
+  canvasGroup: {fileID: 2453682441166863636}
   coinText: {fileID: 7896904125613864821}
   boosterName: {fileID: 558851336154146034}
   description: {fileID: 3260002139452068635}
@@ -11616,6 +11617,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3718743666666533266}
   - component: {fileID: 1029615713709756362}
+  - component: {fileID: 2453682441166863636}
   m_Layer: 5
   m_Name: Buy Boosters Popup
   m_TagString: Untagged
@@ -11672,3 +11674,15 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!225 &2453682441166863636
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8696764903197302191}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

@@ -2,11 +2,11 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GlobalScripts.Effects;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.Miscs;
 using Cysharp.Threading.Tasks;
-using Hellmade.Sound;
 
 namespace CandyMatch3.Scripts.Gameplay.Effects
 {
@@ -30,21 +30,13 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
         {
             PreloadEffects().Forget();
             soundEffectDatabase.Initialize();
-            EazySoundManager.IgnoreDuplicateSounds = true;
         }
 
         public void PlaySoundEffect(SoundEffectType soundEffect)
         {
             AudioClip sound = soundEffectDatabase.SoundEffectCollection[soundEffect];
-            Audio audio = EazySoundManager.GetAudio(sound);
-            
-            if(audio == null)
-            {
-                int audioId = EazySoundManager.PrepareSound(sound, 1);
-                audio = EazySoundManager.GetAudio(audioId);
-            }
-
-            audio.Play();
+            ItemSoundEffect effect = SimplePool.Spawn(effectDatabase.SoundEffect, EffectContainer.Transform, Vector3.zero, Quaternion.identity);
+            effect.PlaySound(sound);
         }
 
         public void PlayItemSwapEffect(Vector3 position)
@@ -161,6 +153,9 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
 
         private async UniTask PreloadEffects()
         {
+            SimplePool.PoolPreLoad(effectDatabase.SoundEffect.gameObject, 20, EffectContainer.Transform);
+            await UniTask.NextFrame(_token);
+         
             SimplePool.PoolPreLoad(effectDatabase.SoundEffect.gameObject, 12, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
 

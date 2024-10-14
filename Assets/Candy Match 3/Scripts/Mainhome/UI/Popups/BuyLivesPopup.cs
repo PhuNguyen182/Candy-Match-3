@@ -25,6 +25,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
         [SerializeField] private Animator animator;
         [SerializeField] private ParticleSystem heartEffect;
         [SerializeField] private FadeBackground background;
+        [SerializeField] private CanvasGroup canvasGroup;
 
         [Space(10)]
         [SerializeField] private Button closeButton;
@@ -61,6 +62,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
                 AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
 
             priceText.text = $"{price}";
+            canvasGroup.interactable = true;
             MainhomeManager.Instance?.SetInputActive(false);
             background.ShowBackground(true);
         }
@@ -143,6 +145,7 @@ namespace CandyMatch3.Scripts.Mainhome.UI.Popups
 
         private async UniTask CloseAsync()
         {
+            canvasGroup.interactable = false;
             animator.SetTrigger(_closeHash);
             background.ShowBackground(false);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);

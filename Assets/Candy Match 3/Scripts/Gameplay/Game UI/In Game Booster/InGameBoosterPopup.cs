@@ -40,6 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [SerializeField] private InGameBoosterType boosterType;
         [SerializeField] private ParticleSystem coinEffect;
         [SerializeField] private UpdateResouceResponder resouceResponder;
+        [SerializeField] private CanvasGroup canvasGroup;
 
         [Space(10)]
         [SerializeField] private TMP_Text coinText;
@@ -99,6 +100,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             if (!IsPreload)
                 AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
 
+            canvasGroup.interactable = true;
             int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
             _reactiveCoin.Value = coin; // Show the current value of coin in game data
         }
@@ -179,6 +181,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
 
         private async UniTask ClosePopup()
         {
+            canvasGroup.interactable = false;
             popupAnimator.SetTrigger(_closeHash);
             backgroundAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(closeClip.length), cancellationToken: _token);
