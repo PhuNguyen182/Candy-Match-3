@@ -8,7 +8,7 @@ using CandyMatch3.Scripts.Common.Enums;
 
 namespace GlobalScripts.Audios
 {
-    public class MusicManager : Singleton<MusicManager>
+    public class AudioManager : Singleton<AudioManager>
     {
         [SerializeField] private bool playSequence;
         [SerializeField] private AudioMixer audioMixer;

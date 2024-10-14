@@ -30,12 +30,12 @@ namespace GlobalScripts.App
 
         private void InitDOTween()
         {
-            DOTween.Init(true, true, LogBehaviour.Verbose).SetCapacity(2000, 200);
+            DOTween.Init(true, true, LogBehaviour.Verbose).SetCapacity(5000, 1000);
         }
 
         private void InitUnitask()
         {
-            TaskPool.SetMaxPoolSize(100000);
+            TaskPool.SetMaxPoolSize(10000);
         }
     }
 }

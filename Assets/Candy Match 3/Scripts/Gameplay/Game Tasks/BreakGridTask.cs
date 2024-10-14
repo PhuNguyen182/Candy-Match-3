@@ -46,7 +46,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             _token = _cts.Token;
         }
 
-        public async UniTask BreakItem(Vector3Int position)
+        public async UniTask BreakItem(Vector3Int position, bool useCheckGrid = true)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
 
@@ -65,7 +65,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (isLockedState)
                 {
-                    _checkGridTask.CheckAroundPosition(position, 1);
+                    if(useCheckGrid)
+                        _checkGridTask.CheckAroundPosition(position, 1);
                     return;
                 }
             }
@@ -108,13 +109,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             gridCell.LockStates = LockStates.None;
         }
 
-        public async UniTask Break(Vector3Int position, bool breakAdjacent = false)
+        public async UniTask Break(Vector3Int position, bool breakAdjacent = false, bool useCheckGrid = true)
         {
             IGridCell gridCell = _gridCellManager.Get(position);
-            await Break(gridCell, breakAdjacent);
+            await Break(gridCell, breakAdjacent, useCheckGrid);
         }
 
-        public async UniTask Break(IGridCell gridCell, bool breakAdjacent)
+        public async UniTask Break(IGridCell gridCell, bool breakAdjacent, bool useCheckGrid)
         {
             if (gridCell == null)
                 return;
@@ -132,7 +133,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
                 if (isLockedState)
                 {
-                    _checkGridTask.CheckAroundPosition(position, 1);
+                    if(useCheckGrid)
+                        _checkGridTask.CheckAroundPosition(position, 1);
                     return;
                 }
             }

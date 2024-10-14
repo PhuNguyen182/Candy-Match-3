@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using GlobalScripts.Effects.Tweens;
+using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Constants;
 using CandyMatch3.Scripts.Mainhome.UI.Shops;
 using CandyMatch3.Scripts.Common.Messages;
+using CandyMatch3.Scripts.GameData;
 using Cysharp.Threading.Tasks;
 using TMPro;
 
@@ -24,12 +26,14 @@ namespace CandyMatch3.Scripts.Mainhome.UI.ResourcesDisplayer
         private void Awake()
         {
             PreloadPopup();
+            UpdateCoins(GameDataManager.Instance.GetResource(GameResourceType.Coin));
+
             coinTweenEffect.BindInt(_reactiveCoin, ShowCoins);
             shopButton.onClick.AddListener(OpenShop);
 
             resouceResponder.OnUpdate = () =>
             {
-                // To do: update coin value here
+                UpdateCoins(GameDataManager.Instance.GetResource(GameResourceType.Coin));
             };
         }
 

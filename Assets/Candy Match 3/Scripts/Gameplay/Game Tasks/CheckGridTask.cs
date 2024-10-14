@@ -75,6 +75,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             }
         }
 
+        public bool CheckSpawnableLite(IGridCell gridCell)
+        {
+            return _spawnItemTask.CheckSpawnableLite(gridCell);
+        }
+
         private void AddRangeToCheck(BoundsInt bounds)
         {
             foreach (Vector3Int position in bounds.Iterator2D())

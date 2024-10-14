@@ -35,19 +35,19 @@ public class PopupController : SingletonClass<PopupController>, IService
 
     public void Initialize()
     {
-        Observable.EveryUpdate()
-                  .Subscribe(_ =>
-                  {
-                      if (Input.GetKeyUp(KeyCode.Escape))
-                      {
-                          ProcessBackBtn();
-                      }
+        //Observable.EveryUpdate()
+        //          .Subscribe(_ =>
+        //          {
+        //              if (Input.GetKeyUp(KeyCode.Escape))
+        //              {
+        //                  ProcessBackBtn();
+        //              }
 
-                      if (Input.GetKeyDown(KeyCode.Space))
-                      {
-                          DebugStack();
-                      }
-                  });
+        //              if (Input.GetKeyDown(KeyCode.Space))
+        //              {
+        //                  DebugStack();
+        //              }
+        //          });
 
         SceneManager.sceneLoaded += (scene, mode) => OnLevelWasLoaded();
     }

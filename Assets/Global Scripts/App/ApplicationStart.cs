@@ -36,7 +36,7 @@ namespace GlobalScripts.App
         {
             Register<AppInitializer>("App/App Initializer");
             Register<UpdateHandlerManager>("Handlers/Update Behaviour Handler");
-            Register<MusicManager>("Managers/Music Manager");
+            Register<AudioManager>("Managers/Music Manager");
             Register<GameManager>("Managers/Game Manager");
         }
 

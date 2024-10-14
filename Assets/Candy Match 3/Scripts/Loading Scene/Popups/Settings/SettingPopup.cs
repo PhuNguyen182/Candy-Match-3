@@ -45,31 +45,31 @@ namespace CandyMatch3.Scripts.LoadingScene.Settings
 
         private void OnEnable()
         {
-            float musicVolume = MusicManager.Instance.MusicVolume;
-            float soundVolume = MusicManager.Instance.SoundVolume;
+            float musicVolume = AudioManager.Instance.MusicVolume;
+            float soundVolume = AudioManager.Instance.SoundVolume;
 
             musicButton.UpdateImmediately(musicVolume > 0.5f);
             soundButton.UpdateImmediately(soundVolume > 0.5f);
 
             fadeBackground?.ShowBackground(true);
-            MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+            AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
         }
 
         private void OnMusicButtonClick()
         {
-            float musicVolume = MusicManager.Instance.MusicVolume;
+            float musicVolume = AudioManager.Instance.MusicVolume;
             float newVolume = musicVolume > 0.5f ? 0.0001f : 1f;
 
-            MusicManager.Instance.MusicVolume = newVolume;
+            AudioManager.Instance.MusicVolume = newVolume;
             musicButton.UpdateValue(newVolume > 0.5f);
         }
 
         private void OnSoundButtonClick()
         {
-            float soundVolume = MusicManager.Instance.SoundVolume;
+            float soundVolume = AudioManager.Instance.SoundVolume;
             float newVolume = soundVolume > 0.5f ? 0.0001f : 1f;
 
-            MusicManager.Instance.SoundVolume = newVolume;
+            AudioManager.Instance.SoundVolume = newVolume;
             soundButton.UpdateValue(newVolume > 0.5f);
         }
 
@@ -93,7 +93,7 @@ namespace CandyMatch3.Scripts.LoadingScene.Settings
         {
             popupAnimator.SetTrigger(_closeHash);
             fadeBackground?.ShowBackground(false);
-            MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
+            AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
         }
     }

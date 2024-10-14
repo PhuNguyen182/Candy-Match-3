@@ -1268,6 +1268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputObserverCamera: {fileID: 1297229455}
+  eventSystem: {fileID: 36646530}
 --- !u!4 &1175848229
 Transform:
   m_ObjectHideFlags: 0

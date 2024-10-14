@@ -45,7 +45,7 @@ namespace CandyMatch3.Scripts.Mainhome.ProgressMaps
             }
 
             else ShowCurrentMainhome();
-            BackHomeConfig.Current = null;
+            BackHomeConfig.Reset();
         }
 
         private void ShowCurrentMainhome()

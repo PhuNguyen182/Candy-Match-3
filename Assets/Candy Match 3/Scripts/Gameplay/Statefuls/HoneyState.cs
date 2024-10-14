@@ -61,7 +61,7 @@ namespace CandyMatch3.Scripts.Gameplay.Statefuls
             GridCellView.UpdateStateView(null, StatefulLayer);
             Vector3 position = GridCellView.WorldPosition;
 
-            EffectManager.Instance.PlaySoundEffect(SoundEffectType.Honey);
+            EffectManager.Instance.PlaySoundEffect(SoundEffectType.Honey, true);
             EffectManager.Instance.SpawnStatefulEffect(GroupType, position);
 
             _decreaseTargetPublisher.Publish(new DecreaseTargetMessage

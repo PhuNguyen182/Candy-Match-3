@@ -20,11 +20,11 @@ public class TestRotate : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            particle.Stop();
-            particle.Play();
-        }
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    particle.Stop();
+        //    particle.Play();
+        //}
 
         AlignContinuous();
     }

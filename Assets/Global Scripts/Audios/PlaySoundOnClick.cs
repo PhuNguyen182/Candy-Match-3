@@ -20,7 +20,7 @@ namespace GlobalScripts.Audios
 #if !UNITY_EDITOR && UNITY_ANDROID
                 Vibration.Vibrate(80);
 #endif
-                MusicManager.Instance.PlaySoundEffect(clip, volumeScale);
+                AudioManager.Instance.PlaySoundEffect(clip, volumeScale);
             });
         }
 

@@ -125,7 +125,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
         public void PlayBreakEffect()
         {
             int index = _healthPoint;
-            EffectManager.Instance.PlaySoundEffect(breakSound);
+            EffectManager.Instance.PlaySoundEffect(breakSound, true);
             EffectManager.Instance.SpawnSpecialEffect(effectTypes[index], WorldPosition);
         }
 

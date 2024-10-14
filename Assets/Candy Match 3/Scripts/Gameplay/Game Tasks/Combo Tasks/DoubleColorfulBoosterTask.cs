@@ -150,7 +150,11 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks
                                                        , Vector3.zero, Quaternion.identity);
             fireray.SetPhaseStep(index);
             await fireray.Fire(targetGridCell, position, delay);
-            await _breakGridTask.BreakItem(targetPosition);
+            
+            if(targetGridCell.HasItem)
+                targetGridCell.BlockItem.IsLocking = false;
+            
+            await _breakGridTask.BreakItem(targetPosition, false);
         }
 
         private void PlayEffect()

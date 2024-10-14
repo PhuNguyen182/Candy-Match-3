@@ -11188,6 +11188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6565882448965818553}
   - component: {fileID: 7814622793931372733}
+  - component: {fileID: 9198188758832172526}
   m_Layer: 5
   m_Name: BuyLivesPopup
   m_TagString: Untagged
@@ -11236,6 +11237,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!225 &9198188758832172526
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4205567283742798582}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4268742609823958039
 GameObject:
   m_ObjectHideFlags: 0
@@ -11932,6 +11945,7 @@ MonoBehaviour:
   animator: {fileID: 7814622793931372733}
   heartEffect: {fileID: 7370277949269907826}
   background: {fileID: 6723206642726379042}
+  canvasGroup: {fileID: 9198188758832172526}
   closeButton: {fileID: 4197495251208970785}
   purchaseButton: {fileID: 5663262825871884899}
   playButton: {fileID: 2211197121111312696}
