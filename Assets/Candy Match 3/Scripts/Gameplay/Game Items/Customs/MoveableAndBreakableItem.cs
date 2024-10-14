@@ -128,7 +128,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameItems.Customs
 
         public void PlayBreakEffect()
         {
-            EffectManager.Instance.PlaySoundEffect(breakSound);
+            EffectManager.Instance.PlaySoundEffect(breakSound, true);
             EffectManager.Instance.SpawnSpecialEffect(itemType, WorldPosition);
         }
 
