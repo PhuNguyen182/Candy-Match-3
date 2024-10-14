@@ -88,7 +88,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             {
                 _selectecGridCell = gridCell;
                 _processGridCell = gridCell;
-                _selectedPosition = _boardInput.WorldMoudePosition;
+                _selectedPosition = _boardInput.WorldPointerPosition;
                 _selectedGridPosition = gridCell.GridPosition;
             }
         }
@@ -102,7 +102,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
                 return;
 
             Vector3Int checkPosition = _selectecGridCell.GridPosition;
-            Vector2 moveDirection = _boardInput.WorldMoudePosition - _selectedPosition;
+            Vector2 moveDirection = _boardInput.WorldPointerPosition - _selectedPosition;
 
             if (moveDirection.sqrMagnitude < Match3Constants.TouchMoveTorerance)
                 return;
