@@ -15,17 +15,17 @@ public class TestCameraShake : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            impulseSource.m_ImpulseDefinition = new CinemachineImpulseDefinition
-            {
-                m_ImpulseDuration = 0.3f,
-                m_ImpulseShape = CinemachineImpulseDefinition.ImpulseShapes.Explosion,
-                m_ImpulseType = CinemachineImpulseDefinition.ImpulseTypes.Uniform,
-            };
+        //if (Input.GetKeyDown(KeyCode.I))
+        //{
+        //    impulseSource.m_ImpulseDefinition = new CinemachineImpulseDefinition
+        //    {
+        //        m_ImpulseDuration = 0.3f,
+        //        m_ImpulseShape = CinemachineImpulseDefinition.ImpulseShapes.Explosion,
+        //        m_ImpulseType = CinemachineImpulseDefinition.ImpulseTypes.Uniform,
+        //    };
 
-            impulseSource.GenerateImpulseWithVelocity(Random.insideUnitCircle.normalized * m);
-        }
+        //    impulseSource.GenerateImpulseWithVelocity(Random.insideUnitCircle.normalized * m);
+        //}
 
         result = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
     }

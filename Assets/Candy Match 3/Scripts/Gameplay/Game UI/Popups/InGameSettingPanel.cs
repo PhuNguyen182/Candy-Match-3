@@ -106,17 +106,17 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 
         private void MusicButton()
         {
-            float musicVolume = MusicManager.Instance.MusicVolume;
+            float musicVolume = AudioManager.Instance.MusicVolume;
             float newVolume = musicVolume > 0.5f ? 0.0001f : 1f;
-            MusicManager.Instance.MusicVolume = newVolume;
+            AudioManager.Instance.MusicVolume = newVolume;
             UpdateMusicButton();
         }
 
         private void SoundButton()
         {
-            float soundVolume = MusicManager.Instance.SoundVolume;
+            float soundVolume = AudioManager.Instance.SoundVolume;
             float newVolume = soundVolume > 0.5f ? 0.0001f : 1f;
-            MusicManager.Instance.SoundVolume = newVolume;
+            AudioManager.Instance.SoundVolume = newVolume;
             UpdateSoundButton();
         }
 
@@ -134,14 +134,14 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.Popups
 
         private void UpdateMusicButton()
         {
-            float musicVolume = MusicManager.Instance.MusicVolume;
+            float musicVolume = AudioManager.Instance.MusicVolume;
             int musicState = musicVolume > 0.5f ? 0 : 1;
             musicButton.SetState(musicState);
         }
 
         private void UpdateSoundButton()
         {
-            float soundVolume = MusicManager.Instance.SoundVolume;
+            float soundVolume = AudioManager.Instance.SoundVolume;
             int soundState = soundVolume > 0.5f ? 0 : 1;
             soundButton.SetState(soundState);
         }

@@ -6,11 +6,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using CandyMatch3.Scripts.GameData;
 using CandyMatch3.Scripts.Gameplay.Models;
 using CandyMatch3.Scripts.Gameplay.GridCells;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Common.DataStructs;
 using CandyMatch3.Scripts.Common.Constants;
+using CandyMatch3.Scripts.Common.SingleConfigs;
 using CandyMatch3.Scripts.Gameplay.GameUI.Popups;
 using CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster;
 using CandyMatch3.Scripts.Gameplay.GameTasks.ComboTasks;
@@ -106,13 +108,32 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
         public void InitStartBooster()
         {
-            InitBoosters(new()
+            if (PlayGameConfig.Current.IsTestMode)
             {
-                new() { Amount = 100, BoosterType = InGameBoosterType.Break },
-                new() { Amount = 100, BoosterType = InGameBoosterType.Blast },
-                new() { Amount = 100, BoosterType = InGameBoosterType.Swap },
-                new() { Amount = 100, BoosterType = InGameBoosterType.Colorful }
-            });
+                InitBoosters(new()
+                {
+                    new() { Amount = 100, BoosterType = InGameBoosterType.Break },
+                    new() { Amount = 100, BoosterType = InGameBoosterType.Blast },
+                    new() { Amount = 100, BoosterType = InGameBoosterType.Swap },
+                    new() { Amount = 100, BoosterType = InGameBoosterType.Colorful }
+                });
+            }
+
+            else
+            {
+                int breakBooster = GameDataManager.Instance.GetResource(GameResourceType.BreakHammer);
+                int blastBooster = GameDataManager.Instance.GetResource(GameResourceType.BlasterBomb);
+                int swapBooster = GameDataManager.Instance.GetResource(GameResourceType.SwitchHand);
+                int colorfulBooster = GameDataManager.Instance.GetResource(GameResourceType.Colorful);
+
+                InitBoosters(new()
+                {
+                    new() { Amount = breakBooster, BoosterType = InGameBoosterType.Break },
+                    new() { Amount = blastBooster, BoosterType = InGameBoosterType.Blast },
+                    new() { Amount = swapBooster, BoosterType = InGameBoosterType.Swap },
+                    new() { Amount = colorfulBooster, BoosterType = InGameBoosterType.Colorful }
+                });
+            }
         }
 
         private void InitBoosters(List<InGameBoosterModel> boosterModels)
@@ -210,9 +231,15 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
 
             IsBoosterUsed = false;
             _boosters[message.BoosterType].Value--;
-            CurrentBooster = InGameBoosterType.None;
+
+            if (!PlayGameConfig.Current.IsTestMode)
+            {
+                GameResourceType resourceType = GetResourceType(CurrentBooster);
+                GameDataManager.Instance.SpendResource(resourceType, 1);
+            }
 
             SetSuggestActive(true);
+            CurrentBooster = InGameBoosterType.None;
             await _inGameBoosterPanel.SetBoosterPanelActive(false);
             
             if (_usingBoosterButton != null)
@@ -302,6 +329,18 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks.BoosterTasks
             }
 
             _suggestTask.IsActive = isActive;
+        }
+
+        private GameResourceType GetResourceType(InGameBoosterType boosterType)
+        {
+            return boosterType switch
+            {
+                InGameBoosterType.Break => GameResourceType.BreakHammer,
+                InGameBoosterType.Blast => GameResourceType.BlasterBomb,
+                InGameBoosterType.Swap => GameResourceType.SwitchHand,
+                InGameBoosterType.Colorful => GameResourceType.Colorful,
+                _ => GameResourceType.None
+            };
         }
 
         public void Dispose()

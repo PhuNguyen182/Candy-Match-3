@@ -256,7 +256,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
 
         private async UniTask OnQuitGame()
         {
-            PlayGameConfig.Current = null;
+            PlayGameConfig.Reset();
             await UniTask.Delay(TimeSpan.FromSeconds(0.25f), cancellationToken: _token);
             await SceneBridge.LoadNextScene(SceneConstants.Mainhome);
         }

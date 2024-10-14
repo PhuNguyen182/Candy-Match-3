@@ -14,12 +14,12 @@ namespace CandyMatch3.Scripts.Gameplay.EditorOnly
 #if UNITY_EDITOR
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.S))
-            {
-                _check = _check + 1;
-                _count = _check % timescales.Length;
-                Time.timeScale = timescales[_count];
-            }
+            //if (Input.GetKeyDown(KeyCode.S))
+            //{
+            //    _check = _check + 1;
+            //    _count = _check % timescales.Length;
+            //    Time.timeScale = timescales[_count];
+            //}
         }
 #endif
 

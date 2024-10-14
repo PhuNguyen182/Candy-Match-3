@@ -44,7 +44,7 @@ namespace GlobalScripts.Audios
                 index = index + 1;
 
                 await UniTask.Delay(TimeSpan.FromSeconds(trackInterval), cancellationToken: _token);
-                MusicManager.Instance.PlayMusic(music, false, 0.65f);
+                AudioManager.Instance.PlayMusic(music, false, 0.65f);
                 await UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken: _token);
             }
         }

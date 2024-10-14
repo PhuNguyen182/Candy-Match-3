@@ -145,18 +145,25 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
         private bool CheckLine(Vector3Int checkPosition, Vector3Int directionUnit)
         {
             int index = 1;
+            IGridCell checkCell;
+            Vector3Int checkCellPosition;
 
             do
             {
-                IGridCell checkCell = _gridCellManager.Get(checkPosition + directionUnit * index);
+                checkCellPosition = checkPosition + directionUnit * index;
+                checkCell = _gridCellManager.Get(checkCellPosition);
+
                 if (checkCell == null)
                     return true;
 
                 if (checkCell.IsSpawner)
-                    return false;
-
-                if (!checkCell.CanMove)
-                    return true;
+                {
+                    if (_checkGridTask.CheckSpawnableLite(checkCell))
+                        return false;
+                    
+                    else
+                        return !checkCell.IsLocked && !checkCell.IsMoveable;
+                }
 
                 if (checkCell.IsMoving)
                     return false;
@@ -175,7 +182,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameTasks
             if (gridCell == null)
                 return false;
 
-            if (!gridCell.CanContainItem)
+            if (!gridCell.CanContainItem || gridCell.IsSpawner)
                 return false;
 
             if (gridCell.IsLocked)

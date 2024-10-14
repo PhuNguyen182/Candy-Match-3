@@ -418,6 +418,50 @@ MonoBehaviour:
   musicButton: {fileID: 1165285154}
   soundButton: {fileID: 1165285153}
   quitPopup: {fileID: 2098872849}
+--- !u!1 &98147464
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 98147466}
+  - component: {fileID: 98147465}
+  m_Layer: 0
+  m_Name: Eazy Sound Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &98147465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98147464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0500072cba35d4749ad862e7730ad14b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &98147466
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98147464}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &158697951 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2859231979481159324, guid: b6f1d69ce59acb14893a3ecd0fa16e8a, type: 3}
@@ -3892,6 +3936,7 @@ SceneRoots:
   - {fileID: 1336813330}
   - {fileID: 1707640712}
   - {fileID: 1105668869}
+  - {fileID: 98147466}
   - {fileID: 1049017513}
   - {fileID: 41471072}
   - {fileID: 1592590829}

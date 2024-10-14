@@ -26,6 +26,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [Serializable]
         public struct InGameBoosterBoxInfo
         {
+            public GameResourceType ResourceType;
             public InGameBoosterType BoosterType;
             public string BoosterName;
             public string Description;
@@ -39,6 +40,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         [SerializeField] private InGameBoosterType boosterType;
         [SerializeField] private ParticleSystem coinEffect;
         [SerializeField] private UpdateResouceResponder resouceResponder;
+        [SerializeField] private CanvasGroup canvasGroup;
 
         [Space(10)]
         [SerializeField] private TMP_Text coinText;
@@ -57,6 +59,7 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
 
         private CancellationToken _token;
         private InGameBoosterPack _boosterPack;
+        private InGameBoosterBoxInfo _currentInfo;
         private IPublisher<AddInGameBoosterMessage> _addInGameBoosterPublisher;
 
         private readonly int _closeHash = Animator.StringToHash("Close");
@@ -95,8 +98,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         protected override void DoAppear()
         {
             if (!IsPreload)
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupOpen);
 
+            canvasGroup.interactable = true;
             int coin = GameDataManager.Instance.GetResource(GameResourceType.Coin);
             _reactiveCoin.Value = coin; // Show the current value of coin in game data
         }
@@ -111,8 +115,8 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
         public void SetBoosterInfo(InGameBoosterType boosterType)
         {
             this.boosterType = boosterType;
-            InGameBoosterBoxInfo info = PopupInfoCollection[boosterType];
-            SetPopupInfo(info);
+            _currentInfo = PopupInfoCollection[boosterType];
+            SetPopupInfo(_currentInfo);
         }
 
         private void UpdateCoin()
@@ -129,8 +133,9 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
             if (coin >= price)
             {
                 coinEffect.Play();
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.CoinsPopButton);
                 GameDataManager.Instance.SpendResource(GameResourceType.Coin, price);
+                GameDataManager.Instance.EarnResource(_currentInfo.ResourceType, _boosterPack.Amount);
 
                 _addInGameBoosterPublisher.Publish(new AddInGameBoosterMessage
                 {
@@ -176,12 +181,13 @@ namespace CandyMatch3.Scripts.Gameplay.GameUI.InGameBooster
 
         private async UniTask ClosePopup()
         {
+            canvasGroup.interactable = false;
             popupAnimator.SetTrigger(_closeHash);
             backgroundAnimator.SetTrigger(_closeHash);
             await UniTask.Delay(TimeSpan.FromSeconds(closeClip.length), cancellationToken: _token);
 
             if (!IsPreload)
-                MusicManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
+                AudioManager.Instance.PlaySoundEffect(SoundEffectType.PopupClose);
 
             base.DoClose();
             UnblockInput?.Invoke();

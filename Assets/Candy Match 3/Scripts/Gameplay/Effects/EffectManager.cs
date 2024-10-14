@@ -2,11 +2,11 @@ using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GlobalScripts.Effects;
 using CandyMatch3.Scripts.Common.Enums;
 using CandyMatch3.Scripts.Common.Databases;
 using CandyMatch3.Scripts.Gameplay.Miscs;
 using Cysharp.Threading.Tasks;
-using GlobalScripts.Effects;
 
 namespace CandyMatch3.Scripts.Gameplay.Effects
 {
@@ -16,7 +16,9 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
         [SerializeField] private TargetDatabase targetDatabase;
         [SerializeField] private SoundEffectDatabase soundEffectDatabase;
         [SerializeField] private TargetCompletedObject targetObject;
+        [SerializeField] private float playSoundRate = 0.1f;
 
+        private float _playSoundNext = 0;
         private CancellationToken _token;
         public static EffectManager Instance { get; private set; }
 
@@ -32,13 +34,19 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             soundEffectDatabase.Initialize();
         }
 
-        public void PlaySoundEffect(SoundEffectType soundEffect)
+        public void PlaySoundEffect(SoundEffectType soundEffect, bool useGapTime = false)
         {
-            AudioClip sound = soundEffectDatabase.SoundEffectCollection[soundEffect];
-            ItemSoundEffect itemSoundEffect = SimplePool.Spawn(effectDatabase.SoundEffect
-                                                               , EffectContainer.Transform
-                                                               , Vector3.zero, Quaternion.identity);
-            itemSoundEffect.PlaySound(sound);
+            if (useGapTime)
+            {
+                if (_playSoundNext < Time.fixedTime)
+                {
+                    _playSoundNext = Time.fixedTime + playSoundRate;
+                    PlaySoundEffect(soundEffect);
+                }
+            }
+
+            else
+                PlaySoundEffect(soundEffect);
         }
 
         public void PlayItemSwapEffect(Vector3 position)
@@ -153,8 +161,18 @@ namespace CandyMatch3.Scripts.Gameplay.Effects
             return SimplePool.Spawn(effectDatabase.ExplodeEffect, EffectContainer.Transform, position, Quaternion.identity);
         }
 
+        private void PlaySoundEffect(SoundEffectType soundEffect)
+        {
+            AudioClip sound = soundEffectDatabase.SoundEffectCollection[soundEffect];
+            ItemSoundEffect effect = SimplePool.Spawn(effectDatabase.SoundEffect, EffectContainer.Transform, Vector3.zero, Quaternion.identity);
+            effect.PlaySound(sound);
+        }
+
         private async UniTask PreloadEffects()
         {
+            SimplePool.PoolPreLoad(effectDatabase.SoundEffect.gameObject, 20, EffectContainer.Transform);
+            await UniTask.NextFrame(_token);
+         
             SimplePool.PoolPreLoad(effectDatabase.SoundEffect.gameObject, 12, EffectContainer.Transform);
             await UniTask.NextFrame(_token);
 
