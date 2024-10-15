@@ -44,6 +44,8 @@ namespace CandyMatch3.Scripts.GameManagers
                     }
                 }
             }
+
+            else GameDataManager.Instance.SetResource(GameResourceType.Life, _maxHeart);
         }
 
         public void LoadHeartOnStart()
